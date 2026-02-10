@@ -2,9 +2,6 @@
  * Category view
  * Display a category with filters and search
  *
- * @module package/quiqqer/products/bin/controls/frontend/category/ProductList
- * @author www.pcsg.de (Henning Leutz)
- *
  * @event onFilterChange [self]
  * @event onQuiqqerProductsOpenProduct [self, productId]
  * @event onQuiqqerProductsCloseProduct [self, productId]
@@ -365,7 +362,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     this.$FreeText.value = search.search;
                 }
 
-                var FreeTextSearchBtn = this.$FreeTextContainer.getElement('button');
+                const FreeTextSearchBtn = this.$FreeTextContainer.getElement('button');
 
                 if (FreeTextSearchBtn) {
                     FreeTextSearchBtn.addEvent('click', executeSearch);

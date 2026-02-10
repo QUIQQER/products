@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/products/CreateProductWindow
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/products/CreateProductWindow', [
 
     'qui/QUI',

@@ -1,9 +1,6 @@
 /**
  * Makes an input field to a user selection field
  *
- * @module package/quiqqer/products/bin/controls/categories/Select
- * @author www.pcsg.de (Henning Leutz)
- *
  * @event onAddCategory [ this, id ]
  * @event onChange [ this ]
  * @event onRemoveCategory [ this, categoryId ]
@@ -26,8 +23,8 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 ], function (QUI, QUIControl, QUIButton, QUIConfirm, QUIElementUtils, SelectItem, Handler, Ajax, QUILocale) {
     "use strict";
 
-    var lg         = 'quiqqer/products';
-    var Categories = new Handler();
+    const lg = 'quiqqer/products';
+    const Categories = new Handler();
 
     /**
      * @class controls/usersAndGroups/Input
@@ -40,7 +37,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/categories/Select',
+        Type: 'package/quiqqer/products/bin/controls/categories/Select',
 
         Binds: [
             'close',
@@ -55,24 +52,24 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         ],
 
         options: {
-            max      : false, // max entries
-            multiple : true,  // select more than one entry?
-            name     : '',    // string
-            styles   : false, // object
-            label    : false, // text string or a <label> DOMNode Element
+            max: false, // max entries
+            multiple: true,  // select more than one entry?
+            name: '',    // string
+            styles: false, // object
+            label: false, // text string or a <label> DOMNode Element
             resizable: true, // resize is allowed
-            create   : true
+            create: true
         },
 
         initialize: function (options, Input) {
-            var self = this;
+            const self = this;
 
             this.parent(options);
 
-            this.$Input    = Input || null;
-            this.$Elm      = null;
-            this.$List     = null;
-            this.$Search   = null;
+            this.$Input = Input || null;
+            this.$Elm = null;
+            this.$List = null;
+            this.$Search = null;
             this.$DropDown = null;
 
             this.$SearchButton = null;
@@ -81,8 +78,8 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             this.$values = [];
 
             this.addEvents({
-                onImport      : this.$onImport,
-                onInject      : function () {
+                onImport: this.$onImport,
+                onInject: function () {
                     (function () {
                         if (!self.$Elm.getParent('.data-table')) {
                             self.$Elm.setStyles({
@@ -102,7 +99,6 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         /**
          * Return the DOMNode Element
          *
-         * @method package/quiqqer/products/bin/controls/categories/Select#create
          * @return {HTMLElement} The main DOM-Node Element
          */
         create: function () {
@@ -110,10 +106,10 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 return this.$Elm;
             }
 
-            var self = this;
+            const self = this;
 
             this.$Elm = new Element('div', {
-                'class'     : 'qui-products-categories-list',
+                'class': 'qui-products-categories-list',
                 'data-quiid': this.getId()
             });
 
@@ -131,12 +127,12 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
             this.$Input.set({
                 styles: {
-                    opacity : 0,
+                    opacity: 0,
                     position: 'absolute',
-                    zIndex  : 1,
-                    left    : 5,
-                    top     : 5,
-                    cursor  : 'pointer'
+                    zIndex: 1,
+                    left: 5,
+                    top: 5,
+                    cursor: 'pointer'
                 },
                 events: {
                     focus: this.$onInputFocus
@@ -150,13 +146,13 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
             this.$SearchIcon = new Element('span', {
                 'class': 'qui-products-categories-list-searchIcon',
-                html   : '<span class="fa fa-shopping-basket"></span>'
+                html: '<span class="fa fa-shopping-basket"></span>'
             }).inject(this.$Elm);
 
             this.$Search = new Element('input', {
-                'class'    : 'qui-products-categories-list-search',
+                'class': 'qui-products-categories-list-search',
                 placeholder: QUILocale.get(lg, 'control.select.search.categories.placeholder'),
-                events     : {
+                events: {
                     keyup: function (event) {
                         if (event.key === 'down') {
                             this.down();
@@ -176,14 +172,14 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                         this.fireSearch();
                     }.bind(this),
 
-                    blur : this.close,
+                    blur: this.close,
                     focus: this.fireSearch
                 }
             }).inject(this.$Elm);
 
             this.$SearchButton = new QUIButton({
-                icon  : 'fa fa-search',
-                name  : 'search',
+                icon: 'fa fa-search',
+                name: 'search',
                 styles: {
                     width: 50
                 },
@@ -200,8 +196,8 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                         ], function (Window) {
                             new Window({
                                 autoclose: true,
-                                multiple : self.getAttribute('multiple'),
-                                events   : {
+                                multiple: self.getAttribute('multiple'),
+                                events: {
                                     onSubmit: function (Win, categorieIds) {
                                         categorieIds.each(function (categorieId) {
                                             self.addCategory(categorieId);
@@ -218,13 +214,13 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
 
             this.$CreateButton = new QUIButton({
-                name  : 'create',
-                icon  : 'fa fa-sitemap',
+                name: 'create',
+                icon: 'fa fa-sitemap',
                 styles: {
                     display: 'none',
-                    width  : 50
+                    width: 50
                 },
-                alt   : QUILocale.get(lg, 'control.select.category.create'),
+                alt: QUILocale.get(lg, 'control.select.category.create'),
                 events: {
                     onClick: this.$showCreateCategoryDialog
                 }
@@ -233,15 +229,15 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
             this.$DropDown = new Element('div', {
                 'class': 'qui-products-categories-list-dropdown',
-                styles : {
+                styles: {
                     display: 'none',
-                    top    : this.$Search.getPosition().y + this.$Search.getSize().y,
-                    left   : this.$Search.getPosition().x
+                    top: this.$Search.getPosition().y + this.$Search.getSize().y,
+                    left: this.$Search.getPosition().x
                 }
             }).inject(document.body);
 
             if (this.getAttribute('label')) {
-                var Label = this.getAttribute('label');
+                let Label = this.getAttribute('label');
 
                 if (typeof this.getAttribute('label').nodeName === 'undefined') {
                     Label = new Element('label', {
@@ -254,8 +250,8 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 if (Label.get('data-desc') && Label.get('data-desc') !== '&nbsp;') {
                     new Element('div', {
                         'class': 'description',
-                        html   : Label.get('data-desc'),
-                        styles : {
+                        html: Label.get('data-desc'),
+                        styles: {
                             marginBottom: 10
                         }
                     }).inject(Label, 'after');
@@ -267,8 +263,8 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
                 new Element('div', {
                     'class': 'qui-products-categories-list-resize',
-                    html   : '<span class="fa fa-arrows-v"></span>',
-                    events : {
+                    html: '<span class="fa fa-arrows-v"></span>',
+                    events: {
                         click: this.resize
                     }
                 }).inject(this.$Elm);
@@ -283,12 +279,12 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 this.$List.setStyles({
                     border: 'none',
                     height: 31,
-                    width : 'calc(100% - 50px)'
+                    width: 'calc(100% - 50px)'
                 });
 
                 this.$Elm.setStyles({
                     borderBottom: '1px solid rgba(147, 128, 108, 0.25)',
-                    borderRight : '1px solid rgba(147, 128, 108, 0.25)'
+                    borderRight: '1px solid rgba(147, 128, 108, 0.25)'
                 });
             }
 
@@ -302,12 +298,12 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 this.$List.setStyles({
                     border: 'none',
                     height: 31,
-                    width : 'calc(100% - 50px)'
+                    width: 'calc(100% - 50px)'
                 });
 
                 this.$Elm.setStyles({
                     borderBottom: '1px solid rgba(147, 128, 108, 0.25)',
-                    borderRight : '1px solid rgba(147, 128, 108, 0.25)'
+                    borderRight: '1px solid rgba(147, 128, 108, 0.25)'
                 });
             }
 
@@ -325,7 +321,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
          * event: on inject
          */
         $onImport: function () {
-            var Elm = this.getElm();
+            const Elm = this.getElm();
 
             if (Elm.nodeName === 'INPUT') {
                 this.$Input = Elm;
@@ -343,10 +339,10 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 return;
             }
 
-            var self  = this,
+            const self = this,
                 items = this.$List.getElements('.quiqqer-category-selectItem');
 
-            var height = items.map(function (elm) {
+            let height = items.map(function (elm) {
                 return elm.getSize().y + 1;
             }).sum();
 
@@ -377,8 +373,6 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
         /**
          * fire the search
-         *
-         * @method package/quiqqer/products/bin/controls/categories/Select#fireSearch
          */
         fireSearch: function () {
             if (this.$Search.value === '') {
@@ -388,13 +382,13 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             this.cancelSearch();
 
             this.$DropDown.set({
-                html  : '<span class="fa fa-spinner fa-spin"></span>',
+                html: '<span class="fa fa-spinner fa-spin"></span>',
                 styles: {
                     display: '',
-                    left   : this.$Search.getPosition().x,
-                    top    : this.$Search.getPosition().y + this.$Search.getSize().y,
-                    width  : this.$Search.getSize().x,
-                    zIndex : QUIElementUtils.getComputedZIndex(this.$Input)
+                    left: this.$Search.getPosition().x,
+                    top: this.$Search.getPosition().y + this.$Search.getSize().y,
+                    width: this.$Search.getSize().x,
+                    zIndex: QUIElementUtils.getComputedZIndex(this.$Input)
                 }
             });
 
@@ -403,8 +397,6 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
         /**
          * cancel the search timeout
-         *
-         * @method package/quiqqer/products/bin/controls/categories/Select#cancelSearch
          */
         cancelSearch: function () {
             if (this.$search) {
@@ -414,8 +406,6 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
         /**
          * close the users search
-         *
-         * @method package/quiqqer/products/bin/controls/categories/Select#close
          */
         close: function () {
             this.cancelSearch();
@@ -444,9 +434,9 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
          * @param {Number} categoryId
          */
         removeCategory: function (categoryId) {
-            var newValues = [];
+            const newValues = [];
 
-            for (var i = 0, len = this.$values.length; i < len; i++) {
+            for (let i = 0, len = this.$values.length; i < len; i++) {
                 if (this.$values[i] != categoryId) {
                     newValues.push(this.$values[i]);
                 }
@@ -468,22 +458,20 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
         /**
          * trigger a users search and open a category dropdown for selection
-         *
-         * @method package/quiqqer/products/bin/controls/categories/Select#search
          */
         search: function () {
-            var self  = this,
+            const self = this,
                 value = this.$Search.value;
 
             Categories.search({
                 order: 'ASC',
                 limit: 5
             }, {
-                id    : value,
+                id: value,
                 fields: value
             }).then(function (result) {
 
-                var i, id, len, nam, entry, Entry,
+                let i, id, len, nam, entry, Entry,
                     func_mousedown, func_mouseover,
 
                     DropDown = self.$DropDown;
@@ -493,12 +481,12 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
                 if (!result || !result.length) {
                     new Element('div', {
-                        html  : QUILocale.get(lg, 'control.select.no.results'),
+                        html: QUILocale.get(lg, 'control.select.no.results'),
                         styles: {
                             'float': 'left',
                             'clear': 'both',
                             padding: 5,
-                            margin : 5
+                            margin: 5
                         }
                     }).inject(DropDown);
 
@@ -507,7 +495,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
                 // events
                 func_mousedown = function (event) {
-                    var Elm = event.target;
+                    let Elm = event.target;
 
                     if (!Elm.hasClass('qui-products-categories-list-dropdown-entry')) {
                         Elm = Elm.getParent('.qui-products-categories-list-dropdown-entry');
@@ -530,7 +518,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 for (i = 0, len = result.length; i < len; i++) {
 
                     entry = result[i];
-                    id    = entry.id;
+                    id = entry.id;
 
                     nam = '#' + id + ' - ';
                     nam = nam + QUILocale.get(lg, 'products.category.' + id + '.title');
@@ -543,12 +531,12 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                     }
 
                     Entry = new Element('div', {
-                        html     : '<span class="fa fa-sitemap"></span>' +
+                        html: '<span class="fa fa-sitemap"></span>' +
                             '<span>' + nam + ' (' + id + ')</span>',
-                        'class'  : 'box-sizing qui-products-categories-list-dropdown-entry',
+                        'class': 'box-sizing qui-products-categories-list-dropdown-entry',
                         'data-id': id,
-                        events   : {
-                            mousedown : func_mousedown,
+                        events: {
+                            mousedown: func_mousedown,
                             mouseenter: func_mouseover
                         }
                     }).inject(DropDown);
@@ -559,7 +547,6 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         /**
          * Add a user to the input
          *
-         * @method package/quiqqer/products/bin/controls/categories/Select#addUser
          * @param {Number|String} id - id of the user
          * @return {Object} this (package/quiqqer/products/bin/controls/categories/Select)
          */
@@ -570,7 +557,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
             this.$hideCreateButton();
 
-            var max = parseInt(this.getAttribute('max'));
+            const max = parseInt(this.getAttribute('max'));
 
             if (max === 1) {
                 // max = 1 -> overwrites the old
@@ -591,7 +578,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
             new SelectItem({
                 categoryId: id,
-                events    : {
+                events: {
                     onDestroy: this.$onCategoryDestroy
                 }
             }).inject(this.$List);
@@ -607,7 +594,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         /**
          * @param {String} value
          */
-        importValue: function(value) {
+        importValue: function (value) {
             if (typeOf(value) !== 'string') {
                 return;
             }
@@ -620,7 +607,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             for (let i = 0, len = values.length; i < len; i++) {
                 new SelectItem({
                     categoryId: values[i],
-                    events    : {
+                    events: {
                         onDestroy: this.$onCategoryDestroy
                     }
                 }).inject(this.$List);
@@ -635,7 +622,6 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         /**
          * keyup - users dropdown selection one step up
          *
-         * @method package/quiqqer/products/bin/controls/categories/Select#up
          * @return {Object} this (package/quiqqer/products/bin/controls/categories/Select)
          */
         up: function () {
@@ -647,7 +633,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 return this;
             }
 
-            var Active = this.$DropDown.getElement(
+            const Active = this.$DropDown.getElement(
                 '.qui-products-categories-list-dropdown-entry-hover'
             );
 
@@ -677,7 +663,6 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         /**
          * keydown - users dropdown selection one step down
          *
-         * @method package/quiqqer/products/bin/controls/categories/Select#down
          * @return {Object} this (package/quiqqer/products/bin/controls/categories/Select)
          */
         down: function () {
@@ -689,7 +674,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 return this;
             }
 
-            var Active = this.$DropDown.getElement(
+            const Active = this.$DropDown.getElement(
                 '.qui-products-categories-list-dropdown-entry-hover'
             );
 
@@ -720,15 +705,13 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
         /**
          * select the selected user / group
-         *
-         * @method package/quiqqer/products/bin/controls/categories/Select#submit
          */
         submit: function () {
             if (!this.$DropDown) {
                 return;
             }
 
-            var Active = this.$DropDown.getElement(
+            const Active = this.$DropDown.getElement(
                 '.qui-products-categories-list-dropdown-entry-hover'
             );
 
@@ -743,7 +726,6 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         /**
          * Set the focus to the input field
          *
-         * @method package/quiqqer/products/bin/controls/categories/Select#focus
          * @return {Object} this (package/quiqqer/products/bin/controls/categories/Select)
          */
         focus: function () {
@@ -761,8 +743,6 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
         /**
          * Write the ids to the real input field
-         *
-         * @method package/quiqqer/products/bin/controls/categories/Select#$refreshValues
          */
         $refreshValues: function () {
             this.$Input.value = this.$values.join(',');
@@ -774,9 +754,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         },
 
         /**
-         * event : if a user or a groupd would be destroyed
-         *
-         * @method package/quiqqer/products/bin/controls/categories/Select#$onCategoryDestroy
+         * event : if a user or a group would be destroyed
          * @param {Object} Item - package/quiqqer/products/bin/controls/categories/Select
          */
         $onCategoryDestroy: function (Item) {
@@ -851,7 +829,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 return;
             }
 
-            var self  = this,
+            const self = this,
                 title = this.getAttribute('Site').getAttribute('title');
 
             self.$CreateButton.setAttribute('icon', 'fa fa-spinner fa-spin');
@@ -861,9 +839,9 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             ], function (Window) {
                 new Window({
                     autoclose: true,
-                    multiple : false,
-                    message  : QUILocale.get(lg, 'control.select.window.select.parent'),
-                    events   : {
+                    multiple: false,
+                    message: QUILocale.get(lg, 'control.select.window.select.parent'),
+                    events: {
                         onSubmit: function (Win, categorieIds) {
                             self.$CreateButton.setAttribute('icon', 'fa fa-spinner fa-spin');
 
@@ -872,8 +850,8 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                                 self.$CreateButton.setAttribute('icon', 'fa fa-sitemap');
                             }, {
                                 'package': 'quiqqer/products',
-                                parentId : categorieIds[0],
-                                params   : JSON.encode({
+                                parentId: categorieIds[0],
+                                params: JSON.encode({
                                     title: title
                                 })
                             });

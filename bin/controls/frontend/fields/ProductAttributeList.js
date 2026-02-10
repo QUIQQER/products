@@ -1,7 +1,4 @@
 /**
- * @module package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeList
- * @author www.pcsg.de (Henning Leutz)
- *
  * @event onChange [{Object} self, {Number} fieldId]
  */
 define('package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeList', [
@@ -13,8 +10,9 @@ define('package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeLi
     "use strict";
 
     return new Class({
+
         Extends: FieldControl,
-        Type   : 'package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeList',
+        Type: 'package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeList',
 
         Binds: [
             '$onImport',
@@ -32,10 +30,10 @@ define('package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeLi
         },
 
         /**
-         * event : on import
+         * event: on import
          */
         $onImport: function () {
-            var Elm = this.getElm();
+            const Elm = this.getElm();
 
             this.$fieldId = Elm.get('data-field').toInt();
 
@@ -49,11 +47,11 @@ define('package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeLi
          * event: on change
          */
         $onChange: function () {
-            var self = this,
-                Elm  = this.getElm();
+            const self = this,
+                Elm = this.getElm();
 
-            var value  = Elm.value;
-            var Option = Elm.getElement('option[value="' + value + '"]');
+            const value = Elm.value;
+            const Option = Elm.getElement('option[value="' + value + '"]');
 
             if (self.$UserInput) {
                 self.$UserInput.destroy();
@@ -99,7 +97,7 @@ define('package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeLi
 
                     if (value.length) {
                         this.$showUserInput().then(function () {
-                            this.getElm().value   = value[0];
+                            this.getElm().value = value[0];
                             this.$UserInput.value = value[1];
 
                             this.$UserInput.fireEvent('change');
@@ -131,7 +129,7 @@ define('package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeLi
                 }
 
                 moofx(this.$UserInput).animate({
-                    height : 0,
+                    height: 0,
                     opacity: 0
                 }, {
                     duration: 250,
@@ -156,28 +154,28 @@ define('package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeLi
             return new Promise(function (resolve) {
                 if (!this.$UserInput) {
                     this.$UserInput = new Element('input', {
-                        type   : 'text',
+                        type: 'text',
                         'class': 'field-userinput',
-                        styles : {
-                            display : 'none',
-                            opacity : 0,
+                        styles: {
+                            display: 'none',
+                            opacity: 0,
                             position: 'relative',
-                            width   : '100%'
+                            width: '100%'
                         }
                     }).inject(this.getElm(), 'after');
                 }
 
-                var height = this.$UserInput.measure(function () {
+                const height = this.$UserInput.measure(function () {
                     return this.getSize().y;
                 });
 
                 this.$UserInput.setStyles({
                     display: null,
-                    height : 0
+                    height: 0
                 });
 
                 moofx(this.$UserInput).animate({
-                    height : height,
+                    height: height,
                     opacity: 1
                 }, {
                     duration: 250,

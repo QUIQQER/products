@@ -1,8 +1,5 @@
 /**
  * Category panel
- *
- * @module package/quiqqer/products/bin/controls/categories/Panel
- * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/controls/categories/Panel', [
 

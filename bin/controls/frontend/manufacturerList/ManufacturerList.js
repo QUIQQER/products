@@ -2,9 +2,6 @@
  * Category view
  * Display a category with filters and search
  *
- * @module package/quiqqer/products/bin/controls/frontend/manufacturerList/ManufacturerList
- * @author www.pcsg.de (Henning Leutz)
- *
  * @event onFilterChange [self]
  * @event onQuiqqerProductsOpenProduct [self, productId]
  * @event onQuiqqerProductsCloseProduct [self, productId]
@@ -31,11 +28,11 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
 ) {
     "use strict";
 
-    var DEBUG = false;
+    const DEBUG = false;
 
-    var lg = 'quiqqer/products';
-    var productOpened = false;
-    var animationDuration = 300;
+    const lg = 'quiqqer/products';
+    const productOpened = false;
+    let animationDuration = 300;
 
     if (typeof window.QUIQQER_PRODUCTS_FRONTEND_ANIMATION !== 'undefined') {
         animationDuration = window.QUIQQER_PRODUCTS_FRONTEND_ANIMATION;
@@ -54,7 +51,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/frontend/manufacturerList/ManufacturerList',
+        Type: 'package/quiqqer/products/bin/controls/frontend/manufacturerList/ManufacturerList',
 
         Binds: [
             'galleryView',
@@ -75,13 +72,13 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
         ],
 
         options: {
-            view             : 'gallery',
-            sort             : false,
-            project          : false,
-            lang             : false,
-            siteId           : false,
-            autoload         : true,
-            autoloadAfter    : 3, // After how many clicks are further products loaded automatically? (false | number)
+            view: 'gallery',
+            sort: false,
+            project: false,
+            lang: false,
+            siteId: false,
+            autoload: true,
+            autoloadAfter: 3, // After how many clicks are further products loaded automatically? (false | number)
             productLoadNumber: 9
         },
 
@@ -169,9 +166,9 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
          * event : on import
          */
         $onImport: function () {
-            var self = this,
-                Elm  = this.getElm(),
-                cid  = Elm.get('data-productlist-id');
+            const self = this,
+                Elm = this.getElm(),
+                cid = Elm.get('data-productlist-id');
 
             if (parseInt(Elm.get('data-autoload')) === 0) {
                 this.setAttribute('autoload', false);
@@ -196,7 +193,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 this.setAttribute('sort', Elm.get('data-sort'));
             }
 
-            var Url    = URI(window.location),
+            const Url = URI(window.location),
                 search = Url.search(true);
 
             if ("p" in search) {
@@ -227,11 +224,11 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
 
             this.$ContainerLoader = new Element('div', {
                 'class': 'quiqqer-products-manufacturerList-loader',
-                'html' : '<span class="fa fa-spinner fa-spin"></span>',
-                styles : {
-                    display  : 'none',
+                'html': '<span class="fa fa-spinner fa-spin"></span>',
+                styles: {
+                    display: 'none',
                     marginTop: 20,
-                    opacity  : 0
+                    opacity: 0
                 }
             }).inject(this.$Container);
 
@@ -253,16 +250,16 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
 
             // filter
             if (this.$FilterContainer) {
-                var inner = this.$FilterContainer.get('html');
+                const inner = this.$FilterContainer.get('html');
 
                 this.$FilterContainer.set('html', '');
 
                 new Element('div', {
-                    html  : inner,
+                    html: inner,
                     styles: {
-                        'float'      : 'left',
+                        'float': 'left',
                         paddingBottom: 20,
-                        width        : '100%'
+                        width: '100%'
                     }
                 }).inject(this.$FilterContainer);
             }
@@ -319,13 +316,13 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             // freetext
             if (this.$FreeTextContainer) {
                 this.$FreeText = this.$FreeTextContainer.getElement('[type="search"]');
-                var Button = this.$FreeTextContainer.getElement('[type="submit"]');
+                const Button = this.$FreeTextContainer.getElement('[type="submit"]');
 
                 if (Button) {
                     Button.setStyle('display', 'none');
                 }
 
-                var executeSearch = function () {
+                const executeSearch = function () {
                     this.$productId = false;
                     this.$setWindowLocation(true);
                 }.bind(this);
@@ -335,13 +332,13 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 }
 
                 new QUIButton({
-                    icon  : 'fa fa-search',
+                    icon: 'fa fa-search',
                     events: {
                         onClick: executeSearch
                     },
                     styles: {
                         padding: 5,
-                        width  : 50
+                        width: 50
                     }
                 }).inject(this.$FreeTextContainer);
 
@@ -384,18 +381,18 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
 
             // sort
             if (this.$BarSort) {
-                var Select  = this.$BarSort.getElement('select'),
+                const Select = this.$BarSort.getElement('select'),
                     options = Select.getElements('option');
 
                 this.$Sort = new QUISelect({
-                    showIcons      : false,
+                    showIcons: false,
                     placeholderText: QUILocale.get(lg, 'product.list.sort.placeholder'),
-                    events         : {
+                    events: {
                         onChange: this.$setWindowLocation
                     }
                 });
 
-                for (var i = 0, len = options.length; i < len; i++) {
+                for (let i = 0, len = options.length; i < len; i++) {
                     this.$Sort.appendChild(
                         options[i].get('html'),
                         options[i].get('value')
@@ -452,7 +449,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                     return;
                 }
 
-                var isInView = QUIElementUtils.isInViewport(this.$More);
+                const isInView = QUIElementUtils.isInViewport(this.$More);
 
                 if (isInView) {
                     this.next();
@@ -472,8 +469,8 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
 
 
             if (typeof Pace !== 'undefined') {
-                var loaded = false;
-                var paceDone = function () {
+                let loaded = false;
+                const paceDone = function () {
                     if (loaded) {
                         return;
                     }
@@ -526,7 +523,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
          * @returns {Promise}
          */
         $readWindowLocation: function () {
-            var self = this;
+            const self = this;
 
             if (DEBUG) console.log('$readWindowLocation', 1);
 
@@ -534,7 +531,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 if (DEBUG) console.log('$readWindowLocation', '1 -> ');
 
                 return new Promise(function (resolve) {
-                    var checkRunning = function () {
+                    const checkRunning = function () {
                         if (self.$readLocationRunning === false) {
                             return Promise.resolve(true);
                         }
@@ -555,14 +552,14 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             if (DEBUG) console.log('$readWindowLocation', 2);
 
             return new Promise(function (resolve) {
-                var Close;
-                var Url    = URI(window.location),
+                let Close;
+                const Url = URI(window.location),
                     search = Url.search(true);
 
                 if (!Object.getLength(search)) {
                     if (DEBUG) console.log('$readWindowLocation', 3, {
                         productOpened: productOpened,
-                        Container    : this.$ProductContainer
+                        Container: this.$ProductContainer
                     });
 
                     if (productOpened && this.$ProductContainer) {
@@ -590,7 +587,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 if ("p" in search && Object.getLength(search) === 1) {
                     if (DEBUG) console.log('$readWindowLocation', 6);
 
-                    var productId = parseInt(search.p);
+                    const productId = parseInt(search.p);
 
                     if (productOpened) {
                         if (DEBUG) console.log('$readWindowLocation', 7);
@@ -625,18 +622,18 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 if ("f" in search && this.$FilterContainer) {
                     if (DEBUG) console.log('$readWindowLocation', 10);
 
-                    var fieldList = this.$FilterContainer.getElements(
+                    const fieldList = this.$FilterContainer.getElements(
                         '.quiqqer-products-search-field'
                     ).map(function (Field) {
                         return QUI.Controls.getById(Field.get('data-quiid'));
                     });
 
                     try {
-                        var Field, fieldId;
-                        var fieldParams = JSON.decode(search.f);
+                        let Field, fieldId;
+                        const fieldParams = JSON.decode(search.f);
 
-                        var findFilterById = function (fieldId) {
-                            for (var f in fieldList) {
+                        const findFilterById = function (fieldId) {
+                            for (const f in fieldList) {
                                 if (fieldList.hasOwnProperty(f) &&
                                     fieldList[f].getFieldId() === fieldId) {
                                     return fieldList[f];
@@ -656,8 +653,8 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                                 continue;
                             }
 
-                            var currentFieldValue = Field.getSearchValue();
-                            var newFieldValue = fieldParams[fieldId];
+                            let currentFieldValue = Field.getSearchValue();
+                            let newFieldValue = fieldParams[fieldId];
 
                             if (typeof currentFieldValue === 'object' && currentFieldValue) {
                                 currentFieldValue = Object.toQueryString(currentFieldValue);
@@ -677,7 +674,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 }
 
                 // tags
-                var tags = Array.clone(this.$tags);
+                const tags = Array.clone(this.$tags);
 
                 if ("t" in search) {
                     tags.combine(search.t.split(','));
@@ -760,7 +757,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             }
 
             // set history
-            var history      = {},
+            let history = {},
                 searchParams = this.$getSearchParams();
 
             if (searchParams.sortBy !== '') {
@@ -787,10 +784,10 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             }
 
             if (searchParams.tags.length) {
-                var tags = [];
-                var locTags = searchParams.tags;
+                const tags = [];
+                const locTags = searchParams.tags;
 
-                for (var i = 0, len = locTags.length; i < len; i++) {
+                for (let i = 0, len = locTags.length; i < len; i++) {
                     if (!this.$tags.contains(locTags[i])) {
                         tags.push(locTags[i]);
                     }
@@ -813,7 +810,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             }
 
             if (searchParams.fields) {
-                var fields = Object.filter(searchParams.fields, function (value) {
+                const fields = Object.filter(searchParams.fields, function (value) {
                     return value !== '';
                 });
 
@@ -827,7 +824,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 history.p = parseInt(searchParams.productId);
             }
 
-            var url = location.pathname;
+            let url = location.pathname;
 
             if (Object.getLength(history)) {
                 url = location.pathname + '?' + Object.toQueryString(history);
@@ -855,20 +852,20 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
          * @return {Promise}
          */
         next: function () {
-            var self = this,
+            const self = this,
                 size = this.$More.getSize();
 
             this.$More.addClass('disabled');
             this.$loadingMore = true;
 
             this.$More.setStyles({
-                height  : size.y,
+                height: size.y,
                 overflow: 'hidden',
-                width   : size.x
+                width: size.x
             });
 
             return new Promise(function (resolve) {
-                var oldButtonText = self.$More.get('text');
+                const oldButtonText = self.$More.get('text');
 
                 if (self.$More) {
                     self.$More.set('html', '<span class="fa fa-spinner fa-spin"></span>');
@@ -879,7 +876,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 self.$renderSearch(true).then(function (data) {
                     if (self.$More) {
                         self.$More.set({
-                            html  : oldButtonText,
+                            html: oldButtonText,
                             styles: {
                                 width: null
                             }
@@ -978,11 +975,11 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
         $renderSearch: function (next) {
             next = typeof next !== 'undefined';
 
-            var self          = this,
-                view          = this.getAttribute('view'),
-                sort          = this.getAttribute('sort'),
+            let self = this,
+                view = this.getAttribute('view'),
+                sort = this.getAttribute('sort'),
                 ContainerReal = this.$ContainerReal,
-                articles      = this.$ContainerReal.getElements('article').length;
+                articles = this.$ContainerReal.getElements('article').length;
 
             if (sort) {
                 sort = sort.replace('Sc_date', 'c_date').replace('Se_date', 'e_date');
@@ -1005,11 +1002,11 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                         self.$showMoreButton();
                     }
 
-                    var Ghost = new Element('div', {
+                    const Ghost = new Element('div', {
                         html: result.html
                     });
 
-                    var Prom = Promise.resolve();
+                    let Prom = Promise.resolve();
 
                     if (next === false) {
                         Prom = self.$clearContainer();
@@ -1018,7 +1015,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                     Prom.then(function () {
                         self.enableSorting();
 
-                        var articles = Ghost.getElements('article');
+                        const articles = Ghost.getElements('article');
 
                         articles.inject(ContainerReal);
 
@@ -1029,16 +1026,16 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                         resolve(result);
                     });
                 }, {
-                    'package'   : 'quiqqer/products',
-                    view        : view,
-                    sort        : sort,
-                    articles    : articles,
-                    next        : next ? 1 : 0,
-                    project     : JSON.encode({
+                    'package': 'quiqqer/products',
+                    view: view,
+                    sort: sort,
+                    articles: articles,
+                    next: next ? 1 : 0,
+                    project: JSON.encode({
                         name: self.getAttribute('project'),
                         lang: self.getAttribute('lang')
                     }),
-                    siteId      : self.getAttribute('siteId'),
+                    siteId: self.getAttribute('siteId'),
                     searchParams: JSON.encode(self.$getSearchParams())
                 });
             });
@@ -1050,16 +1047,16 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
          * @param {HTMLElement} Node
          */
         $parseElements: function (Node) {
-            var self     = this,
+            const self = this,
                 Products = Node.getElements('.quiqqer-products-productGallery-products-product'),
-                Details  = Node.getElements('.quiqqer-products-productGallery-products-product-details');
+                Details = Node.getElements('.quiqqer-products-productGallery-products-product-details');
 
             Products.set({
                 tabIndex: -1,
-                styles  : {
+                styles: {
                     outline: 'none'
                 },
-                events  : {
+                events: {
                     click: function (event) { // open products in list
                         event.stop();
                         self.openProduct(parseInt(this.get('data-pid')));
@@ -1071,7 +1068,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 click: function (event) {
                     event.stop();
 
-                    var Product = event.target.getParent(
+                    const Product = event.target.getParent(
                         '.quiqqer-products-productGallery-products-product'
                     );
 
@@ -1082,12 +1079,12 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             });
 
 
-            var Categories      = Node.getElements('.quiqqer-products-categoryGallery-category'),
+            const Categories = Node.getElements('.quiqqer-products-categoryGallery-category'),
                 CategoryDetails = Node.getElements('.quiqqer-products-categoryGallery-category-details');
 
             Categories.set({
                 tabIndex: -1,
-                styles  : {
+                styles: {
                     outline: 'none'
                 }
             });
@@ -1115,19 +1112,19 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
          * }
          */
         $getSearchParams: function () {
-            var i, len, Field;
+            let i, len, Field;
 
-            var fields     = {},
+            let fields = {},
                 categories = Array.clone(this.$categories),
-                tags       = Array.clone(this.$tags),
-                sortOn     = '',
-                sortBy     = '',
-                freetext   = '',
-                productId  = false;
+                tags = Array.clone(this.$tags),
+                sortOn = '',
+                sortBy = '',
+                freetext = '',
+                productId = false;
 
             if (this.$FilterContainer) {
-                var value;
-                var fieldNodes = this.$FilterContainer.getElements('.quiqqer-products-search-field');
+                let value;
+                const fieldNodes = this.$FilterContainer.getElements('.quiqqer-products-search-field');
 
                 for (i = 0, len = fieldNodes.length; i < len; i++) {
                     Field = QUI.Controls.getById(fieldNodes[i].get('data-quiid'));
@@ -1144,7 +1141,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             }
 
             if (this.$FilterList) {
-                var filterTags = this.$FilterList.getElements('[data-tag]').map(function (Elm) {
+                const filterTags = this.$FilterList.getElements('[data-tag]').map(function (Elm) {
                     return Elm.get('data-tag');
                 });
 
@@ -1154,13 +1151,13 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             if (this.$Sort &&
                 this.$Sort.getValue() &&
                 this.$Sort.getValue() !== '') {
-                var sort = this.$Sort.getValue().split(' ');
+                const sort = this.$Sort.getValue().split(' ');
 
                 sortBy = sort[1];
                 sortOn = sort[0];
             } else {
                 if (this.getAttribute('sort')) {
-                    var sortAttr = this.getAttribute('sort').split(' ');
+                    const sortAttr = this.getAttribute('sort').split(' ');
 
                     sortBy = sortAttr[1];
                     sortOn = sortAttr[0];
@@ -1172,7 +1169,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             }
 
             if (window.location.search) {
-                var Url   = URI(window.location),
+                const Url = URI(window.location),
                     query = Url.query(true);
 
                 if ("search" in query) {
@@ -1187,13 +1184,13 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             sortOn = sortOn.replace('Sc_date', 'c_date').replace('Se_date', 'e_date');
 
             return {
-                tags      : tags,
-                freetext  : freetext,
-                fields    : fields,
+                tags: tags,
+                freetext: freetext,
+                fields: fields,
                 categories: categories,
-                sortOn    : sortOn,
-                sortBy    : sortBy,
-                productId : productId
+                sortOn: sortOn,
+                sortBy: sortBy,
+                productId: productId
             };
         },
 
@@ -1203,7 +1200,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
          * @returns {Promise}
          */
         $clearContainer: function () {
-            var self     = this,
+            const self = this,
                 articles = this.$Container.getElements(
                     'article,.quiqqer-products-manufacturerList-sort__noProducts'
                 );
@@ -1242,10 +1239,10 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
          */
         $showContainer: function () {
             return new Promise(function (resolve) {
-                var height = this.$ContainerReal.getSize().y;
+                const height = this.$ContainerReal.getSize().y;
 
                 this.$FXContainer.animate({
-                    height : height,
+                    height: height,
                     opacity: 1
                 }, {
                     duration: animationDuration,
@@ -1285,9 +1282,9 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
          * @returns {Promise}
          */
         $hideContainerWithLoader: function () {
-            var self = this;
+            const self = this;
 
-            var LoaderAnimation = new Promise(function (resolve) {
+            const LoaderAnimation = new Promise(function (resolve) {
                 self.$ContainerLoader.setStyle('opacity', 0);
                 self.$ContainerLoader.setStyle('display', null);
                 self.$FXLoader.animate({
@@ -1298,7 +1295,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 });
             });
 
-            var ContainerAnimation = new Promise(function (resolve) {
+            const ContainerAnimation = new Promise(function (resolve) {
                 self.$FXContainerReal.animate({
                     opacity: 0
                 }, {
@@ -1318,7 +1315,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
          * @returns {Promise}
          */
         scrollToLastRow: function () {
-            var Row = this.$Container.getElement('[data-row]:last-child');
+            const Row = this.$Container.getElement('[data-row]:last-child');
 
             return new Promise(function (resolve) {
                 new Fx.Scroll(window.document, {
@@ -1420,12 +1417,12 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
          * @returns {Promise}
          */
         search: function (params) {
-            var project = {
+            let project = {
                 name: this.getAttribute('project'),
                 lang: this.getAttribute('lang')
             };
 
-            var siteId = this.getAttribute('siteId');
+            let siteId = this.getAttribute('siteId');
 
             if (!project.name) {
                 project = {
@@ -1445,7 +1442,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
          * Show all categories if some categories are hidden
          */
         showAllCategories: function () {
-            var Categories = this.getElm().getElement(
+            const Categories = this.getElm().getElement(
                 '.quiqqer-products-manufacturerList-categories'
             );
 
@@ -1453,7 +1450,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 return;
             }
 
-            var hiddenChildren = Categories.getElements(
+            const hiddenChildren = Categories.getElements(
                 '.quiqqer-products-category__hide'
             );
 
@@ -1461,20 +1458,20 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 return;
             }
 
-            var size = Categories.getSize();
+            const size = Categories.getSize();
 
             Categories.setStyles({
-                height  : size.y,
+                height: size.y,
                 overflow: 'hidden'
             });
 
             hiddenChildren.removeClass('quiqqer-products-category__hide');
 
-            var wantedSizes = Categories.getScrollSize();
+            const wantedSizes = Categories.getScrollSize();
 
             if (this.$CategoryMore) {
                 moofx(this.$CategoryMore).animate({
-                    height : 0,
+                    height: 0,
                     opacity: 0
                 }, {
                     duration: animationDuration,
@@ -1508,7 +1505,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 return Promise.resolve();
             }
 
-            var opacity = this.$FilterContainer.getStyle('opacity').toInt();
+            const opacity = this.$FilterContainer.getStyle('opacity').toInt();
 
             if (opacity) {
                 return this.hideFilter();
@@ -1527,7 +1524,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 return Promise.resolve();
             }
 
-            var opacity = this.$FilterContainer.getStyle('opacity').toInt();
+            const opacity = this.$FilterContainer.getStyle('opacity').toInt();
 
             if (!opacity) {
                 return Promise.resolve();
@@ -1547,7 +1544,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             }
 
             if (this.$BarFilter) {
-                var Opener = this.$BarFilter.getElement(
+                const Opener = this.$BarFilter.getElement(
                     '.quiqqer-products-manufacturerList-sort-filter-opener'
                 );
 
@@ -1555,22 +1552,22 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 Opener.addClass('fa-angle-double-down');
             }
 
-            var scrollHeight = this.$FilterContainer.getFirst('div').getComputedSize().totalHeight,
-                height       = this.$FilterContainer.getSize().y;
+            const scrollHeight = this.$FilterContainer.getFirst('div').getComputedSize().totalHeight,
+                height = this.$FilterContainer.getSize().y;
 
             if (scrollHeight === height) {
                 return Promise.resolve();
             }
 
             return new Promise(function (resolve) {
-                var padding = '20px 0';
+                let padding = '20px 0';
 
                 if (this.$FilterContainer.getParent('.content-headerpage-multible-left')) {
                     padding = 0;
                 }
 
                 moofx(this.$FilterContainer).animate({
-                    height : scrollHeight,
+                    height: scrollHeight,
                     opacity: 1,
                     padding: padding
                 }, {
@@ -1592,7 +1589,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 return Promise.resolve();
             }
 
-            var Opener = this.$BarFilter.getElement(
+            const Opener = this.$BarFilter.getElement(
                 '.quiqqer-products-manufacturerList-sort-filter-opener'
             );
 
@@ -1601,7 +1598,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
 
             return new Promise(function (resolve) {
                 moofx(this.$FilterContainer).animate({
-                    height : 0,
+                    height: 0,
                     opacity: 0,
                     padding: 0
                 }, {
@@ -1619,20 +1616,20 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 return;
             }
 
-            var c, i, len, clen, options, searchdata, Field, Control, Filter, Title, Select;
+            let c, i, len, clen, options, searchdata, Field, Control, Filter, Title, Select;
 
             // standard
-            var filter = this.$FilterContainer.getElements(
+            const filter = this.$FilterContainer.getElements(
                 '.quiqqer-products-manufacturerList-filter-entry'
             );
 
-            var change = function (values, Select) {
-                for (var i = 0, len = values.length; i < len; i++) {
+            const change = function (values, Select) {
+                for (let i = 0, len = values.length; i < len; i++) {
                     this.addFilter(values[i]);
                 }
 
                 // removing deleted filter
-                var uncheckedFilter = Select.getChildren().filter(function (Item) {
+                const uncheckedFilter = Select.getChildren().filter(function (Item) {
                     return !Item.isChecked();
                 }).map(function (Item) {
                     return Item.getAttribute('value');
@@ -1663,11 +1660,11 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                     }
 
                     Field = new SearchField({
-                        fieldid   : Select.get('data-fieldid'),
+                        fieldid: Select.get('data-fieldid'),
                         searchtype: Select.get('data-searchtype'),
                         searchdata: searchdata,
-                        title     : Title.get('text').trim(),
-                        events    : {
+                        title: Title.get('text').trim(),
+                        events: {
                             onChange: this.$setWindowLocation
                         }
                     }).inject(Filter);
@@ -1680,14 +1677,14 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 options = Select.getElements('option');
 
                 Control = new QUISelect({
-                    placeholderText      : Title.get('html').trim(),
+                    placeholderText: Title.get('html').trim(),
                     placeholderSelectable: false,
-                    multiple             : true,
-                    checkable            : true,
-                    styles               : {
+                    multiple: true,
+                    checkable: true,
+                    styles: {
                         width: '100%'
                     },
-                    events               : {
+                    events: {
                         onChange: change
                     }
                 });
@@ -1714,13 +1711,13 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 return;
             }
 
-            var self    = this,
+            const self = this,
                 onClose = function (PLF) {
                     PLF.getAttribute('Field').reset();
                 },
                 onReady = function () {
                     new ManufacturerListField({
-                        Field : this,
+                        Field: this,
                         events: {
                             onClose: onClose
                         }
@@ -1729,12 +1726,12 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
 
             this.$FilterFieldList.set('html', '');
 
-            for (var i = 0, len = this.$selectFields.length; i < len; i++) {
+            for (let i = 0, len = this.$selectFields.length; i < len; i++) {
                 if (this.$selectFields[i].isReady() &&
                     this.$selectFields[i].getSearchValue()) {
 
                     new ManufacturerListField({
-                        Field : this.$selectFields[i],
+                        Field: this.$selectFields[i],
                         events: {
                             onClose: onClose
                         }
@@ -1760,22 +1757,22 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             }
 
             return new Promise(function (resolve) {
-                var realHeight = this.$FilterFL.getSize().y;
+                const realHeight = this.$FilterFL.getSize().y;
 
                 this.$FilterFL.setStyles({
                     position: 'absolute',
-                    height  : null
+                    height: null
                 });
 
-                var height = this.$FilterFL.getSize().y;
+                const height = this.$FilterFL.getSize().y;
 
                 this.$FilterFL.setStyles({
                     position: null,
-                    height  : realHeight
+                    height: realHeight
                 });
 
                 moofx(this.$FilterFL).animate({
-                    height : height,
+                    height: height,
                     opacity: 1
                 }, {
                     duration: animationDuration,
@@ -1802,7 +1799,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 this.$FilterFL.setStyle('overflow', 'hidden');
 
                 moofx(this.$FilterFL).animate({
-                    height : 0,
+                    height: 0,
                     opacity: 0
                 }, {
                     duration: animationDuration,
@@ -1820,19 +1817,19 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             }
 
             if (this.$FilterFieldList) {
-                var fields = this.$FilterFieldList.getElements('.quiqqer-products-manufacturerList-filter');
+                const fields = this.$FilterFieldList.getElements('.quiqqer-products-manufacturerList-filter');
 
                 fields.forEach(function (Node) {
-                    var Field = QUI.Controls.getById(Node.get('data-quiid'));
+                    const Field = QUI.Controls.getById(Node.get('data-quiid'));
                     Field.getAttribute('Field').reset();
                 });
             }
 
             this.$FilterList.set('html', '');
 
-            var i, len;
+            let i, len;
 
-            var uncheck = function (Child) {
+            const uncheck = function (Child) {
                 Child.uncheck();
             };
 
@@ -1865,7 +1862,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             }
 
             new ManufacturerListFilter({
-                tag   : filter,
+                tag: filter,
                 events: {
                     onDestroy: function (Filter) {
                         this.removeFilter(Filter.getAttribute('tag'));
@@ -1886,7 +1883,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 return;
             }
 
-            for (var i = 0, len = this.$selectFilter.length; i < len; i++) {
+            for (let i = 0, len = this.$selectFilter.length; i < len; i++) {
                 this.$selectFilter[i].unselectChild(filter);
 
                 if (this.$FilterList) {
@@ -1906,17 +1903,17 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 return;
             }
 
-            var empty = false;
+            let empty = false;
 
-            var fieldHTML = this.$FilterFieldList.innerHTML.trim();
-            var filterHTML = this.$FilterList.innerHTML.trim();
+            const fieldHTML = this.$FilterFieldList.innerHTML.trim();
+            const filterHTML = this.$FilterList.innerHTML.trim();
 
             if (fieldHTML === '' && filterHTML === '') {
                 empty = true;
             }
 
             if (fieldHTML !== '') {
-                var filters = this.$FilterFieldList.getElements('.quiqqer-products-manufacturerList-filter');
+                let filters = this.$FilterFieldList.getElements('.quiqqer-products-manufacturerList-filter');
 
                 filters = filters.filter(function (Field) {
                     return Field.getStyle('display') !== 'none';
@@ -1969,7 +1966,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
          * @return {Promise}
          */
         $refreshSearchCount: function () {
-            var self   = this,
+            const self = this,
                 search = this.$getSearchParams();
 
             search.count = true;

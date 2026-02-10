@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/fields/types/Input
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/fields/types/Input', [
 
     'qui/QUI',
@@ -11,8 +7,9 @@ define('package/quiqqer/products/bin/controls/fields/types/Input', [
     "use strict";
 
     return new Class({
+
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/Input',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/Input',
 
         Binds: [
             '$onImport'
@@ -27,10 +24,10 @@ define('package/quiqqer/products/bin/controls/fields/types/Input', [
         },
 
         /**
-         * event : on import
+         * event: on import
          */
         $onImport: function () {
-            var Elm = this.getElm();
+            const Elm = this.getElm();
 
             Elm.addClass('field-container-field');
             Elm.type = 'text';

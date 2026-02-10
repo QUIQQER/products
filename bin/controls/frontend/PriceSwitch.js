@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/frontend/PriceSwitch
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/frontend/PriceSwitch', [
 
     'qui/QUI',
@@ -22,7 +18,7 @@ define('package/quiqqer/products/bin/controls/frontend/PriceSwitch', [
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/frontend/PriceSwitch',
+        Type: 'package/quiqqer/products/bin/controls/frontend/PriceSwitch',
 
         Binds: [
             '$onInject',
@@ -37,8 +33,8 @@ define('package/quiqqer/products/bin/controls/frontend/PriceSwitch', [
             this.parent(options);
 
             this.$Switch = null;
-            this.$Elm    = null;
-            this.$Icon   = null;
+            this.$Elm = null;
+            this.$Icon = null;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -54,15 +50,15 @@ define('package/quiqqer/products/bin/controls/frontend/PriceSwitch', [
             if (this.getAttribute('icon')) {
                 this.$Elm = new Element('div', {
                     'class': 'quiqqer-products-priceSwitch',
-                    html   : '<span class="fa"></span>',
-                    title  : QUILocale.get(
+                    html: '<span class="fa"></span>',
+                    title: QUILocale.get(
                         'quiqqer/products',
                         'controls.PriceSwitch.title.hide_prices'
                     ),
-                    styles : {
+                    styles: {
                         cursor: 'pointer'
                     },
-                    events : {
+                    events: {
                         click: this.$onChange
                     }
                 });
@@ -107,10 +103,10 @@ define('package/quiqqer/products/bin/controls/frontend/PriceSwitch', [
         },
 
         /**
-         * event : on change
+         * event: on change
          */
         $onChange: function () {
-            var status;
+            let status;
 
             if (this.getAttribute('icon')) {
                 status = !this.$Elm.hasClass('quiqqer-products-priceSwitch-hidePrice');
@@ -139,7 +135,7 @@ define('package/quiqqer/products/bin/controls/frontend/PriceSwitch', [
             QUIAjax.post('ajax_session_set', function () {
                 window.location.reload();
             }, {
-                key  : 'QUIQQER_PRODUCTS_HIDE_PRICE',
+                key: 'QUIQQER_PRODUCTS_HIDE_PRICE',
                 value: status ? 1 : 0
             });
         }

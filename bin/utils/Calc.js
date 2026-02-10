@@ -1,9 +1,6 @@
 /**
  * Calc utils
  * Helper for calculations
- *
- * @module package/quiqqer/products/bin/utils/Calc
- * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/utils/Calc', {
     /**

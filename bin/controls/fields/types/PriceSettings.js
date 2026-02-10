@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/fields/types/PriceSettings
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/fields/types/PriceSettings', [
 
     'qui/QUI',
@@ -16,7 +12,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceSettings', [
 
     return new Class({
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/PriceSettings',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/PriceSettings',
 
         Binds: [
             'update',
@@ -26,7 +22,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceSettings', [
 
         options: {
             fieldId: false,
-            groups : [],
+            groups: [],
 
             ignoreForPriceCalculation: false
         },
@@ -52,7 +48,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceSettings', [
             this.$Elm = new Element('div', {
                 styles: {
                     'float': 'left',
-                    width  : '100%'
+                    width: '100%'
                 }
             });
 
@@ -63,18 +59,18 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceSettings', [
          * event : on import
          */
         $onInject: function () {
-            var Parent = this.$Elm.getParent('.field-options');
+            const Parent = this.$Elm.getParent('.field-options');
 
             if (Parent) {
                 Parent.setStyle('padding', 0);
             }
 
-            var localePriceCalcTitle               = QUILocale.get('quiqqer/products', 'fieldConsiderPriceCalculation')
-            var fieldConsiderPriceCalculationGroup = QUILocale.get('quiqqer/products', 'fieldConsiderPriceCalculationGroup')
+            const localePriceCalcTitle = QUILocale.get('quiqqer/products', 'fieldConsiderPriceCalculation')
+            const fieldConsiderPriceCalculationGroup = QUILocale.get('quiqqer/products', 'fieldConsiderPriceCalculationGroup')
 
             new Element('div', {
                 'class': 'quiqqer-products-price-settings',
-                html   : '<div class="quiqqer-products-price-settings-groups">' +
+                html: '<div class="quiqqer-products-price-settings-groups">' +
                     '    <label>' +
                     '        <span class="quiqqer-products-price-settings-groups-text">' +
                     fieldConsiderPriceCalculationGroup + ':' +
@@ -121,9 +117,9 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceSettings', [
          */
         $onImport: function (self, Node) {
             this.$Input = Node;
-            this.$Elm   = this.create();
+            this.$Elm = this.create();
 
-            var data = {};
+            let data = {};
 
             try {
                 data = JSON.decode(this.$Input.value);
@@ -155,7 +151,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceSettings', [
          */
         update: function () {
             this.$Input.value = JSON.encode({
-                groups                   : this.$Groups.getValue(),
+                groups: this.$Groups.getValue(),
                 ignoreForPriceCalculation: this.$Ignore.checked ? 1 : 0
             });
         }

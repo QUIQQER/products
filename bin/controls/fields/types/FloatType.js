@@ -1,8 +1,5 @@
 /**
  * Komma zahl feld
- *
- * @module package/quiqqer/products/bin/controls/fields/types/FloatType
- * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/controls/fields/types/FloatType', [
 
@@ -13,8 +10,9 @@ define('package/quiqqer/products/bin/controls/fields/types/FloatType', [
     "use strict";
 
     return new Class({
+
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/FloatType',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/FloatType',
 
         Binds: [
             '$onImport'
@@ -32,12 +30,12 @@ define('package/quiqqer/products/bin/controls/fields/types/FloatType', [
          * event : on import
          */
         $onImport: function () {
-            var Elm = this.getElm();
+            const Elm = this.getElm();
 
             Elm.addClass('field-container-field');
 
-            Elm.type        = 'number';
-            Elm.step        = 'any';
+            Elm.type = 'number';
+            Elm.step = 'any';
             Elm.placeholder = '10.9999';
         },
 

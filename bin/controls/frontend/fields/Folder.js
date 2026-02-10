@@ -1,8 +1,5 @@
 /**
  * Frontend control for handling media items of "media" product fields.
- *
- * @module package/quiqqer/products/bin/controls/frontend/fields/Folder
- * @author www.pcsg.de (Patrick Müller)
  */
 define('package/quiqqer/products/bin/controls/frontend/fields/Folder', [
 

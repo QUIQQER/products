@@ -1,8 +1,5 @@
 /**
  * Price display
- *
- * @module package/quiqqer/products/bin/controls/Price
- * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/controls/frontend/Price', [
 

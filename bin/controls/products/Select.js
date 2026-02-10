@@ -1,9 +1,6 @@
 /**
  * Makes an input field to a user selection field
  *
- * @module package/quiqqer/products/bin/controls/Select
- * @author www.pcsg.de (Henning Leutz)
- *
  * @event onAddProduct [ this, id ]
  * @event onChange [ this ]
  */
@@ -17,21 +14,17 @@ define('package/quiqqer/products/bin/controls/products/Select', [
 ], function (QUI, QUIElementSelect, Handler, QUILocale) {
     "use strict";
 
-    var lg       = 'quiqqer/products';
-    var Products = new Handler();
+    const lg = 'quiqqer/products';
+    const Products = new Handler();
 
     /**
-     * @class package/quiqqer/products/bin/controls/products/Select
-     *
      * @param {Object} options
      * @param {HTMLInputElement} [Input]  - (optional), if no input given, one would be created
-     *
-     * @memberof! <global>
      */
     return new Class({
 
         Extends: QUIElementSelect,
-        Type   : 'package/quiqqer/products/bin/controls/products/Select',
+        Type: 'package/quiqqer/products/bin/controls/products/Select',
 
         Binds: [
             '$onSearchButtonClick',
@@ -85,9 +78,9 @@ define('package/quiqqer/products/bin/controls/products/Select', [
             ], function (Search) {
                 new Search({
                     productTypes: self.getAttribute('productTypes'),
-                    events      : {
+                    events: {
                         onSubmit: function (Win, values) {
-                            for (var i = 0, len = values.length; i < len; i++) {
+                            for (let i = 0, len = values.length; i < len; i++) {
                                 self.addItem(values[i]);
                             }
                         }

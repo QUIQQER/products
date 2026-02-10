@@ -1,8 +1,5 @@
 /**
  * Edit and manage one product - Product Panel
- *
- * @module package/quiqqer/products/bin/controls/products/Product
- * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/controls/products/Product', [
 
@@ -37,11 +34,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'text!package/quiqqer/products/bin/controls/products/CreateField.html',
     'css!package/quiqqer/products/bin/controls/products/Product.css'
 
-], function(QUI, QUIPanel, QUIButton, QUISwitch, QUIButtonSwitch, QUIConfirm, QUIFormUtils,
-    QUIAjax, QUILocale, Users, Grid, FolderViewer, Mustache, Packages, Locker,
-    Products, Product, Categories, Fields, FieldUtils, FieldWindow,
-    CategorySelect, FieldTypeSelect, ProductUtils, informationTemplate, templateProductData,
-    templateProductPrices, templateField
+], function (QUI, QUIPanel, QUIButton, QUISwitch, QUIButtonSwitch, QUIConfirm, QUIFormUtils,
+             QUIAjax, QUILocale, Users, Grid, FolderViewer, Mustache, Packages, Locker,
+             Products, Product, Categories, Fields, FieldUtils, FieldWindow,
+             CategorySelect, FieldTypeSelect, ProductUtils, informationTemplate, templateProductData,
+             templateProductPrices, templateField
 ) {
     'use strict';
 
@@ -81,7 +78,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             productId: false
         },
 
-        initialize: function(options) {
+        initialize: function (options) {
             this.setAttributes({
                 title: QUILocale.get(lg, 'products.product.panel.title'),
                 icon: 'fa fa-shopping-bag',
@@ -120,7 +117,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             this.addEvents({
                 onCreate: this.$onCreate,
                 onInject: this.$onInject,
-                onDestroy: function() {
+                onDestroy: function () {
                     if (this.$Product) {
                         Locker.unlock('product_' + this.$Product.getId());
                     }
@@ -134,7 +131,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param {Object} data
          * @return {Object} this (package/quiqqer/products/bin/controls/products/Product)
          */
-        unserialize: function(data) {
+        unserialize: function (data) {
             this.setAttributes(data.attributes);
 
             this.$Product = new Product({
@@ -147,7 +144,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         /**
          * event : on create
          */
-        $onCreate: function() {
+        $onCreate: function () {
             this.Loader.setAttribute('opacity', 1);
             this.Loader.setAttribute('styles', {
                 background: '#fff'
@@ -161,8 +158,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 textimage: 'fa fa-save',
                 text: QUILocale.get('quiqqer/system', 'save'),
                 events: {
-                    onClick: function() {
-                        this.update().catch(function(err) {
+                    onClick: function () {
+                        this.update().catch(function (err) {
                             console.error(err);
                         });
                     }.bind(this)
@@ -198,7 +195,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             });
         },
 
-        $loaderHide: function() {
+        $loaderHide: function () {
             if (this.$loaded) {
                 this.Loader.hide();
             }
@@ -209,7 +206,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @return {Promise}
          */
-        $onInject: function() {
+        $onInject: function () {
             this.Loader.show();
 
             return this.$render().then(() => {
@@ -260,7 +257,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         margin: '20px 10px'
                     },
                     events: {
-                        onClick: function() {
+                        onClick: function () {
                             LockContainer.destroy();
                         }
                     }
@@ -274,8 +271,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         margin: '20px 10px'
                     },
                     events: {
-                        onClick: function() {
-                            this.minimize(function() {
+                        onClick: function () {
+                            this.minimize(function () {
                                 this.destroy();
                             }.bind(this));
                         }.bind(this)
@@ -295,7 +292,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @return {Promise}
          */
-        $render: function() {
+        $render: function () {
             if (this.$injected) {
                 return Promise.resolve();
             }
@@ -309,7 +306,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 Content = self.getContent();
 
             // load product data
-            return Packages.getConfig('quiqqer/products').then(function(config) {
+            return Packages.getConfig('quiqqer/products').then(function (config) {
                 if (!('products' in config)) {
                     return;
                 }
@@ -339,9 +336,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         }
                     }).inject(self.getHeader());
                 }
-            }).then(function() {
+            }).then(function () {
                 return self.loadData();
-            }).then(function() {
+            }).then(function () {
 
                 // get product data
                 return Promise.all([
@@ -351,7 +348,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 ]);
 
                 // render
-            }).then(function(data) {
+            }).then(function (data) {
                 let fields = data[0],
                     categories = data[1],
                     isActive = data[2];
@@ -370,7 +367,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     categories = [];
                 }
 
-                fields.each(function(Field) {
+                fields.each(function (Field) {
                     self.$data[Field.id] = Field;
                 });
 
@@ -414,7 +411,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     Fields.getStandardFields(),
                     Fields.getFieldTypes(),
                     self.$getFieldCategories()
-                ]).then(function(result) {
+                ]).then(function (result) {
                     let fieldList = [],
                         fieldTypes = {},
                         categoriesFields = result[0],
@@ -433,7 +430,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     // cleanup complete list
                     let completeIds = {};
 
-                    complete = complete.filter(function(entry) {
+                    complete = complete.filter(function (entry) {
                         if (entry.id in completeIds) {
                             return false;
                         }
@@ -445,7 +442,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         fieldList[complete[i].id] = complete[i];
                     }
 
-                    let diffFields = complete.filter(function(value) {
+                    let diffFields = complete.filter(function (value) {
                         for (let i = 0, len = systemFields.length; i < len; i++) {
                             if (value.id === systemFields[i].id) {
                                 return false;
@@ -521,10 +518,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }
 
                     return self.$renderData(self.$Data, self.$Product);
-                }).then(function() {
+                }).then(function () {
                     return self.refresh();
                 });
-            }).catch(function(err) {
+            }).catch(function (err) {
                 console.error(err);
                 self.destroy();
             });
@@ -535,7 +532,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @return {Promise}
          */
-        refresh: function() {
+        refresh: function () {
             this.parent();
 
             return this.$Product.isActive().then((status) => {
@@ -566,24 +563,24 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param {Array} fieldCategories
          * @param {Object} fieldTypes - list of the field types data
          */
-        $createCategories: function(fields, fieldCategories, fieldTypes) {
+        $createCategories: function (fields, fieldCategories, fieldTypes) {
             const self = this;
 
-            const fieldClick = function(Btn) {
+            const fieldClick = function (Btn) {
                 self.Loader.show();
                 self.openField(Btn.getAttribute('fieldId')).then(() => {
                     self.$loaderHide();
                 });
             };
 
-            const imageFolderClick = function(Btn) {
+            const imageFolderClick = function (Btn) {
                 self.Loader.show();
                 self.openMediaFolderField(Btn.getAttribute('fieldId')).then(() => {
                     self.$loaderHide();
                 });
             };
 
-            const showCategory = function(type) {
+            const showCategory = function (type) {
                 if (type === 'TextareaMultiLang' ||
                     type === 'Textarea' ||
                     type === 'Products') {
@@ -605,9 +602,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 text: QUILocale.get('quiqqer/system', 'information'),
                 icon: 'fa fa-info',
                 events: {
-                    onClick: function() {
+                    onClick: function () {
                         self.Loader.show();
-                        self.openInformation().then(function() {
+                        self.openInformation().then(function () {
                             self.$loaderHide();
                         });
                     }
@@ -619,9 +616,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 text: QUILocale.get('quiqqer/system', 'data'),
                 icon: 'fa fa-shopping-bag',
                 events: {
-                    onClick: function() {
+                    onClick: function () {
                         self.Loader.show();
-                        self.openData().then(function() {
+                        self.openData().then(function () {
                             self.$loaderHide();
                         });
                     }
@@ -633,9 +630,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 text: QUILocale.get(lg, 'products.product.panel.category.prices'),
                 icon: 'fa fa-money',
                 events: {
-                    onClick: function() {
+                    onClick: function () {
                         self.Loader.show();
-                        self.openPrices().then(function() {
+                        self.openPrices().then(function () {
                             self.$loaderHide();
                         });
                     }
@@ -695,9 +692,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 text: QUILocale.get(lg, 'products.product.panel.category.images'),
                 icon: 'fa fa-picture-o',
                 events: {
-                    onClick: function() {
+                    onClick: function () {
                         self.Loader.show();
-                        self.openImages().then(function() {
+                        self.openImages().then(function () {
                             self.$loaderHide();
                         });
                     }
@@ -709,9 +706,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 text: QUILocale.get(lg, 'products.product.panel.category.files'),
                 icon: 'fa fa-file-text',
                 events: {
-                    onClick: function() {
+                    onClick: function () {
                         self.Loader.show();
-                        self.openFiles().then(function() {
+                        self.openFiles().then(function () {
                             self.$loaderHide();
                         });
                     }
@@ -744,9 +741,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 text: QUILocale.get(lg, 'products.product.panel.category.attributelist'),
                 icon: 'fa fa-file-text-o',
                 events: {
-                    onClick: function() {
+                    onClick: function () {
                         self.Loader.show();
-                        self.openAttributeList().then(function() {
+                        self.openAttributeList().then(function () {
                             self.$loaderHide();
                         });
                     }
@@ -759,7 +756,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @returns {Promise}
          */
-        loadData: function() {
+        loadData: function () {
             return this.$Product.refresh().then(() => {
                 return this.$Product.getTitle();
             }).then((title) => {
@@ -778,7 +775,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param Container
          * @param Product
          */
-        $fillDataToContainer: function(Container, Product) {
+        $fillDataToContainer: function (Container, Product) {
             const Form = Container.getElement('form');
 
             if (!Form) {
@@ -790,7 +787,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 fields = attributes.fields;
 
             // fill field values
-            fields.each(function(field) {
+            fields.each(function (field) {
                 const Input = Form.elements['field-' + field.id];
 
                 if (typeof Input !== 'undefined') {
@@ -822,7 +819,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 '[data-qui="package/quiqqer/products/bin/controls/fields/types/Image"]'
             );
 
-            images.each(function(Input) {
+            images.each(function (Input) {
                 const quiId = Input.get('data-quiid'),
                     Control = QUI.Controls.getById(quiId);
 
@@ -836,7 +833,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             });
 
             // events
-            const fieldChange = function(Field) {
+            const fieldChange = function (Field) {
                 if (!('getFieldId' in Field)) {
                     return;
                 }
@@ -844,12 +841,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 const fieldId = Field.getFieldId(),
                     value = Field.getValue();
 
-                Product.getField(fieldId).then(function(Field) {
+                Product.getField(fieldId).then(function (Field) {
                     Field.value = value;
                 });
             };
 
-            QUI.Controls.getControlsInElement(Container).each(function(Field) {
+            QUI.Controls.getControlsInElement(Container).each(function (Field) {
                 if (!Field.getType().match('controls/fields/types/')) {
                     return;
                 }
@@ -863,16 +860,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @return {Promise}
          */
-        openInformation: function() {
+        openInformation: function () {
             if (this.getCategory('information').isActive()) {
                 return Promise.resolve();
             }
 
             const self = this;
 
-            return self.$hideCategories().then(function() {
+            return self.$hideCategories().then(function () {
                 return self.$renderInformation(self.$Information, self.$Product);
-            }).then(function() {
+            }).then(function () {
                 return self.$showCategory(self.$Information);
             });
         },
@@ -884,18 +881,18 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param Product
          * @return {Promise}
          */
-        $renderInformation: function(Container, Product) {
+        $renderInformation: function (Container, Product) {
             const productId = this.getAttribute('productId');
 
-            return Product.getCategories().then(function(data) {
+            return Product.getCategories().then(function (data) {
                 return Categories.getCategories(data);
-            }).then(function(categories) {
+            }).then(function (categories) {
                 // eigenes bild hohlen, wenn leer, oder nicht existiert, egal
-                return new Promise(function(resolve) {
-                    Product.getImage().then(resolve).catch(function() {
+                return new Promise(function (resolve) {
+                    Product.getImage().then(resolve).catch(function () {
                         resolve(false);
                     });
-                }).then(function(image) {
+                }).then(function (image) {
                     return Promise.all([
                         Product.getTitle(),
                         Product.getDescription(),
@@ -904,8 +901,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         Product.getAttributes()
                     ]);
                 });
-            }).then(function(data) {
-                const categories = data[3].map(function(Category) {
+            }).then(function (data) {
+                const categories = data[3].map(function (Category) {
                     return {title: Category.title};
                 });
 
@@ -946,16 +943,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @return {Promise}
          */
-        openData: function() {
+        openData: function () {
             if (this.getCategory('data').isActive() && !this.$FieldAdministration.getStyle('opacity')) {
                 return Promise.resolve();
             }
 
             const self = this;
 
-            return self.$hideCategories().then(function() {
+            return self.$hideCategories().then(function () {
                 return self.$renderData(self.$Data, self.$Product);
-            }).then(function() {
+            }).then(function () {
                 return self.$showCategory(self.$Data);
             });
         },
@@ -965,7 +962,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param Container
          * @param Product
          */
-        $renderData: function(Container, Product) {
+        $renderData: function (Container, Product) {
             const self = this;
             const data = {};
 
@@ -974,7 +971,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 Product.getFields(),
                 Product.getCategories(),
                 Product.getCategory()
-            ]).then(function(result) {
+            ]).then(function (result) {
                 let fields = result[0],
                     categories = result[1],
                     category = result[2];
@@ -988,7 +985,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }
 
                 // set values
-                fields.each(function(Field) {
+                fields.each(function (Field) {
                     data[Field.id] = Field;
                 });
 
@@ -1008,7 +1005,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 const Select = new CategorySelect({
                     name: 'categories',
                     events: {
-                        onDelete: function(Select, Item) {
+                        onDelete: function (Select, Item) {
                             const categoryId = Item.getAttribute('categoryId');
                             const Option = MainCategory.getElement('[value="' + categoryId + '"]');
 
@@ -1016,7 +1013,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                 Option.destroy();
                             }
                         },
-                        onChange: function() {
+                        onChange: function () {
                             let ids = Select.getValue();
 
                             if (ids === '') {
@@ -1025,7 +1022,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                 ids = ids.split(',');
                             }
 
-                            ids.each(function(id) {
+                            ids.each(function (id) {
                                 if (MainCategory.getElement('[value="' + id + '"]')) {
                                     return;
                                 }
@@ -1052,7 +1049,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     MainCategory.set('html', '');
                 }
 
-                categories.each(function(id) {
+                categories.each(function (id) {
                     Select.addCategory(id);
 
                     if (MainCategory.getElement('[value="' + id + '"]')) {
@@ -1083,7 +1080,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }
 
                 return QUI.parse(Container);
-            }).then(function() {
+            }).then(function () {
                 self.$fillDataToContainer(Container, Product);
 
                 // pcsg-projects/demo-shop/-/issues/9#note_152341
@@ -1091,7 +1088,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     const SystemContainer = Container.getElement('.product-standardfield tbody');
 
                     if (Product.$data.editableVariantFields) {
-                        Product.$data.editableVariantFields.forEach(function(fieldId) {
+                        Product.$data.editableVariantFields.forEach(function (fieldId) {
                             SystemContainer.getElements('[name="field-' + fieldId + '"]').set('disabled', false);
                         });
                     }
@@ -1114,7 +1111,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }).inject(Container);
                 }
 
-                QUI.Controls.getControlsInElement(Container).each(function(Field) {
+                QUI.Controls.getControlsInElement(Container).each(function (Field) {
                     if (!('getFieldId' in Field)) {
                         return;
                     }
@@ -1140,7 +1137,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     inputs.removeEvents('blur');
                     inputs.addEvent('blur', self.$checkUrl);
                 }
-            }).catch(function(err) {
+            }).catch(function (err) {
                 if (typeof err.getMessage !== 'undefined') {
                     console.error(err.getMessage());
                 } else {
@@ -1155,26 +1152,26 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param field
          * @return {Element}
          */
-        $renderDataField: function(field) {
+        $renderDataField: function (field) {
             return ProductUtils.renderDataField(field);
         },
 
         /**
          * Opens the price fields
          */
-        openPrices: function() {
+        openPrices: function () {
             if (this.getCategory('prices').isActive()) {
                 return Promise.resolve();
             }
 
             const self = this;
 
-            return self.$hideCategories().then(function() {
+            return self.$hideCategories().then(function () {
                 return self.$renderPrices(self.$Prices, self.$Product);
-            }).then(function() {
+            }).then(function () {
                 // change events
                 const prices = QUI.Controls.getControlsInElement(self.$Prices),
-                    onChange = function(Price) {
+                    onChange = function (Price) {
                         const fieldId = Price.getFieldId();
 
                         // set product field value
@@ -1196,16 +1193,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @return {Promise}
          */
-        $renderPrices: function(Container, Product) {
+        $renderPrices: function (Container, Product) {
             return Promise.all([
                 Product.getFieldsByType(Fields.TYPE_PRICE),
                 Product.getFieldsByType(Fields.TYPE_PRICE_BY_QUANTITY),
                 Product.getFieldsByType(Fields.TYPE_PRICE_BY_TIMEPERIOD)
-            ]).then(function(fields) {
+            ]).then(function (fields) {
                 fields = fields.flatten();
 
                 // sort by priority and mein price as first
-                fields.sort(function(FieldA, FieldB) {
+                fields.sort(function (FieldA, FieldB) {
                     const priorityA = parseInt(FieldA.priority),
                         priorityB = parseInt(FieldB.priority);
 
@@ -1260,7 +1257,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @return {Promise}
          */
-        openImages: function() {
+        openImages: function () {
             if (this.getCategory('images').isActive()) {
                 return Promise.resolve();
             }
@@ -1279,7 +1276,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @return {Promise}
          */
-        openFiles: function() {
+        openFiles: function () {
             if (this.getCategory('files').isActive()) {
                 return Promise.resolve();
             }
@@ -1301,7 +1298,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param {Number} [fileId]
          * @return {Promise}
          */
-        $renderFolderViewer: function(Container, Product, types, fileId) {
+        $renderFolderViewer: function (Container, Product, types, fileId) {
             const self = this;
 
             Container.set('html', '');
@@ -1313,12 +1310,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             return Promise.all([
                 Products.getParentFolder(),
                 Product.getFields()
-            ]).then(function(result) {
+            ]).then(function (result) {
                 const Folder = result[0];
                 const fields = result[1];
                 let productFolder = false;
 
-                const folderFields = fields.filter(function(field) {
+                const folderFields = fields.filter(function (field) {
                     return parseInt(field.id) === parseInt(Fields.FIELD_FOLDER);
                 });
 
@@ -1355,7 +1352,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             margin: '20px 0 0 0'
                         },
                         events: {
-                            onClick: function(Button) {
+                            onClick: function (Button) {
                                 self.$onCreateMediaFolderClick(Button, Product, Viewer, fileId);
                             }
                         }
@@ -1371,7 +1368,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @param {Number} fieldId
          */
-        openField: function(fieldId) {
+        openField: function (fieldId) {
             return this.$hideCategories().then(() => {
                 return this.$renderField(this.$FieldContainer, this.$Product, fieldId);
             }).then(() => {
@@ -1388,12 +1385,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param Product
          * @param fieldId
          */
-        $renderField: function(Container, Product, fieldId) {
+        $renderField: function (Container, Product, fieldId) {
             Container.set('html', '');
 
-            Product.getField(fieldId).then(function(Field) {
-                return new Promise(function(resolve) {
-                    require([Field.jsControl], function(Control) {
+            Product.getField(fieldId).then(function (Field) {
+                return new Promise(function (resolve) {
+                    require([Field.jsControl], function (Control) {
                         const Instance = new Control();
 
                         if (Field.help !== '') {
@@ -1431,13 +1428,13 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @param {Number} fieldId
          */
-        openMediaFolderField: function(fieldId) {
+        openMediaFolderField: function (fieldId) {
             const self = this,
                 Field = this.$data[fieldId];
 
             self.$FieldContainer.set('html', '');
 
-            return this.$hideCategories().then(function() {
+            return this.$hideCategories().then(function () {
                 // no images or files exists
                 if (Field.value === '' || !Field.value) {
                     const Container = new Element('div', {
@@ -1453,12 +1450,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             margin: '20px 0 0 0'
                         },
                         events: {
-                            onClick: function(Btn) {
+                            onClick: function (Btn) {
                                 Btn.setAttribute('textimage', 'fa fa-spinner fa-spin');
 
                                 self.Loader.show();
 
-                                self.$createMediaFolder(Field.id, self.$Product).then(function() {
+                                self.$createMediaFolder(Field.id, self.$Product).then(function () {
                                     self.getElm().getElements('.folder-missing-container').destroy();
                                     self.openMediaFolderField(Field.id);
                                 });
@@ -1485,17 +1482,17 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         /**
          * opens the field administration
          */
-        openFieldAdministration: function() {
+        openFieldAdministration: function () {
             const self = this;
 
-            return self.$hideCategories().then(function() {
+            return self.$hideCategories().then(function () {
 
-                const refresh = function() {
-                    const FieldTypes = self.$Grid.getButtons().filter(function(Btn) {
+                const refresh = function () {
+                    const FieldTypes = self.$Grid.getButtons().filter(function (Btn) {
                         return Btn.getAttribute('name') === 'select';
                     })[0];
 
-                    self.$Product.getFields().then(function(fields) {
+                    self.$Product.getFields().then(function (fields) {
                         let i, len, entry, typeTitle;
 
                         const data = [];
@@ -1570,10 +1567,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             text: QUILocale.get(lg, 'product.fields.add.field'),
                             textimage: 'fa fa-plus',
                             events: {
-                                onClick: function() {
-                                    self.openAddFieldDialog().then(function() {
+                                onClick: function () {
+                                    self.openAddFieldDialog().then(function () {
                                         self.openFieldAdministration();
-                                    }).catch(function(err) {
+                                    }).catch(function (err) {
                                         if (typeOf(err) !==
                                             'package/quiqqer/products/bin/controls/fields/search/Window') {
                                             console.error(err);
@@ -1588,10 +1585,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             disabled: true,
                             textimage: 'fa fa-trash',
                             events: {
-                                onClick: function() {
-                                    self.openDeleteFieldDialog(self.$Grid.getSelectedData()[0].id).then(function() {
+                                onClick: function () {
+                                    self.openDeleteFieldDialog(self.$Grid.getSelectedData()[0].id).then(function () {
                                         self.openFieldAdministration();
-                                    }).catch(function(err) {
+                                    }).catch(function (err) {
                                         console.log(typeOf(err));
                                         if (typeOf(err) !== 'qui/controls/windows/Confirm') {
                                             console.error(err);
@@ -1669,13 +1666,13 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     ]
                 });
 
-                const switchStatusChange = function(Switch) {
+                const switchStatusChange = function (Switch) {
                     const fieldId = Switch.getAttribute('fieldId'),
                         status = Switch.getStatus();
 
                     Switch.disable();
 
-                    self.$Product.setPublicStatusFromField(fieldId, status).then(function() {
+                    self.$Product.setPublicStatusFromField(fieldId, status).then(function () {
                         Switch.enable();
                     });
                 };
@@ -1683,9 +1680,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 self.$Grid.addEvents({
                     onRefresh: refresh,
-                    onClick: function() {
+                    onClick: function () {
                         const selected = self.$Grid.getSelectedData()[0],
-                            Remove = self.$Grid.getButtons().filter(function(Btn) {
+                            Remove = self.$Grid.getButtons().filter(function (Btn) {
                                 return Btn.getAttribute('name') === 'remove';
                             })[0];
 
@@ -1696,17 +1693,17 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         }
                     },
 
-                    onDblClick: function() {
+                    onDblClick: function () {
                         self.Loader.show();
                         const selected = self.$Grid.getSelectedData()[0];
 
                         require([
                             'package/quiqqer/products/bin/controls/fields/windows/Field'
-                        ], function(FieldWindow) {
+                        ], function (FieldWindow) {
                             new FieldWindow({
                                 fieldId: selected.id,
                                 events: {
-                                    onOpen: function() {
+                                    onOpen: function () {
                                         self.$loaderHide();
                                     }
                                 }
@@ -1715,16 +1712,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }
                 });
 
-                const size = self.$FieldAdministration.measure(function() {
+                const size = self.$FieldAdministration.measure(function () {
                     return this.getSize();
                 });
 
-                return self.$Grid.setHeight(size.y - 40).then(function() {
+                return self.$Grid.setHeight(size.y - 40).then(function () {
                     self.$Grid.refresh();
                 });
-            }).then(function() {
+            }).then(function () {
                 return self.$showCategory(self.$FieldAdministration);
-            }).then(function() {
+            }).then(function () {
                 self.$loaderHide();
                 self.getCategory('data').setActive();
 
@@ -1737,10 +1734,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @return {Promise}
          */
-        openAttributeList: function() {
+        openAttributeList: function () {
             const self = this;
 
-            return self.$hideCategories().then(function() {
+            return self.$hideCategories().then(function () {
 
                 const GridContainer = new Element('div', {
                     styles: {
@@ -1757,10 +1754,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             text: QUILocale.get(lg, 'product.fields.grid.button.addSelectList'),
                             textimage: 'fa fa-plus',
                             events: {
-                                onClick: function() {
-                                    self.openAddFieldDialog('ProductAttributeList').then(function() {
+                                onClick: function () {
+                                    self.openAddFieldDialog('ProductAttributeList').then(function () {
                                         self.openAttributeList();
-                                    }).catch(function(err) {
+                                    }).catch(function (err) {
                                         if (typeOf(err) !==
                                             'package/quiqqer/products/bin/controls/fields/search/Window') {
                                             console.error(err);
@@ -1778,10 +1775,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             textimage: 'fa fa-trash',
                             disabled: true,
                             events: {
-                                onClick: function() {
-                                    self.openDeleteFieldDialog(self.$Grid.getSelectedData()[0].id).then(function() {
+                                onClick: function () {
+                                    self.openDeleteFieldDialog(self.$Grid.getSelectedData()[0].id).then(function () {
                                         self.openAttributeList();
-                                    }).catch(function(err) {
+                                    }).catch(function (err) {
                                         console.log(typeOf(err));
                                         if (typeOf(err) !== 'qui/controls/windows/Confirm') {
                                             console.error(err);
@@ -1850,20 +1847,20 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     ]
                 });
 
-                const switchStatusChange = function(Switch) {
+                const switchStatusChange = function (Switch) {
                     const fieldId = Switch.getAttribute('fieldId'),
                         status = Switch.getStatus();
 
                     Switch.disable();
 
-                    self.$Product.setPublicStatusFromField(fieldId, status).then(function() {
+                    self.$Product.setPublicStatusFromField(fieldId, status).then(function () {
                         Switch.enable();
                     });
                 };
 
 
-                const refresh = function() {
-                    self.$Product.getFields().then(function(fields) {
+                const refresh = function () {
+                    self.$Product.getFields().then(function (fields) {
                         let i, len, entry,
                             options, calculation_basis, calculation_priority;
 
@@ -1934,9 +1931,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 self.$Grid.addEvents({
                     onRefresh: refresh,
-                    onClick: function() {
+                    onClick: function () {
                         const selected = self.$Grid.getSelectedData()[0],
-                            Remove = self.$Grid.getButtons().filter(function(Btn) {
+                            Remove = self.$Grid.getButtons().filter(function (Btn) {
                                 return Btn.getAttribute('name') === 'remove';
                             })[0];
 
@@ -1948,14 +1945,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }
                 });
 
-                const size = self.$AttributeList.measure(function() {
+                const size = self.$AttributeList.measure(function () {
                     return this.getSize();
                 });
 
-                return self.$Grid.setHeight(size.y - 40).then(function() {
+                return self.$Grid.setHeight(size.y - 40).then(function () {
                     self.$Grid.refresh();
                     return self.$showCategory(self.$AttributeList);
-                }).then(function() {
+                }).then(function () {
                     self.$Grid.resize();
                     self.getCategory('attributelist').setActive();
                     self.$loaderHide();
@@ -1966,12 +1963,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         /**
          * Shows permissions for the product
          */
-        openPermissions: function() {
+        openPermissions: function () {
             this.Loader.show();
 
             require([
                 'package/quiqqer/products/bin/controls/products/permissions/Permissions'
-            ], function(ProductPermissions) {
+            ], function (ProductPermissions) {
                 const self = this;
                 const Sheet = this.createSheet({
                     icon: 'fa fa-shopping-bag',
@@ -1979,7 +1976,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 });
 
                 Sheet.addEvents({
-                    onOpen: function(Sheet) {
+                    onOpen: function (Sheet) {
                         const Permissions = new ProductPermissions({
                             productId: self.getAttribute('productId')
                         }).inject(Sheet.getContent());
@@ -1988,9 +1985,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             text: QUILocale.get('quiqqer/system', 'save'),
                             textimage: 'fa fa-save',
                             events: {
-                                onClick: function() {
+                                onClick: function () {
                                     self.Loader.show();
-                                    Permissions.save().then(function() {
+                                    Permissions.save().then(function () {
                                         Sheet.hide();
                                         self.$loaderHide();
                                     });
@@ -2010,7 +2007,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @returns {Promise}
          */
-        save: function() {
+        save: function () {
             return this.update();
         },
 
@@ -2019,14 +2016,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @returns {Promise}
          */
-        update: function() {
+        update: function () {
             const self = this,
                 Elm = self.getElm();
 
             this.Loader.show();
 
-            return this.$saveControl(this.$Product).then(function() {
-                return self.$Product.getFields().then(function(fields) {
+            return this.$saveControl(this.$Product).then(function () {
+                return self.$Product.getFields().then(function (fields) {
                     const result = {};
                     let i, len, field;
 
@@ -2045,12 +2042,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 const selfData = self.$data;
 
-                Object.each(selfData, function(entry) {
+                Object.each(selfData, function (entry) {
                     fields['field-' + entry.id] = entry.value;
                 });
 
                 // fields
-                let formfields = Object.filter(data, function(value, key) {
+                let formfields = Object.filter(data, function (value, key) {
                     return (key.indexOf('field-') >= 0);
                 });
 
@@ -2073,7 +2070,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         data = QUIFormUtils.getFormData(Form);
                     }
 
-                    formfields = Object.filter(data, function(value, key) {
+                    formfields = Object.filter(data, function (value, key) {
                         return (key.indexOf('field-') >= 0);
                     });
 
@@ -2111,7 +2108,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 let categories = data.categories.split(',');
 
-                categories = categories.filter(function(item) {
+                categories = categories.filter(function (item) {
                     return item !== '';
                 });
 
@@ -2121,9 +2118,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     data['product-category'],
                     fields
                 );
-            }).then(function() {
+            }).then(function () {
                 return self.loadData();
-            }).then(function() {
+            }).then(function () {
                 const Active = self.getActiveCategory();
 
                 // refresh category
@@ -2134,7 +2131,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 Active.setActive();
 
                 self.$executeUnloadForm = true;
-            }).catch(function(err) {
+            }).catch(function (err) {
                 console.error(err);
                 self.$loaderHide();
             });
@@ -2145,11 +2142,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @returns {Promise}
          */
-        copy: function() {
+        copy: function () {
             const self = this;
 
-            return new Promise(function(resolve, reject) {
-                self.$Product.getTitle().then(function(title) {
+            return new Promise(function (resolve, reject) {
+                self.$Product.getTitle().then(function (title) {
                     new QUIConfirm({
                         icon: 'fa fa-copy',
                         title: QUILocale.get(lg, 'products.window.copy.title', {
@@ -2175,13 +2172,13 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         },
 
                         events: {
-                            onSubmit: function(Win) {
+                            onSubmit: function (Win) {
                                 Win.Loader.show();
 
-                                Products.copy(self.$Product.getId()).then(function(newProductId) {
+                                Products.copy(self.$Product.getId()).then(function (newProductId) {
                                     require([
                                         'package/quiqqer/products/bin/controls/products/Product'
-                                    ], function(ProductPanel) {
+                                    ], function (ProductPanel) {
                                         new ProductPanel({
                                             productId: newProductId
                                         }).inject(self.getParent());
@@ -2201,7 +2198,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         /**
          * Change the product status - activate / deactivate
          */
-        $onActivationStatusChange: function() {
+        $onActivationStatusChange: function () {
             const self = this,
                 Button = this.getButtons('status');
 
@@ -2215,7 +2212,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 Prom = self.$Product.activate();
             }
 
-            Prom.then(function() {
+            Prom.then(function () {
                 return self.update();
             }).then(self.refresh).catch(self.refresh);
         },
@@ -2226,8 +2223,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param {Number|Array} fieldId
          * @returns {Promise}
          */
-        addField: function(fieldId) {
-            return this.$Product.addField(fieldId).then(function() {
+        addField: function (fieldId) {
+            return this.$Product.addField(fieldId).then(function () {
                 this.$injected = false;
                 return this.$render();
             }.bind(this));
@@ -2239,8 +2236,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param {Number} fieldId
          * @returns {*|Promise|Object}
          */
-        removeField: function(fieldId) {
-            return this.$Product.removeField(fieldId).then(function() {
+        removeField: function (fieldId) {
+            return this.$Product.removeField(fieldId).then(function () {
                 this.$injected = false;
                 return this.$render();
             }.bind(this));
@@ -2252,16 +2249,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param {string} [fieldTypeFilter]
          * @return {Promise}
          */
-        openAddFieldDialog: function(fieldTypeFilter) {
-            return new Promise(function(resolve, reject) {
+        openAddFieldDialog: function (fieldTypeFilter) {
+            return new Promise(function (resolve, reject) {
                 new FieldWindow({
                     fieldTypeFilter: fieldTypeFilter,
                     multiple: true,
                     events: {
-                        onSubmit: function(Win, value) {
+                        onSubmit: function (Win, value) {
                             Win.Loader.show();
 
-                            this.addField(value).then(function() {
+                            this.addField(value).then(function () {
                                 Win.close();
                                 resolve();
                             });
@@ -2279,8 +2276,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param {Number} fieldId
          * @return {Promise}
          */
-        openDeleteFieldDialog: function(fieldId) {
-            return new Promise(function(resolve, reject) {
+        openDeleteFieldDialog: function (fieldId) {
+            return new Promise(function (resolve, reject) {
                 new QUIConfirm({
                     icon: 'fa fa-trash',
                     texticon: 'fa fa-trash',
@@ -2292,10 +2289,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     maxHeight: 300,
                     maxWidth: 600,
                     events: {
-                        onSubmit: function(Win) {
+                        onSubmit: function (Win) {
                             Win.Loader.show();
 
-                            this.removeField(fieldId).then(function() {
+                            this.removeField(fieldId).then(function () {
                                 Win.close();
                                 resolve();
                             });
@@ -2312,18 +2309,18 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @returns {Promise}
          */
-        $hideCategories: function() {
+        $hideCategories: function () {
             const self = this,
                 nodes = this.getContent().getElements('.sheet');
 
-            const done = function() {
-                return new Promise(function(resolve) {
+            const done = function () {
+                return new Promise(function (resolve) {
                     moofx(nodes).animate({
                         opacity: 0,
                         top: -20
                     }, {
                         duration: 200,
-                        callback: function() {
+                        callback: function () {
                             if (self.$Control) {
                                 self.$Control.destroy();
                                 self.$Control = null;
@@ -2343,7 +2340,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             }
 
                             // destroy controls
-                            QUI.Controls.getControlsInElement(self.getContent()).forEach(function(Control) {
+                            QUI.Controls.getControlsInElement(self.getContent()).forEach(function (Control) {
                                 Control.destroy();
                             });
 
@@ -2368,7 +2365,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             return this.$unloadCategory(
                 this.$CurrentCategory,
                 this.$Product
-            ).then(function() {
+            ).then(function () {
                 return done();
             });
         },
@@ -2378,7 +2375,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param {Element} Category
          * @param Product - we need this variable and not this.$Product because of the Variant Panel
          */
-        $unloadCategory: function(Category, Product) {
+        $unloadCategory: function (Category, Product) {
             if (Category === null || !Category) {
                 return Promise.resolve();
             }
@@ -2433,7 +2430,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param {Object} Product
          * @return {Promise}
          */
-        $saveControl: function(Product) {
+        $saveControl: function (Product) {
             if (!this.$CurrentCategory) {
                 return Promise.resolve();
             }
@@ -2467,10 +2464,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param {HTMLDivElement} Node
          * @returns {Promise}
          */
-        $showCategory: function(Node) {
+        $showCategory: function (Node) {
             this.$CurrentCategory = Node;
 
-            return new Promise(function(resolve) {
+            return new Promise(function (resolve) {
                 Node.setStyles({
                     position: null,
                     display: null,
@@ -2494,15 +2491,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param {Object} Product - Media Folder Field-ID
          * @return {Promise}
          */
-        $createMediaFolder: function(fieldId, Product) {
+        $createMediaFolder: function (fieldId, Product) {
             this.Loader.show();
 
-            return Product.createMediaFolder(fieldId).then(function() {
+            return Product.createMediaFolder(fieldId).then(function () {
                 return Product.getFields();
             }).then((productFields) => {
                 const wantedId = fieldId || Fields.FIELD_FOLDER;
 
-                const folder = productFields.filter(function(field) {
+                const folder = productFields.filter(function (field) {
                     return parseInt(field.id) === parseInt(wantedId);
                 });
 
@@ -2524,12 +2521,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param {Object} Viewer - folder viewer
          * @param {Number} fileId
          */
-        $onCreateMediaFolderClick: function(Button, Product, Viewer, fileId) {
+        $onCreateMediaFolderClick: function (Button, Product, Viewer, fileId) {
             const self = this;
 
             Button.setAttribute('textimage', 'fa fa-spinner fa-spin');
 
-            this.$createMediaFolder(fileId, Product).then(function(folder) {
+            this.$createMediaFolder(fileId, Product).then(function (folder) {
                 if (folder) {
                     Viewer.setAttribute('folderUrl', folder);
                     Viewer.refresh();
@@ -2556,15 +2553,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @param event
          */
-        $checkUrl: function(event) {
+        $checkUrl: function (event) {
             const Target = event.target;
             const FieldInput = Target.getParent('tr').getElement('[name="field-19"]');
             const value = FieldInput.value;
 
-            this.$Product.getCategory().then(function(categoryId) {
-                QUIAjax.get('package_quiqqer_products_ajax_products_checkUrl', function(result) {
+            this.$Product.getCategory().then(function (categoryId) {
+                QUIAjax.get('package_quiqqer_products_ajax_products_checkUrl', function (result) {
                     if (result.exists) {
-                        QUI.getMessageHandler().then(function(MH) {
+                        QUI.getMessageHandler().then(function (MH) {
                             MH.addError(result.message, Target);
                         });
                     }
@@ -2582,7 +2579,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @return {Promise}
          */
-        $getFieldCategories: function() {
+        $getFieldCategories: function () {
             return new Promise((resolve) => {
                 QUIAjax.get('package_quiqqer_products_ajax_products_getFieldCategories', resolve, {
                     'package': 'quiqqer/products',
@@ -2596,14 +2593,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @param Category
          */
-        $fieldCategoryClick: function(Category) {
+        $fieldCategoryClick: function (Category) {
             const self = this;
 
-            return self.$hideCategories().then(function() {
+            return self.$hideCategories().then(function () {
                 self.$FieldContainer.set('html', '');
 
-                return new Promise(function(resolve) {
-                    QUIAjax.get('package_quiqqer_products_ajax_products_getFieldCategory', function(fields) {
+                return new Promise(function (resolve) {
+                    QUIAjax.get('package_quiqqer_products_ajax_products_getFieldCategory', function (fields) {
                         const Form = new Element('form', {
                             html: '' +
                                 '<table class="data-table data-table-flexbox product-data">' +

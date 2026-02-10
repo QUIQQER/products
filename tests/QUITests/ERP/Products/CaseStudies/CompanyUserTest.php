@@ -2,7 +2,9 @@
 
 namespace QUITests\ERP\Products\CaseStudies;
 
-use QUI;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\TestCase;
+use QUI\Exception;
 use QUITests\ERP\Products\CaseStudies\Classes\CompanyUser;
 use QUITests\ERP\Products\CaseStudies\Classes\ProductListHelper;
 
@@ -12,9 +14,13 @@ require_once dirname(__FILE__) . '/Classes/ProductListHelper.php';
 /**
  * Class NettoUserTest
  */
-class CompanyUserTest extends \PHPUnit_Framework_TestCase
+class CompanyUserTest extends TestCase
 {
-    public function testCasetStudyCompany()
+    /**
+     * @throws Exception
+     * @throws \QUI\ERP\Products\Product\Exception
+     */
+    public function testCaseStudyCompany(): void
     {
         writePhpUnitMessage('/*********************************/');
         writePhpUnitMessage('      Company Nutzer');
@@ -22,7 +28,7 @@ class CompanyUserTest extends \PHPUnit_Framework_TestCase
         writePhpUnitMessage();
 
         $Company = new CompanyUser();
-        $List    = ProductListHelper::getList($Company);
+        $List = ProductListHelper::getList($Company);
         $List->calc();
 
         ProductListHelper::outputList($List);

@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/fields/types/AttributeGroup
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/fields/types/AttributeGroup', [
 
     'qui/QUI',
@@ -11,7 +7,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroup', [
 
     'css!package/quiqqer/products/bin/controls/fields/types/AttributeGroup.css'
 
-], function(QUI, QUIControl, Fields, QUILocale) {
+], function (QUI, QUIControl, Fields, QUILocale) {
     'use strict';
 
     return new Class({
@@ -27,7 +23,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroup', [
             fieldId: false
         },
 
-        initialize: function(options) {
+        initialize: function (options) {
             this.parent(options);
 
             this.$initValue = false;
@@ -38,9 +34,9 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroup', [
         },
 
         /**
-         * event : on import
+         * event: on import
          */
-        $onImport: function() {
+        $onImport: function () {
             this.$Input = this.getElm();
 
             this.$Elm = new Element('div').wraps(this.$Input);
@@ -51,7 +47,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroup', [
 
             this.$Select = new Element('select').inject(this.$Elm);
             this.$Select.addClass('quiqqer-products-field-attributeGroup-select');
-            this.$Select.addEvent('change', function(e) {
+            this.$Select.addEvent('change', function (e) {
                 this.$Input.value = e.target.value;
             }.bind(this));
 
@@ -60,7 +56,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroup', [
 
             this.$Input.name = '';
 
-            this.$loadOptions().catch(function(err) {
+            this.$loadOptions().catch(function (err) {
                 console.error(err);
             });
         },
@@ -70,7 +66,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroup', [
          *
          * @param val
          */
-        setData: function(val) {
+        setData: function (val) {
             this.$initValue = val;
 
             if (!this.$Select && this.$Elm) {
@@ -81,7 +77,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroup', [
                 this.$Select.value = val;
             }
 
-            this.addEvent('onLoad', function() {
+            this.addEvent('onLoad', function () {
                 this.$Select.value = val;
             }.bind(this));
         },
@@ -91,8 +87,8 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroup', [
          *
          * @return {Promise<void>}
          */
-        $loadOptions: function() {
-            var self = this,
+        $loadOptions: function () {
+            const self = this,
                 fieldId = parseInt(this.$Select.get('name').replace('field-', '')),
                 value = this.$initValue;
 
@@ -104,9 +100,9 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroup', [
                     return;
                 }
 
-                var i, len, text;
-                var current = QUILocale.getCurrent();
-                var entries = options.entries;
+                let i, len, text;
+                const current = QUILocale.getCurrent();
+                const entries = options.entries;
 
                 if (!entries.length) {
                     new Element('option', {
@@ -142,7 +138,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroup', [
                 if (value) {
                     self.$Select.value = value;
                 } else {
-                    var selected = entries.filter(function(entry) {
+                    const selected = entries.filter(function (entry) {
                         return entry.selected;
                     });
 
@@ -154,8 +150,8 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroup', [
                 // if variant, than disable
                 // varianten können ihre attribute listen nicht mehr ändern
                 // da es sonst wegen doppelten varianten probleme geben kann
-                var isVariantPanel = self.getElm().getParent('.panel-product-variant');
-                var isVariantChild = self.getElm().getParent('.variants-sheet');
+                const isVariantPanel = self.getElm().getParent('.panel-product-variant');
+                const isVariantChild = self.getElm().getParent('.variants-sheet');
 
                 if (!isVariantPanel) {
                     self.$Select.set('disabled', false);
@@ -178,7 +174,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroup', [
          *
          * @returns {String}
          */
-        getValue: function() {
+        getValue: function () {
             return this.$Select.value;
         }
     });

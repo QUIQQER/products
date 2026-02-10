@@ -1,9 +1,6 @@
 /**
  * Category sitemap
  *
- * @module package/quiqqer/products/bin/controls/categories/Sitemap
- * @author www.pcsg.de (Henning Leutz)
- *
  * @event onClick [this, id, Item]
  * @event onChildContextMenu [this, Item, event]
  */
@@ -20,12 +17,12 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
 ], function (QUI, QUIControl, QUISitemap, QUISitemapItem, QUIFunctionUtils, Handler, QUILocale) {
     "use strict";
 
-    var Categories = new Handler();
+    const Categories = new Handler();
 
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/categories/Sitemap',
+        Type: 'package/quiqqer/products/bin/controls/categories/Sitemap',
 
         Binds: [
             '$onCreate',
@@ -37,7 +34,7 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
 
         options: {
             selectedId: false,
-            multiple  : false
+            multiple: false
         },
 
         initialize: function (options) {
@@ -56,10 +53,10 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
          * @return {HTMLDivElement}
          */
         create: function () {
-            var self = this,
-                Elm  = this.parent();
+            const self = this,
+                Elm = this.parent();
 
-            var showContextMenu = QUIFunctionUtils.debounce(function () {
+            const showContextMenu = QUIFunctionUtils.debounce(function () {
                 self.fireEvent('childContextMenu', [
                     self,
                     this.Item,
@@ -68,13 +65,13 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
             }, 200, true);
 
             this.$Sitemap = new QUISitemap({
-                name    : 'map',
+                name: 'map',
                 multiple: this.getAttribute('multiple'),
-                events  : {
+                events: {
                     onChildContextMenu: function (Map, Item, event) {
                         showContextMenu.bind({
-                            Map  : Map,
-                            Item : Item,
+                            Map: Map,
+                            Item: Item,
                             event: event
                         })();
                     }
@@ -83,12 +80,12 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
 
             this.$Sitemap.appendChild(
                 new QUISitemapItem({
-                    text  : QUILocale.get('quiqqer/products', 'products.category.0.title'),
-                    id    : 0,
-                    value : 0,
-                    icon  : 'fa fa-shopping-basket',
+                    text: QUILocale.get('quiqqer/products', 'products.category.0.title'),
+                    id: 0,
+                    value: 0,
+                    icon: 'fa fa-shopping-basket',
                     events: {
-                        onOpen : this.$onItemOpen,
+                        onOpen: this.$onItemOpen,
                         onClose: this.$onItemClose,
                         onClick: this.$onItemClick
                     }
@@ -104,13 +101,13 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
         $onInject: function () {
             this.$Sitemap.firstChild().open();
 
-            var selectedId = this.getAttribute('selectedId');
+            const selectedId = this.getAttribute('selectedId');
 
             if (selectedId === false) {
                 return;
             }
 
-            var self   = this,
+            const self = this,
                 values = this.$Sitemap.getChildrenByValue(selectedId);
 
             if (values.length) {
@@ -120,9 +117,9 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
 
             Categories.getPath(selectedId).then(function (path) {
 
-                var openElement = function (id) {
+                const openElement = function (id) {
                     return new Promise(function (resolve, reject) {
-                        var values = self.$Sitemap.getChildrenByValue(id);
+                        const values = self.$Sitemap.getChildrenByValue(id);
                         if (!values.length) {
                             reject();
                             return;
@@ -134,14 +131,14 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
                     });
                 };
 
-                var Prom = Promise.resolve();
+                let Prom = Promise.resolve();
 
-                for (var i = 0, len = path.length; i < len; i++) {
+                for (let i = 0, len = path.length; i < len; i++) {
                     Prom.then(openElement(path[0]));
                 }
 
                 Prom.then(function () {
-                    var result = self.$Sitemap.getChildrenByValue(selectedId);
+                    const result = self.$Sitemap.getChildrenByValue(selectedId);
 
                     if (result[0]) {
                         result[0].click();
@@ -157,7 +154,7 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
          */
         $onItemOpen: function (Item) {
 
-            var self       = this,
+            const self = this,
                 categoryId = Item.getAttribute('value');
 
             return new Promise(function (resolve) {
@@ -172,18 +169,18 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
                 Categories.getChildren(categoryId || 0, {
                     countChildren: 1
                 }).then(function (data) {
-                    var i, len, entry;
+                    let i, len, entry;
 
                     for (i = 0, len = data.length; i < len; i++) {
                         entry = data[i];
 
                         new QUISitemapItem({
-                            text       : entry.title,
-                            value      : entry.id,
-                            icon       : 'fa fa-sitemap',
+                            text: entry.title,
+                            value: entry.id,
+                            icon: 'fa fa-sitemap',
                             hasChildren: parseInt(entry.countChildren),
-                            events     : {
-                                onOpen : self.$onItemOpen,
+                            events: {
+                                onOpen: self.$onItemOpen,
                                 onClose: self.$onItemClose,
                                 onClick: self.$onItemClick
                             }

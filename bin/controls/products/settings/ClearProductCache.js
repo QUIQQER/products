@@ -1,7 +1,4 @@
 /**
- * @module package/quiqqer/products/bin/controls/products/settings/ClearProductCache
- * @author www.pcsg.de (Henning Leutz)
- *
  * Cache löschen in den settings
  */
 define('package/quiqqer/products/bin/controls/products/settings/ClearProductCache', [

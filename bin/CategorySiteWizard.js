@@ -1,8 +1,5 @@
 /**
  * Category Site Wizard
- *
- * @module package/quiqqer/products/bin/CategorySiteWizard
- * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/CategorySiteWizard', [
     'package/quiqqer/products/bin/controls/categories/CategorySiteWizard'
@@ -13,8 +10,7 @@ define('package/quiqqer/products/bin/CategorySiteWizard', [
         Site.addEvent('onOpenCreateChild', function (Win, Site) {
 
             // on submit event
-            var onSubmit = function (Wiz) {
-
+            const onSubmit = function (Wiz) {
                 Wiz.submit().then(function (Site) {
                     require(['utils/Panels'], function (PanelUtils) {
 
@@ -27,16 +23,15 @@ define('package/quiqqer/products/bin/CategorySiteWizard', [
                             Site.getId()
                         );
                     });
-
                 }, function () {
                     Win.Loader.hide();
                 });
             };
 
             // create the dom
-            var Content = Win.getContent(),
-                Wiz     = new Wizard({
-                    Site  : Site,
+            const Content = Win.getContent(),
+                Wiz = new Wizard({
+                    Site: Site,
                     events: {
                         onSubmitBegin: function () {
                             Win.Loader.show();
@@ -44,7 +39,7 @@ define('package/quiqqer/products/bin/CategorySiteWizard', [
                         onSubmitError: function () {
                             Win.Loader.hide();
                         },
-                        submit       : onSubmit
+                        submit: onSubmit
                     }
                 });
 

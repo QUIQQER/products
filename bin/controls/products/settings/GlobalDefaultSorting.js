@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/products/settings/GlobalDefaultSorting
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/products/settings/GlobalDefaultSorting', [
 
     'qui/QUI',
@@ -11,12 +7,12 @@ define('package/quiqqer/products/bin/controls/products/settings/GlobalDefaultSor
 ], function (QUI, QUIControl, QUILocale) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/products/settings/GlobalDefaultSorting',
+        Type: 'package/quiqqer/products/bin/controls/products/settings/GlobalDefaultSorting',
 
         Binds: [
             '$onImport',
@@ -37,18 +33,18 @@ define('package/quiqqer/products/bin/controls/products/settings/GlobalDefaultSor
         $onImport: function () {
             this.reload();
 
-            var Table            = this.getElm().getParent('table');
-            var AvailableSorting = Table.getElement('[name="products.sortFields"]');
+            const Table = this.getElm().getParent('table');
+            const AvailableSorting = Table.getElement('[name="products.sortFields"]');
 
             if (AvailableSorting.get('data-quiid')) {
                 QUI.Controls
-                   .getById(AvailableSorting.get('data-quiid'))
-                   .addEvent('change', this.reload);
+                    .getById(AvailableSorting.get('data-quiid'))
+                    .addEvent('change', this.reload);
             } else {
                 AvailableSorting.addEvent('load', function () {
                     QUI.Controls
-                       .getById(AvailableSorting.get('data-quiid'))
-                       .addEvent('change', this.reload);
+                        .getById(AvailableSorting.get('data-quiid'))
+                        .addEvent('change', this.reload);
                 }.bind(this));
             }
         },
@@ -57,7 +53,7 @@ define('package/quiqqer/products/bin/controls/products/settings/GlobalDefaultSor
          * Reload the list
          */
         reload: function () {
-            var self = this;
+            const self = this;
 
             this.getElm().set('disabled', true);
 
@@ -66,15 +62,15 @@ define('package/quiqqer/products/bin/controls/products/settings/GlobalDefaultSor
             }).then(function (fields) {
                 self.getElm().innerHTML = '';
 
-                for (var i = 0, len = fields.length; i < len; i++) {
+                for (let i = 0, len = fields.length; i < len; i++) {
                     new Element('option', {
                         value: fields[i].id + ' DESC',
-                        html : fields[i].title + ' ' + QUILocale.get(lg, 'sortDESC')
+                        html: fields[i].title + ' ' + QUILocale.get(lg, 'sortDESC')
                     }).inject(self.getElm());
 
                     new Element('option', {
                         value: fields[i].id + ' ASC',
-                        html : fields[i].title + ' ' + QUILocale.get(lg, 'sortASC')
+                        html: fields[i].title + ' ' + QUILocale.get(lg, 'sortASC')
                     }).inject(self.getElm());
                 }
 
@@ -86,11 +82,11 @@ define('package/quiqqer/products/bin/controls/products/settings/GlobalDefaultSor
          * @return {Promise}
          */
         $getAvailableSorting: function () {
-            var self = this;
+            const self = this;
 
             return new Promise(function (resolve) {
-                var Table            = self.getElm().getParent('table');
-                var AvailableSorting = Table.getElement('[name="products.sortFields"]');
+                const Table = self.getElm().getParent('table');
+                const AvailableSorting = Table.getElement('[name="products.sortFields"]');
 
                 if (!AvailableSorting.get('data-quiid')) {
                     return new Promise(function (res) {
@@ -100,7 +96,7 @@ define('package/quiqqer/products/bin/controls/products/settings/GlobalDefaultSor
                     }).then(resolve);
                 }
 
-                var Instance = QUI.Controls.getById(AvailableSorting.get('data-quiid'));
+                const Instance = QUI.Controls.getById(AvailableSorting.get('data-quiid'));
                 resolve(Instance);
             });
         }

@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/frontend/category/Menu
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
 
     'qui/QUI',
@@ -16,7 +12,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/frontend/category/Menu',
+        Type: 'package/quiqqer/products/bin/controls/frontend/category/Menu',
 
         Binds: [
             '$onImport'
@@ -25,8 +21,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Nav      = null;
-            this.$lists    = {};
+            this.$Nav = null;
+            this.$lists = {};
             this.$selected = {};
 
             this.addEvents({
@@ -35,11 +31,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
         },
 
         /**
-         * event : on import
+         * event: on import
          */
         $onImport: function () {
-            var self = this,
-                Elm  = this.getElm();
+            const self = this,
+                Elm = this.getElm();
 
             // search product list
             this.getProductLists();
@@ -53,14 +49,14 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
                     return;
                 }
 
-                var Target = event.target,
-                    Label  = Target.getParent('label');
+                const Target = event.target,
+                    Label = Target.getParent('label');
 
                 if (!Label) {
                     return;
                 }
 
-                var Input = Label.getElement('input');
+                const Input = Label.getElement('input');
 
                 if (!Input) {
                     return;
@@ -72,10 +68,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
                 Input.fireEvent('change');
             });
 
-            var categories = this.$Nav.getElements('input[type="checkbox"]');
+            const categories = this.$Nav.getElements('input[type="checkbox"]');
 
             categories.addEvent('change', function () {
-                var categoryId = parseInt(this.value);
+                const categoryId = parseInt(this.value);
 
                 if (!categoryId) {
                     this.checked = false;
@@ -104,7 +100,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
                 }
 
                 // window popstate
-                var Url = URI(window.location);
+                const Url = URI(window.location);
 
                 Url.removeSearch('c');
 
@@ -121,11 +117,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
             });
 
             // check the checkboxes
-            var Url    = URI(window.location),
+            const Url = URI(window.location),
                 search = Url.search(true);
 
             if ("c" in search) {
-                var urlCategories = search.c.toString().split(',').map(function (v) {
+                const urlCategories = search.c.toString().split(',').map(function (v) {
                     return parseInt(v);
                 });
 
@@ -152,15 +148,15 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
             }
 
 
-            var self  = this,
+            const self = this,
                 nodes = document.getElements(
                     '[data-qui="package/quiqqer/products/bin/controls/frontend/category/ProductList"]'
                 );
 
-            var i, len, quiid;
+            let i, len, quiid;
 
-            var onNodeLoad = function () {
-                var qid          = this.get('data-quiid');
+            const onNodeLoad = function () {
+                const qid = this.get('data-quiid');
                 self.$lists[qid] = QUI.Controls.getById(qid);
             };
 
@@ -193,21 +189,21 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
          * @returns {Promise}
          */
         $getLists: function () {
-            var self = this;
+            const self = this;
 
             return new Promise(function (resolve) {
                 if (Object.getLength(self.$lists)) {
                     return resolve(self.$lists);
                 }
 
-                var i, len, quiid;
-                var nodes = document.getElements(
+                let i, len, quiid;
+                const nodes = document.getElements(
                     '[data-qui="package/quiqqer/products/bin/controls/frontend/category/ProductList"]'
                 );
 
-                var promisesList = [];
+                const promisesList = [];
 
-                var promiseSolved = function (resolve) {
+                const promiseSolved = function (resolve) {
                     this.addEvent('load', resolve);
                 };
 
@@ -236,7 +232,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
                     document.getElements(
                         '[data-qui="package/quiqqer/products/bin/controls/frontend/category/ProductList"]'
                     ).each(function (Node) {
-                        var quiid = Node.get('data-quiid');
+                        const quiid = Node.get('data-quiid');
 
                         self.$lists[quiid] = QUI.Controls.getById(quiid);
                     });

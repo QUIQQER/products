@@ -1,9 +1,6 @@
 /**
  * Category sitemap
  *
- * @module package/quiqqer/products/bin/controls/categories/Create
- * @author www.pcsg.de (Henning Leutz)
- *
  * @event onCancel
  * @event onSuccess
  * @event onSubmit
@@ -33,7 +30,7 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/categories/Create',
+        Type: 'package/quiqqer/products/bin/controls/categories/Create',
 
         Binds: [
             'showParentSelect',
@@ -66,15 +63,15 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
          * @return {HTMLDivElement}
          */
         create: function () {
-            var Elm = this.parent();
+            const Elm = this.parent();
 
             Elm.set({
                 'class': 'category-create',
-                html   : '<div class="category-create-container">' +
-                         '<div class="category-create-sheet category-create-parentSelect"></div>' +
-                         '<div class="category-create-sheet category-create-text"></div>' +
-                         '</div>' +
-                         '<div class="category-create-buttons"></div>'
+                html: '<div class="category-create-container">' +
+                    '<div class="category-create-sheet category-create-parentSelect"></div>' +
+                    '<div class="category-create-sheet category-create-text"></div>' +
+                    '</div>' +
+                    '<div class="category-create-buttons"></div>'
             });
 
             this.$ParentSelect = Elm.getElement('.category-create-parentSelect');
@@ -84,20 +81,20 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
             this.$Text.setStyles({
                 display: 'none',
                 opacity: 0,
-                top    : -10
+                top: -10
             });
 
             this.$ParentSelect.setStyles({
                 display: 'none',
                 opacity: 0,
-                top    : -10
+                top: -10
             });
 
             this.$TitleTranslate = new TranslationUpdate({
-                'group'  : 'quiqqer/products',
+                'group': 'quiqqer/products',
                 'package': 'quiqqer/products',
-                editable : true,
-                events   : {
+                editable: true,
+                events: {
                     onLoad: function (Instance) {
                         Instance.getElm().getElements('[type="text"]').set('value', ' ');
                     }
@@ -105,10 +102,10 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
             });
 
             this.$DescTranslate = new TranslationUpdate({
-                'group'  : 'quiqqer/products',
+                'group': 'quiqqer/products',
                 'package': 'quiqqer/products',
-                editable : true,
-                events   : {
+                editable: true,
+                events: {
                     onLoad: function (Instance) {
                         Instance.getElm().getElements('[type="text"]').set('value', ' ');
                     }
@@ -131,28 +128,28 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
          * @return {Promise}
          */
         showParentSelect: function () {
-            var self = this;
+            const self = this;
 
             this.$Buttons.set('html', '');
 
             new QUIButton({
-                text     : 'Abbrechen', // #locale
+                text: 'Abbrechen', // #locale
                 textimage: 'fa fa-remove',
-                events   : {
+                events: {
                     onClick: this.cancel
                 },
-                styles   : {
+                styles: {
                     'float': 'left'
                 }
             }).inject(this.$Buttons);
 
             new QUIButton({
-                text     : 'Weiter', // #locale
+                text: 'Weiter', // #locale
                 textimage: 'fa fa-angle-right',
-                events   : {
+                events: {
                     onClick: this.showTextEdit
                 },
-                styles   : {
+                styles: {
                     'float': 'right'
                 }
             }).inject(this.$Buttons);
@@ -160,10 +157,10 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
             return new Promise(function (reslolve) {
 
                 self.$ParentSelect.set({
-                    html  : '<div class="category-create-parentSelect-description">' +
-                            'Wählen Sie bitte die Kategorie aus unter welche ' +
-                            'die neue Kategorie neu angelegt werden soll' +
-                            '</div>', // #locale
+                    html: '<div class="category-create-parentSelect-description">' +
+                        'Wählen Sie bitte die Kategorie aus unter welche ' +
+                        'die neue Kategorie neu angelegt werden soll' +
+                        '</div>', // #locale
                     styles: {
                         display: null
                     }
@@ -171,7 +168,7 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
 
                 moofx(self.$Text).animate({
                     opacity: 0,
-                    top    : -10
+                    top: -10
                 }, {
                     callback: function () {
 
@@ -180,13 +177,13 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
 
                         moofx(self.$ParentSelect).animate({
                             opacity: 1,
-                            top    : 0
+                            top: 0
                         }, {
                             duration: 200,
                             callback: function () {
                                 new CategorySitemap({
                                     selectedId: self.getAttribute('parentId'),
-                                    events    : {
+                                    events: {
                                         onClick: function (Map, value) {
                                             self.setAttribute('parentId', value);
                                         }
@@ -207,28 +204,28 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
          * @return {Promise}
          */
         showTextEdit: function () {
-            var self = this;
+            const self = this;
 
             this.$Buttons.set('html', '');
 
             new QUIButton({
-                text     : 'Zurück',
+                text: 'Zurück',
                 textimage: 'fa fa-angle-left',
-                events   : {
+                events: {
                     onClick: this.showParentSelect
                 },
-                styles   : {
+                styles: {
                     'float': 'left'
                 }
             }).inject(this.$Buttons);
 
             new QUIButton({
-                text     : 'Kategorie anlegen',
+                text: 'Kategorie anlegen',
                 textimage: 'fa fa-angle-right',
-                events   : {
+                events: {
                     onClick: this.submit
                 },
-                styles   : {
+                styles: {
                     'float': 'right'
                 }
             }).inject(this.$Buttons);
@@ -241,25 +238,25 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
                 }
 
                 self.$Text.set({
-                    html  : '<div class="category-create-text-description">' +
-                            'Geben Sie bitte einen Titel und Kurzbeschreibung für die Kategorie an' +
-                            '</div>',
+                    html: '<div class="category-create-text-description">' +
+                        'Geben Sie bitte einen Titel und Kurzbeschreibung für die Kategorie an' +
+                        '</div>',
                     styles: {
                         display: null
                     }
                 });
 
 
-                var Text = new Element('label', {
+                const Text = new Element('label', {
                     'class': 'field-container category-create-text-title',
-                    html   : '<span class="field-container-item">Kategorien-Titel</span>' +
-                             '<div class="field-container-field"></div>'
+                    html: '<span class="field-container-item">Kategorien-Titel</span>' +
+                        '<div class="field-container-field"></div>'
                 }).inject(self.$Text);
 
-                var Desc = new Element('div', {
+                const Desc = new Element('div', {
                     'class': 'field-container category-create-text-title',
-                    html   : '<span class="field-container-item">Kategorien-Beschreibung</span>' +
-                             '<div class="field-container-field"></div>'
+                    html: '<span class="field-container-item">Kategorien-Beschreibung</span>' +
+                        '<div class="field-container-field"></div>'
                 }).inject(self.$Text);
 
 
@@ -269,7 +266,7 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
 
                 moofx(self.$ParentSelect).animate({
                     opacity: 0,
-                    top    : -10
+                    top: -10
                 }, {
                     duration: 200,
                     callback: function () {
@@ -279,7 +276,7 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
 
                         moofx(self.$Text).animate({
                             opacity: 1,
-                            top    : 0
+                            top: 0
                         }, {
                             duration: 200,
                             callback: function () {
@@ -304,13 +301,13 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
          * @returns {Object}
          */
         submit: function () {
-            var self = this;
+            const self = this;
 
             self.fireEvent('submit');
 
             return new Promise(function (resolve, reject) {
 
-                var parentId = self.getAttribute('parentId');
+                const parentId = self.getAttribute('parentId');
 
                 QUI.getMessageHandler().then(function (MH) {
                     MH.setAttribute('showMessages', false);

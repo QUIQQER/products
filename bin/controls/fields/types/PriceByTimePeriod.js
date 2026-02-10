@@ -1,8 +1,4 @@
 /**
- * @module package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod
- * @author www.pcsg.de (Henning Leutz)
- * @author www.pcsg.de (Patrick Müller)
- *
  * new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(1000)
  */
 define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
@@ -21,12 +17,12 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
 ], function (QUI, QUIControl, PriceBruttoWindow, MoneyUtils, QUILocale, QUIAjax, Mustache, template) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod',
 
         Binds: [
             '$onImport',
@@ -38,16 +34,16 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Input       = null;
-            this.$Price       = null;
-            this.$Currency    = null;
+            this.$Input = null;
+            this.$Price = null;
+            this.$Currency = null;
             this.$BruttoInput = null;
-            this.$productId   = null;
+            this.$productId = null;
 
-            this.$From      = null;
-            this.$FromTime  = null;
-            this.$To        = null;
-            this.$ToTime    = null;
+            this.$From = null;
+            this.$FromTime = null;
+            this.$To = null;
+            this.$ToTime = null;
             this.$calcTimer = null;
 
             this.$Formatter = QUILocale.getNumberFormatter({
@@ -81,13 +77,13 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
          * event : on import
          */
         $onImport: function () {
-            var self = this;
-            var Elm  = this.getElm(),
-                data = {
-                    price: false,
-                    from : false,
-                    to   : false
-                };
+            const self = this;
+            const Elm = this.getElm();
+            let data = {
+                price: false,
+                from: false,
+                to: false
+            };
 
             Elm.type = 'hidden';
 
@@ -101,8 +97,8 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
             if (!data || !("price" in data) || !("from" in data) || !("to" in data)) {
                 data = {
                     price: false,
-                    from : false,
-                    to   : false
+                    from: false,
+                    to: false
                 };
             }
 
@@ -110,16 +106,16 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
                 data.price = 0;
             }
 
-            var lgPrefix = 'controls.fields.types.PriceByTimePeriod.template.';
+            const lgPrefix = 'controls.fields.types.PriceByTimePeriod.template.';
 
             this.$Elm = new Element('div', {
                 'class': 'field-container-field quiqqer-products-field-priceByTimePeriod',
-                html   : Mustache.render(template, {
-                    placeholderPrice  : self.$Formatter.format(1000),
-                    labelTo           : QUILocale.get(lg, lgPrefix + 'labelTo'),
-                    labelFrom         : QUILocale.get(lg, lgPrefix + 'labelFrom'),
-                    labelToTime       : QUILocale.get(lg, lgPrefix + 'labelToTime'),
-                    labelFromTime     : QUILocale.get(lg, lgPrefix + 'labelFromTime'),
+                html: Mustache.render(template, {
+                    placeholderPrice: self.$Formatter.format(1000),
+                    labelTo: QUILocale.get(lg, lgPrefix + 'labelTo'),
+                    labelFrom: QUILocale.get(lg, lgPrefix + 'labelFrom'),
+                    labelToTime: QUILocale.get(lg, lgPrefix + 'labelToTime'),
+                    labelFromTime: QUILocale.get(lg, lgPrefix + 'labelFromTime'),
                     titleBruttoCalcBtn: QUILocale.get(lg, 'fields.control.price.brutto')
                 })
             }).inject(this.$Input, 'after');
@@ -150,25 +146,25 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
             this.$To = this.$Elm.getElement('input.quiqqer-products-field-priceByTimePeriod-date[name="to"]');
             this.$To.addEvents({
                 change: this.refresh,
-                blur  : this.refresh
+                blur: this.refresh
             });
 
             this.$ToTime = this.$Elm.getElement('input.quiqqer-products-field-priceByTimePeriod-date[name="to_time"]');
             this.$ToTime.addEvents({
                 change: this.refresh,
-                blur  : this.refresh
+                blur: this.refresh
             });
 
             this.$From = this.$Elm.getElement('input.quiqqer-products-field-priceByTimePeriod-date[name="from"]');
             this.$From.addEvents({
                 change: this.refresh,
-                blur  : this.refresh
+                blur: this.refresh
             });
 
             this.$FromTime = this.$Elm.getElement('input.quiqqer-products-field-priceByTimePeriod-date[name="from_time"]');
             this.$FromTime.addEvents({
                 change: this.refresh,
-                blur  : this.refresh
+                blur: this.refresh
             });
 
             // Total (brutto) calculator
@@ -178,7 +174,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
             this.$BruttoInput = this.$Elm.getElement('span.quiqqer-products-field-priceByTimePeriod-bruttoinput');
 
             if (this.$Elm.getParent('.qui-panel')) {
-                var Panel = QUI.Controls.getById(this.$Elm.getParent('.qui-panel').get('data-quiid'));
+                const Panel = QUI.Controls.getById(this.$Elm.getParent('.qui-panel').get('data-quiid'));
 
                 if (Panel.getAttribute('productId')) {
                     this.$productId = Panel.getAttribute('productId');
@@ -194,8 +190,8 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
          * refresh
          */
         refresh: function () {
-            var from = this.$From.value,
-                to   = this.$To.value;
+            let from = this.$From.value,
+                to = this.$To.value;
 
             if (from && this.$FromTime.value) {
                 from += ' ' + this.$FromTime.value;
@@ -207,8 +203,8 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
 
             this.$Input.value = JSON.encode({
                 price: this.$Price.value,
-                from : from,
-                to   : to
+                from: from,
+                to: to
             });
 
             this.fireEvent('change', [this]);
@@ -248,12 +244,12 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
                 }
 
                 if ("from" in value && value.from) {
-                    var from = value.from;
+                    let from = value.from;
 
                     if (from.indexOf(' ') !== -1) {
                         from = from.split(' ');
 
-                        this.$From.value     = from[0];
+                        this.$From.value = from[0];
                         this.$FromTime.value = from[1];
                     } else {
                         this.$From.value = from;
@@ -261,12 +257,12 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
                 }
 
                 if ("to" in value && value.to) {
-                    var to = value.to;
+                    let to = value.to;
 
                     if (to.indexOf(' ') !== -1) {
                         to = to.split(' ');
 
-                        this.$To.value     = to[0];
+                        this.$To.value = to[0];
                         this.$ToTime.value = to[1];
                     } else {
                         this.$To.value = to;
@@ -291,11 +287,11 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
                 return;
             }
 
-            var groupingSeparator = QUILocale.getGroupingSeparator();
-            var decimalSeparator  = QUILocale.getDecimalSeparator();
+            const groupingSeparator = QUILocale.getGroupingSeparator();
+            const decimalSeparator = QUILocale.getDecimalSeparator();
 
-            var foundGroupSeparator   = typeOf(value) === 'string' && value.indexOf(groupingSeparator) >= 0;
-            var foundDecimalSeparator = typeOf(value) === 'string' && value.indexOf(decimalSeparator) >= 0;
+            const foundGroupSeparator = typeOf(value) === 'string' && value.indexOf(groupingSeparator) >= 0;
+            const foundDecimalSeparator = typeOf(value) === 'string' && value.indexOf(decimalSeparator) >= 0;
 
             if ((foundGroupSeparator || foundDecimalSeparator) && !(foundGroupSeparator && !foundDecimalSeparator)) {
                 this.$Price.value = value;
@@ -308,12 +304,12 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
         },
 
         /**
-         * Retuen the field ID
+         * Returns the field ID
          *
          * @return {String|Boolean|Number}
          */
         getFieldId: function () {
-            var name = this.$Input.name;
+            let name = this.$Input.name;
 
             name = name.replace('field-', '');
             name = parseInt(name);
@@ -325,11 +321,11 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
          * Opens the brutto / gross input
          */
         openBruttoInput: function () {
-            var self = this;
+            const self = this;
 
             new PriceBruttoWindow({
                 productId: this.$productId,
-                events   : {
+                events: {
                     onOpen: function (Win) {
                         Win.getContent().set('html', '');
                     },
@@ -356,7 +352,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
 
             if (this.$Price.value === '') {
                 this.$BruttoInput.innerHTML = '---';
-                this.$BruttoInput.title     = QUILocale.get(lg, 'fields.control.price.quantity.title', {
+                this.$BruttoInput.title = QUILocale.get(lg, 'fields.control.price.quantity.title', {
                     price: '---'
                 });
                 return;
@@ -365,16 +361,16 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
             this.$BruttoInput.innerHTML = '<span class="fa fa-spinner fa-spin"></span>';
 
             this.$calcTimer = (function () {
-                var self = this;
+                const self = this;
 
                 QUIAjax.get('package_quiqqer_products_ajax_products_calcBruttoPrice', function (price) {
                     self.$BruttoInput.innerHTML = price;
-                    self.$BruttoInput.title     = QUILocale.get(lg, 'fields.control.price.quantity.title', {
+                    self.$BruttoInput.title = QUILocale.get(lg, 'fields.control.price.quantity.title', {
                         price: price
                     });
                 }, {
                     'package': 'quiqqer/products',
-                    price    : self.$Price.value,
+                    price: self.$Price.value,
                     formatted: 1,
                     productId: self.$productId
                 });

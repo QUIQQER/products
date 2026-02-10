@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/products/permissions/Permission
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/products/permissions/Permission', [
 
     'qui/QUI',

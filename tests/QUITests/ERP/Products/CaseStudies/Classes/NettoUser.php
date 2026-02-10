@@ -14,14 +14,13 @@ class NettoUser extends QUI\Users\User
     {
         $this->refresh();
     }
-
-    public function refresh()
+    public function refresh(): void
     {
-        $this->name    = 'netto_user';
-        $this->id      = 0;
-        $this->active  = 1;
+        $this->name = 'netto_user';
+        $this->id = 0;
+        $this->active = 1;
         $this->company = false;
-        $this->lang    = 'de';
+        $this->lang = 'de';
 
         $this->Locale = new QUI\Locale();
         $this->Locale->setCurrent('de');

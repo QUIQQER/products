@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/fields/types/ProductAttributeList
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/fields/types/GroupListSettings', [
 
     'qui/QUI',
@@ -13,10 +9,8 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupListSettings', [
     'text!package/quiqqer/products/bin/controls/fields/types/GroupListSettings.html',
     'css!package/quiqqer/products/bin/controls/fields/types/GroupListSettings.css'
 
-], function(QUI, QUIControl, QUILocale, Mustache, GroupsInput, template) {
+], function (QUI, QUIControl, QUILocale, Mustache, GroupsInput, template) {
     'use strict';
-
-    var lg = 'quiqqer/products';
 
     return new Class({
 
@@ -34,7 +28,7 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupListSettings', [
             multipleUsers: true
         },
 
-        initialize: function(options) {
+        initialize: function (options) {
             this.parent(options);
 
             this.$Groups = null;
@@ -54,7 +48,7 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupListSettings', [
          *
          * @return {HTMLDivElement}
          */
-        create: function() {
+        create: function () {
             this.$Elm = new Element('div', {
                 html: Mustache.render(template, {}),
                 styles: {
@@ -72,9 +66,9 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupListSettings', [
         /**
          * event : on inject
          */
-        $onInject: function() {
+        $onInject: function () {
             // build group id select
-            var GroupIdsInput = this.$Elm.getElement('[name="groupIds"]');
+            const GroupIdsInput = this.$Elm.getElement('[name="groupIds"]');
 
             this.$Groups = new GroupsInput({
                 styles: {
@@ -85,8 +79,8 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupListSettings', [
                 }
             }).inject(GroupIdsInput.getParent());
 
-            var Parent = GroupIdsInput.getParent('.field-container-field');
-            var Options = GroupIdsInput.getParent('.field-options');
+            const Parent = GroupIdsInput.getParent('.field-container-field');
+            const Options = GroupIdsInput.getParent('.field-options');
 
             if (Parent) {
                 Parent.addClass('field-container-field-no-padding');
@@ -96,10 +90,10 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupListSettings', [
                 Options.addClass('field-container-field-no-padding');
             }
 
-            var groups = this.getAttribute('groupIds');
+            const groups = this.getAttribute('groupIds');
 
             if (groups) {
-                groups.each(function(groupId) {
+                groups.each(function (groupId) {
                     this.$Groups.addItem(groupId);
                 }.bind(this));
             }
@@ -115,12 +109,12 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupListSettings', [
          * @param self
          * @param {HTMLInputElement} Node
          */
-        $onImport: function(self, Node) {
+        $onImport: function (self, Node) {
             this.$Input = Node;
             this.$Elm = this.create();
 
             try {
-                var data = JSON.decode(this.$Input.value);
+                const data = JSON.decode(this.$Input.value);
 
                 if ('multipleUsers' in data) {
                     this.setAttribute('multipleUsers', data.multipleUsers);
@@ -143,15 +137,15 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupListSettings', [
         /**
          * refresh the grid data dispaly
          */
-        refresh: function() {
+        refresh: function () {
 
         },
 
         /**
          * Set the data to the input
          */
-        update: function() {
-            var groups = [];
+        update: function () {
+            let groups = [];
 
             if (this.$Groups.getValue()) {
                 groups = this.$Groups.getValue();
@@ -170,7 +164,7 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupListSettings', [
          *
          * @returns {String}
          */
-        getValue: function() {
+        getValue: function () {
             return this.$Input.value;
         }
     });

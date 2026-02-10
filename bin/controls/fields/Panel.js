@@ -1,8 +1,5 @@
 /**
  * Field management
- *
- * @module package/quiqqer/products/bin/controls/fields/Panel
- * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/controls/fields/Panel', [
 
@@ -23,13 +20,13 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
              Handler, CreateField, UpdateField, FieldSearch) {
     "use strict";
 
-    var lg     = 'quiqqer/products',
+    const lg = 'quiqqer/products',
         Fields = new Handler();
 
     return new Class({
 
         Extends: QUIPanel,
-        Type   : 'package/quiqqer/products/bin/controls/fields/Panel',
+        Type: 'package/quiqqer/products/bin/controls/fields/Panel',
 
         Binds: [
             'refresh',
@@ -46,7 +43,7 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
 
             this.setAttributes({
                 title: QUILocale.get(lg, 'products.fields.panel.title'),
-                icon : 'fa fa-file-text-o'
+                icon: 'fa fa-file-text-o'
             });
 
             this.$Search = null;
@@ -55,7 +52,7 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                 onCreate: this.$onCreate,
                 onInject: this.$onInject,
                 onResize: this.$onResize,
-                onShow  : this.$onResize
+                onShow: this.$onResize
             });
         },
 
@@ -84,24 +81,24 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
          * event : on create
          */
         $onCreate: function () {
-            var self = this;
+            const self = this;
 
             // buttons
             this.addButton({
-                name     : 'add',
-                text     : QUILocale.get('quiqqer/system', 'add'),
+                name: 'add',
+                text: QUILocale.get('quiqqer/system', 'add'),
                 textimage: 'fa fa-plus',
-                events   : {
+                events: {
                     onClick: this.createChild
                 }
             });
 
             this.addButton({
-                name     : 'edit',
-                text     : QUILocale.get('quiqqer/system', 'edit'),
+                name: 'edit',
+                text: QUILocale.get('quiqqer/system', 'edit'),
                 textimage: 'fa fa-edit',
-                disabled : true,
-                events   : {
+                disabled: true,
+                events: {
                     onClick: function () {
                         self.updateChild(
                             self.$Search.getSelected()[0]
@@ -115,11 +112,11 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
             });
 
             this.addButton({
-                name     : 'delete',
-                text     : QUILocale.get('quiqqer/system', 'delete'),
+                name: 'delete',
+                text: QUILocale.get('quiqqer/system', 'delete'),
                 textimage: 'fa fa-trash',
-                disabled : true,
-                events   : {
+                disabled: true,
+                events: {
                     onClick: function () {
                         self.deleteChild(self.$Search.getSelected());
                     }
@@ -130,7 +127,7 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
             // field search
             this.$Search = new FieldSearch({
                 multiple: true,
-                events  : {
+                events: {
                     onRefreshBegin: function () {
                         self.Loader.show();
                     },
@@ -140,8 +137,8 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                     },
 
                     onClick: function () {
-                        var Delete = self.getButtons('delete'),
-                            Edit   = self.getButtons('edit');
+                        const Delete = self.getButtons('delete'),
+                            Edit = self.getButtons('edit');
 
                         Delete.enable();
                         Edit.enable();
@@ -158,7 +155,7 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
          * event : on inject
          */
         $onInject: function () {
-            var self = this;
+            const self = this;
 
             this.refresh().then(function () {
                 self.Loader.hide();
@@ -169,17 +166,17 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
          * Opens the create child dialog
          */
         createChild: function () {
-            var self = this;
+            const self = this;
 
             this.Loader.show();
 
             this.createSheet({
-                title : QUILocale.get(lg, 'fields.create.title'),
+                title: QUILocale.get(lg, 'fields.create.title'),
                 events: {
-                    onShow : function (Sheet) {
+                    onShow: function (Sheet) {
                         Sheet.getContent().setStyle('padding', 20);
 
-                        var Field = new CreateField({
+                        const Field = new CreateField({
                             events: {
                                 onLoaded: function () {
                                     self.Loader.hide();
@@ -189,9 +186,9 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
 
                         Sheet.addButton(
                             new QUIButton({
-                                text     : QUILocale.get('quiqqer/system', 'save'),
+                                text: QUILocale.get('quiqqer/system', 'save'),
                                 textimage: 'fa fa-save',
-                                events   : {
+                                events: {
                                     onClick: function () {
                                         self.Loader.show();
 
@@ -219,7 +216,7 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
          * @param {Number} fieldId
          */
         updateChild: function (fieldId) {
-            var self = this;
+            const self = this;
 
             this.Loader.show();
 
@@ -228,7 +225,7 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
             ], function (FieldWindow) {
                 new FieldWindow({
                     fieldId: fieldId,
-                    events : {
+                    events: {
                         onOpen: function () {
                             self.Loader.hide();
                         }
@@ -243,24 +240,24 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
          * @param {Number|Array} fieldId
          */
         deleteChild: function (fieldId) {
-            var self = this;
+            const self = this;
 
             if (typeOf(fieldId) !== 'array') {
                 fieldId = [fieldId];
             }
 
             new QUIConfirm({
-                title      : QUILocale.get(lg, 'fields.window.delete.title'),
-                text       : QUILocale.get(lg, 'fields.window.delete.text'),
+                title: QUILocale.get(lg, 'fields.window.delete.title'),
+                text: QUILocale.get(lg, 'fields.window.delete.text'),
                 information: QUILocale.get(lg, 'fields.window.delete.description', {
                     fields: fieldId.join(',')
                 }),
-                autoclose  : false,
-                maxHeight  : 400,
-                maxWidth   : 600,
-                icon       : 'fa fa-trashcan',
-                texticon   : 'fa fa-trashcan',
-                events     : {
+                autoclose: false,
+                maxHeight: 400,
+                maxWidth: 600,
+                icon: 'fa fa-trashcan',
+                texticon: 'fa fa-trashcan',
+                events: {
                     onSubmit: function (Win) {
                         Win.Loader.show();
 

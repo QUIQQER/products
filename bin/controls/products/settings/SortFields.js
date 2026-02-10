@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/products/settings/SortFields
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
 
     'qui/QUI',
@@ -15,12 +11,12 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
 ], function (QUI, QUIControl, QUISwitch, QUILoader, Grid, QUILocale, QUIAjax) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/products/settings/SortFields',
+        Type: 'package/quiqqer/products/bin/controls/products/settings/SortFields',
 
         Binds: [
             '$onImport',
@@ -30,9 +26,9 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Site          = null;
+            this.$Site = null;
             this.$currentFields = null;
-            this.$Loader        = new QUILoader();
+            this.$Loader = new QUILoader();
 
             this.addEvents({
                 onImport: this.$onImport
@@ -43,18 +39,18 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
          * event: on import
          */
         $onImport: function () {
-            var self = this;
+            const self = this;
 
-            this.$Input      = this.getElm();
+            this.$Input = this.getElm();
             this.$Input.type = 'hidden';
 
             this.$confGroup = this.$Input.name;
 
             // is it in site?
-            var PanelNode = this.$Input.getParent('.qui-panel');
+            const PanelNode = this.$Input.getParent('.qui-panel');
 
             if (PanelNode) {
-                var Panel = QUI.Controls.getById(PanelNode.get('data-quiid'));
+                const Panel = QUI.Controls.getById(PanelNode.get('data-quiid'));
 
                 if (Panel.getType() === 'controls/projects/project/site/Panel') {
                     this.$Site = Panel.getSite();
@@ -65,7 +61,7 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
             this.$Elm = new Element('div', {
                 styles: {
                     'float': 'left',
-                    width  : '100%'
+                    width: '100%'
                 }
             }).wraps(this.$Input);
 
@@ -79,8 +75,8 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
             }
 
             // label
-            var Row   = this.$Input.getParent('.qui-xml-panel-row-item');
-            var Label = document.getElement('[for="' + this.$Input.id + '"]');
+            const Row = this.$Input.getParent('.qui-xml-panel-row-item');
+            const Label = document.getElement('[for="' + this.$Input.id + '"]');
 
             if (Label) {
                 Label.setStyle('width', '100%');
@@ -92,38 +88,38 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
 
 
             // size
-            var size = this.$Elm.getSize();
+            const size = this.$Elm.getSize();
 
             // grid container
-            var Container = new Element('div', {
+            const Container = new Element('div', {
                 styles: {
                     'float': 'left',
-                    width  : Math.round(size.x)
+                    width: Math.round(size.x)
                 }
             }).inject(this.$Elm);
 
             this.$Grid = new Grid(Container, {
-                height     : 300,
-                width      : Math.round(size.x),
-                perPage    : 150,
+                height: 300,
+                width: Math.round(size.x),
+                perPage: 150,
                 columnModel: [{
-                    header   : QUILocale.get(lg, 'settings.window.products.grid.sortFields'),
+                    header: QUILocale.get(lg, 'settings.window.products.grid.sortFields'),
                     dataIndex: 'status',
-                    dataType : 'QUI',
-                    width    : 60
+                    dataType: 'QUI',
+                    width: 60
                 }, {
-                    header   : QUILocale.get('quiqqer/system', 'id'),
+                    header: QUILocale.get('quiqqer/system', 'id'),
                     dataIndex: 'idDisplay',
-                    dataType : 'number',
-                    width    : 60
+                    dataType: 'number',
+                    width: 60
                 }, {
                     dataIndex: 'id',
-                    hidden   : true
+                    hidden: true
                 }, {
-                    header   : QUILocale.get('quiqqer/system', 'title'),
+                    header: QUILocale.get('quiqqer/system', 'title'),
                     dataIndex: 'title',
-                    dataType : 'text',
-                    width    : 200
+                    dataType: 'text',
+                    width: 200
                 }]
             });
 
@@ -150,8 +146,8 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
          * @return {void|Promise}
          */
         resize: function () {
-            var Parent = this.getElm().getParent('.field-container-field');
-            var size   = Parent.getSize();
+            const Parent = this.getElm().getParent('.field-container-field');
+            const size = Parent.getSize();
 
             return this.$Grid.setWidth(size.x);
         },
@@ -160,7 +156,7 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
          * @return {Promise}
          */
         refresh: function () {
-            var self = this;
+            const self = this;
 
             if (this.$Site) {
                 return new Promise(function (resolve, reject) {
@@ -169,9 +165,9 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
                         self.$parseFieldData(fields);
                         resolve();
                     }, {
-                        'package'  : 'quiqqer/products',
-                        onError    : reject,
-                        siteId     : self.$Site.getId(),
+                        'package': 'quiqqer/products',
+                        onError: reject,
+                        siteId: self.$Site.getId(),
                         projectData: self.$Site.getProject().encode()
                     });
                 });
@@ -184,7 +180,7 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
                     resolve();
                 }, {
                     'package': 'quiqqer/products',
-                    onError  : reject
+                    onError: reject
                 });
             });
         },
@@ -193,15 +189,15 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
          * @param fields
          */
         $parseFieldData: function (fields) {
-            for (var i = 0, len = fields.length; i < len; i++) {
+            for (let i = 0, len = fields.length; i < len; i++) {
                 if (typeof fields[i].sorting === 'undefined') {
                     continue;
                 }
 
                 fields[i].status = new QUISwitch({
-                    status : fields[i].sorting,
+                    status: fields[i].sorting,
                     fieldId: fields[i].id,
-                    events : {
+                    events: {
                         onChange: this.$onSwitchChange
                     }
                 });
@@ -216,23 +212,23 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
          * event: switch change
          */
         $onSwitchChange: function (Current) {
-            var controls = QUI.Controls.getControlsInElement(this.$Elm);
-            var switches = controls.filter(function (Control) {
+            const controls = QUI.Controls.getControlsInElement(this.$Elm);
+            const switches = controls.filter(function (Control) {
                 return Control.getType() === 'qui/controls/buttons/Switch';
             });
 
-            var values = [];
+            const values = [];
 
-            for (var i = 0, len = switches.length; i < len; i++) {
+            for (let i = 0, len = switches.length; i < len; i++) {
                 if (switches[i].getStatus()) {
                     values.push(switches[i].getAttribute('fieldId'));
                 }
             }
 
-            var currentId     = Current.getAttribute('fieldId');
-            var currentStatus = Current.getStatus();
+            const currentId = Current.getAttribute('fieldId');
+            const currentStatus = Current.getStatus();
 
-            for (i = 0, len = this.$currentFields.length; i < len; i++) {
+            for (let i = 0, len = this.$currentFields.length; i < len; i++) {
                 if (this.$currentFields[i].id === currentId) {
                     this.$currentFields[i].sorting = currentStatus;
                     break;
@@ -249,7 +245,7 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
          * @return {Promise}
          */
         getActiveFields: function () {
-            var self = this;
+            const self = this;
 
             return new Promise(function (resolve) {
                 if (self.$currentFields === null) {
@@ -260,7 +256,7 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
                     return;
                 }
 
-                var filtered = self.$currentFields.filter(function (field) {
+                const filtered = self.$currentFields.filter(function (field) {
                     return field.sorting;
                 });
 

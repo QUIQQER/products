@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/fields/types/Image
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/fields/types/Image', [
 
     'qui/QUI',
@@ -15,7 +11,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Image', [
 
     return new Class({
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/Image',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/Image',
 
         Binds: [
             '$onImport',
@@ -29,7 +25,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Image', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Input   = null;
+            this.$Input = null;
             this.$Preview = null;
 
             this.addEvents({
@@ -41,37 +37,37 @@ define('package/quiqqer/products/bin/controls/fields/types/Image', [
          * event : on import
          */
         $onImport: function () {
-            var Elm = this.getElm();
+            const Elm = this.getElm();
 
             this.$Elm = new Element('div', {
                 'class': 'field-container-field field-container',
-                styles : {
-                    padding : 0,
+                styles: {
+                    padding: 0,
                     position: 'relative'
                 }
             }).wraps(Elm);
 
-            this.$Input      = Elm;
+            this.$Input = Elm;
             this.$Input.type = 'text';
 
             this.$Input.addClass('field-container-field');
 
             this.$Input.setStyles({
                 border: 'none',
-                width : 'calc(100% - 50px)'
+                width: 'calc(100% - 50px)'
             });
 
             new Element('span', {
                 'class': 'field-container-item',
-                html   : '<span class="fa fa-picture-o"></span>',
-                styles : {
+                html: '<span class="fa fa-picture-o"></span>',
+                styles: {
                     borderWidth: '0 0 0 1px',
-                    cursor     : 'pointer',
-                    lineHeight : 30,
-                    textAlign  : 'center',
-                    width      : 50
+                    cursor: 'pointer',
+                    lineHeight: 30,
+                    textAlign: 'center',
+                    width: 50
                 },
-                events : {
+                events: {
                     click: this.openMedia
                 }
             }).inject(this.$Elm);
@@ -79,15 +75,15 @@ define('package/quiqqer/products/bin/controls/fields/types/Image', [
             this.$Preview = new Element('div', {
                 styles: {
                     backgroundPosition: 'center center',
-                    backgroundRepeat  : 'none',
+                    backgroundRepeat: 'none',
 
-                    height    : '100%',
-                    left      : 0,
+                    height: '100%',
+                    left: 0,
                     lineHeight: 40,
-                    position  : 'absolute',
-                    textAlign : 'center',
-                    top       : 0,
-                    width     : 50
+                    position: 'absolute',
+                    textAlign: 'center',
+                    top: 0,
+                    width: 50
                 }
             }).inject(this.$Elm);
 
@@ -98,7 +94,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Image', [
          * refresh the preview
          */
         refresh: function () {
-            var self  = this,
+            const self = this,
                 value = this.$Input.value;
 
             if (value === '') {
@@ -116,7 +112,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Image', [
                 'ajax_media_url_rewrited',
                 'ajax_media_url_getPath'
             ], function (result, path) {
-                var previewUrl = (URL_DIR + result).replace('//', '/');
+                const previewUrl = (URL_DIR + result).replace('//', '/');
 
                 // self.$Path.set('html', path);
                 // self.$Path.set('title', path);
@@ -134,9 +130,9 @@ define('package/quiqqer/products/bin/controls/fields/types/Image', [
                 });
             }, {
                 fileurl: value,
-                params : JSON.encode({
+                params: JSON.encode({
                     height: 40,
-                    width : 40
+                    width: 40
                 })
             });
         },
@@ -149,13 +145,13 @@ define('package/quiqqer/products/bin/controls/fields/types/Image', [
                 return;
             }
 
-            var self    = this,
-                value   = this.$Input.value,
-                fileid  = false,
+            let self = this,
+                value = this.$Input.value,
+                fileid = false,
                 project = false;
 
-            var productFolder = this.getAttribute('productFolder'),
-                urlParams     = {};
+            let productFolder = this.getAttribute('productFolder'),
+                urlParams = {};
 
             if (value === '' && productFolder) {
                 urlParams = QUIStringUtils.getUrlParams(productFolder);
@@ -172,10 +168,10 @@ define('package/quiqqer/products/bin/controls/fields/types/Image', [
             }
 
             new MediaPopup({
-                fileid    : fileid,
-                project   : project,
+                fileid: fileid,
+                project: project,
                 breadcrumb: false,
-                events    : {
+                events: {
                     onSubmit: function (Window, imageData) {
                         self.$Input.value = imageData.url;
                         self.refresh();

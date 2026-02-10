@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/fields/types/CheckboxInput
- * @author www.pcsg.de (Patrick Müller)
- */
 define('package/quiqqer/products/bin/controls/fields/types/CheckboxInput', [
 
     'qui/QUI',
@@ -13,8 +9,9 @@ define('package/quiqqer/products/bin/controls/fields/types/CheckboxInput', [
     "use strict";
 
     return new Class({
+
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/CheckboxInput',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/CheckboxInput',
 
         Binds: [
             '$onImport',
@@ -27,8 +24,8 @@ define('package/quiqqer/products/bin/controls/fields/types/CheckboxInput', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Input      = null;
-            this.$Checkbox   = null;
+            this.$Input = null;
+            this.$Checkbox = null;
             this.$ValueInput = null;
 
             this.addEvents({
@@ -40,21 +37,21 @@ define('package/quiqqer/products/bin/controls/fields/types/CheckboxInput', [
          * event : on import
          */
         $onImport: function () {
-            this.$Input      = this.getElm();
+            this.$Input = this.getElm();
             this.$Input.type = 'hidden';
 
-            var Container = new Element('div', {
+            const Container = new Element('div', {
                 'class': 'quiqqer-products-field-checkboxinput-container field-container-field'
             }).inject(this.$Input, 'before');
 
             this.$Checkbox = new Element('input', {
                 'class': 'quiqqer-products-field-checkboxinput-checkbox',
-                type   : 'checkbox'
+                type: 'checkbox'
             }).inject(Container);
 
             this.$ValueInput = new Element('input', {
                 'class': 'quiqqer-products-field-checkboxinput-value',
-                type   : 'text'
+                type: 'text'
             }).inject(Container);
 
             this.$Checkbox.addEvent('change', this.$setValue);
@@ -67,7 +64,7 @@ define('package/quiqqer/products/bin/controls/fields/types/CheckboxInput', [
         $setValue: function () {
             this.$Input.value = JSON.encode({
                 checked: this.$Checkbox.checked,
-                value  : this.$ValueInput.value.trim()
+                value: this.$ValueInput.value.trim()
             });
         },
 
@@ -95,7 +92,7 @@ define('package/quiqqer/products/bin/controls/fields/types/CheckboxInput', [
         getValue: function () {
             return JSON.encode({
                 checked: this.$Checkbox.checked,
-                value  : this.$ValueInput.value.trim()
+                value: this.$ValueInput.value.trim()
             });
         },
 
@@ -103,7 +100,7 @@ define('package/quiqqer/products/bin/controls/fields/types/CheckboxInput', [
          * Enable control
          */
         enable: function () {
-            this.$Checkbox.disabled   = false;
+            this.$Checkbox.disabled = false;
             this.$ValueInput.disabled = false;
         },
 
@@ -111,7 +108,7 @@ define('package/quiqqer/products/bin/controls/fields/types/CheckboxInput', [
          * Disable control
          */
         disable: function () {
-            this.$Checkbox.disabled   = true;
+            this.$Checkbox.disabled = true;
             this.$ValueInput.disabled = true;
         }
     });
