@@ -49,6 +49,20 @@ define('package/quiqqer/products/bin/utils/Products', [
             }
 
             return FieldElm;
+        },
+
+        /**
+         * Generate SHA 256 hash from string.
+         *
+         * @param {String} str
+         * @return {Promise<string>}
+         */
+        getSha256Hash: async function(str) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(str);
+            const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
         }
     };
 });

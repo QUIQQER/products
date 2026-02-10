@@ -7,9 +7,10 @@ define('package/quiqqer/products/bin/classes/Products', [
     'qui/QUI',
     'qui/classes/DOM',
     'Ajax',
-    'package/quiqqer/products/bin/classes/Product'
+    'package/quiqqer/products/bin/classes/Product',
+    'package/quiqqer/products/bin/utils/Products'
 
-], function (QUI, QUIDOM, Ajax, Product) {
+], function (QUI, QUIDOM, Ajax, Product, ProductUtils) {
     'use strict';
 
     const requestCache = {};
@@ -218,7 +219,7 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @param {Boolean} forceCache - disabled frontend cache, force ajax call
          * @returns {Promise}
          */
-        getChild: function (productId, fields, forceCache) {
+        getChild: async function (productId, fields, forceCache) {
             fields = fields || {};
 
             if (typeof forceCache === 'undefined') {
@@ -226,7 +227,7 @@ define('package/quiqqer/products/bin/classes/Products', [
             }
 
             const jsonData = JSON.stringify({productId, fields});
-            const key = btoa(String.fromCharCode(...new TextEncoder().encode(jsonData))).slice(0, 32);
+            const key = await ProductUtils.getSha256Hash(jsonData);
 
             let inAdministration = false;
             if (typeof QUIQQER.inAdministration !== 'undefined' && QUIQQER.inAdministration) {
