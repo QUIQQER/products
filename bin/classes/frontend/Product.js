@@ -32,6 +32,10 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
             id: false
         },
 
+        binds: [
+            'refresh'
+        ],
+
         initialize: function (options) {
             this.parent(options);
 
@@ -214,7 +218,8 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                 require(['package/quiqqer/products/bin/Products'], (Products) => {
                     Products.getChild(
                         this.getAttribute('id'),
-                        this.$data.fields
+                        this.$data.fields,
+                        true
                     ).then((data) => {
                         this.$loaded = true;
                         this.$data = data;
