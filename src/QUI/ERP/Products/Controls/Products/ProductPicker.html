@@ -41,10 +41,27 @@
             {/foreach}
             {/if}
         </div>
-
     </form>
 
     <div data-name="product-picker-slides" class="quiqqer-products-controls-product-productPicker__sheets">
+        {if $this->getAttribute('zeroProduct')}
+        <div class="quiqqer-products-controls-product-productPicker__sheet quiqqer-productPicker-sheet">
+            <div class="quiqqer-productPicker-sheet__inner">
+                <div data-name="zero-product-image" class="quiqqer-productPicker-sheet-product__image"></div>
+                <div data-name="zero-product-title" class="quiqqer-productPicker-sheet__title"></div>
+                <div data-name="zero-product-description" class="quiqqer-productPicker-sheet__content text-muted"></div>
+                <div data-name="zero-product-content" class="quiqqer-productPicker-sheet-product__content text-muted"></div>
+                <div data-name="zero-product-price" class="quiqqer-productPicker-sheet-product__price text-muted"></div>
+                <div class="quiqqer-productPicker-sheet-product__actions text-muted">
+                    <button disabled class="btn btn-secondary w-full">
+                        <span class="fa fa-basket-shopping"></span>
+                        <span data-name="zero-button-text"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        {/if}
+
         {foreach $sheets as $sheet}
         <div class="quiqqer-products-controls-product-productPicker__sheet {if $sheet.highlighted}highlighted{/if} quiqqer-productPicker-sheet">
             <div class="quiqqer-productPicker-sheet__inner">

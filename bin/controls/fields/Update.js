@@ -1,9 +1,6 @@
 /**
  * Control for update a field
  *
- * @module package/quiqqer/products/bin/controls/categories/Create
- * @author www.pcsg.de (Henning Leutz)
- *
  * @event onLoaded
  */
 define('package/quiqqer/products/bin/controls/fields/Update', [
@@ -24,12 +21,12 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
     'text!package/quiqqer/products/bin/controls/fields/Create.html',
     'css!package/quiqqer/products/bin/controls/fields/Create.css'
 
-], function(QUI, QUIControl, QUIConfirm, QUIFormUtils, QUILocale, QUIAjax,
-    Mustache, InputMultiLang, Handler, FieldUtils, Translation, Products, template
+], function (QUI, QUIControl, QUIConfirm, QUIFormUtils, QUILocale, QUIAjax,
+             Mustache, InputMultiLang, Handler, FieldUtils, Translation, Products, template
 ) {
     'use strict';
 
-    var lg = 'quiqqer/products',
+    const lg = 'quiqqer/products',
         Fields = new Handler();
 
     return new Class({
@@ -45,7 +42,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
             fieldId: false
         },
 
-        initialize: function(options) {
+        initialize: function (options) {
             this.parent(options);
 
             this.$Translation = null;
@@ -65,8 +62,8 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
          *
          * @return {HTMLDivElement}
          */
-        create: function() {
-            var Elm = this.parent();
+        create: function () {
+            const Elm = this.parent();
 
             Elm.set({
                 'class': 'field-create',
@@ -110,7 +107,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
         /**
          * event : on inject
          */
-        $onInject: function() {
+        $onInject: function () {
             const self = this,
                 Elm = self.getElm(),
                 id = this.getAttribute('fieldId');
@@ -139,10 +136,10 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 Fields.getFieldTypes(),
                 Fields.getFieldTypeSettings(),
                 Fields.getSearchTypesForField(id)
-            ]).then(function(result) {
-                var i, len, settings;
+            ]).then(function (result) {
+                let i, len, settings;
 
-                var fieldTypes = result[1],
+                const fieldTypes = result[1],
                     fieldData = result[0],
                     fieldSettings = result[2],
                     searchTypes = result[3],
@@ -157,9 +154,9 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     FieldShowInDetails = Elm.getElement('[name="showInDetails"]'),
                     FieldStandard = Elm.getElement('[name="standardField"]');
 
-                fieldTypes.sort(function(a, b) {
-                    var aField = QUILocale.get(a.locale[0], a.locale[1]);
-                    var bField = QUILocale.get(b.locale[0], b.locale[1]);
+                fieldTypes.sort(function (a, b) {
+                    const aField = QUILocale.get(a.locale[0], a.locale[1]);
+                    const bField = QUILocale.get(b.locale[0], b.locale[1]);
 
                     if (aField === bField) {
                         return 0;
@@ -189,7 +186,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     }).replaces(Elm.getElement('.field-search_type'));
 
                 } else {
-                    var FieldSearchType = new Element('select', {
+                    const FieldSearchType = new Element('select', {
                         name: 'search_type',
                         value: fieldData.search_type,
                         styles: {
@@ -214,7 +211,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     case 'FloatType':
                     case 'Textarea':
                     case 'IntType':
-                        var DefaultValue = Elm.getElement('.field-defaultValue');
+                        const DefaultValue = Elm.getElement('.field-defaultValue');
 
                         DefaultValue.getParent('tr').setStyle('display', null);
 
@@ -248,7 +245,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 FieldPublic.checked = fieldData.isPublic;
                 FieldShowInDetails.checked = fieldData.showInDetails;
 
-                const loadSettings = function() {
+                const loadSettings = function () {
                     self.$loadSettings(this);
                 }.bind(FieldTypes);
 
@@ -266,9 +263,9 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 FieldTypes.disabled = true;
 
                 loadSettings();
-            }.bind(this)).then(function() {
+            }.bind(this)).then(function () {
                 return FieldUtils.canUsedAsDetailField(id);
-            }).then(function(canUsedAsDetail) {
+            }).then(function (canUsedAsDetail) {
                 if (!canUsedAsDetail) {
                     Elm.getElement('[name="showInDetails"]').checked = false;
                     Elm.getElement('[name="showInDetails"]').disabled = true;
@@ -278,12 +275,12 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 return FieldUtils.canUsedAsDetailField(
                     Elm.getElement('[name="type"]').value
                 );
-            }).then(function(canUsedAsDetail) {
+            }).then(function (canUsedAsDetail) {
                 if (!canUsedAsDetail) {
                     Elm.getElement('[name="showInDetails"]').checked = false;
                     Elm.getElement('[name="showInDetails"]').disabled = true;
                 }
-            }).then(function() {
+            }).then(function () {
                 // title description are always public
                 if (id === 4 || id === 5) {
                     Elm.getElement('[name="publicField"]').checked = true;
@@ -299,17 +296,17 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
          *
          * @returns {Promise}
          */
-        submit: function() {
-            var self = this,
+        submit: function () {
+            const self = this,
                 Elm = self.getElm();
 
-            return new Promise(function(resolve, reject) {
+            return new Promise(function (resolve, reject) {
 
                 if (!self.$Translation) {
                     return reject('Translation not found');
                 }
 
-                var Form = Elm.getElement('form'),
+                let Form = Elm.getElement('form'),
                     fieldId = self.getAttribute('fieldId'),
                     search_type = '';
 
@@ -318,11 +315,11 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 }
 
                 // trigger update
-                QUI.getMessageHandler().then(function(MH) {
+                QUI.getMessageHandler().then(function (MH) {
                     MH.setAttribute('showMessages', false);
 
-                }).then(function() {
-                    var defaultValue = null;
+                }).then(function () {
+                    let defaultValue = null;
 
                     if (typeof Form.elements.defaultValue !== 'undefined') {
                         defaultValue = Form.elements.defaultValue.value;
@@ -343,28 +340,28 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                         fieldEditable: Form.elements.fieldEditable.checked ? 1 : 0,
                         fieldInherited: Form.elements.fieldInherited.checked ? 1 : 0
                     });
-                }).then(function(PRODUCT_ARRAY_STATUS) {
+                }).then(function (PRODUCT_ARRAY_STATUS) {
                     if (PRODUCT_ARRAY_STATUS == Fields.PRODUCT_ARRAY_CHANGED) {
                         // product array changed,
                         return self.saveFieldToAllProducts();
                     }
-                }).then(function() {
+                }).then(function () {
                     return Promise.all([
                         self.$Translation.save(),
                         self.$WorkingTitle.save(),
                         self.$Description.save()
                     ]);
-                }).then(function() {
+                }).then(function () {
                     return QUI.getMessageHandler();
-                }).then(function(MH) {
+                }).then(function (MH) {
                     MH.setAttribute('showMessages', true);
 
                     MH.addSuccess(
                         QUILocale.get(lg, 'message.field.successfully.created')
                     );
 
-                }).then(resolve).catch(function(e) {
-                    QUI.getMessageHandler().then(function(MH) {
+                }).then(resolve).catch(function (e) {
+                    QUI.getMessageHandler().then(function (MH) {
                         MH.setAttribute('showMessages', true);
                         reject(e);
                     });
@@ -376,10 +373,10 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
          *
          * @returns {Promise}
          */
-        saveFieldToAllProducts: function() {
-            var self = this;
+        saveFieldToAllProducts: function () {
+            const self = this;
 
-            return new Promise(function(resolve) {
+            return new Promise(function (resolve) {
                 new QUIConfirm({
                     icon: 'fa fa-file-text-o',
                     title: QUILocale.get('quiqqer/products', 'fields.window.productarray.changed.title'),
@@ -396,14 +393,14 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     maxWidth: 750,
                     autoclose: false,
                     events: {
-                        onOpen: function(Win) {
+                        onOpen: function (Win) {
                             Win.Loader.show();
 
-                            var SubmitBtn = Win.getButton('submit');
+                            const SubmitBtn = Win.getButton('submit');
 
                             SubmitBtn.disable();
 
-                            Products.getProductCount().then(function(count) {
+                            Products.getProductCount().then(function (count) {
                                 if (count < 500) {
                                     SubmitBtn.enable();
                                     Win.Loader.hide();
@@ -412,7 +409,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
 
                                 QUIAjax.get(
                                     'package_quiqqer_products_ajax_products_getSetFieldAttributesToProductsCmd',
-                                    function(cmd) {
+                                    function (cmd) {
                                         Win.Loader.hide();
 
                                         Win.setAttribute(
@@ -437,10 +434,10 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                                 );
                             });
                         },
-                        onSubmit: function(Win) {
+                        onSubmit: function (Win) {
                             Win.Loader.show();
 
-                            QUIAjax.post('package_quiqqer_products_ajax_fields_setProductFieldArray', function() {
+                            QUIAjax.post('package_quiqqer_products_ajax_fields_setProductFieldArray', function () {
                                 Win.close();
                             }, {
                                 'package': 'quiqqer/products',
@@ -459,16 +456,16 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
          *
          * @param {HTMLSelectElement} FieldTypes
          */
-        $loadSettings: function(FieldTypes) {
+        $loadSettings: function (FieldTypes) {
             if (FieldTypes.value === '') {
                 return;
             }
 
-            var self = this,
+            const self = this,
                 Option = FieldTypes.getElement('[value="' + FieldTypes.value + '"]'),
                 settings = Option.get('data-settings');
 
-            var Form = FieldTypes.getParent('form'),
+            let Form = FieldTypes.getParent('form'),
                 FormOptions = Form.elements.options,
                 Container = Form.getElement('.field-options'),
                 Cell = Container.getParent('td');
@@ -488,7 +485,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     padding: null
                 });
 
-                Container.getChildren().each(function(Child) {
+                Container.getChildren().each(function (Child) {
                     if (Child != FormOptions) {
                         Child.destroy();
                     }
@@ -499,7 +496,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 return;
             }
 
-            var Loader = new Element('span', {
+            const Loader = new Element('span', {
                 'class': 'fa fa-spinner fa-spin',
                 styles: {
                     left: 10,
@@ -508,7 +505,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 }
             }).inject(Container);
 
-            require([settings], function(Control) {
+            require([settings], function (Control) {
                 Loader.destroy();
 
                 new Control({
@@ -516,7 +513,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 }).imports(FormOptions);
 
                 FieldTypes.focus();
-            }, function(err) {
+            }, function (err) {
                 console.error(err);
                 console.error(arguments);
                 //FieldTypes.disabled = false;

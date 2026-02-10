@@ -1,7 +1,4 @@
 /**
- * @module package/quiqqer/products/bin/controls/fields/search/Window
- * @author www.pcsg.de (Henning Leutz)
- *
  * Felder suche
  */
 define('package/quiqqer/products/bin/controls/fields/search/Window', [
@@ -19,12 +16,12 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
 ], function (QUI, QUIControl, QUIConfirm, Grid, Fields, QUILocale, Search) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
 
         Extends: QUIConfirm,
-        Type   : 'package/quiqqer/products/bin/controls/fields/search/Window',
+        Type: 'package/quiqqer/products/bin/controls/fields/search/Window',
 
         Binds: [
             'submit',
@@ -33,20 +30,20 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
         ],
 
         options: {
-            maxHeight      : 600,
-            maxWidth       : 800,
-            icon           : 'fa fa-file-text-o',
-            title          : QUILocale.get(lg, 'fields.window.search.title'),
-            autoclose      : true,
-            multiple       : false,
+            maxHeight: 600,
+            maxWidth: 800,
+            icon: 'fa fa-file-text-o',
+            title: QUILocale.get(lg, 'fields.window.search.title'),
+            autoclose: true,
+            multiple: false,
             fieldTypeFilter: false,
 
             cancel_button: {
-                text     : QUILocale.get('quiqqer/system', 'cancel'),
+                text: QUILocale.get('quiqqer/system', 'cancel'),
                 textimage: 'fa fa-remove'
             },
-            ok_button    : {
-                text     : QUILocale.get('quiqqer/system', 'accept'),
+            ok_button: {
+                text: QUILocale.get('quiqqer/system', 'accept'),
                 textimage: 'fa fa-search'
             },
 
@@ -57,7 +54,7 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
             this.parent(options);
 
             this.$Search = null;
-            this.$Grid   = null;
+            this.$Grid = null;
 
             this.addEvents({
                 onOpen: this.$onOpen
@@ -77,18 +74,18 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
          * @returns {HTMLDivElement}
          */
         $onOpen: function (Win) {
-            var Content = Win.getContent();
+            const Content = Win.getContent();
             Content.set('html', '');
 
             Win.Loader.show();
 
             this.$Search = new Search({
-                fieldTypeFilter   : this.getAttribute('fieldTypeFilter'),
-                multiple          : this.getAttribute('multiple'),
+                fieldTypeFilter: this.getAttribute('fieldTypeFilter'),
+                multiple: this.getAttribute('multiple'),
                 showsearchableonly: this.getAttribute('showsearchableonly'),
-                events            : {
+                events: {
                     onSubmit: this.submit,
-                    onLoad  : function () {
+                    onLoad: function () {
                         Win.Loader.hide();
                     }
                 }
@@ -101,7 +98,7 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
          * Submit
          */
         submit: function () {
-            var ids = this.$Search.getSelected();
+            const ids = this.$Search.getSelected();
 
             if (!ids.length) {
                 return;

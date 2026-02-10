@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/products/settings/SiteProductTags
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/products/settings/SiteProductTags', [
 
     'qui/QUI',
@@ -13,7 +9,7 @@ define('package/quiqqer/products/bin/controls/products/settings/SiteProductTags'
 
     return new Class({
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/products/settings/SiteProductTags',
+        Type: 'package/quiqqer/products/bin/controls/products/settings/SiteProductTags',
 
         initialize: function (options) {
             this.parent(options);
@@ -27,11 +23,11 @@ define('package/quiqqer/products/bin/controls/products/settings/SiteProductTags'
          * event: on import
          */
         $onImport: function () {
-            var Elm = this.getElm();
+            const Elm = this.getElm();
 
             Products.getInstalledProductPackages().then(function (Packages) {
                 if (!Packages['quiqqer/productstags']) {
-                    var Row = Elm.getParent('tr');
+                    const Row = Elm.getParent('tr');
 
                     if (Row) {
                         Row.setStyle('display', 'none');

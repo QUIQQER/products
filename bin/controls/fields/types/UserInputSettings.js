@@ -1,24 +1,19 @@
 /**
  * Settings for the "UserInput" field type
- *
- * @module package/quiqqer/products/bin/controls/fields/types/UserInputSettings
- * @author www.pcsg.de (Patrick Müller)
  */
 define('package/quiqqer/products/bin/controls/fields/types/UserInputSettings', [
 
     'qui/controls/Control',
     'Locale',
     'qui/utils/Form',
-
     'Mustache',
-
     'text!package/quiqqer/products/bin/controls/fields/types/UserInputSettings.html',
     'css!package/quiqqer/products/bin/controls/fields/types/UserInputSettings.css'
 
-], function(QUIControl, QUILocale, QUIFormUtils, Mustache, template) {
+], function (QUIControl, QUILocale, QUIFormUtils, Mustache, template) {
     'use strict';
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
 
@@ -39,7 +34,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInputSettings', [
             autoActivateItems: false
         },
 
-        initialize: function(options) {
+        initialize: function (options) {
             this.parent(options);
 
             this.$CheckboxAutoActivate = null;
@@ -55,7 +50,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInputSettings', [
          *
          * @return {HTMLDivElement}
          */
-        create: function() {
+        create: function () {
             this.$Elm = new Element('div', {
                 'class': 'quiqqer-products-userinput-settings',
                 html: Mustache.render(template, {
@@ -87,27 +82,9 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInputSettings', [
         },
 
         /**
-         * event : on import
+         * event: on import
          */
-        $onInject: function() {
-            //var Parent = this.$Elm.getParent('.field-options');
-            //
-            //if (Parent) {
-            //    Parent.setStyle('padding', 0);
-            //}
-            //
-            //new Element('div', {
-            //    'class': 'quiqqer-products-folder-settings',
-            //    html   : '<label>' +
-            //        '        <input type="checkbox" name="autoActivateItems"/>' +
-            //        '           <span>' + QUILocale.get(lg, 'controls.UserInputSettings.autoActivateItems') + '</span>' +
-            //        '    </label>'
-            //}).inject(this.$Elm);
-            //
-            //this.$CheckboxAutoActivate = this.$Elm.getElement('[name="autoActivateItems"]');
-            //this.$CheckboxAutoActivate.addEvent('change', this.update);
-            //
-            //this.$CheckboxAutoActivate.checked = !!this.getAttribute('autoActivateItems');
+        $onInject: function () {
         },
 
         /**
@@ -116,11 +93,11 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInputSettings', [
          * @param self
          * @param {HTMLInputElement} Node
          */
-        $onImport: function(self, Node) {
+        $onImport: function (self, Node) {
             this.$Input = Node;
             this.$Elm = this.create();
 
-            var data = {};
+            let data = {};
 
             try {
                 data = JSON.decode(this.$Input.value);
@@ -152,7 +129,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInputSettings', [
         /**
          * Set the data to the input
          */
-        update: function() {
+        update: function () {
             this.$Input.value = JSON.encode(QUIFormUtils.getDataFromNode(this.$Elm));
         }
     });

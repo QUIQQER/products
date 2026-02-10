@@ -16,7 +16,8 @@ class ProductPicker extends QUI\Control
             'sheetOptionsStyle' => 'select', // select, radio, button-style1
             'sheetOptions' => [],
             'sheets' => [],
-            'showProductDetails' => true
+            'showProductDetails' => true,
+            'zeroProduct' => false
         ]);
 
         $this->setJavaScriptControl(
@@ -61,7 +62,11 @@ class ProductPicker extends QUI\Control
             }
         }
 
-        $this->setCustomVariable('countSheets', count($sheets));
+        if ($this->getAttribute('zeroProduct')) {
+            $this->setCustomVariable('countSheets', count($sheets) + 1);
+        } else {
+            $this->setCustomVariable('countSheets', count($sheets));
+        }
 
         $Engine->assign([
             'this' => $this,
@@ -87,7 +92,7 @@ class ProductPicker extends QUI\Control
      * @return void
      */
 
-    private function setCustomVariable(string $name, string|int $value): void
+    private function setCustomVariable(string $name, string | int $value): void
     {
         if (!$name || !$value) {
             return;

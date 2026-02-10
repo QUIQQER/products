@@ -1,7 +1,4 @@
 /**
- * @module package/quiqqer/products/bin/controls/products/GenerateVariants
- * @author www.pcsg.de (Henning Leutz)
- *
  * @event onLoad
  * @event onChange
  */

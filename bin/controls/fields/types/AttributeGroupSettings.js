@@ -1,9 +1,5 @@
 /**
- * Settings for "AttributeGroup" field type.
- *
- * @module package/quiqqer/products/bin/controls/fields/types/AttributeGroupSettings
- * @author www.pcsg.de (Henning Leutz)
- * @author www.pcsg.de (Patrick Müller)
+ * Settings for "AttributeGroup" field type
  */
 define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSettings', [
 

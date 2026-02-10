@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/fields/types/IntType
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/fields/types/IntType', [
 
     'qui/QUI',
@@ -11,8 +7,9 @@ define('package/quiqqer/products/bin/controls/fields/types/IntType', [
     "use strict";
 
     return new Class({
+
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/IntType',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/IntType',
 
         Binds: [
             '$onImport'
@@ -27,10 +24,10 @@ define('package/quiqqer/products/bin/controls/fields/types/IntType', [
         },
 
         /**
-         * event : on import
+         * event: on import
          */
         $onImport: function () {
-            var Elm = this.getElm();
+            const Elm = this.getElm();
 
             Elm.addClass('field-container-field');
             Elm.type = 'number';

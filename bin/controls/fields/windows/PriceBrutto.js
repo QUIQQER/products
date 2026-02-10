@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/fields/windows/PriceBrutto
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/fields/windows/PriceBrutto', [
 
     'qui/QUI',

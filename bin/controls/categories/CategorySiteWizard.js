@@ -1,9 +1,6 @@
 /**
  * Category Site Wizard
  *
- * @module package/quiqqer/products/bin/CategorySiteWizard
- * @author www.pcsg.de (Henning Leutz)
- *
  * @event onCategorySelect
  */
 define('package/quiqqer/products/bin/controls/categories/CategorySiteWizard', [
@@ -81,7 +78,7 @@ define('package/quiqqer/products/bin/controls/categories/CategorySiteWizard', [
          * @returns {Promise}
          */
         submit: function () {
-            var self = this,
+            const self = this,
                 Site = this.getAttribute('Site'),
                 catId = this.getAttribute('categoryParent');
 
@@ -97,7 +94,7 @@ define('package/quiqqer/products/bin/controls/categories/CategorySiteWizard', [
                         require([
                             'package/quiqqer/translator/bin/classes/Translator'
                         ], function (Translator) {
-                            var Tr = new Translator();
+                            const Tr = new Translator();
 
                             Tr.publish('quiqqer/products').then(function () {
                                 return Tr.refreshLocale();
@@ -121,7 +118,7 @@ define('package/quiqqer/products/bin/controls/categories/CategorySiteWizard', [
                         return;
                     }
 
-                    var Child = Site.getProject().get(newSiteId);
+                    const Child = Site.getProject().get(newSiteId);
 
                     Site.fireEvent('createChild', [Site, newSiteId]);
                     resolve(Child);
@@ -147,11 +144,11 @@ define('package/quiqqer/products/bin/controls/categories/CategorySiteWizard', [
          */
         categorySelect: function () {
             return new Promise(function (resolve) {
-                var self = this;
+                const self = this;
 
                 this.fireEvent('categorySelect', [this]);
 
-                var Container = new Element('div', {
+                const Container = new Element('div', {
                     html: '<p>Bitte wählen Sie die Übergeordnete Kategorie aus:</p>',  // #locale
                     styles: {
                         background: '#fff',

@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/fields/types/Vat
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/fields/types/Vat', [
 
     'qui/QUI',
@@ -12,11 +8,12 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
 ], function (QUI, QUIControl, TaxHandler, QUILocale) {
     "use strict";
 
-    var Tax = new TaxHandler();
+    const Tax = new TaxHandler();
 
     return new Class({
+
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/Vat',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/Vat',
 
         Binds: [
             '$onImport'
@@ -36,27 +33,27 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
          * event : on import
          */
         $onImport: function () {
-            var self = this,
-                Elm  = this.getElm();
+            const self = this,
+                Elm = this.getElm();
 
             Elm.type = 'hidden';
 
             // loader
-            var Loader = new Element('span', {
+            const Loader = new Element('span', {
                 'class': 'field-container-item',
-                html   : '<span class="fa fa-spinner fa-spin"></span>',
-                styles : {
+                html: '<span class="fa fa-spinner fa-spin"></span>',
+                styles: {
                     lineHeight: 30,
-                    textAlign : 'center',
-                    width     : 50
+                    textAlign: 'center',
+                    width: 50
                 }
             }).inject(Elm, 'after');
 
             //vat select
             this.$Select = new Element('select', {
                 'class': 'field-container-field',
-                'html' : '<option value=""></option>',
-                events : {
+                'html': '<option value=""></option>',
+                events: {
                     change: function () {
                         Elm.value = self.$Select.value;
                     }
@@ -65,8 +62,8 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
             }).inject(Elm, 'after');
 
             // Wenn im Produkt
-            var isInProduct   = !!this.getElm().getParent('.product-update');
-            var defaultOption = this.$Select.getElement('option');
+            const isInProduct = !!this.getElm().getParent('.product-update');
+            const defaultOption = this.$Select.getElement('option');
 
             if (isInProduct) {
                 defaultOption.set({
@@ -75,8 +72,8 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
             }
 
             Tax.getList().then(function (result) {
-                var i, len, html, value;
-                var selectValue = '';
+                let i, len, html, value;
+                let selectValue = '';
 
                 if (Elm.value !== '') {
                     selectValue = Elm.value;
@@ -96,7 +93,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
                     }
 
                     new Element('option', {
-                        html : html,
+                        html: html,
                         value: value
                     }).inject(self.$Select);
                 }

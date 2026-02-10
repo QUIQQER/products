@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/fields/types/TextareaSettings
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/fields/types/Textarea', [
 
     'qui/QUI',
@@ -13,7 +9,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Textarea', [
 
     return new Class({
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/Textarea',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/Textarea',
 
         Binds: [
             '$onInject'
@@ -29,7 +25,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Textarea', [
             this.$Editor = null;
 
             this.addEvents({
-                onInject : this.$onInject,
+                onInject: this.$onInject,
                 onDestroy: function () {
                     if (this.$Editor) {
                         this.$Editor.destroy()
@@ -42,11 +38,11 @@ define('package/quiqqer/products/bin/controls/fields/types/Textarea', [
          * event : on import
          */
         $onInject: function () {
-            var Elm = this.getElm();
+            const Elm = this.getElm();
 
             Elm.setStyles({
                 'float': 'left',
-                height : '100%'
+                height: '100%'
             });
 
             Editors.getEditor().then(function (Editor) {

@@ -2,6 +2,8 @@
 
 namespace QUITests\ERP\Products\CaseStudies;
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\TestCase;
 use QUI;
 use QUITests\ERP\Products\CaseStudies\Classes\BruttoUser;
 use QUITests\ERP\Products\CaseStudies\Classes\ProductListHelper;
@@ -12,9 +14,9 @@ require_once dirname(__FILE__) . '/Classes/ProductListHelper.php';
 /**
  * Class BruttoUserTest
  */
-class BruttoUserTest extends \PHPUnit_Framework_TestCase
+class BruttoUserTest extends TestCase
 {
-    public function testCaseStudyBrutto()
+    public function testCaseStudyBrutto(): void
     {
         writePhpUnitMessage('/*********************************/');
         writePhpUnitMessage('      Brutto Nutzer');
@@ -22,13 +24,13 @@ class BruttoUserTest extends \PHPUnit_Framework_TestCase
         writePhpUnitMessage();
 
         $Brutto = new BruttoUser();
-        $List   = ProductListHelper::getList($Brutto);
+        $List = ProductListHelper::getList($Brutto);
         $List->calc();
 
         ProductListHelper::outputList($List);
     }
 
-    public function testIsBruttoUser()
+    public function testIsBruttoUser(): void
     {
         $this->assertFalse(
             QUI\ERP\Utils\User::isNettoUser(

@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/fields/types/UnitSelect
- * @author www.pcsg.de (Patrick Müller)
- */
 define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
 
     'qui/controls/Control',
@@ -13,8 +9,9 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
     "use strict";
 
     return new Class({
+        
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/UnitSelect',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/UnitSelect',
 
         Binds: [
             '$onImport',
@@ -28,8 +25,8 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Select        = null;
-            this.$fieldId       = null;
+            this.$Select = null;
+            this.$fieldId = null;
             this.$QuantityInput = null;
 
             this.addEvents({
@@ -38,22 +35,22 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
         },
 
         /**
-         * event : on import
+         * event: on import
          */
         $onImport: function () {
-            var self = this,
-                Elm  = this.getElm();
+            const self = this,
+                Elm = this.getElm();
 
             this.$fieldId = Elm.get('name').split('-')[1];
 
             // loader
-            var Loader = new Element('span', {
+            const Loader = new Element('span', {
                 'class': 'field-container-item',
-                html   : '<span class="fa fa-spinner fa-spin"></span>',
-                styles : {
+                html: '<span class="fa fa-spinner fa-spin"></span>',
+                styles: {
                     lineHeight: 30,
-                    textAlign : 'center',
-                    width     : 50
+                    textAlign: 'center',
+                    width: 50
                 }
             }).inject(Elm, 'after');
 
@@ -65,8 +62,8 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
             // Quantity input
             this.$QuantityInput = new Element('input', {
                 'class': 'quiqqer-products-fields-unitselect-quantity',
-                type   : 'number',
-                events : {
+                type: 'number',
+                events: {
                     change: this.$setValue
                 }
             }).inject(this.$Select, 'before');
@@ -77,13 +74,13 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
                     return;
                 }
 
-                var i, len, label;
+                let i, len, label;
 
-                var selectValue  = false,
+                let selectValue = false,
                     defaultValue = false;
 
                 if (Elm.value) {
-                    var value = JSON.decode(Elm.value);
+                    const value = JSON.decode(Elm.value);
 
                     selectValue = value.id;
 
@@ -92,13 +89,13 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
                     }
                 }
 
-                for (var id in Options.entries) {
+                for (let id in Options.entries) {
                     if (!Options.entries.hasOwnProperty(id)) {
                         continue;
                     }
 
-                    var Option = Options.entries[id];
-                    var Title  = Option.title;
+                    const Option = Options.entries[id];
+                    const Title = Option.title;
 
                     if (USER.lang in Title) {
                         label = Title[USER.lang];
@@ -107,8 +104,8 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
                     }
 
                     new Element('option', {
-                        html        : label,
-                        value       : id,
+                        html: label,
+                        value: id,
                         'data-input': Option.quantityInput ? 1 : 0
                     }).inject(self.$Select);
 
@@ -123,7 +120,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
                     self.$Select.value = defaultValue;
                 }
 
-                var SelectedOption = self.$Select.getElement('option[value="' + self.$Select.value + '"]');
+                const SelectedOption = self.$Select.getElement('option[value="' + self.$Select.value + '"]');
 
                 if (!parseInt(SelectedOption.get('data-input'))) {
                     self.$QuantityInput.setStyle('display', 'none');
@@ -144,7 +141,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
          * @param {DOMEvent} event
          */
         $onSelectChange: function (event) {
-            var Option = this.$Select.getElement('option[value="' + event.target.value + '"]');
+            const Option = this.$Select.getElement('option[value="' + event.target.value + '"]');
 
             this.$setValue();
 
@@ -162,7 +159,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
          */
         $setValue: function () {
             this.getElm().value = JSON.encode({
-                id      : this.$Select.value,
+                id: this.$Select.value,
                 quantity: this.$QuantityInput ? this.$QuantityInput.value.trim() : false
             });
         },
@@ -174,7 +171,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
          */
         getValue: function () {
             return {
-                id      : this.$Select.value,
+                id: this.$Select.value,
                 quantity: this.$QuantityInput ? this.$QuantityInput.value.trim() : false
             };
         },
@@ -184,7 +181,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
          */
         enable: function () {
             this.$QuantityInput.disabled = false;
-            this.$Select.disabled        = false;
+            this.$Select.disabled = false;
         },
 
         /**
@@ -192,7 +189,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
          */
         disable: function () {
             this.$QuantityInput.disabled = true;
-            this.$Select.disabled        = true;
+            this.$Select.disabled = true;
         }
     });
 });

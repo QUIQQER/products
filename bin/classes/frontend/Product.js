@@ -1,7 +1,4 @@
 /**
- * @module package/quiqqer/products/bin/classes/frontend/Product
- * @author www.pcsg.de (henning Leutz)
- *
  * @event onRefresh [this]
  */
 define('package/quiqqer/products/bin/classes/frontend/Product', [
@@ -34,6 +31,10 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
         options: {
             id: false
         },
+
+        binds: [
+            'refresh'
+        ],
 
         initialize: function (options) {
             this.parent(options);
@@ -217,7 +218,8 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                 require(['package/quiqqer/products/bin/Products'], (Products) => {
                     Products.getChild(
                         this.getAttribute('id'),
-                        this.$data.fields
+                        this.$data.fields,
+                        true
                     ).then((data) => {
                         this.$loaded = true;
                         this.$data = data;

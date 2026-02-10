@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/fields/types/Folder
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/fields/types/Folder', [
 
     'qui/QUI',
@@ -13,8 +9,9 @@ define('package/quiqqer/products/bin/controls/fields/types/Folder', [
     "use strict";
 
     return new Class({
+
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/Folder',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/Folder',
 
         Binds: [
             '$onImport',
@@ -39,18 +36,18 @@ define('package/quiqqer/products/bin/controls/fields/types/Folder', [
          * event : on import
          */
         $onImport: function () {
-            var Elm = this.getElm();
+            const Elm = this.getElm();
 
             new Element('span', {
                 'class': 'field-container-item',
-                html   : '<span class="fa fa-picture-o"></span>',
-                styles : {
-                    cursor    : 'pointer',
+                html: '<span class="fa fa-picture-o"></span>',
+                styles: {
+                    cursor: 'pointer',
                     lineHeight: 30,
-                    textAlign : 'center',
-                    width     : 50
+                    textAlign: 'center',
+                    width: 50
                 },
-                events : {
+                events: {
                     click: this.openMedia
                 }
             }).inject(Elm, 'after');
@@ -65,13 +62,13 @@ define('package/quiqqer/products/bin/controls/fields/types/Folder', [
          * opens the media
          */
         openMedia: function () {
-            var self    = this,
-                value   = this.$Input.value,
-                fileid  = false,
+            let self = this,
+                value = this.$Input.value,
+                fileid = false,
                 project = false;
 
-            var productFolder = this.getAttribute('productFolder'),
-                urlParams     = {};
+            let productFolder = this.getAttribute('productFolder'),
+                urlParams = {};
 
             if (value === '' && productFolder) {
                 urlParams = QUIStringUtils.getUrlParams(productFolder);
@@ -88,10 +85,10 @@ define('package/quiqqer/products/bin/controls/fields/types/Folder', [
             }
 
             new MediaPopup({
-                fileid          : fileid,
-                project         : project,
+                fileid: fileid,
+                project: project,
                 selectable_types: ['folder'],
-                events          : {
+                events: {
                     onSubmit: function (Window, imageData) {
                         self.$Input.value = imageData.url;
                     }

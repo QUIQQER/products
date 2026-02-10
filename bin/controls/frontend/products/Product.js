@@ -1,9 +1,6 @@
 /**
  * Product view
  * Display a product in the content
- *
- * @module package/quiqqer/products/bin/controls/frontend/products/Product
- * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
@@ -20,7 +17,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/frontend/products/Product',
+        Type: 'package/quiqqer/products/bin/controls/frontend/products/Product',
 
         Binds: [
             'nextTab',
@@ -34,27 +31,27 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
         ],
 
         options: {
-            closeable    : false,
-            productId    : false,
+            closeable: false,
+            productId: false,
             galleryLoader: true
         },
 
         initialize: function (options) {
             this.parent(options);
 
-            this.$TabContainer    = null;
-            this.$fieldHashes     = {};
+            this.$TabContainer = null;
+            this.$fieldHashes = {};
             this.$availableHashes = {};
 
-            this.$Tabbar  = null;
-            this.$Touch   = null;
-            this.$Price   = null;
+            this.$Tabbar = null;
+            this.$Touch = null;
+            this.$Price = null;
             this.$Gallery = null;
 
             this.$Next = null;
             this.$Prev = null;
 
-            this.$tabs    = null;
+            this.$tabs = null;
             this.$isTouch = !!('ontouchstart' in window);
 
             this.addEvents({
@@ -75,8 +72,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
             }
 
             if (this.$Next && this.$Prev && !this.$isTouch) {
-                var size       = this.$TabContainer.getSize();
-                var scrollSize = this.$TabContainer.getScrollSize();
+                const size = this.$TabContainer.getSize();
+                const scrollSize = this.$TabContainer.getScrollSize();
 
                 // show scroll buttons
                 if (size.x < scrollSize.x) {
@@ -96,7 +93,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
          * event : on inject
          */
         $onInject: function () {
-            var self      = this,
+            const self = this,
                 productId = this.getAttribute('productId');
 
             this.$Product = Products.get(productId);
@@ -104,12 +101,12 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
             return new Promise(function (resolve) {
                 require(['Ajax'], function (QUIAjax) {
                     QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getProduct', function (result) {
-                        var Container = self.create(),
-                            Helper    = new Element('div', {
+                        const Container = self.create(),
+                            Helper = new Element('div', {
                                 html: result.html
                             });
 
-                        self.$fieldHashes     = result.fieldHashes;
+                        self.$fieldHashes = result.fieldHashes;
                         self.$availableHashes = result.availableHashes;
 
                         Container.set('data-qui', self.getType());
@@ -130,7 +127,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
                         Container.setStyle('margin', 0);
 
-                        var Article = Container.getElement('article');
+                        let Article = Container.getElement('article');
 
                         if (!Article) {
                             Article = new Element('div');
@@ -146,8 +143,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
                         new Element('div', {
                             'class': 'product-close-button',
-                            html   : '<span class="fa fa-close"></span>',
-                            events : {
+                            html: '<span class="fa fa-close"></span>',
+                            events: {
                                 click: function () {
                                     document.title = QUIQQER.title;
                                     self.fireEvent('close');
@@ -159,8 +156,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                     }, {
                         'package': 'quiqqer/products',
                         productId: productId,
-                        project  : JSON.encode(QUIQQER_PROJECT),
-                        siteId   : QUIQQER_SITE.id
+                        project: JSON.encode(QUIQQER_PROJECT),
+                        siteId: QUIQQER_SITE.id
                     });
                 });
             });
@@ -171,8 +168,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
          */
         $onImport: function () {
             return new Promise(function (resolve) {
-                var self      = this,
-                    Elm       = this.getElm(),
+                const self = this,
+                    Elm = this.getElm(),
                     productId = Elm.get('data-productid');
 
                 this.setAttribute('productId', productId);
@@ -184,7 +181,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 this.$Prev = Elm.getElement('.product-data-more-prev');
 
                 this.$TabContainer = Elm.getElement('.product-data-more-tabsContainer');
-                this.$Tabbar       = Elm.getElement('.product-data-more-tabs');
+                this.$Tabbar = Elm.getElement('.product-data-more-tabs');
 
                 if (this.$Next) {
                     this.$Next.addEvent('click', this.nextTab);
@@ -196,7 +193,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
                 QUI.parse(Elm).then(function () {
                     // price
-                    var Price   = Elm.getElement('.product-data-price-main .qui-products-price-display'),
+                    const Price = Elm.getElement('.product-data-price-main .qui-products-price-display'),
                         Gallery = Elm.getElement('.quiqqer-gallery-slider');
 
                     if (Gallery) {
@@ -212,7 +209,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                     }
 
                     // field events
-                    var fields = this.getFieldControls();
+                    const fields = this.getFieldControls();
 
                     fields.each(function (Control) {
                         Control.addEvent('onChange', function () {
@@ -232,11 +229,11 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
          * set and initialize all tab events for the detail tabs
          */
         $initTabEvents: function () {
-            var Elm = this.getElm();
+            const Elm = this.getElm();
 
             this.$TabContainer = Elm.getElement('.product-data-more-tabsContainer');
-            this.$Tabbar       = Elm.getElement('.product-data-more-tabs');
-            this.$Sheets       = Elm.getElement('.product-data-more-sheets');
+            this.$Tabbar = Elm.getElement('.product-data-more-tabs');
+            this.$Sheets = Elm.getElement('.product-data-more-sheets');
 
             if (!this.$Tabbar) {
                 return;
@@ -251,7 +248,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 mouseleave: function () {
                     this.removeClass('hover');
                 },
-                click     : this.$tabClick
+                click: this.$tabClick
             });
 
             // calc tab height
@@ -271,8 +268,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
 
             // get preview images
-            var rowClick = function (event) {
-                var Target = event.target;
+            const rowClick = function (event) {
+                const Target = event.target;
 
                 if (Target.nodeName === 'IMG') {
                     return;
@@ -293,11 +290,11 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 this.getElement('.product-data-files-table-preview img').click();
             };
 
-            var images = Elm.getElements(
+            const images = Elm.getElements(
                 '.product-data-files-table-preview [data-zoom="1"]'
             );
 
-            for (var i = 0, len = images.length; i < len; i++) {
+            for (let i = 0, len = images.length; i < len; i++) {
                 images[i].getParent('tr').addEvent('click', rowClick);
                 images[i].getParent('tr').setStyle('cursor', 'pointer');
             }
@@ -315,7 +312,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
          * @return {Array}
          */
         getFieldControls: function () {
-            var controls = QUI.Controls.getControlsInElement(this.getElm());
+            const controls = QUI.Controls.getControlsInElement(this.getElm());
 
             return controls.filter(function (Control) {
                 if (!('isField' in Control)) {
@@ -332,14 +329,14 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
          * @returns {Promise}
          */
         calcPrice: function () {
-            var self      = this,
-                fields    = this.getFieldControls(),
+            const self = this,
+                fields = this.getFieldControls(),
                 fieldData = [];
 
-            for (var i = 0, len = fields.length; i < len; i++) {
+            for (let i = 0, len = fields.length; i < len; i++) {
                 fieldData.push({
                     fieldId: fields[i].getFieldId(),
-                    value  : fields[i].getValue()
+                    value: fields[i].getValue()
                 });
             }
 
@@ -366,8 +363,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
          * @return {Promise}
          */
         nextTab: function () {
-            var Active = this.$Tabbar.getElement('[aria-selected="true"]');
-            var Next   = Active.getNext();
+            const Active = this.$Tabbar.getElement('[aria-selected="true"]');
+            let Next = Active.getNext();
 
             if (!Next) {
                 Next = this.$Tabbar.getFirst();
@@ -381,8 +378,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
             this.$scrollToTab(Next);
 
-            var ActiveSheet = this.$getSheet(Active.get('aria-controls'));
-            var NextSheet   = this.$getSheet(Next.get('aria-controls'));
+            const ActiveSheet = this.$getSheet(Active.get('aria-controls'));
+            const NextSheet = this.$getSheet(Next.get('aria-controls'));
 
             return Promise.all([
                 this.$hideTabToLeft(ActiveSheet),
@@ -396,8 +393,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
          * @return {Promise}
          */
         prevTab: function () {
-            var Active = this.$Tabbar.getElement('[aria-selected="true"]');
-            var Prev   = Active.getPrevious();
+            const Active = this.$Tabbar.getElement('[aria-selected="true"]');
+            let Prev = Active.getPrevious();
 
             if (!Prev) {
                 Prev = this.$Tabbar.getLast();
@@ -411,8 +408,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
             this.$scrollToTab(Prev);
 
-            var ActiveSheet = this.$getSheet(Active.get('aria-controls'));
-            var PrevSheet   = this.$getSheet(Prev.get('aria-controls'));
+            const ActiveSheet = this.$getSheet(Active.get('aria-controls'));
+            const PrevSheet = this.$getSheet(Prev.get('aria-controls'));
 
             return Promise.all([
                 this.$hideTabToRight(ActiveSheet),
@@ -432,7 +429,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
             return new Promise(function (resolve) {
                 moofx(Node).animate({
-                    left   : -50,
+                    left: -50,
                     opacity: 0
                 }, {
                     duration: 200,
@@ -456,7 +453,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
             return new Promise(function (resolve) {
                 moofx(Node).animate({
-                    left   : 50,
+                    left: 50,
                     opacity: 0
                 }, {
                     duration: 200,
@@ -480,11 +477,11 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
             Node.setStyles({
                 display: 'inline',
-                left   : -50,
+                left: -50,
                 opacity: 0
             });
 
-            var height     = 310,
+            let height = 310,
                 nodeHeight = Node.getSize().y + 10;
 
             if (nodeHeight > height) {
@@ -499,7 +496,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
             return new Promise(function (resolve) {
                 moofx(Node).animate({
-                    left   : 0,
+                    left: 0,
                     opacity: 1
                 }, {
                     duration: 200,
@@ -520,11 +517,11 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
             Node.setStyles({
                 display: 'inline',
-                left   : 50,
+                left: 50,
                 opacity: 0
             });
 
-            var height     = 310,
+            let height = 310,
                 nodeHeight = Node.getSize().y + 10;
 
             if (nodeHeight > height) {
@@ -539,7 +536,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
             return new Promise(function (resolve) {
                 moofx(Node).animate({
-                    left   : 0,
+                    left: 0,
                     opacity: 1
                 }, {
                     duration: 200,
@@ -571,7 +568,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
          * event: tab click
          */
         $tabClick: function (event) {
-            var Target = event.target;
+            let Target = event.target;
 
             if ("stop" in event) {
                 event.stop();
@@ -582,9 +579,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
             }
 
 
-            var TargetSheet = this.$getSheet(Target.get('aria-controls'));
+            const TargetSheet = this.$getSheet(Target.get('aria-controls'));
 
-            var Active      = this.$Tabbar.getElement('[aria-selected="true"]'),
+            let Active = this.$Tabbar.getElement('[aria-selected="true"]'),
                 ActiveSheet = null,
                 activeIndex = 0,
                 targetIndex = 0;

@@ -2,18 +2,21 @@
 
 namespace QUITests\ERP\Products\Handler;
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\TestCase;
 use QUI;
+use QUI\Exception;
 
 /**
  * Class FieldsTest
  */
-class FieldsTest extends \PHPUnit_Framework_TestCase
+class FieldsTest extends TestCase
 {
     /**
-     * Create child test
-     * @throws \QUI\Exception
+     * Create a child test
+     * @throws Exception
      */
-    public function testGetFieldTypes()
+    public function testGetFieldTypes(): void
     {
         $fields = QUI\ERP\Products\Handler\Fields::getFieldTypes();
 

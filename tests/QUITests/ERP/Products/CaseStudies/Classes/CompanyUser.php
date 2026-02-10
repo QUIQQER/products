@@ -15,13 +15,13 @@ class CompanyUser extends QUI\Users\User
         $this->refresh();
     }
 
-    public function refresh()
+    public function refresh(): void
     {
-        $this->name    = 'company_user';
-        $this->id      = 0;
-        $this->active  = 1;
+        $this->name = 'company_user';
+        $this->id = 0;
+        $this->active = 1;
         $this->company = true;
-        $this->lang    = 'en';
+        $this->lang = 'en';
 
         $this->Locale = new QUI\Locale();
         $this->Locale->setCurrent('en');

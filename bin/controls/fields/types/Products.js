@@ -1,8 +1,5 @@
 /**
  * Settings for field Products
- *
- * @module package/quiqqer/products/bin/controls/fields/types/Products
- * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/controls/fields/types/Products', [
 
@@ -16,7 +13,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Products', [
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/Products',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/Products',
 
         Binds: [
             '$onImport'
@@ -45,8 +42,8 @@ define('package/quiqqer/products/bin/controls/fields/types/Products', [
             this.$Elm = new Element('div', {
                 styles: {
                     'float': 'left',
-                    height : '100%',
-                    width  : '100%'
+                    height: '100%',
+                    width: '100%'
                 }
             });
 
@@ -59,16 +56,16 @@ define('package/quiqqer/products/bin/controls/fields/types/Products', [
         $onInject: function () {
             this.$Select = new ProductSelect({
                 multiple: true,
-                styles  : {
+                styles: {
                     height: '100%',
-                    width : '100%'
+                    width: '100%'
                 }
             }).inject(this.$Elm);
 
-            var value = this.getAttribute('value');
+            const value = this.getAttribute('value');
 
             if (typeOf(value) === 'array') {
-                for (var i = 0, len = value.length; i < len; i++) {
+                for (let i = 0, len = value.length; i < len; i++) {
                     if (value[i] !== '') {
                         this.$Select.addItem(value[i]);
                     }

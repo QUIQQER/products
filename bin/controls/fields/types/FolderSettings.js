@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/fields/types/FolderSettings
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/fields/types/FolderSettings', [
 
     'qui/QUI',
@@ -15,11 +11,12 @@ define('package/quiqqer/products/bin/controls/fields/types/FolderSettings', [
 ], function (QUI, QUIControl, QUILoader, QUILocale) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
+
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/FolderSettings',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/FolderSettings',
 
         Binds: [
             'update',
@@ -29,7 +26,7 @@ define('package/quiqqer/products/bin/controls/fields/types/FolderSettings', [
 
         options: {
             fieldId: false,
-            groups : [],
+            groups: [],
 
             autoActivateItems: false
         },
@@ -37,10 +34,10 @@ define('package/quiqqer/products/bin/controls/fields/types/FolderSettings', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$CheckboxAutoActivate           = null;
+            this.$CheckboxAutoActivate = null;
             this.$CheckboxShowFrontendTabIfEmpty = null;
-            this.$MediaFolderSelect              = null;
-            this.Loader                          = new QUILoader();
+            this.$MediaFolderSelect = null;
+            this.Loader = new QUILoader();
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -57,7 +54,7 @@ define('package/quiqqer/products/bin/controls/fields/types/FolderSettings', [
             this.$Elm = new Element('div', {
                 styles: {
                     'float': 'left',
-                    width  : '100%'
+                    width: '100%'
                 }
             });
 
@@ -65,7 +62,7 @@ define('package/quiqqer/products/bin/controls/fields/types/FolderSettings', [
         },
 
         /**
-         * event : on import
+         * event: on import
          */
         $onInject: function () {
             const Parent = this.$Elm.getParent('.field-options');
@@ -76,7 +73,7 @@ define('package/quiqqer/products/bin/controls/fields/types/FolderSettings', [
 
             const Content = new Element('div', {
                 'class': 'quiqqer-products-folder-settings',
-                html   : '<label>' +
+                html: '<label>' +
                     '        <input type="checkbox" name="autoActivateItems"/>' +
                     '           <span>' + QUILocale.get(lg, 'controls.FolderSettings.autoActivateItems') + '</span>' +
                     '    </label>' +
@@ -135,9 +132,9 @@ define('package/quiqqer/products/bin/controls/fields/types/FolderSettings', [
          */
         $onImport: function (self, Node) {
             this.$Input = Node;
-            this.$Elm   = this.create();
+            this.$Elm = this.create();
 
-            var data = {};
+            let data = {};
 
             try {
                 data = JSON.decode(this.$Input.value);
@@ -172,8 +169,8 @@ define('package/quiqqer/products/bin/controls/fields/types/FolderSettings', [
          */
         update: function () {
             this.$Input.value = JSON.encode({
-                autoActivateItems     : this.$CheckboxAutoActivate.checked ? 1 : 0,
-                mediaFolder           : this.$MediaFolderSelect.getValue(),
+                autoActivateItems: this.$CheckboxAutoActivate.checked ? 1 : 0,
+                mediaFolder: this.$MediaFolderSelect.getValue(),
                 showFrontendTabIfEmpty: this.$CheckboxShowFrontendTabIfEmpty.checked ? 1 : 0
             });
         }

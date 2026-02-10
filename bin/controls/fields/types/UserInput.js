@@ -1,13 +1,9 @@
-/**
- * @module package/quiqqer/products/bin/controls/fields/types/UserInput
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/fields/types/UserInput', [
 
     'Locale',
     'qui/controls/Control'
 
-], function(QUILocale, QUIControl) {
+], function (QUILocale, QUIControl) {
     'use strict';
 
     return new Class({
@@ -19,7 +15,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInput', [
             '$onImport'
         ],
 
-        initialize: function(options) {
+        initialize: function (options) {
             this.parent(options);
 
             this.addEvents({
@@ -28,10 +24,10 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInput', [
         },
 
         /**
-         * event : on import
+         * event: on import
          */
-        $onImport: function() {
-            var Elm = this.getElm();
+        $onImport: function () {
+            const Elm = this.getElm();
 
             Elm.type = 'hidden';
 
@@ -46,7 +42,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInput', [
          *
          * @returns {String}
          */
-        getValue: function() {
+        getValue: function () {
             return null;
         }
     });

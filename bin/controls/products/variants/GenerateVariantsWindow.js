@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/products/GenerateVariantsWindow
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/products/variants/GenerateVariantsWindow', [
 
     'qui/QUI',
@@ -13,12 +9,12 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
 ], function (QUI, QUIConfirm, GenerateVariants, QUIAjax, QUILocale) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
 
         Extends: QUIConfirm,
-        Type   : 'package/quiqqer/products/bin/controls/products/variants/GenerateVariantsWindow',
+        Type: 'package/quiqqer/products/bin/controls/products/variants/GenerateVariantsWindow',
 
         Binds: [
             '$onOpen'
@@ -26,7 +22,7 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
 
         options: {
             productId: false,
-            maxWidth : 600,
+            maxWidth: 600,
             maxHeight: 800,
             autoclose: false
         },
@@ -35,20 +31,20 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
             this.parent(options);
 
             this.setAttributes({
-                icon     : 'fa fa-magic',
-                title    : QUILocale.get(lg, 'variants.generating.window.title'),
+                icon: 'fa fa-magic',
+                title: QUILocale.get(lg, 'variants.generating.window.title'),
                 ok_button: {
-                    text     : QUILocale.get(lg, 'variants.generating.window.button.next'),
+                    text: QUILocale.get(lg, 'variants.generating.window.button.next'),
                     textimage: 'fa fa-magic'
                 }
             });
 
-            this.$List         = null;
+            this.$List = null;
             this.$SubmitButton = null;
             this.$CancelButton = null;
 
             this.addEvents({
-                onOpen  : this.$onOpen,
+                onOpen: this.$onOpen,
                 onSubmit: this.$onSubmit
             });
         },
@@ -57,7 +53,7 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
          * events: on open
          */
         $onOpen: function () {
-            var self = this;
+            const self = this;
 
             this.Loader.show();
             this.getContent().set('html', '');
@@ -75,7 +71,7 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
                 self.close();
             });
 
-            var ListContainer = new Element('div', {
+            const ListContainer = new Element('div', {
                 styles: {
                     'flex-grow': 1
                 }
@@ -83,8 +79,8 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
 
             this.$List = new GenerateVariants({
                 productId: this.getAttribute('productId'),
-                events   : {
-                    onLoad  : function () {
+                events: {
+                    onLoad: function () {
                         self.Loader.hide();
                     },
                     onChange: function (Control) {
@@ -110,7 +106,7 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
          * event: on submit
          */
         $onSubmit: function () {
-            var self = this;
+            const self = this;
 
             this.Loader.show(
                 QUILocale.get(lg, 'variants.generating.window.generating')

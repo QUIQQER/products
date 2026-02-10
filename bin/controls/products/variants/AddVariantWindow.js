@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/products/AddVariantWindow
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/products/variants/AddVariantWindow', [
 
     'qui/QUI',
@@ -15,7 +11,7 @@ define('package/quiqqer/products/bin/controls/products/variants/AddVariantWindow
     return new Class({
 
         Extends: QUIConfirm,
-        Type   : 'package/quiqqer/products/bin/controls/products/variants/AddVariantWindow',
+        Type: 'package/quiqqer/products/bin/controls/products/variants/AddVariantWindow',
 
         Binds: [
             '$onSubmit',
@@ -24,7 +20,7 @@ define('package/quiqqer/products/bin/controls/products/variants/AddVariantWindow
 
         options: {
             productId: false,
-            maxWidth : 600,
+            maxWidth: 600,
             maxHeight: 800,
             autoclose: false
         },
@@ -51,13 +47,13 @@ define('package/quiqqer/products/bin/controls/products/variants/AddVariantWindow
             );
 
             this.setAttribute('ok_button', {
-                text     : QUILocale.get('quiqqer/products', 'variants.addVariant.window.button'),
+                text: QUILocale.get('quiqqer/products', 'variants.addVariant.window.button'),
                 textimage: 'icon-ok fa fa-check'
             });
 
             this.addEvents({
                 onSubmit: this.$onSubmit,
-                onOpen  : this.$onOpen
+                onOpen: this.$onOpen
             });
         },
 
@@ -65,16 +61,16 @@ define('package/quiqqer/products/bin/controls/products/variants/AddVariantWindow
          * event: on open
          */
         $onOpen: function () {
-            var self = this;
+            const self = this;
 
             this.Loader.show();
 
-            var onInputChange = function (event) {
-                var Target = event.target;
-                var Group  = Target.getParent('table');
-                var inputs = Group.getElements('input');
+            const onInputChange = function (event) {
+                const Target = event.target;
+                const Group = Target.getParent('table');
+                const inputs = Group.getElements('input');
 
-                for (var i = 0, len = inputs.length; i < len; i++) {
+                for (let i = 0, len = inputs.length; i < len; i++) {
                     if (Target !== inputs[i]) {
                         inputs[i].checked = false;
                     }
@@ -104,14 +100,14 @@ define('package/quiqqer/products/bin/controls/products/variants/AddVariantWindow
          * event: on submit
          */
         $onSubmit: function () {
-            var self = this;
+            const self = this;
 
             this.Loader.show();
 
-            var inputs = this.getElm().getElements('input:checked');
-            var fields = {};
+            const inputs = this.getElm().getElements('input:checked');
+            const fields = {};
 
-            for (var i = 0, len = inputs.length; i < len; i++) {
+            for (let i = 0, len = inputs.length; i < len; i++) {
                 fields[inputs[i].get('name')] = inputs[i].get('value');
             }
 
@@ -121,7 +117,7 @@ define('package/quiqqer/products/bin/controls/products/variants/AddVariantWindow
             }, {
                 'package': 'quiqqer/products',
                 productId: this.getAttribute('productId'),
-                fields   : JSON.encode(fields)
+                fields: JSON.encode(fields)
             });
         }
     });

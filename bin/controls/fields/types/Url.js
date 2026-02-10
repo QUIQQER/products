@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/fields/types/Url
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/fields/types/Url', [
 
     'qui/QUI',
@@ -13,7 +9,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Url', [
 
     return new Class({
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/Url',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/Url',
 
         Binds: [
             '$onImport'
@@ -22,7 +18,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Url', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Status        = null;
+            this.$Status = null;
             this.$currentStatus = null;
 
             this.addEvents({
@@ -34,32 +30,32 @@ define('package/quiqqer/products/bin/controls/fields/types/Url', [
          * event : on import
          */
         $onImport: function () {
-            var self = this,
-                Elm  = this.getElm();
+            const self = this,
+                Elm = this.getElm();
 
             Elm.addClass('field-container-field');
-            Elm.type        = 'text';
+            Elm.type = 'text';
             Elm.placeholder = 'z.B.: http://www.quiqqer.com';
 
             this.$Status = new Element('div', {
                 'class': 'field-container-item',
-                html   : '<span class="fa fa-bolt"></span>',
-                styles : {
+                html: '<span class="fa fa-bolt"></span>',
+                styles: {
                     lineHeight: 30,
-                    textAlign : 'center',
-                    width     : 50
+                    textAlign: 'center',
+                    width: 50
                 }
             }).inject(Elm, 'after');
 
 
             Elm.addEvent('change', function () {
-                var value = this.value;
+                const value = this.value;
 
                 if (value === '') {
                     return;
                 }
 
-                var isOk = self.validate();
+                const isOk = self.validate();
 
                 if (this.$currentStatus == isOk) {
                     return;
@@ -83,14 +79,14 @@ define('package/quiqqer/products/bin/controls/fields/types/Url', [
          * @returns {boolean}
          */
         validate: function () {
-            var value = this.getElm().value;
+            const value = this.getElm().value;
 
             if (value === '') {
                 return false;
             }
 
             try {
-                var uri = new URI(this.getElm().value);
+                const uri = new URI(this.getElm().value);
 
                 return (!!uri.scheme() && !!uri.host());
             } catch (e) {

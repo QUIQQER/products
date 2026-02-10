@@ -1,9 +1,6 @@
 /**
  * Category handler
  * Create and edit categories
- *
- * @module package/quiqqer/products/bin/classes/Categories
- * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/classes/Categories', [
 
