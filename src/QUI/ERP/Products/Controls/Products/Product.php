@@ -26,8 +26,6 @@ use function usort;
 
 /**
  * Class Button
- *
- * @package QUI\ERP\Products\Controls\Watchlist
  */
 class Product extends QUI\Control
 {
@@ -57,7 +55,6 @@ class Product extends QUI\Control
      *
      * @throws QUI\Exception
      * @see \QUI\Control::create()
-     *
      */
     public function getBody(): string
     {

@@ -34,8 +34,6 @@ use function usort;
 
 /**
  * Class Products Helper
- *
- * @package QUI\ERP\Products\Utils
  */
 class Products
 {

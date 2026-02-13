@@ -17,7 +17,6 @@ use function is_numeric;
 
 /**
  * Class Price
- * @package QUI\ERP\Products\Field
  */
 class BoolType extends QUI\ERP\Products\Field\Field
 {

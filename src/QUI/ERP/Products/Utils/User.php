@@ -13,8 +13,6 @@ use QUI\Interfaces\Users\User as UserInterface;
 /**
  * Class User
  *
- * @package QUI\ERP\Products\Utils
- * @author www.pcsg.de (Henning Leutz)
  * @deprecated
  */
 class User

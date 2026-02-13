@@ -13,7 +13,6 @@ use function dirname;
 
 /**
  * Class ProductFieldDetails
- * @package QUI\ERP\Products\Controls\Products
  */
 class ProductFieldDetails extends QUI\Control
 {

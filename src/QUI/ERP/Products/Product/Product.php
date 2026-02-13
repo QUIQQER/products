@@ -15,7 +15,6 @@ use QUI\ERP\Products\Interfaces\CategoryInterface;
  * Class Product
  * - Controller
  *
- * @package QUI\ERP\Products\Product
  *
  * @example
  * QUI\ERP\Products\Handler\Products::getProduct( ID );

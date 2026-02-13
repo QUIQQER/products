@@ -13,7 +13,6 @@ use QUI\Projects\Media\Utils as MediaUtils;
 
 /**
  * Class Input
- * @package QUI\ERP\Products\Field
  */
 class Image extends QUI\ERP\Products\Field\Field
 {

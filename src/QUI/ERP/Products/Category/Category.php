@@ -37,7 +37,6 @@ use function usort;
  * Class Category
  * - Category Model
  *
- * @package QUI\ERP\Products\Category
  *
  * @example
  * QUI\ERP\Products\Handler\Categories::getCategory( ID );

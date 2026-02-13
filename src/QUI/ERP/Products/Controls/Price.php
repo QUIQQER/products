@@ -18,8 +18,6 @@ use function strval;
 
 /**
  * Price display
- *
- * @package QUI\ERP\Products\Controls
  */
 class Price extends QUI\Control
 {

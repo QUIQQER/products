@@ -16,8 +16,6 @@ use function is_object;
 
 /**
  * Class Categories
- *
- * @package QUI\ERP\Products\Handler
  */
 class Categories
 {

@@ -13,8 +13,6 @@ use function htmlspecialchars;
 
 /**
  * Class DateFrontendView
- *
- * @package QUI\ERP\Products\Field\Types
  */
 class DateFrontendView extends View
 {

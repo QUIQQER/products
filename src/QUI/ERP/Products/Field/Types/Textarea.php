@@ -16,7 +16,6 @@ use function is_string;
 
 /**
  * Class Textarea
- * @package QUI\ERP\Products\Field
  */
 class Textarea extends QUI\ERP\Products\Field\Field
 {

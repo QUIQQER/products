@@ -14,7 +14,6 @@ use function is_numeric;
 
 /**
  * Class FloatType
- * @package QUI\ERP\Products\Field
  */
 class Vat extends QUI\ERP\Products\Field\Field
 {

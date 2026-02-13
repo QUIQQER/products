@@ -25,8 +25,6 @@ use function usort;
 
 /**
  * Class ProductList
- *
- * @package QUI\ERP\Products\Product
  */
 class ProductList
 {

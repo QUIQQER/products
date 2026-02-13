@@ -19,8 +19,6 @@ use function array_merge;
 
 /**
  * Class TextProduct
- *
- * @package QUI\ERP\Products\Product
  */
 class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\ProductInterface
 {

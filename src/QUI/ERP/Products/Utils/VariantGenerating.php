@@ -14,8 +14,6 @@ use function array_merge;
 /**
  * Class VariantGenerating
  * - Helper to generate children for the variant parent
- *
- * @package QUI\ERP\Products\Utils
  */
 class VariantGenerating extends Singleton
 {

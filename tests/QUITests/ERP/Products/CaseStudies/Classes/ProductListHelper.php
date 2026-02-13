@@ -11,7 +11,6 @@ use QUI\Exception;
 
 /**
  * Class ProductListHelper
- * @package QUITests\ERP\Products\CaseStudies\Classes
  */
 class ProductListHelper
 {

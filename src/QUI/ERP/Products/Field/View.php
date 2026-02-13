@@ -15,8 +15,6 @@ use function is_string;
 
 /**
  * Class View
- *
- * @package QUI\ERP\Products\Field
  */
 class View extends UniqueField
 {

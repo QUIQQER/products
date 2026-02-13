@@ -11,8 +11,6 @@ use function is_null;
 
 /**
  * Class ProductCache
- *
- * @package QUI\ERP\Products\Product\Cache
  */
 class ProductCache
 {

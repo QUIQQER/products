@@ -13,8 +13,6 @@ use function htmlspecialchars;
 /**
  * Class BoolType
  * Frontend View for the BoolType Field
- *
- * @package QUI\ERP\Products\Field
  */
 class BoolTypeFrontendView extends QUI\ERP\Products\Field\View
 {

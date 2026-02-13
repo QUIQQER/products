@@ -38,7 +38,6 @@ use function trim;
  *
  * This is a variant parent product
  *
- * @package QUI\ERP\Products\Product\Types
  *
  * backend
  * @todo beim speichern der daten, refresh der daten -> am besten produkt daten als ergebnis mitliefern

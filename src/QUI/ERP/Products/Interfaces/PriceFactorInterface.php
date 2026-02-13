@@ -10,8 +10,6 @@ use QUI;
 
 /**
  * Interface PriceFactor
- *
- * @package QUI\ERP\Products\Interfaces
  */
 interface PriceFactorInterface
 {

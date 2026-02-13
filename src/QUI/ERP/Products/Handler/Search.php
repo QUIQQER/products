@@ -12,7 +12,6 @@ use QUI\ERP\Products\Search\FrontendSearch;
 
 /**
  * Class Fields
- * @package QUI\ERP\Products\Handler
  */
 class Search
 {

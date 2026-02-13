@@ -11,7 +11,6 @@ use function is_null;
 
 /**
  * Class Search
- * @package QUI\ERP\Products\Controls\Search
  * @deprecated
  */
 class Search extends QUI\Control

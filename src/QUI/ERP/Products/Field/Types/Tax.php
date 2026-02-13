@@ -8,7 +8,6 @@ namespace QUI\ERP\Products\Field\Types;
 
 /**
  * Class FloatType
- * @package QUI\ERP\Products\Field
  */
 class Tax extends Vat
 {

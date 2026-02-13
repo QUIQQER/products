@@ -19,8 +19,6 @@ use function round;
 
 /**
  * Class PriceByQuantity
- *
- * @package QUI\ERP\Products\Field
  */
 class PriceByQuantity extends Price
 {

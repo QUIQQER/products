@@ -13,8 +13,6 @@ use function htmlspecialchars;
 /**
  * Class ImageFrontendView
  * Frontend View for the Image Field
- *
- * @package QUI\ERP\Products\Field
  */
 class ImageFrontendView extends QUI\ERP\Products\Field\View
 {

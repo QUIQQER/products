@@ -32,7 +32,6 @@ use function reset;
 /**
  * Class Fields
  *
- * @package QUI\ERP\Products\Handler
  *
  * Feld Rechte:
  * - permission.products.fields.field{$newId}.edit
@@ -667,7 +666,6 @@ class Fields
      * Therefore, this is slow  and should only be used when you know that it's necessary.
      * You would generally want to use @return array
      * @see self::getFieldTypes()
-     *
      */
     private static function getFieldTypesFromDisk(): array
     {
@@ -792,7 +790,6 @@ class Fields
      * You would generally want to use @param string $type - field type
      * @return array
      * @see self::getFieldTypeData()
-     *
      */
     private static function getFieldTypeDataFromDisk(string $type): array
     {

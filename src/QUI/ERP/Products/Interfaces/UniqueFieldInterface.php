@@ -11,8 +11,6 @@ use QUI\ERP\Products\Field\View;
 
 /**
  * Interface UniqueField
- *
- * @package QUI\ERP\Products\Interfaces
  */
 interface UniqueFieldInterface
 {

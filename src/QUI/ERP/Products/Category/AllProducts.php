@@ -16,8 +16,6 @@ use function is_array;
  * Class AllProducts
  * This category is to access all products
  * It's a virtual category
- *
- * @package QUI\ERP\Products\Category
  */
 class AllProducts extends Category
 {

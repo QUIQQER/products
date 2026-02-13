@@ -10,7 +10,6 @@ use QUI\Exception;
 
 /**
  * Interface Field
- * @package QUI\ERP\Products\Interfaces
  */
 interface FieldInterface extends UniqueFieldInterface
 {

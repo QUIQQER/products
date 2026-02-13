@@ -11,8 +11,6 @@ use function is_numeric;
 /**
  * Class Order
  * - Order range
- *
- * @package QUI\ERP\Order\NumberRanges
  */
 class NumberRange implements NumberRangeInterface
 {

@@ -9,10 +9,6 @@ use function file_get_contents;
 
 /**
  * Class UserInputFrontendView - Frontend VIEW
- *
- *
- *
- * @package QUI\ERP\Products\Field\Types
  */
 class UserInputFrontendView extends QUI\ERP\Products\Field\View
 {

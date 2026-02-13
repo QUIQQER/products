@@ -8,8 +8,6 @@ namespace QUI\ERP\Products\Field\Types;
 
 /**
  * Class DateFrontendView
- *
- * @package QUI\ERP\Products\Field\Types
  */
 class TaxFrontendView extends VatFrontendView
 {

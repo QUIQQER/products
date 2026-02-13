@@ -13,7 +13,6 @@ use QUI\Interfaces\Users\User;
 
 /**
  * Interface Category
- * @package QUI\ERP\Products
  */
 interface CategoryInterface extends QUI\QDOMInterface, CategoryViewInterface
 {

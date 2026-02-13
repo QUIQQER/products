@@ -32,9 +32,6 @@ use function round;
 
 /**
  * Class Calc
- *
- * @package QUI\ERP\Products\Utils
- * @author www.pcsg.de (Henning Leutz)
  */
 class Calc
 {

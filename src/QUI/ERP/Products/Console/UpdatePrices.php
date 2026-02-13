@@ -9,8 +9,6 @@ use QUI\ERP\Products\Handler\Products;
 
 /**
  * Console tool for updating product prices with multipliers
- *
- * @author www.pcsg.de (Patrick Müller)
  */
 class UpdatePrices extends QUI\System\Console\Tool
 {

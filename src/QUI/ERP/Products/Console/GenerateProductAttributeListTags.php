@@ -13,8 +13,6 @@ use function class_exists;
 
 /**
  * Console tool for HKL used patches
- *
- * @author www.pcsg.de (Patrick Müller)
  */
 class GenerateProductAttributeListTags extends QUI\System\Console\Tool
 {

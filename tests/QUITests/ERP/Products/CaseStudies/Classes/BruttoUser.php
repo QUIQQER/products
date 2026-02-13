@@ -6,7 +6,6 @@ use QUI;
 
 /**
  * Class BruttoUser
- * @package QUITests\ERP\Products\CaseStudies\Classes
  */
 class BruttoUser extends QUI\Users\User
 {

@@ -7,8 +7,6 @@ use QUI;
 /**
  * Class Cache
  * - Helper for caching ids / names
- *
- * @package QUI\ERP\Products\Handler
  */
 class Cache
 {

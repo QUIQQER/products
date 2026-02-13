@@ -21,7 +21,6 @@ use function json_decode;
  * Class Attributes
  * - Attribute Liste
  *
- * @package QUI\ERP\Products\Field
  *
  * @todo eindeutige ID für option
  */

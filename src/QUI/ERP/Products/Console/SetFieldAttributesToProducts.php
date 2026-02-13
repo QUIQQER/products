@@ -7,8 +7,6 @@ use QUI\ERP\Products\Handler\Fields;
 
 /**
  * Sets system attributes of all fields to all products
- *
- * @author www.pcsg.de (Patrick Müller)
  */
 class SetFieldAttributesToProducts extends QUI\System\Console\Tool
 {

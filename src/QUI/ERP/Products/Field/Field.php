@@ -35,7 +35,6 @@ use function trim;
 /**
  * Class Field
  *
- * @package QUI\ERP\Products\Field
  *
  * @example
  * QUI\ERP\Products\Handler\Field::getField( ID );
@@ -306,7 +305,6 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @throws QUI\Exception
      * @throws QUI\Permissions\Exception
      * @todo value check
-     *
      */
     public function save(): void
     {

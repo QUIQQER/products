@@ -35,7 +35,6 @@ use const JSON_ERROR_NONE;
  *
  * D.h. Hersteller und Lieferanten sind Benutzer
  *
- * @package QUI\ERP\Products\Field
  * @todo Benutzergruppe beim Setup anlegen
  * @todo Einstellung zur Verfügung stellen, Lieferant- und Herstellergruppe festlegen
  */

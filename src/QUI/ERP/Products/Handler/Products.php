@@ -31,8 +31,6 @@ use function trim;
 /**
  * Class Products
  * get and add new products
- *
- * @package QUI\ERP\Products\Handler
  */
 class Products
 {

@@ -15,8 +15,6 @@ use QUI\Interfaces\Projects\Site;
 /**
  * Interface Category for the view
  * has only getter methods
- *
- * @package QUI\ERP\Products
  */
 interface CategoryViewInterface
 {

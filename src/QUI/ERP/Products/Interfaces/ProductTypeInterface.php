@@ -10,8 +10,6 @@ use QUI\Locale;
 
 /**
  * Interface ProductTypeInterface
- *
- * @package QUI\ERP\Products
  */
 interface ProductTypeInterface
 {

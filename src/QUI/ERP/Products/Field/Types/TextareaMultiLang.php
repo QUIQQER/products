@@ -22,7 +22,6 @@ use function strlen;
 
 /**
  * Class TextareaMultiLang
- * @package QUI\ERP\Products\Field
  */
 class TextareaMultiLang extends QUI\ERP\Products\Field\Field
 {

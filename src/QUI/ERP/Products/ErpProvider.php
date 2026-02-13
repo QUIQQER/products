@@ -13,8 +13,6 @@ use QUI\ERP\Api\AbstractErpProvider;
 /**
  * Class ErpProvider
  * Produkte ERP Provider -> erweitert das ERP Shop Panel
- *
- * @package QUI\ERP\Products
  */
 class ErpProvider extends AbstractErpProvider
 {
