@@ -11,7 +11,7 @@ use QUI\ERP\Products\Handler\Products;
  *
  * @param integer $productId - Product-ID
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_createMediaFolder',
     function ($productId, $fieldId) {
         $Product = Products::getProduct($productId);

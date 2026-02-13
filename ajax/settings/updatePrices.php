@@ -8,7 +8,7 @@
 
 use QUI\ERP\Products\Console\UpdatePrices;
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_settings_updatePrices',
     function ($activeOnly, $categoryId = null) {
         $UpdateTool = new UpdatePrices();

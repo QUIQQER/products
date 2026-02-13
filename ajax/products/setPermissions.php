@@ -10,7 +10,7 @@
  * @param integer $productId - product-ID
  * @param integer $permissions - JSON permissions string
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_setPermissions',
     function ($productId, $permissions) {
         $Products = new QUI\ERP\Products\Handler\Products();

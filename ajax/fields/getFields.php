@@ -12,7 +12,7 @@ use QUI\ERP\Products\Handler\Fields;
  * @param string $fieldId - Field-IDs JSON
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_fields_getFields',
     function ($fieldIds) {
         $fieldIds = json_decode($fieldIds, true);

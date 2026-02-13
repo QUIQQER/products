@@ -11,7 +11,7 @@ use QUI\ERP\Products\Search\Cache;
  *
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_search_clearSearchCache',
     function () {
         // TODO: permission?

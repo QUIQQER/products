@@ -13,7 +13,7 @@ use QUI\ERP\Products\Utils\Tables;
  * @param string $categoryId - Category ID
  * @param string $params
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_categories_getProductsFromCategory',
     function ($categoryId, $params) {
         $Categories = new QUI\ERP\Products\Handler\Categories();

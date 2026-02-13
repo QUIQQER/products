@@ -14,7 +14,7 @@
 
 use QUI\ERP\Products\Interfaces\CategoryInterface;
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_categories_path',
     function ($categoryId) {
         $Categories = new QUI\ERP\Products\Handler\Categories();

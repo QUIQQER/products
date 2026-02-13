@@ -14,7 +14,7 @@ use QUI\ERP\Products\Handler\Fields;
  *
  * @return string
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_fields_update',
     function ($fieldId, $params) {
         $Fields = new Fields();

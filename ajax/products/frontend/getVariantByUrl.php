@@ -14,7 +14,7 @@ use QUI\ERP\Products\Handler\Products as ProductHandler;
  * @param string $productId - ID of a product
  * @param string $url - URL of the child
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getVariantByUrl',
     function ($productId, $variantUrl, $variantId) {
         $Variant = null;

@@ -8,7 +8,7 @@
 
 use QUI\ERP\Products\Handler\Products;
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_settings_isAutoGenerateNextArticleNo',
     function () {
         return Products::isAutoGenerateArticleNo();

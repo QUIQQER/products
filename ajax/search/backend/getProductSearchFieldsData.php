@@ -12,7 +12,7 @@ use QUI\ERP\Products\Handler\Search as SearchHandler;
  *
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_search_backend_getProductSearchFieldsData',
     function () {
         $BackEndSearch = SearchHandler::getBackendSearch();

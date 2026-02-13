@@ -14,7 +14,7 @@ use QUI\ERP\Products\Utils\Products as ProductUtils;
  *
  * @param string $productId - ID of a product
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getProduct',
     function ($productId, $project, $siteId) {
         $cacheName = Cache::frontendProductCacheName(

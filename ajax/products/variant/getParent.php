@@ -14,7 +14,7 @@ use QUI\ERP\Products\Product\Types\VariantParent;
  * @param integer $productId - Product-ID
  * @param string $options - JSON Array - Grid options
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_variant_getParent',
     function ($productId) {
         $Product = Products::getProduct($productId);

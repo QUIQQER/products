@@ -12,13 +12,13 @@ use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
 use QUI\ERP\Products\Utils\Tables;
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_search_backend_executeForGrid',
     function ($searchParams) {
         require_once 'execute.php';
 
         // products
-        $result = QUI::$Ajax->callRequestFunction(
+        $result = QUI::getAjax()->callRequestFunction(
             'package_quiqqer_products_ajax_search_backend_execute',
             ['searchParams' => $searchParams]
         );
@@ -138,7 +138,7 @@ QUI::$Ajax->registerFunction(
             $page = (int)$searchParams['sheet'];
         }
 
-        $count = QUI::$Ajax->callRequestFunction(
+        $count = QUI::getAjax()->callRequestFunction(
             'package_quiqqer_products_ajax_search_backend_execute',
             ['searchParams' => json_encode($searchParams)]
         );

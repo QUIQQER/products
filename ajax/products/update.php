@@ -14,7 +14,7 @@ use QUI\ERP\Products\Product\Types\VariantParent;
  *
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_update',
     function ($productId, $categories, $categoryId, $fields) {
         $Products = new QUI\ERP\Products\Handler\Products();

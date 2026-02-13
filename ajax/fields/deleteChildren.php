@@ -9,7 +9,7 @@
  *
  * @param string $fieldIds - JSON list of field ids
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_fields_deleteChildren',
     function ($fieldIds) {
         $fieldIds = json_decode($fieldIds, true);

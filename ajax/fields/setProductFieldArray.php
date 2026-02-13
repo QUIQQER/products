@@ -11,7 +11,7 @@ use QUI\ERP\Products\Handler\Fields;
  *
  * @param integer $fieldId - Field-ID
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_fields_setProductFieldArray',
     function ($fieldId) {
         /*

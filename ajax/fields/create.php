@@ -11,7 +11,7 @@
  *
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_fields_create',
     function ($params) {
         $params = json_decode($params, true);

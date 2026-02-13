@@ -15,7 +15,7 @@ use QUI\ERP\Products\Product\Types\VariantParent;
  * @param integer $productId - Product-ID
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_variant_getVariantFields',
     function ($productId) {
         $Product = Products::getProduct($productId);

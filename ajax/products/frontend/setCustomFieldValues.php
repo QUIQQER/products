@@ -12,7 +12,7 @@ use QUI\ERP\Products\Handler\Products;
  * @param integer $productId - Product-ID
  * @param array $fields
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_setCustomFieldValues',
     function ($productId, $fields) {
         $Product = Products::getProduct($productId);

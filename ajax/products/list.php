@@ -14,7 +14,7 @@
 
 use QUI\ERP\Products\Product\Product;
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_list',
     function ($params) {
         $Products = new QUI\ERP\Products\Handler\Products();

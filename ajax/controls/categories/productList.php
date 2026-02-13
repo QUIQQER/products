@@ -14,7 +14,7 @@ use QUI\ERP\Products\Handler\Categories;
  *
  * @return string
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_controls_categories_productList',
     function ($project, $siteId, $categoryId, $productLoadNumber, $view, $searchParams, $next, $articles) {
         try {

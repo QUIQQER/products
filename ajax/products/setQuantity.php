@@ -14,7 +14,7 @@ use QUI\ERP\Products\Handler\Products;
  * @param integer|float $quantity
  * @return integer|float
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_setQuantity',
     function ($productId, $quantity) {
         $Product = Products::getProduct($productId);

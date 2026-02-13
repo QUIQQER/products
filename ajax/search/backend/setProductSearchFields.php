@@ -12,7 +12,7 @@ use QUI\ERP\Products\Handler\Search as SearchHandler;
  * @param array $searchFields
  * @return array - search fields after set
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_search_backend_setProductSearchFields',
     function ($searchFields) {
         QUI\Permissions\Permission::checkPermission(

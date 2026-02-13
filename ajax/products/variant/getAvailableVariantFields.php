@@ -12,7 +12,7 @@ use QUI\ERP\Products\Utils\VariantGenerating;
  *
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_variant_getAvailableVariantFields',
     function () {
         $fields = VariantGenerating::getInstance()->getAvailableFieldsForGeneration();

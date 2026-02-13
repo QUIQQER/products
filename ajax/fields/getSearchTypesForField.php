@@ -13,7 +13,7 @@
 
 use QUI\ERP\Products\Handler\Fields;
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_fields_getSearchTypesForField',
     function ($fieldId) {
         $Field = Fields::getField((int)$fieldId);
