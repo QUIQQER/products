@@ -37,8 +37,6 @@ use function mb_strtoupper;
  * -> Messing poliert lackiert (MP lackiert)
  * -> Messing poliert ohne Lack (MP ohne Lack)
  * -> Messing matt mit Lack (MM mit Lack)(nach Kundenspezifikation¹) +10%
- *
- * @package QUI\ERP\Products\Field\Types
  */
 class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
 {

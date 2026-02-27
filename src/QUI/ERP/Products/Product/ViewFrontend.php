@@ -22,8 +22,6 @@ use function implode;
 
 /**
  * Product frontend View
- *
- * @package QUI\ERP\Products\Product
  */
 class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\ProductInterface
 {

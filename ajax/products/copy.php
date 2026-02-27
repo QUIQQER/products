@@ -12,7 +12,7 @@ use QUI\ERP\Products\Handler\Products;
  * @param string|integer $productId - Product ID
  * @return integer - new product id
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_copy',
     function ($productId) {
         return Products::copyProduct($productId)->getId();

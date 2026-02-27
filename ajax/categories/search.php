@@ -15,7 +15,7 @@
 use QUI\ERP\Products\Category\AllProducts;
 use QUI\ERP\Products\Category\Category;
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_categories_search',
     function ($fields, $params) {
         $Categories = new QUI\ERP\Products\Handler\Categories();

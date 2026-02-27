@@ -30,8 +30,6 @@ use function usort;
 
 /**
  * Class Fields
- *
- * @package QUI\ERP\Products
  */
 class Fields
 {

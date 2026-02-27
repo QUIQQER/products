@@ -14,8 +14,6 @@ use QUI\Projects\Media\Utils as MediaUtils;
 /**
  * Class Folder
  * Product field which specified a media folder
- *
- * @package QUI\ERP\Products\Field
  */
 class Folder extends QUI\ERP\Products\Field\Field
 {

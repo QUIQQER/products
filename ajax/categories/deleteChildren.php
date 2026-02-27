@@ -9,7 +9,7 @@
  *
  * @param string $categoryIds - JSON list of categorie ids
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_categories_deleteChildren',
     function ($categoryIds) {
         $categoryIds = json_decode($categoryIds, true);

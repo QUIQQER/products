@@ -9,8 +9,6 @@ namespace QUI\ERP\Products\Field;
 /**
  * Class ExceptionRequired
  * -> will be throw if field is required
- *
- * @package QUI\ERP\Products\Product
  */
 class ExceptionRequired extends Exception
 {

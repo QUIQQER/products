@@ -15,8 +15,6 @@ use function is_numeric;
 
 /**
  * Class ChildrenSlider
- *
- * @author www.pcsg.de (Henning Leutz)
  */
 class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
 {

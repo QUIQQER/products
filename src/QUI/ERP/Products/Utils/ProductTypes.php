@@ -15,8 +15,6 @@ use function is_a;
 
 /**
  * Class ProductTypes
- *
- * @package QUI\ERP\Products\Product
  */
 class ProductTypes extends Singleton
 {

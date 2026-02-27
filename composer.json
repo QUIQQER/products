@@ -15,7 +15,7 @@
     "quiqqer/areas": "^2",
     "quiqqer/bricks": "^2",
     "quiqqer/currency": "^2",
-    "quiqqer/discount": "^2",
+    "quiqqer/discount": "^2|^3",
     "quiqqer/pace": "^2",
     "quiqqer/product-bricks": "^2",
     "quiqqer/productsearch": "^2",

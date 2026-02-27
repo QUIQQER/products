@@ -11,7 +11,7 @@
  * @param integer $productId - product-ID
  * @param integer $fieldId - Field-ID
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_addField',
     function ($productId, $fieldId) {
         $Products = new QUI\ERP\Products\Handler\Products();

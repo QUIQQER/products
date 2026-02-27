@@ -20,8 +20,6 @@ use const STR_PAD_LEFT;
 
 /**
  * Console tool for HKL used patches
- *
- * @author www.pcsg.de (Henning Leutz)
  */
 class GenerateProductCache extends QUI\System\Console\Tool
 {

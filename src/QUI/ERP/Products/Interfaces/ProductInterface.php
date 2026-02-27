@@ -14,7 +14,6 @@ use QUI\Projects\Media\Image;
 
 /**
  * Interface Product
- * @package QUI\ERP\Products
  */
 interface ProductInterface
 {

@@ -13,7 +13,7 @@ use QUI\ERP\Products\Handler\Products;
  * @param string|integer $categoryId - Category ID
  * @param string $productIds - JSON Array, Product Ids
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_categories_addProducts',
     function ($categoryId, $productIds) {
         $Category = Categories::getCategory($categoryId);

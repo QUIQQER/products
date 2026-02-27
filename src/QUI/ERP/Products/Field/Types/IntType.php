@@ -15,7 +15,6 @@ use function is_numeric;
 
 /**
  * Class IntType
- * @package QUI\ERP\Products\Field
  */
 class IntType extends QUI\ERP\Products\Field\Field
 {

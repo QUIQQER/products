@@ -10,7 +10,7 @@
 
 use QUI\ERP\Products\Controls\ManufacturerList\ManufacturerList;
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_controls_manufacturerList_get',
     function ($project, $siteId, $view, $searchParams, $next, $articles) {
         $Project = QUI\Projects\Manager::decode($project);

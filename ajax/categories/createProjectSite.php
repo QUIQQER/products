@@ -11,7 +11,7 @@
  * @param string $siteId - Project parent site ID
  * @param string $title - New Title
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_categories_createProjectSite',
     function ($project, $siteId, $title, $createCategory, $parentCategory) {
         $Project = QUI::getProjectManager()->decode($project);

@@ -16,8 +16,6 @@ use function is_string;
  *
  * PriceFactor is an entry in the PriceFactors List
  * It's a helper to manipulate prices in products
- *
- * @package QUI\ERP\Products\Utils
  */
 class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
 {

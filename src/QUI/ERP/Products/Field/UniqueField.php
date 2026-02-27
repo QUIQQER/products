@@ -24,7 +24,6 @@ use function reset;
  * Class UniqueField
  * This field is a field for the view, unique fields are not editable
  *
- * @package QUI\ERP\Products\Field
  *
  * @example
  * QUI\ERP\Products\Handler\Field::getField( ID )->createUniqueField();

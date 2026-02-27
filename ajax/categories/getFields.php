@@ -9,7 +9,7 @@
  *
  * @param string $categoryIds - JSON list of categories ids
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_categories_getFields',
     function ($categoryIds) {
         $Categories = new QUI\ERP\Products\Handler\Categories();

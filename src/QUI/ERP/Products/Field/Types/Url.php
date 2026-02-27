@@ -14,8 +14,6 @@ use function filter_var;
 
 /**
  * Class FloatType
- *
- * @package QUI\ERP\Products\Field
  */
 class Url extends QUI\ERP\Products\Field\Field
 {

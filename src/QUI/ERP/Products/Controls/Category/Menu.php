@@ -14,8 +14,6 @@ use function md5;
 
 /**
  * Class Button
- *
- * @package QUI\ERP\Products\Controls\Watchlist
  */
 class Menu extends QUI\Control
 {
@@ -44,7 +42,6 @@ class Menu extends QUI\Control
      *
      * @throws QUI\Exception
      * @see \QUI\Control::create()
-     *
      */
     public function getBody(): string
     {
@@ -189,7 +186,6 @@ class Menu extends QUI\Control
      *
      * @param QUI\Interfaces\Projects\Site $Site
      * @return string
-     *
      */
     public function getBreadcrumbFlag(QUI\Interfaces\Projects\Site $Site): string
     {

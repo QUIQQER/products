@@ -10,8 +10,6 @@ use QUI;
 
 /**
  * Console tool for HKL used patches
- *
- * @author www.pcsg.de (Patrick Müller)
  */
 class Cleanup extends QUI\System\Console\Tool
 {

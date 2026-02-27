@@ -9,7 +9,7 @@
  *
  * @param string $productId - Product-ID
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_deleteChild',
     function ($productId) {
         $Products = new QUI\ERP\Products\Handler\Products();

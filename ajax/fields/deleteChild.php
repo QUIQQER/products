@@ -9,7 +9,7 @@
  *
  * @param string $fieldId - Field-ID
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_fields_deleteChild',
     function ($fieldId) {
         $Fields = new QUI\ERP\Products\Handler\Fields();

@@ -9,7 +9,7 @@
  *
  * @param string $productId - ID of a product
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getProductByProductNo',
     function ($productNo) {
         $Product = QUI\ERP\Products\Handler\Products::getProductByProductNo($productNo);

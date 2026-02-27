@@ -15,7 +15,7 @@ use QUI\ERP\Products\Utils\Calc;
  *
  * @return float
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_calcBruttoPrice',
     function ($price, $formatted, $productId) {
         try {

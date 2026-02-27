@@ -32,8 +32,6 @@ use function trim;
 
 /**
  * Class EventHandling
- *
- * @package QUI\ERP\Products
  */
 class EventHandling
 {

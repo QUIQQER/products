@@ -14,8 +14,6 @@ use function strtoupper;
 
 /**
  * Class AttributeGroupFrontendView
- *
- * @package QUI\ERP\Products\Field\Types
  */
 class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
 {

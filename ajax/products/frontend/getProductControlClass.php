@@ -14,7 +14,7 @@ use QUI\ERP\Products\Product\Types\VariantParent;
  * @param string $productId - ID of a product
  * @return string
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getProductControlClass',
     function ($productId) {
         $Product = Products::getProduct((int)$productId);

@@ -10,7 +10,7 @@
 
 use QUI\ERP\Products\Handler\Products;
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_getFieldCategories',
     function ($productId) {
         $Product = null;

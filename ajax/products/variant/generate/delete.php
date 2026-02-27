@@ -11,7 +11,7 @@ use QUI\ERP\Products\Handler\Products;
  *
  * @param string $variantIds - JSON Ids of variants
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_variant_generate_delete',
     function ($variantIds) {
         $variantIds = json_decode($variantIds, true);

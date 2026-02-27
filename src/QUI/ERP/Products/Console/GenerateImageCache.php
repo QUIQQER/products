@@ -17,8 +17,6 @@ use const STR_PAD_LEFT;
 
 /**
  * Console tool for HKL used patches
- *
- * @author www.pcsg.de (Patrick Müller)
  */
 class GenerateImageCache extends QUI\System\Console\Tool
 {

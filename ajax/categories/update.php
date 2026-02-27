@@ -11,7 +11,7 @@
  *
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_categories_update',
     function ($categoryId, $params, $updateProductFields) {
         if (!isset($updateProductFields)) {

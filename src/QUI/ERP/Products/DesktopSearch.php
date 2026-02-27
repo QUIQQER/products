@@ -15,8 +15,6 @@ use function json_encode;
 
 /**
  * Class DesktopSearch
- *
- * @package QUI\Products
  */
 class DesktopSearch implements ProviderInterface
 {

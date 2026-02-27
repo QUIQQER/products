@@ -12,7 +12,6 @@ use QUI\ERP\Products\Handler\Search;
 
 /**
  * Class Input
- * @package QUI\ERP\Products\Field
  */
 class BasketConditions extends QUI\ERP\Products\Field\Field
 {
