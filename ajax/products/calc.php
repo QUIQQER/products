@@ -14,7 +14,7 @@ use QUI\ERP\Products\Handler\Products;
  * @param string $fields - JSON fields
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_calc',
     function ($productId, $fields, $quantity) {
         $fields = json_decode($fields, true);

@@ -12,7 +12,7 @@
  * @param integer $status - Field publix status 0 or 1, true or false
  * @return boolean
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_setPublicStatusFromField',
     function ($productId, $fieldId, $status) {
         $Products = new QUI\ERP\Products\Handler\Products();

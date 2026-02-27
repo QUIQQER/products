@@ -12,7 +12,7 @@
 use QUI\ERP\Products\Handler\Search as SearchHandler;
 use QUI\Utils\Security\Orthos;
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_search_frontend_getSearchFields',
     function ($siteId, $project, $options) {
         if (empty($options)) {

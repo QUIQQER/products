@@ -13,8 +13,6 @@ use function sort;
 
 /**
  * Class FieldSortCache
- *
- * @package QUI\ERP\Products\Utils
  */
 class FieldSortCache
 {

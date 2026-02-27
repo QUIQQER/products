@@ -8,7 +8,7 @@
 
 use QUI\ERP\Products\Handler\Cache;
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_fields_getPublicFields',
     function () {
         $cacheName = Cache::getBasicCachePath() . 'fields/publicFields';

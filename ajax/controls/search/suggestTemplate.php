@@ -15,7 +15,7 @@
 
 use QUI\ERP\Products\Controls\Search\Suggest;
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_controls_search_suggestTemplate',
     function ($project, $siteId) {
         $Project = QUI::getProjectManager()->decode($project);

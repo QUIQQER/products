@@ -23,7 +23,6 @@ use function trim;
 
 /**
  * Class FloatType
- * @package QUI\ERP\Products\Field
  */
 class FloatType extends QUI\ERP\Products\Field\Field
 {

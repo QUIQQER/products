@@ -13,7 +13,7 @@
 use QUI\ERP\Products\Handler\Products;
 use QUI\ExceptionStack;
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_variant_massProcessing',
     function ($productIds, $fieldId, $value) {
         $productIds = json_decode($productIds, true);

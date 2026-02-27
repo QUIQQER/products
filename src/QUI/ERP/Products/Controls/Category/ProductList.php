@@ -27,8 +27,6 @@ use function usort;
 
 /**
  * Class Button
- *
- * @package QUI\ERP\Products\Controls\Watchlist
  */
 class ProductList extends QUI\Control
 {

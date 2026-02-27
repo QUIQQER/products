@@ -12,8 +12,6 @@ use QUI\Locale;
 /**
  * Class Product
  * - Default Product Type
- *
- * @package QUI\ERP\Products\Product\Types
  */
 class Product extends AbstractType
 {

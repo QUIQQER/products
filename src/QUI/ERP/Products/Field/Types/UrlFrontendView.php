@@ -13,8 +13,6 @@ use function htmlspecialchars;
 /**
  * Class UrlFrontendView
  * Frontend View for the Url Field
- *
- * @package QUI\ERP\Products\Field
  */
 class UrlFrontendView extends QUI\ERP\Products\Field\View
 {

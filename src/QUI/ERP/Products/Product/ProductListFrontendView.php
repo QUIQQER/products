@@ -17,8 +17,6 @@ use function json_encode;
 /**
  * Class ProductListView
  * FrontendView for a product list
- *
- * @package QUI\ERP\Products\Product
  */
 class ProductListFrontendView
 {

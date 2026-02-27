@@ -15,8 +15,6 @@ use function json_encode;
 /**
  * Class ProductListBackendView.
  * FrontendView for a product list
- *
- * @package QUI\ERP\Products\Product
  */
 class ProductListBackendView
 {
@@ -288,7 +286,6 @@ class ProductListBackendView
      *
      * @param bool $css - optional, with inline style, default = true
      * @return string
-     *
      */
     public function toHTML($css = true): string
     {

@@ -8,7 +8,7 @@
 
 use QUI\ERP\Products\Handler\Fields;
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_settings_getPriceFields',
     function () {
         $fields = Fields::getFields([

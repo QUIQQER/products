@@ -65,7 +65,6 @@ use function usort;
  * This class is the main data object for a product
  * This class handles all data from and for a product
  *
- * @package QUI\ERP\Products\Product
  *
  * @example
  * QUI\ERP\Products\Handler\Products::getProduct( ID );

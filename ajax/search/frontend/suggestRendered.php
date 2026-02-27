@@ -14,7 +14,7 @@ use QUI\ERP\Products\Search\FrontendSearch;
  * @param array $searchData
  * @return string
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_search_frontend_suggestRendered',
     function ($project, $siteId, $searchParams, $globalsearch, $limit, $showLinkToSearchSite, $searchUrl) {
         QUI\Permissions\Permission::checkPermission(

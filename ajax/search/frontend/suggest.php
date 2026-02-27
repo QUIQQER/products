@@ -13,7 +13,7 @@ use QUI\ERP\Products\Search\FrontendSearch;
  * @param array $searchData
  * @return array - product ids
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_search_frontend_suggest',
     function ($project, $siteId, $searchParams) {
         QUI\Permissions\Permission::checkPermission(

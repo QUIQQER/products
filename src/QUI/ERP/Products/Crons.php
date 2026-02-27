@@ -18,8 +18,6 @@ use function set_time_limit;
 
 /**
  * Class EventHandling
- *
- * @package QUI\ERP\Products
  */
 class Crons
 {

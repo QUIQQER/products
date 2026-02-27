@@ -15,7 +15,6 @@ use function dirname;
 
 /**
  * Class Suggest
- * @package QUI\ERP\Products\Controls\Search\Suggest
  */
 class Suggest extends QUI\Control
 {
@@ -47,7 +46,6 @@ class Suggest extends QUI\Control
      *
      * @throws QUI\Exception
      * @see \QUI\Control::create()
-     *
      */
     public function getBody(): string
     {

@@ -6,7 +6,7 @@
  * @return array
  */
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_fields_getSortableFieldsForSite',
     function ($siteId, $projectData) {
         $Project = QUI::getProjectManager()->decode($projectData);

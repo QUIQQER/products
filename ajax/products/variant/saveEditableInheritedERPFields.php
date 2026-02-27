@@ -11,7 +11,7 @@ use QUI\ERP\Products\Handler\Products;
  *
  * @param array $fields - field ids
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_variant_saveEditableInheritedERPFields',
     function ($editable, $inherited) {
         $editable = json_decode($editable, true);

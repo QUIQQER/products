@@ -10,7 +10,7 @@
  * @param string|integer $categoryId - Category ID
  * @param string|integer $parentId - Parent ID
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_categories_setParent',
     function ($categoryId, $parentId) {
         $Categories = new QUI\ERP\Products\Handler\Categories();

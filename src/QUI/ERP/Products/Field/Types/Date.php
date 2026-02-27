@@ -17,7 +17,6 @@ use function strtotime;
 
 /**
  * Class Price
- * @package QUI\ERP\Products\Field
  */
 class Date extends QUI\ERP\Products\Field\Field
 {

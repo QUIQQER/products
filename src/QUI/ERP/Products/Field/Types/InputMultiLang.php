@@ -27,7 +27,6 @@ use function strlen;
 
 /**
  * Class InputMultiLang
- * @package QUI\ERP\Products\Field
  */
 class InputMultiLang extends QUI\ERP\Products\Field\Field
 {

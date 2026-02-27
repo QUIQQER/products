@@ -6,7 +6,7 @@
  * @return array
  */
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_settings_getVatEntries',
     function () {
         return QUI\ERP\Tax\Utils::getAvailableTaxList();

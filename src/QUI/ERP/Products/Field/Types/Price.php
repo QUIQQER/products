@@ -24,7 +24,6 @@ use function trim;
 
 /**
  * Class Price
- * @package QUI\ERP\Products\Field
  */
 class Price extends QUI\ERP\Products\Field\Field
 {

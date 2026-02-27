@@ -14,7 +14,7 @@ use QUI\ERP\Products\Handler\Products;
  * @param string $productId - ID of a product
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getTrackingDataForProduct',
     function ($productId) {
         $Locale = QUI::getLocale();

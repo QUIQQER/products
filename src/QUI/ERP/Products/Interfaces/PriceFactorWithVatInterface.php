@@ -10,7 +10,6 @@ use QUI\ERP\Tax\TaxType;
 
 /**
  * Interface PriceFactorWithVatInterface
- * @package QUI\ERP\Products\Interfaces
  */
 interface PriceFactorWithVatInterface extends PriceFactorInterface
 {

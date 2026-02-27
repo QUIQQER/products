@@ -19,8 +19,6 @@ use function usort;
  * Class PriceFactors
  *
  * Price factors is a list of prices from products
- *
- * @package QUI\ERP\Products\Utils
  */
 class PriceFactors
 {

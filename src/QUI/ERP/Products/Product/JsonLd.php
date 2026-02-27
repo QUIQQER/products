@@ -16,7 +16,6 @@ use function json_encode;
 /**
  * Class JsonLd
  *
- * @package QUI\ERP\Products\Product
  *
  * @todo ProductVariant
  * @todo consider stock

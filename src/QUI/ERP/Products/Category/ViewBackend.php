@@ -15,8 +15,6 @@ use QUI\Interfaces\Projects\Site;
 
 /**
  * Class ViewFrontend
- *
- * @package QUI\ERP\Products\Category
  */
 class ViewBackend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
 {

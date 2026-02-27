@@ -13,8 +13,6 @@ use function explode;
  * Class AssignProductsToParentCategories
  *
  * Assign products to all parent categories of its assigned categories
- *
- * @author www.pcsg.de (Patrick Müller)
  */
 class AssignProductsToParentCategories extends QUI\System\Console\Tool
 {

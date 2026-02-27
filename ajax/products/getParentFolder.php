@@ -9,7 +9,7 @@
  *
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_getParentFolder',
     function () {
         $Package = QUI::getPackage('quiqqer/products');

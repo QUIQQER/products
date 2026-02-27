@@ -27,8 +27,6 @@ use function str_replace;
 /**
  * Class VariantChild
  * - Variant Child
- *
- * @package QUI\ERP\Products\Product\Types
  */
 class VariantChild extends AbstractType
 {

@@ -11,8 +11,6 @@ use QUI;
 /**
  * Class PDF
  * Helper for PDF generation - watchlist, accounting etc
- *
- * @package QUI\ERP\Products\Utils
  */
 class PDF
 {

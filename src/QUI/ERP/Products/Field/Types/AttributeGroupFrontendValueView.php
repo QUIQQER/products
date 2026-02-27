@@ -10,8 +10,6 @@ use function is_string;
 
 /**
  * Class AttributeGroupFrontendView
- *
- * @package QUI\ERP\Products\Field\Types
  */
 class AttributeGroupFrontendValueView extends QUI\ERP\Products\Field\View
 {

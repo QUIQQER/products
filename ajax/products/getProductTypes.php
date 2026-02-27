@@ -9,7 +9,7 @@
  *
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_getProductTypes',
     function () {
         $ProductTypes = QUI\ERP\Products\Utils\ProductTypes::getInstance();

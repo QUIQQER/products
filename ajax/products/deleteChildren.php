@@ -9,7 +9,7 @@
  *
  * @param string $productIds - JSON list of product ids
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_deleteChildren',
     function ($productIds) {
         $productIds = json_decode($productIds, true);
