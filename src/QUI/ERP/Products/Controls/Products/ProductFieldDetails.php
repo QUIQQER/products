@@ -109,7 +109,7 @@ class ProductFieldDetails extends QUI\Control
                     $files = $Folder->getChildren();
                 } elseif (!$showFiles && $showImages) {
                     $files = $Folder->getImages();
-                } elseif ($showFiles && !$showImages) {
+                } elseif ($showFiles) {
                     $files = $Folder->getFiles();
                 }
 
