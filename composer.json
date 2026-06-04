@@ -30,7 +30,7 @@
     "quiqqer-asset/intl": "^1"
   },
   "require-dev": {
-    "phpunit/phpunit-mock-objects": "~3.1"
+    "phpunit/phpunit-mock-objects": "^6"
   },
   "suggest": {
     "quiqqer/tax": "VAT management",
