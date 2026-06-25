@@ -491,12 +491,12 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         }
 
         if (!$Project) {
-            return $this->sites;
+            return $this->sites ?: [];
         }
 
         $sites = [];
         $id = $this->getId();
-        $result = $this->sites;
+        $result = $this->sites ?: [];
 
         $projectName = $Project->getName();
         $projectLang = $Project->getLang();
