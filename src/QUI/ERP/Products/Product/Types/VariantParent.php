@@ -1386,7 +1386,7 @@ class VariantParent extends AbstractType
             }
 
             foreach ($options as $entry) {
-                if (!isset($entry['title']) && !isset($entry['valueId'])) {
+                if (!isset($entry['title']) || !isset($entry['valueId'])) {
                     continue;
                 }
 
