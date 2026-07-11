@@ -862,7 +862,7 @@ class Products
                 Products::getProduct($Folder->getAttribute('name'));
             } catch (QUI\ERP\Products\Product\Exception $Exception) {
                 if ($Exception->getCode() == 404 && Utils::isFolder($Folder)) {
-                    $Folder->delete();
+                    $Folder?->delete();
                 }
 
                 QUI\System\Log::writeException($Exception);
