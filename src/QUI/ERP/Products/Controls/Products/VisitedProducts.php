@@ -14,10 +14,7 @@ use QUI;
  */
 class VisitedProducts extends QUI\Control
 {
-    /**
-     * @var null|ChildrenSlider
-     */
-    protected $Slider = null;
+    protected ChildrenSlider $Slider;
 
     /**
      * ChildrenSlider constructor.

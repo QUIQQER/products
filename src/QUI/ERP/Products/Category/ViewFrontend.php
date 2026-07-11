@@ -20,10 +20,8 @@ class ViewFrontend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
 {
     /**
      * Real category
-     *
-     * @var Category|null
      */
-    protected ?Category $Category = null;
+    protected Category $Category;
 
     /**
      * View constructor
@@ -122,7 +120,7 @@ class ViewFrontend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
      * Return the parent category
      * - Category 0 has no parent => returns false
      *
-     * @return bool|Category
+     * @return bool|QUI\ERP\Products\Interfaces\CategoryInterface
      * @throws Exception
      */
     public function getParent(): bool | QUI\ERP\Products\Interfaces\CategoryInterface
