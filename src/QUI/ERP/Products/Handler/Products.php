@@ -259,6 +259,7 @@ class Products
      * Return a new product instance
      * this function does not look into the instance cache
      *
+     * @param int|string $pid
      * @throws QUI\ERP\Products\Product\Exception
      */
     public static function getNewProductInstance($pid): QUI\ERP\Products\Product\Types\AbstractType
@@ -338,8 +339,8 @@ class Products
     }
 
     /**
-     * @param $pid
-     * @param $result
+     * @param mixed $pid
+     * @param mixed $result
      * @return QUI\ERP\Products\Product\Types\AbstractType
      *
      * // @todo interface check

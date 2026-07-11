@@ -206,7 +206,7 @@ class Calc
      * Calculate a complete product list
      *
      * @param ProductList $List
-     * @param callable|boolean $callback - optional, callback function for the data array
+     * @param callable|boolean $callback - optional, callback function for the data array<mixed>
      * @return ProductList
      *
      * @throws QUI\Exception
@@ -619,7 +619,7 @@ class Calc
      * only fields
      *
      * @param UniqueProduct $Product
-     * @param callable|boolean $callback - optional, callback function for the calculated data array
+     * @param callable|boolean $callback - optional, callback function for the calculated data array<mixed>
      * @param Price|UniqueFieldInterface|null $Price - optional, price object to calc with
      * @param bool $ignorePriceFactors - ignore price factors, default = false
      *

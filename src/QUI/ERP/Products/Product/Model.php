@@ -2128,7 +2128,7 @@ class Model extends QUI\QDOM
      * Return the field value
      *
      * @param integer|string $fieldId - Field ID or FIELD constant name -> FIELD_PRICE, FIELD_PRODUCT_NO ...
-     * @return int|float|string|array|null
+     * @return int|float|string|array<mixed>|null
      * @throws Exception
      */
     public function getFieldValue(int | string $fieldId): int | float | string | array | null
@@ -2141,7 +2141,7 @@ class Model extends QUI\QDOM
      *
      * @param integer $fieldId
      * @param Locale|null $Locale (optional)
-     * @return int|float|string|array|null
+     * @return int|float|string|array<mixed>|null
      * @throws Exception
      */
     public function getFieldValueByLocale(int $fieldId, ?QUI\Locale $Locale = null): int | float | string | array | null
@@ -2150,7 +2150,7 @@ class Model extends QUI\QDOM
     }
 
     /**
-     * @param $fieldId
+     * @param mixed $fieldId
      * @return array<mixed>
      *
      * @throws Exception

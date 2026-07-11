@@ -62,6 +62,7 @@ class VisitedProducts extends QUI\Control
      * Add multiple products to the children slider
      *
      * @param array<mixed> $products
+     * @return void
      */
     public function addProducts($products)
     {

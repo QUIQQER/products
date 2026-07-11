@@ -40,12 +40,13 @@ class VariantChild extends AbstractType
      */
     protected mixed $OwnMediaFolderField = null;
 
+    /** @var array<mixed>|null */
     protected ?array $shortDescAddition = null;
 
     /**
      * VariantChild constructor.
      *
-     * @param $pid
+     * @param mixed $pid
      * @param array<mixed> $product
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception

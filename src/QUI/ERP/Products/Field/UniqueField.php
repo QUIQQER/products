@@ -46,7 +46,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
 
     /**
      * Field title
-     * @var string|array
+     * @var string|array<mixed>
      */
     protected string | array $title;
 
@@ -94,7 +94,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     /**
      * search cache value
      *
-     * @var string|array|null
+     * @var string|array<mixed>|null
      */
     protected string | array | null $searchvalue;
 
@@ -445,7 +445,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
 
     /**
      * @param Locale|null $Locale
-     * @return string|array|null
+     * @return string|array<mixed>|null
      */
     public function getSearchCacheValue(null | QUI\Locale $Locale = null): null | string | array
     {
@@ -774,7 +774,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     }
 
     /**
-     * @param $Product - Product instance
+     * @param mixed $Product - Product instance
      */
     public function setProduct($Product): void
     {

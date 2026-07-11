@@ -44,7 +44,7 @@ class Products
      * - QUI\ERP\Products\Product\Model
      * - QUI\ERP\Products\Product\Product
      *
-     * @param $mixed
+     * @param mixed $mixed
      * @return bool
      */
     public static function isProduct($mixed): bool
@@ -286,7 +286,7 @@ class Products
     /**
      * Return generate variant hash
      *
-     * @param array<mixed> $fields - could be a field array [Field, Field, Field],
+     * @param array<mixed> $fields - could be a field array<mixed> [Field, Field, Field],
      *                        or could be a field object list ['field-1':2, 'field-1':'value']
      * @return string
      */
@@ -485,7 +485,7 @@ class Products
     /**
      * Is the product a variant product
      *
-     * @param $Product
+     * @param mixed $Product
      * @return bool
      */
     public static function isVariant($Product): bool
@@ -618,7 +618,7 @@ class Products
     }
 
     /**
-     * @param $Product
+     * @param mixed $Product
      * @return int
      */
     public static function getBasketCondition($Product): int

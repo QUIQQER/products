@@ -6,6 +6,9 @@ use QUI;
 
 class ProductPicker extends QUI\Control
 {
+    /**
+     * @param array<string, mixed> $params
+     */
     public function __construct($params = [])
     {
         parent::__construct($params);

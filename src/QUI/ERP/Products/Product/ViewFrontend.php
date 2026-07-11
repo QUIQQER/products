@@ -363,7 +363,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     /**
      * Return all fields from the wanted type
      *
-     * @param string|array $type
+     * @param string|array<mixed> $type
      * @return array<mixed>
      */
     public function getFieldsByType(string | array $type): array

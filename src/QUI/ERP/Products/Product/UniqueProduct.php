@@ -854,7 +854,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     }
 
     /**
-     * @param string|array $type
+     * @param string|array<mixed> $type
      * @return array<mixed>
      */
     public function getFieldsByType(string | array $type): array

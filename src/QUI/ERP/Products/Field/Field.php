@@ -64,6 +64,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
     protected mixed $defaultValue = null;
 
+    /** @var array<mixed> */
     protected array $options = [];
 
     /**
@@ -93,6 +94,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     protected string $columnType = 'LONGTEXT';
 
+    /** @var array<mixed> */
     protected array $searchTypes = [];
 
     /**
@@ -814,7 +816,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * Return value for use in product search cache
      *
      * @param Locale|null $Locale
-     * @return string|array|null
+     * @return string|array<mixed>|null
      */
     public function getSearchCacheValue(?Locale $Locale = null): null | string | array
     {
@@ -1331,7 +1333,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
-     * @param $Product - Product instance
+     * @param mixed $Product - Product instance
      */
     public function setProduct($Product): void
     {

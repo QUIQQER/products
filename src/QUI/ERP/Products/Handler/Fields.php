@@ -485,8 +485,8 @@ class Fields
      * Set the field translations of a field
      * but only if there is no translation
      *
-     * @param $fieldId
-     * @param $attributes
+     * @param mixed $fieldId
+     * @param mixed $attributes
      */
     public static function setFieldTranslations($fieldId, $attributes): void
     {
@@ -624,7 +624,7 @@ class Fields
     /**
      * Return the cache name of a field
      *
-     * @param $fieldId
+     * @param mixed $fieldId
      * @return string
      */
     public static function getFieldCacheName($fieldId): string
@@ -665,6 +665,7 @@ class Fields
      * This iterates through all packages and reads their files from disk.
      * Therefore, this is slow  and should only be used when you know that it's necessary.
      * You would generally want to use @return array
+     * @return array<mixed>
      * @see self::getFieldTypes()
      */
     private static function getFieldTypesFromDisk(): array
@@ -1079,7 +1080,7 @@ class Fields
     /**
      * Return all fields by a specific type
      *
-     * @param $type
+     * @param mixed $type
      * @return QUI\ERP\Products\Interfaces\FieldInterface[]
      */
     public static function getFieldsByType($type): array
@@ -1285,6 +1286,8 @@ class Fields
 
     /**
      * Get all price field types provided by package providers
+     *
+     * @return array<mixed>
      */
     public static function getPriceFieldTypesByProviders(): array
     {

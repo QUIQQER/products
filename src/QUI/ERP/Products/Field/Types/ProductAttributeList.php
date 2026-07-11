@@ -44,6 +44,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
 
     protected mixed $defaultValue = null;
 
+    /** @var array<mixed> */
     protected array $disabled = [];
 
     /**
@@ -386,7 +387,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @return string|array|int|null
+     * @return string|array<mixed>|int|null
      */
     public function cleanup(mixed $value): string | array | int | null
     {

@@ -1306,7 +1306,7 @@ class EventHandling
      * event : on request
      *
      * @param QUI\Rewrite $Rewrite
-     * @param $url
+     * @param mixed $url
      */
     public static function onRequest(QUI\Rewrite $Rewrite, $url): void
     {
@@ -1486,8 +1486,8 @@ class EventHandling
     /**
      * event: on quiqqer translator edit by id
      *
-     * @param $id
-     * @param $data
+     * @param mixed $id
+     * @param mixed $data
      */
     public static function onQuiqqerTranslatorEditById($id, $data): void
     {
@@ -1502,6 +1502,7 @@ class EventHandling
      * Update category title & description locale
      *
      * @deprecated replaced by onQuiqqerTranslatorEditById & onQuiqqerTranslatorEdit
+     * @return void
      */
     public static function onQuiqqerTranslatorPublish()
     {

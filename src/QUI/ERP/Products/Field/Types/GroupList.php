@@ -365,7 +365,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
      * Return value for use in product search cache
      *
      * @param Locale|null $Locale
-     * @return string|array|null
+     * @return string|array<mixed>|null
      *
      * @throws ExceptionStack
      * @throws QUI\Database\Exception
@@ -421,7 +421,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
      * Return the value in dependence of a locale (language)
      *
      * @param bool|Locale|null $Locale (optional)
-     * @return string|array
+     * @return string|array<mixed>
      */
     public function getValueByLocale(null | bool | Locale $Locale = null): string | array
     {

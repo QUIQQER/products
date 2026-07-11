@@ -194,7 +194,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     }
 
     /**
-     * @param string|array $type
+     * @param string|array<mixed> $type
      * @return array<mixed>
      */
     public function getFieldsByType(string | array $type): array
@@ -222,7 +222,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
 
     /**
      * @param int|string $fieldId
-     * @return string|array|null
+     * @return string|array<mixed>|null
      *
      * @throws Exception
      */

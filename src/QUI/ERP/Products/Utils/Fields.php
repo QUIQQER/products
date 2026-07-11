@@ -62,7 +62,7 @@ class Fields
     }
 
     /**
-     * @param $fieldHash
+     * @param mixed $fieldHash
      * @return array<mixed>
      */
     public static function parseFieldHashToArray($fieldHash): array
@@ -153,7 +153,7 @@ class Fields
     }
 
     /**
-     * @param $field
+     * @param mixed $field
      * @return string
      */
     protected static function generateFieldHashFromArray($field): string
@@ -422,7 +422,7 @@ class Fields
     /**
      * is the value a weight specification
      *
-     * @param $weight
+     * @param mixed $weight
      * @return bool
      */
     public static function isWeight($weight): bool
@@ -436,9 +436,9 @@ class Fields
     /**
      * compares to numbers
      *
-     * @param $no1
-     * @param $no2
-     * @param $type
+     * @param mixed $no1
+     * @param mixed $no2
+     * @param mixed $type
      *
      * @return bool
      */
@@ -472,7 +472,7 @@ class Fields
      *
      * egt = >=
      *
-     * @param $term
+     * @param mixed $term
      * @return string
      */
     public static function termToHuman($term): string

@@ -55,7 +55,7 @@ interface UniqueFieldInterface
      * Return value for use in product search cache
      *
      * @param Locale|null $Locale
-     * @return string|array|null
+     * @return string|array<mixed>|null
      */
     public function getSearchCacheValue(null | Locale $Locale = null): null|string|array;
 

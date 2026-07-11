@@ -99,7 +99,7 @@ class Sortables
     }
 
     /**
-     * @return array[]
+     * @return array<int, array<string, mixed>>
      *
      * @throws QUI\Exception
      */

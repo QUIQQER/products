@@ -14,6 +14,7 @@ use function is_null;
  */
 class ProductCache
 {
+    /** @var array<string, array<mixed>> */
     protected static array $uniqueProductData = [];
 
     /**
