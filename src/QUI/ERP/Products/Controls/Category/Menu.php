@@ -20,7 +20,7 @@ class Menu extends QUI\Control
     /**
      * constructor
      *
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -123,7 +123,7 @@ class Menu extends QUI\Control
      * Return the quiqqer/products:types/category children
      *
      * @param QUI\Interfaces\Projects\Site|null $Site
-     * @return array
+     * @return array<mixed>
      *
      * @throws QUI\Exception
      */

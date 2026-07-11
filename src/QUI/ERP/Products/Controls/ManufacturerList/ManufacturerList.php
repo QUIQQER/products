@@ -21,7 +21,7 @@ class ManufacturerList extends QUI\Control
     /**
      * constructor
      *
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -116,7 +116,7 @@ class ManufacturerList extends QUI\Control
      * Return the first articles as html array
      *
      * @param boolean|integer $count - (optional) count of the children
-     * @return array [html, count, more]
+     * @return array<mixed> [html, count, more]
      */
     public function getStart(bool|int $count = false): array
     {
@@ -128,7 +128,7 @@ class ManufacturerList extends QUI\Control
      *
      * @param boolean|integer $start - (optional) start position
      * @param boolean|integer $count - (optional) count of the children
-     * @return array [html, count, more]
+     * @return array<mixed> [html, count, more]
      */
     public function getNext(bool|int $start = false, bool|int $count = false): array
     {
@@ -141,7 +141,7 @@ class ManufacturerList extends QUI\Control
      * @param boolean|integer $start - (optional) start position
      * @param boolean|integer $max - (optional) max children
      * @param boolean|integer $count - (optional) count of the children
-     * @return array [html, count, more]
+     * @return array<mixed> [html, count, more]
      */
     protected function renderData(bool|int $start, bool|int $max, bool|int $count = false): array
     {

@@ -58,33 +58,33 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     protected int $parentId;
 
     /**
-     * @var ?array
+     * @var array<mixed>|null
      */
     protected ?array $fields = null;
 
     /**
-     * @var ?array
+     * @var array<mixed>|null
      */
     protected ?array $sites = null;
 
     /**
-     * @var array|null
+     * @var array<mixed>|null
      */
     protected array | null $defaultSites = [];
 
     /**
      * db data
-     * @var array
+     * @var array<mixed>
      */
     protected array $data = [];
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected array $caches = [];
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected mixed $customData = [];
 
@@ -92,7 +92,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      * Model constructor.
      *
      * @param integer $categoryId
-     * @param array $data - optional, category data
+     * @param array<mixed> $data - optional, category data
      */
     public function __construct(int $categoryId, array $data)
     {
@@ -306,7 +306,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * Return the attributes
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getAttributes(): array
     {
@@ -376,7 +376,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getChildren(): array
     {
@@ -538,7 +538,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * refresh the internal sites bind
      *
-     * @return array|null
+     * @return array<mixed>|null
      *
      * @throws Exception
      * @throws QUI\Exception
@@ -615,12 +615,12 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * Return all products from the category
      *
-     * @param array $params - query parameter
+     * @param array<mixed> $params - query parameter
      *                              $queryParams['where']
      *                              $queryParams['limit']
      *                              $queryParams['order']
      *                              $queryParams['debug']
-     * @return array
+     * @return array<mixed>
      */
     public function getProducts(array $params = []): array
     {
@@ -659,12 +659,12 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * Return all product ids from the category
      *
-     * @param array $params - query parameter
+     * @param array<mixed> $params - query parameter
      *                              $queryParams['where']
      *                              $queryParams['limit']
      *                              $queryParams['order']
      *                              $queryParams['debug']
-     * @return array
+     * @return array<mixed>
      */
     public function getProductIds(array $params = []): array
     {
@@ -701,7 +701,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * Return the number of the products in the category
      *
-     * @param array $params - query parameter
+     * @param array<mixed> $params - query parameter
      *                              $queryParams['where']
      *                              $queryParams['debug']
      * @return integer
@@ -784,7 +784,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * Return the category fields
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getFields(): array
     {
@@ -1044,7 +1044,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * Get all fields that are set as searchable for this category
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getSearchFields(): array
     {
@@ -1102,7 +1102,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getCustomData(): array
     {

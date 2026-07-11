@@ -67,7 +67,7 @@ class ProductList
 
     /**
      * key 19% value[sum] = sum value[text] = text value[display_sum] formatiert
-     * @var array
+     * @var array<mixed>
      */
     protected mixed $vatArray = [];
 
@@ -101,7 +101,7 @@ class ProductList
 
     /**
      * Currency information
-     * @var array
+     * @var array<mixed>
      */
     protected mixed $currencyData = [
         'currency_sign' => '',
@@ -136,7 +136,7 @@ class ProductList
     /**
      * ProductList constructor.
      *
-     * @param array $params - optional, list settings
+     * @param array<mixed> $params - optional, list settings
      * @param User|null $User - optional, User for calculation
      */
     public function __construct(array $params = [], null | QUI\Interfaces\Users\User $User = null)
@@ -420,7 +420,7 @@ class ProductList
      * Return the products as array list
      *
      * @param null|QUI\Locale $Locale - optional
-     * @return array
+     * @return array<mixed>
      *
      * @throws QUI\Exception
      */

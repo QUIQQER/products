@@ -46,7 +46,7 @@ class VariantChild extends AbstractType
      * VariantChild constructor.
      *
      * @param $pid
-     * @param array $product
+     * @param array<mixed> $product
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
      */
@@ -318,7 +318,7 @@ class VariantChild extends AbstractType
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getCategories(): array
     {
@@ -478,8 +478,8 @@ class VariantChild extends AbstractType
      * Return all images of the product
      * The Variant Parent return all images of the children, too
      *
-     * @param array $params - optional, select params
-     * @return array
+     * @param array<mixed> $params - optional, select params
+     * @return array<mixed>
      */
     public function getImages(array $params = []): array
     {
@@ -551,7 +551,7 @@ class VariantChild extends AbstractType
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function availableActiveChildFields(): array
     {
@@ -559,7 +559,7 @@ class VariantChild extends AbstractType
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function availableActiveFieldHashes(): array
     {
@@ -567,7 +567,7 @@ class VariantChild extends AbstractType
     }
 
     /**
-     * @param array $fieldData
+     * @param array<mixed> $fieldData
      * @param QUI\Interfaces\Users\User|null $EditUser
      *
      * @throws QUI\Database\Exception
@@ -664,7 +664,7 @@ class VariantChild extends AbstractType
      * return all available fields from the variant children
      * this array contains all field ids and field values that are in use in the children
      *
-     * @return array
+     * @return array<mixed>
      */
     public function availableChildFields(): array
     {

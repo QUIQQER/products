@@ -114,7 +114,7 @@ class Fields
     /**
      * List of cache names
      *
-     * @var array
+     * @var array<mixed>
      */
     protected static array $cacheNames = [
         'quiqqer/products/fields',
@@ -123,31 +123,31 @@ class Fields
     ];
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected static array $list = [];
 
     /**
-     * @var array|null
+     * @var array<mixed>|null
      */
     protected static ?array $fieldTypes = null;
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected static array $fieldTypeData = [];
 
     /**
      * Runtime cache for price factor settings
      *
-     * @var array|bool
+     * @var array<mixed>|bool
      */
     protected static array | bool $priceFactorSettings = false;
 
     /**
      * Return the child attributes
      *
-     * @return array
+     * @return array<mixed>
      */
     public static function getChildAttributes(): array
     {
@@ -172,7 +172,7 @@ class Fields
     /**
      * Return all standard fields
      *
-     * @return array
+     * @return array<mixed>
      */
     public static function getStandardFields(): array
     {
@@ -186,7 +186,7 @@ class Fields
     /**
      * Return all system fields
      *
-     * @return array
+     * @return array<mixed>
      */
     public static function getSystemFields(): array
     {
@@ -239,7 +239,7 @@ class Fields
     /**
      * Create a new field
      *
-     * @param array $attributes - field attributes
+     * @param array<mixed> $attributes - field attributes
      * @return QUI\ERP\Products\Field\Field
      *
      * @throws Exception
@@ -598,7 +598,7 @@ class Fields
      *
      * @param string $group
      * @param string $var
-     * @param array $data
+     * @param array<mixed> $data
      */
     protected static function insertTranslations(string $group, string $var, array $data = []): void
     {
@@ -635,7 +635,7 @@ class Fields
     /**
      * Return all available Fields
      *
-     * @return array
+     * @return array<mixed>
      */
     public static function getFieldTypes(): array
     {
@@ -759,7 +759,7 @@ class Fields
      * Return internal field init data for a field type
      *
      * @param string $type - field type
-     * @return array
+     * @return array<mixed>
      */
     public static function getFieldTypeData(string $type): array
     {
@@ -788,7 +788,7 @@ class Fields
      * This iterates through all packages and reads their files from disk.
      * Therefore, this is slow and should only be used when you know that it's necessary.
      * You would generally want to use @param string $type - field type
-     * @return array
+     * @return array<mixed>
      * @see self::getFieldTypeData()
      */
     private static function getFieldTypeDataFromDisk(string $type): array
@@ -813,7 +813,7 @@ class Fields
      *
      * @param string $type - wanted field type
      * @param integer $fieldId - ID of the field
-     * @param array $fieldParams - optional,  Params of the field
+     * @param array<mixed> $fieldParams - optional,  Params of the field
      * @return QUI\ERP\Products\Field\Field
      *
      * @throws QUI\Exception
@@ -991,12 +991,12 @@ class Fields
      * Return a list of field ids
      * if $queryParams is empty, all fields are returned
      *
-     * @param array $queryParams - query parameter
+     * @param array<mixed> $queryParams - query parameter
      *                              $queryParams['where'],
      *                              $queryParams['where_or'],
      *                              $queryParams['limit']
      *                              $queryParams['order']
-     * @return array
+     * @return array<mixed>
      */
     public static function getFieldIds(array $queryParams = []): array
     {
@@ -1043,7 +1043,7 @@ class Fields
      * Return a list of fields
      * if $queryParams is empty, all fields are returned
      *
-     * @param array $queryParams - query parameter
+     * @param array<mixed> $queryParams - query parameter
      *                              $queryParams['where'],
      *                              $queryParams['where_or'],
      *                              $queryParams['limit']
@@ -1099,7 +1099,7 @@ class Fields
     /**
      * Return the number of the fields
      *
-     * @param array $queryParams - query params (where, where_or)
+     * @param array<mixed> $queryParams - query params (where, where_or)
      * @return integer
      */
     public static function countFields(array $queryParams = []): int
@@ -1145,7 +1145,7 @@ class Fields
      * - showInDetails
      *
      * @param int|null $fieldId (optional) - Restrict to one field [default: all fields]
-     * @param array $customAttributes (optional) - Set custom attributes that are set to
+     * @param array<mixed> $customAttributes (optional) - Set custom attributes that are set to
      * every product field
      * @return void
      */
@@ -1238,7 +1238,7 @@ class Fields
     /**
      * Get current price factor settings
      *
-     * @return array
+     * @return array<mixed>
      */
     public static function getPriceFactorSettings(): array
     {
@@ -1269,7 +1269,7 @@ class Fields
     /**
      * Get all price field types.
      *
-     * @return array
+     * @return array<mixed>
      */
     public static function getAllPriceFieldTypes(): array
     {

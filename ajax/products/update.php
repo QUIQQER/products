@@ -12,7 +12,7 @@ use QUI\ERP\Products\Product\Types\VariantParent;
  *
  * @param string $params - JSON query params
  *
- * @return array
+ * @return array<mixed>
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_update',

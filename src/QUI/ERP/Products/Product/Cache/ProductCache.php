@@ -17,7 +17,7 @@ class ProductCache
     protected static array $uniqueProductData = [];
 
     /**
-     * @param array $uniqueProductData
+     * @param array<mixed> $uniqueProductData
      * @param string $cacheName
      * @return void
      */
@@ -32,7 +32,7 @@ class ProductCache
 
     /**
      * @param string $cacheName
-     * @return array|null
+     * @return array<mixed>|null
      */
     public static function getUniqueProductData(string $cacheName): ?array
     {

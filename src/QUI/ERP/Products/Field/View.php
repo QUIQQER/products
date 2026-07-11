@@ -21,7 +21,7 @@ class View extends UniqueField
     /**
      * View constructor.
      *
-     * @param array $params
+     * @param array<mixed> $params
      */
     public function __construct(array $params)
     {

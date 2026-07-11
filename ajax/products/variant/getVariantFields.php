@@ -13,7 +13,7 @@ use QUI\ERP\Products\Product\Types\VariantParent;
  * Return all relevant fields for the variants generation
  *
  * @param integer $productId - Product-ID
- * @return array
+ * @return array<mixed>
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_variant_getVariantFields',

@@ -50,7 +50,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      * ProductAttributeList constructor.
      *
      * @param int $fieldId
-     * @param array $params
+     * @param array<mixed> $params
      */
     public function __construct(int $fieldId, array $params)
     {
@@ -100,7 +100,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
     /**
      * Add a product attribute entry
      *
-     * @param array $entry - data entry
+     * @param array<mixed> $entry - data entry
      *
      * @example $this->addEntry(array(
      *       'title' => '',    // translation json string {de: "", en: ""}
@@ -206,7 +206,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      * Return the array for the calculation
      *
      * @param null|QUI\Locale $Locale
-     * @return array
+     * @return array<mixed>
      */
     public function getCalculationData($Locale = null): array
     {

@@ -101,7 +101,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      *
      * @throws QUI\Exception
      * @throws QUI\ERP\Products\Product\Exception
@@ -364,7 +364,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      * Return all fields from the wanted type
      *
      * @param string|array $type
-     * @return array
+     * @return array<mixed>
      */
     public function getFieldsByType(string | array $type): array
     {
@@ -414,7 +414,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     /**
      * Return all fields
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getFields(): array
     {
@@ -436,7 +436,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     /**
      * Return the product categories
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getCategories(): array
     {
@@ -489,7 +489,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     }
 
     /**
-     * @return array|QUI\Projects\Media\Image[]
+     * @return array<mixed>|QUI\Projects\Media\Image[]
      */
     public function getImages(): array
     {

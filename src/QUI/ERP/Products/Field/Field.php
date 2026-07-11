@@ -101,7 +101,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     protected int | bool $searchDataType = false;
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected array $titles = [];
 
@@ -118,7 +118,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * Model constructor.
      *
      * @param integer $fieldId
-     * @param array $params - optional, field params (system, require, standard)
+     * @param array<mixed> $params - optional, field params (system, require, standard)
      */
     public function __construct(int $fieldId, array $params = [])
     {
@@ -216,7 +216,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the field data for a view
      *
-     * @return array
+     * @return array<mixed>
      */
     protected function getFieldDataForView(): array
     {
@@ -696,7 +696,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
-     * @param array|string $options - field options
+     * @param array<mixed>|string $options - field options
      */
     public function setOptions(array | string $options): void
     {
@@ -826,7 +826,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getOptions(): array
     {
@@ -1075,7 +1075,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Get all available search types for this field
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getSearchTypes(): array
     {
@@ -1099,7 +1099,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the attributes
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getAttributes(): array
     {
@@ -1135,7 +1135,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the attributes for a unique field
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getAttributesForUniqueField(): array
     {
@@ -1188,7 +1188,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the field attributes for a product
      *
-     * @return array
+     * @return array<mixed>
      */
     public function toProductArray(): array
     {
@@ -1262,7 +1262,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @param float|integer $min
      * @param float|integer $max
-     * @return array - contains values from min to max with calculated steps in between
+     * @return array<mixed> - contains values from min to max with calculated steps in between
      */
     public function calculateValueRange(float | int $min, float | int $max): array
     {

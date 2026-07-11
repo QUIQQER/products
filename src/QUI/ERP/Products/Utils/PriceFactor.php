@@ -110,7 +110,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * PriceFactor constructor.
      *
-     * @param array $params - array(
+     * @param array<mixed> $params - array(
      *      'title' => '',
      *      'description' => '',
      *      'priority' => '',
@@ -560,7 +560,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * Returns the price factor as an array
      *
-     * @return array
+     * @return array<mixed>
      */
     public function toArray(): array
     {

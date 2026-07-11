@@ -144,7 +144,7 @@ class PriceByTimePeriod extends Price
      * Precision: 8 (important for currencies like BitCoin)
      *
      * @param mixed $value
-     * @return array
+     * @return array<mixed>
      */
     public function cleanup(mixed $value): array
     {

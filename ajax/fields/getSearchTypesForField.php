@@ -8,7 +8,7 @@
  * Returns all available field types
  *
  * @param integer $fieldId
- * @return array
+ * @return array<mixed>
  */
 
 use QUI\ERP\Products\Handler\Fields;

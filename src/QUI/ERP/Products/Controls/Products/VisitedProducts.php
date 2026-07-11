@@ -21,7 +21,7 @@ class VisitedProducts extends QUI\Control
 
     /**
      * ChildrenSlider constructor.
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -61,7 +61,7 @@ class VisitedProducts extends QUI\Control
     /**
      * Add multiple products to the children slider
      *
-     * @param array $products
+     * @param array<mixed> $products
      */
     public function addProducts($products)
     {

@@ -33,7 +33,7 @@ class UniqueProductFrontendView extends UniqueProduct
      * UniqueProductFrontendView constructor.
      *
      * @param int $pid
-     * @param array $attributes
+     * @param array<mixed> $attributes
      *
      * @throws QUI\Exception
      */
@@ -189,7 +189,7 @@ class UniqueProductFrontendView extends UniqueProduct
     /**
      * Return the product attributes
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getAttributes(): array
     {

@@ -9,8 +9,8 @@ use QUI\ERP\Products\Handler\Search as SearchHandler;
 /**
  * Set search settings for the global freetext search
  *
- * @param array $searchFields
- * @return array - search fields after set
+ * @param array<mixed> $searchFields
+ * @return array<mixed> - search fields after set
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_search_global_setSearchFields',

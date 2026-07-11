@@ -34,8 +34,8 @@ use function usort;
 class Fields
 {
     /**
-     * @param array $fields
-     * @return array
+     * @param array<mixed> $fields
+     * @return array<mixed>
      * @deprecated riesen quatsch
      *
      * @todo wer hat diese methode gebaut? ToJson = return string, wieso array?
@@ -63,7 +63,7 @@ class Fields
 
     /**
      * @param $fieldHash
-     * @return array
+     * @return array<mixed>
      */
     public static function parseFieldHashToArray($fieldHash): array
     {
@@ -90,7 +90,7 @@ class Fields
      * Return all search hashes from one field hash
      *
      * @param string $hash
-     * @return array
+     * @return array<mixed>
      */
     public static function getSearchHashesFromFieldHash(string $hash): array
     {
@@ -200,7 +200,7 @@ class Fields
     /**
      * Sort the fields by priority
      *
-     * @param array $fields - FieldInterface[]
+     * @param array<mixed> $fields - FieldInterface[]
      * @param string $sort - sorting field
      * @return FieldInterface[]
      */
@@ -503,7 +503,7 @@ class Fields
     /**
      *
      * @param ProductModel|null $Product (optional) - Get panel field categories for this specific product only
-     * @return array
+     * @return array<mixed>
      *
      * @todo cachinge
      */
@@ -589,7 +589,7 @@ class Fields
      *
      * @param String $category - name of the category
      * @param ProductModel|null $Product (optional) - Get category fields for this specific product only
-     * @return array
+     * @return array<mixed>
      */
     public static function getPanelFieldCategoryFields(string $category, ?ProductModel $Product = null): array
     {

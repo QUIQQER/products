@@ -21,7 +21,7 @@ class Categories
 {
     /**
      * List of internal categories
-     * @var array
+     * @var array<mixed>
      */
     private static array $list = [];
 
@@ -60,7 +60,7 @@ class Categories
     /**
      * Return the number of the children
      *
-     * @param array $queryParams - query params (where, where_or)
+     * @param array<mixed> $queryParams - query params (where, where_or)
      * @return integer
      */
     public function countCategories(array $queryParams = []): int
@@ -98,7 +98,7 @@ class Categories
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public static function getChildAttributes(): array
     {
@@ -347,7 +347,7 @@ class Categories
      * Return a list of categories
      * if $queryParams is empty, all fields are returned
      *
-     * @param array $queryParams - query parameter
+     * @param array<mixed> $queryParams - query parameter
      *                              $queryParams['where'],
      *                              $queryParams['where_or'],
      *                              $queryParams['limit']
@@ -372,8 +372,8 @@ class Categories
 
     /**
      *
-     * @param array $queryParams
-     * @return array
+     * @param array<mixed> $queryParams
+     * @return array<mixed>
      */
     public static function getCategoryIds(array $queryParams = []): array
     {

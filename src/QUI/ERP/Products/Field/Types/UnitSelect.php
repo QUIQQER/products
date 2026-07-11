@@ -37,7 +37,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
      * ProductAttributeList constructor.
      *
      * @param int $fieldId
-     * @param array $params
+     * @param array<mixed> $params
      */
     public function __construct(int $fieldId, array $params)
     {
@@ -81,7 +81,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
     /**
      * Add unit value entry
      *
-     * @param array $entry - data entry
+     * @param array<mixed> $entry - data entry
      *
      * @example $this->addEntry(array(
      *       'title'         => '',      // translation json string {de: "", en: ""}
@@ -124,7 +124,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
     }
 
     /**
-     * @return array|string|null
+     * @return array<mixed>|string|null
      */
     public function getValue(): array|string|null
     {
@@ -138,7 +138,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
     /**
      * Return the default value
      *
-     * @return array|null
+     * @return array<mixed>|null
      */
     public function getDefaultValue(): ?array
     {
@@ -256,7 +256,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @return array|null
+     * @return array<mixed>|null
      */
     public function cleanup(mixed $value): mixed
     {

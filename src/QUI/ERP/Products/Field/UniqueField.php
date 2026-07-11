@@ -87,7 +87,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
 
     /**
      * custom field calculation data
-     * @var array
+     * @var array<mixed>
      */
     protected array $custom_calc = [];
 
@@ -141,7 +141,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     protected bool $ownField = false;
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected array $options = [];
 
@@ -179,7 +179,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      * Model constructor.
      *
      * @param integer $fieldId
-     * @param array $params - optional, field params (system, require, standard)
+     * @param array<mixed> $params - optional, field params (system, require, standard)
      */
     public function __construct(int $fieldId, array $params = [])
     {
@@ -428,7 +428,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      * Return the value in dependence of a locale (language)
      *
      * @param Locale|null $Locale $Locale
-     * @return array|string
+     * @return array<mixed>|string
      */
     public function getValueByLocale(?Locale $Locale = null): mixed
     {
@@ -436,7 +436,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getOptions(): array
     {
@@ -477,7 +477,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     /**
      * Return the attributes
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getAttributes(): array
     {

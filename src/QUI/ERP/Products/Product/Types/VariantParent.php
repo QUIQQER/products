@@ -58,22 +58,22 @@ class VariantParent extends AbstractType
     const GENERATION_TYPE_ADD = 2;
 
     /**
-     * @var ?array
+     * @var array<mixed>|null
      */
     protected ?array $children = null;
 
     /**
-     * @var array|null
+     * @var array<mixed>|null
      */
     protected ?array $childFields = null;
 
     /**
-     * @var array|null
+     * @var array<mixed>|null
      */
     protected ?array $childFieldsActive = null;
 
     /**
-     * @var array|null
+     * @var array<mixed>|null
      */
     protected ?array $childFieldHashes = null;
 
@@ -81,7 +81,7 @@ class VariantParent extends AbstractType
      * Model constructor
      *
      * @param integer $pid - Product-ID
-     * @param array $product - Product Data
+     * @param array<mixed> $product - Product Data
      *
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
@@ -140,7 +140,7 @@ class VariantParent extends AbstractType
     /**
      * Internal saving method
      *
-     * @param array $fieldData - field data
+     * @param array<mixed> $fieldData - field data
      * @param null|QUI\Interfaces\Users\User $EditUser
      *
      * @throws QUI\Permissions\Exception
@@ -457,8 +457,8 @@ class VariantParent extends AbstractType
      * Return all images of the product
      * The Variant Parent return all images of the children, too
      *
-     * @param array $params - optional, select params
-     * @return array
+     * @param array<mixed> $params - optional, select params
+     * @return array<mixed>
      */
     public function getImages(array $params = []): array
     {
@@ -807,8 +807,8 @@ class VariantParent extends AbstractType
     /**
      * Return all variants
      *
-     * @param array $params - query params
-     * @return array|int
+     * @param array<mixed> $params - query params
+     * @return array<mixed>|int
      *
      * @todo cache
      */
@@ -956,7 +956,7 @@ class VariantParent extends AbstractType
     /**
      * Generate all variants from the given field combinations
      *
-     * @param array $fields - list of field values
+     * @param array<mixed> $fields - list of field values
      *  [
      *      [
      *          fieldId => 1111,
@@ -1097,8 +1097,8 @@ class VariantParent extends AbstractType
     /**
      * Generate permutation array (all combinations) from a php array list
      *
-     * @param array $lists
-     * @return array
+     * @param array<mixed> $lists
+     * @return array<mixed>
      */
     protected function permutations(array $lists): array
     {
@@ -1172,7 +1172,7 @@ class VariantParent extends AbstractType
      * Create a variant by a field array
      * - the url will be adapted to the list fields under certain circumstances
      *
-     * @param array $fields
+     * @param array<mixed> $fields
      * @return VariantChild
      *
      * @throws Exception
@@ -1465,7 +1465,7 @@ class VariantParent extends AbstractType
      * -> parent variant can have non-valid attribute fields and non-valid attribute groups.
      * -> the children have to validate them.
      *
-     * @return array
+     * @return array<mixed>
      *
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
@@ -1507,7 +1507,7 @@ class VariantParent extends AbstractType
      * return all available fields from the variant children
      * this array contains all field ids and field values that are in use in the children
      *
-     * @return array|null
+     * @return array<mixed>|null
      */
     public function availableChildFields(): ?array
     {
@@ -1535,7 +1535,7 @@ class VariantParent extends AbstractType
     /**
      * Get all field values of attribute groups and attribute lists of children products that are active
      *
-     * @return array|null
+     * @return array<mixed>|null
      */
     public function availableActiveChildFields(): ?array
     {
@@ -1551,7 +1551,7 @@ class VariantParent extends AbstractType
     /**
      * Get all hashes of attribute groups and attribute lists of children products that are active
      *
-     * @return array|null
+     * @return array<mixed>|null
      */
     public function availableActiveFieldHashes(): ?array
     {
@@ -1598,8 +1598,8 @@ class VariantParent extends AbstractType
     }
 
     /**
-     * @param array $result - all variant children field hashes
-     * @return array
+     * @param array<mixed> $result - all variant children field hashes
+     * @return array<mixed>
      */
     protected function parseAvailableFields(array $result): array
     {

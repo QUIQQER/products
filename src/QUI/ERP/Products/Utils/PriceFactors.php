@@ -38,7 +38,7 @@ class PriceFactors
      * internal list of price factors
      * be sorted at the beginning
      *
-     * @var array
+     * @var array<mixed>
      */
     protected array $listBeginning = [];
 
@@ -46,7 +46,7 @@ class PriceFactors
      * internal list of price factors
      * be sorted at the end
      *
-     * @var array
+     * @var array<mixed>
      */
     protected array $listEnd = [];
 
@@ -165,7 +165,7 @@ class PriceFactors
      * Return the price factor list as an array
      * This can be imported
      *
-     * @return array
+     * @return array<mixed>
      */
     public function toArray(): array
     {
@@ -203,7 +203,7 @@ class PriceFactors
     /**
      * Imports a price factor array list
      *
-     * @param array $list
+     * @param array<mixed> $list
      */
     public function importList(array $list): void
     {

@@ -58,7 +58,7 @@ interface ProductInterface
     /**
      * Return all fields
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getFields(): array;
 
@@ -81,8 +81,8 @@ interface ProductInterface
     /**
      * Return all fields from the wanted type
      *
-     * @param array|string $type
-     * @return array
+     * @param array<mixed>|string $type
+     * @return array<mixed>
      */
     public function getFieldsByType(array|string $type): array;
 
@@ -147,7 +147,7 @@ interface ProductInterface
     /**
      * Return the product categories
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getCategories(): array;
 

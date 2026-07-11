@@ -4,7 +4,7 @@
  * Returns category list for a grid
  *
  * @param string $params - JSON query params
- * @return array
+ * @return array<mixed>
  */
 
 use QUI\ERP\Products\Handler\Categories;

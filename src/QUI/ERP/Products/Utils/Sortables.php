@@ -18,7 +18,7 @@ class Sortables
 {
     /**
      * @param Site $Site
-     * @return array|bool
+     * @return array<mixed>|bool
      * @throws Exception
      */
     public static function getSortableFieldsForSite(QUI\Projects\Site $Site): array|bool
@@ -45,7 +45,7 @@ class Sortables
 
     /**
      * @param Site $Site
-     * @return array
+     * @return array<mixed>
      * @throws Exception
      */
     public static function getFieldSettingsForSite(QUI\Projects\Site $Site): array

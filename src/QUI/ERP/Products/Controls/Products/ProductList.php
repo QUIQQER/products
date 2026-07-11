@@ -24,7 +24,7 @@ class ProductList extends QUI\Control
 
     /**
      * ChildrenSlider constructor.
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {

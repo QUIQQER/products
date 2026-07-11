@@ -7,7 +7,7 @@
 /**
  * Return all product types
  *
- * @return array
+ * @return array<mixed>
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_getProductTypes',

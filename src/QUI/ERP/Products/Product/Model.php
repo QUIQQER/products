@@ -87,18 +87,18 @@ class Model extends QUI\QDOM
     protected int $id;
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected array $fields = [];
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected array $categories = [];
 
     /**
      * Permissions list
-     * @var array
+     * @var array<mixed>
      */
     protected mixed $permissions = [];
 
@@ -133,7 +133,7 @@ class Model extends QUI\QDOM
      * Model constructor
      *
      * @param integer $pid - Product-ID
-     * @param array $product - Product Data
+     * @param array<mixed> $product - Product Data
      *
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
@@ -1199,7 +1199,7 @@ class Model extends QUI\QDOM
     /**
      * Return the attributes
      *
-     * @return array
+     * @return array<mixed>
      *
      * @throws QUI\Exception
      */
@@ -1298,7 +1298,7 @@ class Model extends QUI\QDOM
     /**
      * Internal saving method
      *
-     * @param array $fieldData - field data
+     * @param array<mixed> $fieldData - field data
      * @param User|null $EditUser (optional) - The user that executes the operation
      *
      * @throws Exception
@@ -1528,7 +1528,7 @@ class Model extends QUI\QDOM
     /**
      * Check if the product url already exists in the category
      *
-     * @param array $fieldData
+     * @param array<mixed> $fieldData
      * @throws QUI\Exception
      * @throws Exception
      */
@@ -1578,7 +1578,7 @@ class Model extends QUI\QDOM
     /**
      * Validate the fields and return the field data
      *
-     * @return array
+     * @return array<mixed>
      *
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
@@ -1669,7 +1669,7 @@ class Model extends QUI\QDOM
      * Return the field data of all fields
      * if the product is active, the fields would be validated, too
      *
-     * @return array
+     * @return array<mixed>
      */
     protected function getFieldData(): array
     {
@@ -2059,7 +2059,7 @@ class Model extends QUI\QDOM
     /**
      * Return all fields from the specific type
      *
-     * @param array|string $type - field type (eq: ProductAttributeList, Price ...) or list of field types
+     * @param array<mixed>|string $type - field type (eq: ProductAttributeList, Price ...) or list of field types
      * @return FieldInterface[]
      */
     public function getFieldsByType(array | string $type): array
@@ -2151,7 +2151,7 @@ class Model extends QUI\QDOM
 
     /**
      * @param $fieldId
-     * @return array
+     * @return array<mixed>
      *
      * @throws Exception
      * @throws QUI\Exception
@@ -2210,7 +2210,7 @@ class Model extends QUI\QDOM
     /**
      * Return the product categories
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getCategories(): array
     {
@@ -2373,8 +2373,8 @@ class Model extends QUI\QDOM
     /**
      * Return all images for the product
      *
-     * @param array $params - optional, select params
-     * @return array
+     * @param array<mixed> $params - optional, select params
+     * @return array<mixed>
      */
     public function getImages(array $params = []): array
     {
@@ -2388,8 +2388,8 @@ class Model extends QUI\QDOM
     /**
      * Return all files for the product
      *
-     * @param array $params - optional, select params
-     * @return array
+     * @param array<mixed> $params - optional, select params
+     * @return array<mixed>
      */
     public function getFiles(array $params = []): array
     {
@@ -2579,7 +2579,7 @@ class Model extends QUI\QDOM
     }
 
     /**
-     * @return array|mixed
+     * @return array<mixed>|mixed
      */
     public function getPermissions(): mixed
     {
@@ -2652,7 +2652,7 @@ class Model extends QUI\QDOM
     /**
      * Get price field factors that apply to this product.
      *
-     * @return array
+     * @return array<mixed>
      */
     protected function getApplicableProductPriceFactors(): array
     {

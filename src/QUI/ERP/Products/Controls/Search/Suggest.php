@@ -21,7 +21,7 @@ class Suggest extends QUI\Control
     /**
      * constructor
      *
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {

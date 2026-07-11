@@ -69,7 +69,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     protected int | string $uid;
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected array $userData = [];
 
@@ -79,7 +79,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     protected int | float $quantity = 1;
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected array $categories = [];
 
@@ -101,7 +101,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     protected QUI\ERP\Products\Utils\PriceFactors $PriceFactors;
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected array $attributes = [];
 
@@ -169,7 +169,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
     /**
      * key 19% value[sum] = sum value[text] = text value[display_sum] formatiert
-     * @var array
+     * @var array<mixed>
      */
     protected array $vatArray = [];
 
@@ -187,7 +187,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
     /**
      * Calculated factors
-     * @var array
+     * @var array<mixed>
      */
     protected array $factors = [];
 
@@ -203,7 +203,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * UniqueProduct constructor.
      *
      * @param integer $pid - Product ID
-     * @param array $attributes - attributes
+     * @param array<mixed> $attributes - attributes
      *
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Users\Exception
@@ -332,7 +332,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     /**
      * Parse the field data
      *
-     * @param array $attributes - product attributes
+     * @param array<mixed> $attributes - product attributes
      */
     protected function parseFieldsFromAttributes(array $attributes = []): void
     {
@@ -389,7 +389,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     /**
      * Parse the category data
      *
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     protected function parseCategoriesFromAttributes(array $attributes = []): void
     {
@@ -411,7 +411,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     }
 
     /**
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     protected function parseCategoryFromAttributes(array $attributes = []): void
     {
@@ -806,7 +806,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     }
 
     /**
-     * @return array|QUI\Projects\Media\Image[]
+     * @return array<mixed>|QUI\Projects\Media\Image[]
      */
     public function getImages(): array
     {
@@ -855,7 +855,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
     /**
      * @param string|array $type
-     * @return array
+     * @return array<mixed>
      */
     public function getFieldsByType(string | array $type): array
     {
@@ -1086,7 +1086,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * Return all custom fields
      * - Custom fields are only fields that the customer fills out
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getCustomFields(): array
     {
@@ -1105,7 +1105,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * Return all public fields
      * custom fields are only fields that the customer fills out
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getPublicFields(): array
     {
@@ -1145,7 +1145,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     /**
      * Return the product categories
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getCategories(): array
     {
@@ -1193,7 +1193,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     /**
      * Return the product attributes
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getAttributes(): array
     {
@@ -1271,7 +1271,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     /**
      * Alias for getAttributes()
      *
-     * @return array
+     * @return array<mixed>
      */
     public function toArray(): array
     {
@@ -1392,7 +1392,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     /**
      * Return the custom fields for saving
      *
-     * @return array
+     * @return array<mixed>
      */
     protected function getCustomFieldsData(): array
     {
@@ -1432,7 +1432,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     /**
      * Return the custom fields for saving
      *
-     * @return array
+     * @return array<mixed>
      */
     protected function getCustomData(): array
     {

@@ -45,7 +45,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
     /**
      * GroupList constructor.
      * @param int $fieldId
-     * @param array $params
+     * @param array<mixed> $params
      */
     public function __construct(int $fieldId, array $params)
     {
@@ -146,7 +146,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
     /**
      * Return the groups in the group list
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getGroups(): array
     {
@@ -293,7 +293,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @return array
+     * @return array<mixed>
      */
     public function cleanup(mixed $value): array
     {
@@ -394,7 +394,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
     /**
      * Get all available search types
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getSearchTypes(): array
     {

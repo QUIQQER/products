@@ -48,8 +48,8 @@ class DesktopSearch implements ProviderInterface
      * Execute a search
      *
      * @param string $search
-     * @param array $params
-     * @return array
+     * @param array<mixed> $params
+     * @return array<mixed>
      * @throws Exception
      */
     public function search(string $search, array $params = []): array
@@ -102,7 +102,7 @@ class DesktopSearch implements ProviderInterface
      * Get all available search groups of this provider.
      * Search results can be filtered by these search groups.
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getFilterGroups(): array
     {

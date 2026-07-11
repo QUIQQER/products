@@ -10,7 +10,7 @@
  * @param string $category - Name of the category
  * @param int $productId (optional) - Get category fields for specific product
  *
- * @return array
+ * @return array<mixed>
  */
 
 use QUI\ERP\Products\Handler\Products;

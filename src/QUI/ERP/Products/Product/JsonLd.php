@@ -51,7 +51,7 @@ class JsonLd
      * @param ProductInterface $Product
      * @param null|QUI\Locale $Locale - optional
      *
-     * @return array
+     * @return array<mixed>
      */
     public static function parse(
         ProductInterface $Product,
@@ -78,7 +78,7 @@ class JsonLd
 
     /**
      * @param ProductInterface $Product
-     * @return array
+     * @return array<mixed>
      */
     protected static function getSKU(ProductInterface $Product): array
     {
@@ -91,7 +91,7 @@ class JsonLd
 
     /**
      * @param ProductInterface $Product
-     * @return array
+     * @return array<mixed>
      */
     protected static function getGTIN(ProductInterface $Product): array
     {
@@ -104,7 +104,7 @@ class JsonLd
 
     /**
      * @param ProductInterface $Product
-     * @return array
+     * @return array<mixed>
      */
     protected static function getBrand(ProductInterface $Product): array
     {
@@ -149,7 +149,7 @@ class JsonLd
      * Return the image array
      *
      * @param ProductInterface $Product
-     * @return array
+     * @return array<mixed>
      */
     protected static function getImages(ProductInterface $Product): array
     {
@@ -208,7 +208,7 @@ class JsonLd
      * @param ProductInterface $Product
      * @param QUI\Locale|null $Locale
      *
-     * @return array
+     * @return array<mixed>
      */
     protected static function getOffer(ProductInterface $Product, ?QUI\Locale $Locale = null): array
     {
@@ -299,7 +299,7 @@ class JsonLd
      * @param ProductInterface $Product
      * @param NumberFormatter $Formatter
      *
-     * @return array
+     * @return array<mixed>
      */
     protected static function getMaxMin(
         ProductInterface $Product,
@@ -324,7 +324,7 @@ class JsonLd
     /**
      * @param ProductInterface $Product
      * @param NumberFormatter $Formatter
-     * @return array
+     * @return array<mixed>
      */
     protected static function getOfferEntry(
         ProductInterface $Product,
@@ -393,7 +393,7 @@ class JsonLd
 
     /**
      * @param string $name
-     * @param array $arguments
+     * @param array<mixed> $arguments
      * @return void
      */
     public function __call(string $name, array $arguments)

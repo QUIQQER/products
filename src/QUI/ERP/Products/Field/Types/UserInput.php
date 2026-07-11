@@ -34,7 +34,7 @@ class UserInput extends QUI\ERP\Products\Field\CustomInputField
     protected mixed $defaultValue = null;
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected array $disabled = [];
 
@@ -42,7 +42,7 @@ class UserInput extends QUI\ERP\Products\Field\CustomInputField
      * Attribute group constructor.
      *
      * @param int $fieldId
-     * @param array $params
+     * @param array<mixed> $params
      */
     public function __construct(int $fieldId, array $params)
     {

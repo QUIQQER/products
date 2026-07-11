@@ -27,7 +27,7 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
 
     /**
      * ChildrenSlider constructor.
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -105,7 +105,7 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
     /**
      * Add multiple products to the children slider
      *
-     * @param array $products
+     * @param array<mixed> $products
      */
     public function addProducts(array $products): void
     {

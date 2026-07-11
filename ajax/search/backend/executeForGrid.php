@@ -4,8 +4,8 @@
  * Get all fields that are available for search for a specific Site
  * Return teh result for grid
  *
- * @param array $searchData
- * @return array - product list
+ * @param array<mixed> $searchData
+ * @return array<mixed> - product list
  */
 
 use QUI\ERP\Products\Handler\Fields;

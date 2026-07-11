@@ -9,7 +9,7 @@
  *
  * @param string $categoryId - Category-ID
  *
- * @return array
+ * @return array<mixed>
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_categories_get',

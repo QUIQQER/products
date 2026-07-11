@@ -25,7 +25,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * TextProduct constructor.
      *
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -133,7 +133,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * Return all fields
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getFields(): array
     {
@@ -224,7 +224,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      * Return all fields from the wanted type
      *
      * @param string|array $type
-     * @return array
+     * @return array<mixed>
      */
     public function getFieldsByType(string|array $type): array
     {
@@ -321,7 +321,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * Return the product categories
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getCategories(): array
     {

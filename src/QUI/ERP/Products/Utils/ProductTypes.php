@@ -21,7 +21,7 @@ class ProductTypes extends Singleton
     /**
      * Return the product type provider classes
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getProductTypes(): array
     {

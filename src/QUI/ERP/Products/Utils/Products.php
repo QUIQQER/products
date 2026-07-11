@@ -178,7 +178,7 @@ class Products
      * editable fields can be changed by the user via the GUI
      *
      * @param ProductTypeInterface|null $Product
-     * @return array
+     * @return array<mixed>
      */
     public static function getEditableFieldIdsForProduct(null | ProductTypeInterface $Product = null): array
     {
@@ -232,7 +232,7 @@ class Products
      * Return the inherited fields for the project
      *
      * @param ProductTypeInterface|null $Product
-     * @return array
+     * @return array<mixed>
      */
     public static function getInheritedFieldIdsForProduct(null | ProductTypeInterface $Product = null): array
     {
@@ -286,7 +286,7 @@ class Products
     /**
      * Return generate variant hash
      *
-     * @param array $fields - could be a field array [Field, Field, Field],
+     * @param array<mixed> $fields - could be a field array [Field, Field, Field],
      *                        or could be a field object list ['field-1':2, 'field-1':'value']
      * @return string
      */
@@ -451,7 +451,7 @@ class Products
 
     /**
      * @param QUI\ERP\Products\Product\Product $Product
-     * @return array
+     * @return array<mixed>
      */
     public static function getJsFieldHashArray(QUI\ERP\Products\Product\Product $Product): array
     {
@@ -505,7 +505,7 @@ class Products
     }
 
     /**
-     * @param array $urlFieldValue
+     * @param array<mixed> $urlFieldValue
      * @param integer $categoryId
      * @param bool|integer $ignoreProductId - optional
      *

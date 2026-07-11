@@ -12,7 +12,7 @@ use QUI\ERP\Products\Handler\Products;
  *
  * @param string $categories - JSON categories
  * @param string $fields - JSON fields
- * @return array
+ * @return array<mixed>
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_create',

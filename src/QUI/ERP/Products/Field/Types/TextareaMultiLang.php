@@ -129,7 +129,7 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @return array|null
+     * @return array<mixed>|null
      */
     public function cleanup(mixed $value): ?array
     {
@@ -195,7 +195,7 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
     /**
      * Get all available search types
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getSearchTypes(): array
     {

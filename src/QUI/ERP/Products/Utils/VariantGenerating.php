@@ -50,7 +50,7 @@ class VariantGenerating extends Singleton
 
     /**
      * @param VariantParent $Product
-     * @return array
+     * @return array<mixed>
      * @todo was ist hiermit?
      */
     public function getMissingVariantsList(VariantParent $Product): array

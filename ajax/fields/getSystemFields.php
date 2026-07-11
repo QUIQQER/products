@@ -7,7 +7,7 @@
 /**
  * Returns all system fields
  *
- * @return array
+ * @return array<mixed>
  */
 
 use QUI\ERP\Products\Field\Field;

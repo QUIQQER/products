@@ -161,7 +161,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
     /**
      * Set multiple permissions
      *
-     * @param array $permissions - ist of permissions
+     * @param array<mixed> $permissions - ist of permissions
      * @param QUI\Interfaces\Users\User|null $User - optional
      *
      * @throws QUI\Permissions\Exception

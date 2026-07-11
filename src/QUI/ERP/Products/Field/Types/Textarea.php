@@ -92,7 +92,7 @@ class Textarea extends QUI\ERP\Products\Field\Field
     /**
      * Get all available search types
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getSearchTypes(): array
     {

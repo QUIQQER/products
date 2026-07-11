@@ -3,7 +3,7 @@
 /**
  * Checks if the system is capable of updating all product prices via web server request.
  *
- * @return array
+ * @return array<mixed>
  */
 
 use QUI\ERP\Products\Handler\Products;

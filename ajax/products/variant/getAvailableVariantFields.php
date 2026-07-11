@@ -10,7 +10,7 @@ use QUI\ERP\Products\Utils\VariantGenerating;
 /**
  * Return all fields for the variants generation
  *
- * @return array
+ * @return array<mixed>
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_variant_getAvailableVariantFields',

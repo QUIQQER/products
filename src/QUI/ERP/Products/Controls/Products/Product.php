@@ -32,7 +32,7 @@ class Product extends QUI\Control
     /**
      * constructor
      *
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -431,7 +431,7 @@ class Product extends QUI\Control
      *
      * package/quiqqer/products/bin/controls/frontend/products/ProductVariant
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getVariantControlSettings(): array
     {

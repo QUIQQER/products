@@ -21,14 +21,14 @@ class Search extends QUI\Control
     protected bool | null | FrontendSearch $Search = null;
 
     /**
-     * @var array|null
+     * @var array<mixed>|null
      */
     protected ?array $fields = null;
 
     /**
      * constructor
      *
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -100,7 +100,7 @@ class Search extends QUI\Control
     /**
      * Return the search field data
      *
-     * @return array
+     * @return array<mixed>
      * @throws Exception
      */
     protected function getSearchFieldData(): array

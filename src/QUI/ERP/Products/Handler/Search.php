@@ -49,7 +49,7 @@ class Search
     /**
      * Get all available search types
      *
-     * @return array
+     * @return array<mixed>
      */
     public static function getSearchTypes()
     {

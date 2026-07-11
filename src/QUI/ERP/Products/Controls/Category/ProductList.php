@@ -41,13 +41,13 @@ class ProductList extends QUI\Control
     protected ?QUI\ERP\Products\Search\FrontendSearch $Search = null;
 
     /**
-     * @var array|null
+     * @var array<mixed>|null
      */
     protected ?array $filter = null;
 
     /**
      * Sorting fields -> can be added via addSort
-     * @var array
+     * @var array<mixed>
      */
     protected array $sort = [];
 
@@ -61,7 +61,7 @@ class ProductList extends QUI\Control
     /**
      * constructor
      *
-     * @param array $attributes
+     * @param array<mixed> $attributes
      * @throws Exception
      */
     public function __construct(array $attributes = [])
@@ -314,7 +314,7 @@ class ProductList extends QUI\Control
     /**
      * Return the available filter in sorted sequence
      *
-     * @return array|null
+     * @return array<mixed>|null
      * @throws Exception
      */
     public function getFilter(): ?array
@@ -428,7 +428,7 @@ class ProductList extends QUI\Control
      * Return the first articles as html array
      *
      * @param boolean|integer $count - (optional) count of the children
-     * @return array [html, count, more]
+     * @return array<mixed> [html, count, more]
      *
      * @throws QUI\Exception
      */
@@ -442,7 +442,7 @@ class ProductList extends QUI\Control
      *
      * @param boolean|integer $start - (optional) start position
      * @param boolean|integer $count - (optional) count of the children
-     * @return array [html, count, more]
+     * @return array<mixed> [html, count, more]
      *
      * @throws QUI\Exception
      */
@@ -474,7 +474,7 @@ class ProductList extends QUI\Control
      * @param boolean|integer $start - (optional) start position
      * @param boolean|integer $max - (optional) max children
      * @param boolean|integer $count - (optional) count of the children
-     * @return array [html, count, more]
+     * @return array<mixed> [html, count, more]
      *
      * @throws QUI\Exception
      */
@@ -625,7 +625,7 @@ class ProductList extends QUI\Control
     /**
      * Render the category list
      *
-     * @param array $categories - list of site categories
+     * @param array<mixed> $categories - list of site categories
      * @param string $categoryTpl - view type tpl
      * @return string
      * @throws QUI\Exception|\Exception
@@ -648,7 +648,7 @@ class ProductList extends QUI\Control
      *
      * @param integer $start - start
      * @param bool|integer $max - optional, ax
-     * @return array|mixed
+     * @return array<mixed>|mixed
      *
      * @throws QUI\Exception
      */
@@ -683,7 +683,7 @@ class ProductList extends QUI\Control
     }
 
     /**
-     * @return array|mixed
+     * @return array<mixed>|mixed
      *
      * @throws QUI\Exception
      */

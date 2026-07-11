@@ -1248,7 +1248,7 @@ class EventHandling
      * event: onPackageInstall
      *
      * @param Package $Package
-     * @param array $params
+     * @param array<mixed> $params
      * @throws QUI\Exception
      */
     public static function onPackageConfigSave(Package $Package, array $params): void
@@ -1291,7 +1291,7 @@ class EventHandling
      * event: on set permission to object
      *
      * @param QUI\Users\User|QUI\Groups\Group|QUI\Projects\Project|QUI\Projects\Site|QUI\Projects\Site\Edit $Obj
-     * @param array $permissions
+     * @param array<mixed> $permissions
      *
      * @throws QUI\Exception
      */
@@ -1412,7 +1412,7 @@ class EventHandling
      * @param string $group
      * @param string $var
      * @param string $packageName
-     * @param array $data
+     * @param array<mixed> $data
      */
     public static function onQuiqqerTranslatorEdit(
         string $group,

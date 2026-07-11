@@ -29,12 +29,12 @@ abstract class CustomCalcField extends QUI\ERP\Products\Field\Field implements C
      * );
      *
      * @param Locale|null $Locale
-     * @return array
+     * @return array<mixed>
      */
     abstract public function getCalculationData(null | Locale $Locale = null): array;
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getAttributes(): array
     {

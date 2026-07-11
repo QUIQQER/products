@@ -25,7 +25,7 @@ class Manufacturers
     const SITE_TYPE_MANUFACTURER_LIST = 'quiqqer/products:types/manufacturerList';
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected static array $manufacturerData = [];
 
@@ -234,7 +234,7 @@ class Manufacturers
      * Get manufacturer data
      *
      * @param int|string $userId - QUIQQER User ID of manufacturer user
-     * @return array
+     * @return array<mixed>
      * @throws QUI\Database\Exception
      */
     protected static function getManufacturerData(int | string $userId): array

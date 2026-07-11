@@ -93,7 +93,7 @@ class Products
 
     /**
      * List of internal products
-     * @var array
+     * @var array<mixed>
      */
     private static array $list = [];
 
@@ -427,8 +427,8 @@ class Products
     /**
      * Create a new Product
      *
-     * @param array $categories - list of category IDs or category Objects
-     * @param array $fields - optional, list of fields (Field, Field, Field)
+     * @param array<mixed> $categories - list of category IDs or category Objects
+     * @param array<mixed> $fields - optional, list of fields (Field, Field, Field)
      * @param string $productType - optional, product type
      * @param integer|null $parent - optional, parent product
      * @param bool $validation - optional, should a validation executed? (default=true)
@@ -650,12 +650,12 @@ class Products
      * Return a list of products
      * if $queryParams is empty, all fields are returned
      *
-     * @param array $queryParams - query parameter
+     * @param array<mixed> $queryParams - query parameter
      *                              $queryParams['where'],
      *                              $queryParams['where_or'],
      *                              $queryParams['limit']
      *                              $queryParams['order']
-     * @return array
+     * @return array<mixed>
      */
     public static function getProducts(array $queryParams = []): array
     {
@@ -676,12 +676,12 @@ class Products
      * Return a list of product ids
      * if $queryParams is empty, all products are returned
      *
-     * @param array $queryParams - query parameter
+     * @param array<mixed> $queryParams - query parameter
      *                              $queryParams['where'],
      *                              $queryParams['where_or'],
      *                              $queryParams['limit']
      *                              $queryParams['order']
-     * @return array
+     * @return array<mixed>
      */
     public static function getProductIds(array $queryParams = []): array
     {
@@ -767,7 +767,7 @@ class Products
      * Return the number of the products
      * Count products
      *
-     * @param array $queryParams - query params (where, where_or)
+     * @param array<mixed> $queryParams - query params (where, where_or)
      * @return integer
      */
     public static function countProducts(array $queryParams = []): int
@@ -986,7 +986,7 @@ class Products
     /**
      * Set global editable variant fields
      *
-     * @param array $fieldIds
+     * @param array<mixed> $fieldIds
      *
      * @throws QUI\Exception
      */
@@ -1047,7 +1047,7 @@ class Products
     /**
      * Set global inherited variant fields
      *
-     * @param array $fieldIds
+     * @param array<mixed> $fieldIds
      *
      * @throws QUI\Exception
      */

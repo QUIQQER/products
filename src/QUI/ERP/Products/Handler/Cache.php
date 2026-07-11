@@ -28,7 +28,7 @@ class Cache
 
     /**
      * @param int $productId
-     * @param array $params
+     * @param array<mixed> $params
      * @return string
      */
     public static function frontendProductCacheName($productId, $params = [])

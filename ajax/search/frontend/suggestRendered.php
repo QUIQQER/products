@@ -11,7 +11,7 @@ use QUI\ERP\Products\Search\FrontendSearch;
  * Get all fields that are available for search for a specific Site
  * and returned it as html list
  *
- * @param array $searchData
+ * @param array<mixed> $searchData
  * @return string
  */
 QUI::getAjax()->registerFunction(

@@ -70,7 +70,7 @@ interface UniqueFieldInterface
      * Return the feld as array
      * return all attributes of the field
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getAttributes(): array;
 

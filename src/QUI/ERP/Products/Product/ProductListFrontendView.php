@@ -21,7 +21,7 @@ use function json_encode;
 class ProductListFrontendView
 {
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected array $data = [];
 
@@ -318,7 +318,7 @@ class ProductListFrontendView
     /**
      * Return the ProductListView as an array
      *
-     * @return array
+     * @return array<mixed>
      */
     public function toArray(): array
     {
@@ -413,7 +413,7 @@ class ProductListFrontendView
     /**
      * Return the products
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getProducts(): array
     {
