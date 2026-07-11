@@ -23,10 +23,7 @@ class ProductListBackendView
      */
     protected array $data = [];
 
-    /**
-     * @var ?ProductList
-     */
-    protected ?ProductList $ProductList = null;
+    protected ProductList $ProductList;
 
     /**
      * @var bool

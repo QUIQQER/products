@@ -191,10 +191,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     protected array $factors = [];
 
-    /**
-     * @var null|QUI\ERP\Currency\Currency
-     */
-    protected ?QUI\ERP\Currency\Currency $Currency = null;
+    protected QUI\ERP\Currency\Currency $Currency;
 
     protected string $uuid;
     protected ?string $productSetParentUuid = null;
@@ -660,9 +657,9 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     }
 
     /**
-     * @return QUI\ERP\Currency\Currency|null
+     * @return QUI\ERP\Currency\Currency
      */
-    public function getCurrency(): ?QUI\ERP\Currency\Currency
+    public function getCurrency(): QUI\ERP\Currency\Currency
     {
         return $this->Currency;
     }
