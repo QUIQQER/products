@@ -67,6 +67,16 @@ interface UniqueFieldInterface
     public function getView(): View;
 
     /**
+     * Return the backend view
+     */
+    public function getBackendView(): View;
+
+    /**
+     * Return the field type
+     */
+    public function getType(): string;
+
+    /**
      * Return the feld as array
      * return all attributes of the field
      *
