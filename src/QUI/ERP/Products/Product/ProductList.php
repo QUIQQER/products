@@ -303,7 +303,7 @@ class ProductList
     /**
      * Return the products
      *
-     * @return QUI\ERP\Products\Interfaces\ProductInterface[]
+     * @return array<int, UniqueProduct>
      */
     public function getProducts(): array
     {
