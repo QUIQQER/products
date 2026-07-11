@@ -175,7 +175,7 @@ class Categories
     public static function getMainCategory(): QUI\ERP\Products\Interfaces\CategoryInterface
     {
         $Config = QUI::getPackage('quiqqer/products')->getConfig();
-        $mainCategory = $Config->get('products', 'mainCategory');
+        $mainCategory = $Config?->get('products', 'mainCategory');
 
         if (!$mainCategory) {
             return self::getCategory(0);

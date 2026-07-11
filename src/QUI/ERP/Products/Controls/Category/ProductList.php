@@ -133,24 +133,24 @@ class ProductList extends QUI\Control
         }
 
         if (!$categoryPos) {
-            $this->setAttribute('categoryPos', $Config->get('products', 'categoryPos'));
+            $this->setAttribute('categoryPos', $Config?->get('products', 'categoryPos'));
         }
 
         // global settings: product load number
         if ($this->getAttribute('productLoadNumber') == '' || !$this->getAttribute('productLoadNumber')) {
-            $this->setAttribute('productLoadNumber', $Config->get('products', 'productLoadNumber'));
+            $this->setAttribute('productLoadNumber', $Config?->get('products', 'productLoadNumber'));
         }
 
         // global settings: product autoload after x clicks
         if ($this->getAttribute('autoloadAfter') == '' || !$this->getAttribute('autoloadAfter')) {
-            $this->setAttribute('autoloadAfter', $Config->get('products', 'autoloadAfter'));
+            $this->setAttribute('autoloadAfter', $Config?->get('products', 'autoloadAfter'));
         }
 
         // global settings: open product mode (normal or asynchronously)
         $openProductMode = match ($this->getAttribute('openProductMode')) {
             'async' => 1,
             'normal' => 0,
-            default => $Config->get('products', 'openProductAsync')
+            default => $Config?->get('products', 'openProductAsync')
         };
 
         $this->setAttribute('data-project', $this->getSite()->getProject()->getName());

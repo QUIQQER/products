@@ -81,7 +81,7 @@ QUI::getAjax()->registerFunction(
                     ) {
                         if (
                             $ignoreDefaultVariant
-                            && PackageUtils::getConfig()->getValue('products', 'resetFieldsAction')
+                            && PackageUtils::getConfig()?->getValue('products', 'resetFieldsAction')
                         ) {
                             $Field->clearDefaultValue();
                         }

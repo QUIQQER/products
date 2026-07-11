@@ -348,6 +348,11 @@ class VariantChild extends AbstractType
 
         try {
             $Project = QUI::getRewrite()->getProject();
+
+            if (!$Project) {
+                return $Image;
+            }
+
             $Media = $Project->getMedia();
             $Placeholder = $Media->getPlaceholderImage();
 

@@ -411,8 +411,8 @@ class Fields
         // vererbbar und editiert
         try {
             $Config = QUI::getPackage('quiqqer/products')->getConfig();
-            $editable = $Config->getSection('editableFields');
-            $inherited = $Config->getSection('inheritedFields');
+            $editable = $Config?->getSection('editableFields');
+            $inherited = $Config?->getSection('inheritedFields');
 
             if (!isset($attributes['fieldEditable'])) {
                 $attributes['fieldEditable'] = 1;
@@ -1249,7 +1249,7 @@ class Fields
 
         try {
             $Conf = QUI::getPackage('quiqqer/products')->getConfig();
-            $settings = $Conf->get('products', 'priceFieldFactors');
+            $settings = $Conf?->get('products', 'priceFieldFactors');
 
             if (empty($settings)) {
                 self::$priceFactorSettings = [];

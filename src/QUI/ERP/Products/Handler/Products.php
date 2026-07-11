@@ -127,7 +127,7 @@ class Products
     public static function getParentMediaFolder(): QUI\Projects\Media\Folder
     {
         $Config = QUI::getPackage('quiqqer/products')->getConfig();
-        $folderUrl = $Config->get('products', 'folder');
+        $folderUrl = $Config?->get('products', 'folder');
 
         if (empty($folderUrl)) {
             throw new QUI\Exception([
@@ -914,7 +914,7 @@ class Products
             return false;
         }
 
-        $usePermission = (int)$Config->get('products', 'usePermissions');
+        $usePermission = (int)$Config?->get('products', 'usePermissions');
         self::$usePermissions = (bool)$usePermission;
 
         return self::$usePermissions;
@@ -963,7 +963,7 @@ class Products
         }
 
         $result = [];
-        $fields = $Config->getSection('editableFields');
+        $fields = $Config?->getSection('editableFields');
 
         if (empty($fields)) {
             return [];
@@ -994,13 +994,13 @@ class Products
     public static function setGlobalEditableVariantFields(array $fieldIds): void
     {
         $Config = QUI::getPackage('quiqqer/products')->getConfig();
-        $Config->setSection('editableFields');
+        $Config?->setSection('editableFields');
 
         foreach ($fieldIds as $field) {
-            $Config->setValue('editableFields', $field, 1);
+            $Config?->setValue('editableFields', $field, 1);
         }
 
-        $Config->save();
+        $Config?->save();
     }
 
     //endregion
@@ -1024,7 +1024,7 @@ class Products
         }
 
         $result = [];
-        $fields = $Config->getSection('inheritedFields');
+        $fields = $Config?->getSection('inheritedFields');
 
         if (empty($fields)) {
             return [];
@@ -1055,13 +1055,13 @@ class Products
     public static function setGlobalInheritedVariantFields(array $fieldIds): void
     {
         $Config = QUI::getPackage('quiqqer/products')->getConfig();
-        $Config->setSection('inheritedFields');
+        $Config?->setSection('inheritedFields');
 
         foreach ($fieldIds as $field) {
-            $Config->setValue('inheritedFields', $field, 1);
+            $Config?->setValue('inheritedFields', $field, 1);
         }
 
-        $Config->save();
+        $Config?->save();
     }
 
     //endregion
@@ -1187,7 +1187,7 @@ class Products
             return (string)$nextId;
         }
 
-        $articleNoConf = $Conf->getSection('autoArticleNos');
+        $articleNoConf = $Conf?->getSection('autoArticleNos');
 
         if (!empty($articleNoConf['prefix'])) {
             $nextId = $articleNoConf['prefix'] . $nextId;
@@ -1231,7 +1231,7 @@ class Products
     {
         try {
             $Conf = QUI::getPackage('quiqqer/products')->getConfig();
-            return !empty($Conf->get('autoArticleNos', 'generate'));
+            return !empty($Conf?->get('autoArticleNos', 'generate'));
         } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
         }
@@ -1256,7 +1256,7 @@ class Products
         try {
             $Conf = QUI::getPackage('quiqqer/products')->getConfig();
 
-            self::$extendVariantChildShortDesc = !empty($Conf->get('variants', 'extendShortDesc'));
+            self::$extendVariantChildShortDesc = !empty($Conf?->get('variants', 'extendShortDesc'));
 
             return self::$extendVariantChildShortDesc;
         } catch (Exception $Exception) {
@@ -1280,7 +1280,7 @@ class Products
         try {
             $Conf = QUI::getPackage('quiqqer/products')->getConfig();
 
-            self::$checkDuplicateArticleNo = !empty($Conf->get('products', 'checkDuplicateArticleNo'));
+            self::$checkDuplicateArticleNo = !empty($Conf?->get('products', 'checkDuplicateArticleNo'));
 
             return self::$checkDuplicateArticleNo;
         } catch (Exception $Exception) {

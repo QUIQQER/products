@@ -16,7 +16,7 @@ QUI::getAjax()->registerFunction(
         $Config = $Package->getConfig();
 
         try {
-            $folder = $Config->get('products', 'folder');
+            $folder = $Config?->get('products', 'folder');
             $Folder = QUI\Projects\Media\Utils::getMediaItemByUrl($folder);
             $Project = $Folder->getProject();
 

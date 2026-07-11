@@ -207,7 +207,7 @@ class Products
             return [];
         }
 
-        $fields = $Config->getSection('editableFields');
+        $fields = $Config?->getSection('editableFields');
 
         if ($fields) {
             $fieldIds = [];
@@ -261,7 +261,7 @@ class Products
             return [];
         }
 
-        $fields = $Config->getSection('inheritedFields');
+        $fields = $Config?->getSection('inheritedFields');
 
         if ($fields) {
             $fieldIds = [];

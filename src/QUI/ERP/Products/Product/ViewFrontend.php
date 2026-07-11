@@ -473,7 +473,12 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         } catch (QUI\Exception) {
         }
 
-        $Placeholder = QUI::getRewrite()->getProject()->getMedia()->getPlaceholderImage();
+        $Project = QUI::getRewrite()->getProject();
+        $Placeholder = null;
+
+        if ($Project) {
+            $Placeholder = $Project->getMedia()->getPlaceholderImage();
+        }
 
         if ($Placeholder instanceof QUI\Projects\Media\Image) {
             return $Placeholder;

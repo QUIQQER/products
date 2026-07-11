@@ -93,7 +93,7 @@ class Sortables
     public static function getDefaultFields(): array
     {
         $Package = QUI::getPackage('quiqqer/products')->getConfig();
-        $sortingFields = $Package->getValue('products', 'sortFields');
+        $sortingFields = $Package?->getValue('products', 'sortFields');
 
         return explode(',', $sortingFields);
     }
@@ -107,7 +107,7 @@ class Sortables
     {
         // config
         $Package = QUI::getPackage('quiqqer/products')->getConfig();
-        $sortingFields = $Package->getValue('products', 'sortFields');
+        $sortingFields = $Package?->getValue('products', 'sortFields');
         $sortingFields = explode(',', $sortingFields);
         $sortingFields = array_flip($sortingFields);
 

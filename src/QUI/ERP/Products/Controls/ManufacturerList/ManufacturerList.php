@@ -51,7 +51,7 @@ class ManufacturerList extends QUI\Control
         // global settings: product autoload after x clicks
         if ($this->getAttribute('autoloadAfter') == '' || !$this->getAttribute('autoloadAfter')) {
             // @todo get setting from site
-            $this->setAttribute('autoloadAfter', $Config->get('products', 'autoloadAfter'));
+            $this->setAttribute('autoloadAfter', $Config?->get('products', 'autoloadAfter'));
         }
 
         $this->setAttribute('data-project', $this->getSite()->getProject()->getName());

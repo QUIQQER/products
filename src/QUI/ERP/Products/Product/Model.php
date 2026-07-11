@@ -1054,7 +1054,7 @@ class Model extends QUI\QDOM
         if (
             QUI::getPackage('quiqqer/products')
                 ->getConfig()
-                ->get('products', 'useAttributeListsForMinMaxPriceCalculation')
+                ?->get('products', 'useAttributeListsForMinMaxPriceCalculation')
         ) {
             $fields = $Clone->getFieldsByType([
                 Fields::TYPE_ATTRIBUTE_LIST
@@ -1145,7 +1145,7 @@ class Model extends QUI\QDOM
         if (
             QUI::getPackage('quiqqer/products')
                 ->getConfig()
-                ->get('products', 'useAttributeListsForMinMaxPriceCalculation')
+                ?->get('products', 'useAttributeListsForMinMaxPriceCalculation')
         ) {
             $fields = $Clone->getFieldsByType([
                 Fields::TYPE_ATTRIBUTE_LIST
@@ -2325,22 +2325,27 @@ class Model extends QUI\QDOM
                 $Project = QUI::getProjectManager()->getStandard();
             }
 
-            $Media = $Project->getMedia();
-            $Placeholder = $Media->getPlaceholderImage();
+            if ($Project) {
+                $Media = $Project->getMedia();
+                $Placeholder = $Media->getPlaceholderImage();
 
-            if ($Placeholder instanceof QUI\Projects\Media\Image) {
-                return $Placeholder;
+                if ($Placeholder instanceof QUI\Projects\Media\Image) {
+                    return $Placeholder;
+                }
             }
         } catch (QUI\Exception) {
         }
 
         try {
             $Project = QUI::getProjectManager()->getStandard();
-            $Media = $Project->getMedia();
-            $Placeholder = $Media->getPlaceholderImage();
 
-            if ($Placeholder instanceof QUI\Projects\Media\Image) {
-                return $Placeholder;
+            if ($Project) {
+                $Media = $Project->getMedia();
+                $Placeholder = $Media->getPlaceholderImage();
+
+                if ($Placeholder instanceof QUI\Projects\Media\Image) {
+                    return $Placeholder;
+                }
             }
         } catch (QUI\Exception) {
         }

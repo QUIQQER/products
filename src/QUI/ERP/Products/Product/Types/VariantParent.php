@@ -494,7 +494,7 @@ class VariantParent extends AbstractType
 
         try {
             $Config = QUI::getPackage('quiqqer/products')->getConfig();
-            $parentHasChildImages = !!$Config->getValue('variants', 'parentHasChildImages');
+            $parentHasChildImages = !!$Config?->getValue('variants', 'parentHasChildImages');
         } catch (QUI\Exception) {
             $parentHasChildImages = true;
         }
@@ -714,7 +714,7 @@ class VariantParent extends AbstractType
 //         * If the VariantParent shall also be found when searching for values of its VariantChildren
 //         * the search cache entries have to include all child values as well.
 //         */
-//        if (QUI::getPackage('quiqqer/products')->getConfig()->get('variants', 'findVariantParentByChildValues')) {
+//        if (QUI::getPackage('quiqqer/products')->getConfig()?->get('variants', 'findVariantParentByChildValues')) {
 //            $result = QUI::getDataBase()->fetch([
 //                'select' => ['id', 'fieldData'],
 //                'from'   => QUI\ERP\Products\Utils\Tables::getProductTableName(),
@@ -1355,7 +1355,7 @@ class VariantParent extends AbstractType
         );
 
         // set URL
-        if (!QUI::getPackage('quiqqer/products')->getConfig()->get('variants', 'useAttributesForVariantUrl')) {
+        if (!QUI::getPackage('quiqqer/products')->getConfig()?->get('variants', 'useAttributesForVariantUrl')) {
             $Variant->save();
 
             return $Variant;

@@ -438,7 +438,7 @@ class Product extends QUI\Control
         $controlSettings = [];
 
         $Conf = QUI\ERP\Products\Utils\Package::getConfig();
-        $linkVariantsWithImages = !empty($Conf->getValue('variants', 'linkVariantChildrenWithImages'));
+        $linkVariantsWithImages = !empty($Conf?->getValue('variants', 'linkVariantChildrenWithImages'));
         $images = $this->getVariantImages($this->getAttribute('Product'));
 
         if (!empty($images) && $linkVariantsWithImages) {

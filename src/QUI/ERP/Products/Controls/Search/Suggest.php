@@ -68,13 +68,13 @@ class Suggest extends QUI\Control
         $limit = $this->getAttribute('limit');
 
         if (!$limit) {
-            $limit = $Config->get('frontendSuggestSearch', 'limit');
+            $limit = $Config?->get('frontendSuggestSearch', 'limit');
         }
 
         $showLinkToSearchSite = $this->getAttribute('showLinkToSearchSite');
 
         if (!$showLinkToSearchSite) {
-            $showLinkToSearchSite = $Config->get('frontendSuggestSearch', 'showLinkToSearchSite');
+            $showLinkToSearchSite = $Config?->get('frontendSuggestSearch', 'showLinkToSearchSite');
         }
 
         $this->setJavaScriptControlOption('searchurl', $Search->getUrlRewritten());

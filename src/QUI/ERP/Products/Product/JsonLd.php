@@ -169,7 +169,7 @@ class JsonLd
 
         // only show the main product image
         try {
-            if (QUI::getPackage('quiqqer/products')->getConfig()->get('products', 'onlyProductImageAtJsonLd')) {
+            if (QUI::getPackage('quiqqer/products')->getConfig()?->get('products', 'onlyProductImageAtJsonLd')) {
                 return [
                     'image' => $images
                 ];

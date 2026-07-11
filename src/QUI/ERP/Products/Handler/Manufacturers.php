@@ -178,7 +178,12 @@ class Manufacturers
             }
         }
 
-        $Image = QUI::getProjectManager()->getStandard()->getMedia()->getPlaceholderImage();
+        $Project = QUI::getProjectManager()->getStandard();
+        $Image = null;
+
+        if ($Project) {
+            $Image = $Project->getMedia()->getPlaceholderImage();
+        }
 
         if (!empty($Image)) {
             return $Image;
@@ -205,6 +210,10 @@ class Manufacturers
                 QUI\System\Log::writeException($Exception);
                 return false;
             }
+        }
+
+        if (!$Project) {
+            return false;
         }
 
         $manufacturerListSites = $Project->getSites([

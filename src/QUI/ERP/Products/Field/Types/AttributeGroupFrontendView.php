@@ -176,7 +176,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
         if (!$optionsAvailable) {
             $Conf = QUI\ERP\Products\Utils\Package::getConfig();
 
-            if ($Conf->getValue('variants', 'hideAttributeGroupsWithNoOptions')) {
+            if ($Conf?->getValue('variants', 'hideAttributeGroupsWithNoOptions')) {
                 return '';
             }
         }

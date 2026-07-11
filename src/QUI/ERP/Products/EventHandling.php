@@ -78,17 +78,17 @@ class EventHandling
         } catch (QUI\Exception) {
             // no produkt folder, we create one
             $Project = QUI::getProjectManager()->getStandard();
-            $Media = $Project->getMedia();
+            $Media = $Project?->getMedia();
 
-            $Folder = $Media->firstChild();
+            $Folder = $Media?->firstChild();
 
             try {
-                $Products = $Folder->createFolder('Products');
-                $Products->activate();
+                $Products = $Folder?->createFolder('Products');
+                $Products?->activate();
 
                 $Config = QUI::getPackage('quiqqer/products')->getConfig();
-                $Config->set('products', 'folder', $Products->getUrl());
-                $Config->save();
+                $Config?->set('products', 'folder', $Products?->getUrl());
+                $Config?->save();
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addWarning($Exception->getMessage());
             }
@@ -111,7 +111,7 @@ class EventHandling
         }
 
         // Check current config for fields that may not exist anymore
-        $editableFields = $Config->getSection('editableFields');
+        $editableFields = $Config?->getSection('editableFields');
 
         if (!empty($editableFields) && is_array($editableFields)) {
             foreach ($editableFields as $fieldId => $active) {
@@ -134,7 +134,7 @@ class EventHandling
             $Config->setSection('editableFields', $editableFields);
         }
 
-        $inheritedFields = $Config->getSection('inheritedFields');
+        $inheritedFields = $Config?->getSection('inheritedFields');
 
         if (!empty($inheritedFields) && is_array($inheritedFields)) {
             foreach ($inheritedFields as $fieldId => $active) {
@@ -196,14 +196,14 @@ class EventHandling
 
         try {
             foreach ($defaultEditableFields as $fieldId) {
-                $Config->set('editableFields', (string)$fieldId, 1);
+                $Config?->set('editableFields', (string)$fieldId, 1);
             }
 
             foreach ($defaultInheritedFields as $fieldId) {
-                $Config->set('inheritedFields', (string)$fieldId, 1);
+                $Config?->set('inheritedFields', (string)$fieldId, 1);
             }
 
-            $Config->save();
+            $Config?->save();
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
         }
@@ -1019,15 +1019,19 @@ class EventHandling
     public static function checkProductCacheTable(): void
     {
         $DB = QUI::getDataBase();
-        $categoryColumn = $DB->table()->getColumn('products_cache', 'category');
+        $categoryColumn = $DB->table()?->getColumn('products_cache', 'category');
 
-        if ($categoryColumn['Type'] !== 'varchar(255)') {
-            $Stmnt = QUI::getDataBase()->getPDO()->prepare("ALTER TABLE products_cache MODIFY `category` VARCHAR(255)");
-            $Stmnt->execute();
+        if (($categoryColumn['Type'] ?? null) !== 'varchar(255)') {
+            $Stmnt = QUI::getDataBase()->getPDO()?->prepare(
+                "ALTER TABLE products_cache MODIFY `category` VARCHAR(255)"
+            );
+            if ($Stmnt !== null && $Stmnt !== false) {
+                $Stmnt->execute();
+            }
         }
 
         // check field columns
-        $fieldColumns = $DB->table()->getColumns('products_cache');
+        $fieldColumns = $DB->table()?->getColumns('products_cache') ?? [];
         $cacheTbl = QUI::getDBTableName('products_cache');
 
         foreach ($fieldColumns as $column) {
@@ -1171,11 +1175,11 @@ class EventHandling
         $Site = new Edit($Project, $newId);
         $Config = $Package->getConfig();
 
-        if ($Config->getValue('products', 'categoryShowFilterLeft')) {
+        if ($Config?->getValue('products', 'categoryShowFilterLeft')) {
             $Site->setAttribute('quiqqer.products.settings.showFilterLeft', 1);
         }
 
-        if ($Config->getValue('products', 'categoryAsFilter')) {
+        if ($Config?->getValue('products', 'categoryAsFilter')) {
             $Site->setAttribute('quiqqer.products.settings.categoryAsFilter', 1);
         }
 
@@ -1210,7 +1214,7 @@ class EventHandling
 
         if (empty($fieldsIds) && $Site->getAttribute('quiqqer.products.settings.searchFieldIds.edited') === false) {
             $Package = QUI::getPackage('quiqqer/products');
-            $defaultIds = $Package->getConfig()->get('search', 'frontend');
+            $defaultIds = $Package->getConfig()?->get('search', 'frontend');
 
             if ($defaultIds) {
                 $defaultIds = explode(',', $defaultIds);
@@ -1273,7 +1277,7 @@ class EventHandling
             $hide = 1;
         }
 
-        $frontendAnimation = (int)QUI\ERP\Products\Utils\Package::getConfig()->get(
+        $frontendAnimation = (int)QUI\ERP\Products\Utils\Package::getConfig()?->get(
             'products',
             'frontendAnimationDuration'
         );
@@ -1333,7 +1337,7 @@ class EventHandling
         }
 
         try {
-            $Product = Handler\Products::getProduct($params[1]);
+            $Product = Handler\Products::getProduct((int)$params[1]);
             $Project = $Rewrite->getProject();
             $productUrl = $Product->getUrl();
 
@@ -1350,16 +1354,18 @@ class EventHandling
                 'There is no product category for the products. Please create a product category in your project.'
             );
 
-            $Site = $Project->firstChild();
-            $Site->setAttribute('type', 'quiqqer/products:types/category');
-            $Site->setAttribute('quiqqer.products.settings.categoryId', 0);
-            $Site->setAttribute('quiqqer.products.fake.type', 1);
-            $Site->setAttribute('layout', 'layout/noSidebar');
-            $Site->setAttribute('quiqqer.bricks.areas', '');
+            $Site = $Project?->firstChild();
+            $Site?->setAttribute('type', 'quiqqer/products:types/category');
+            $Site?->setAttribute('quiqqer.products.settings.categoryId', 0);
+            $Site?->setAttribute('quiqqer.products.fake.type', 1);
+            $Site?->setAttribute('layout', 'layout/noSidebar');
+            $Site?->setAttribute('quiqqer.bricks.areas', '');
 
             $_REQUEST['_url'] = '';
 
-            $Rewrite->setSite($Site);
+            if ($Site !== null) {
+                $Rewrite->setSite($Site);
+            }
         } catch (QUI\Exception) {
         }
     }

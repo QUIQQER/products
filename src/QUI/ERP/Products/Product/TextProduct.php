@@ -239,7 +239,12 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      */
     public function getImage(): Image
     {
-        $Placeholder = QUI::getRewrite()->getProject()->getMedia()->getPlaceholderImage();
+        $Project = QUI::getRewrite()->getProject();
+        $Placeholder = null;
+
+        if ($Project) {
+            $Placeholder = $Project->getMedia()->getPlaceholderImage();
+        }
 
         if ($Placeholder instanceof Image) {
             return $Placeholder;
