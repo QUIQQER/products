@@ -44,7 +44,7 @@ QUI::getAjax()->registerFunction(
                         continue;
                     }
 
-                    $priceFieldFactorFields[] = Fields::getField($priceFieldFactorFieldId)->getTitle();
+                    $priceFieldFactorFields[] = Fields::getField((int)$priceFieldFactorFieldId)->getTitle();
                 }
 
                 if (!empty($priceFieldFactors['categoryPriority'])) {
