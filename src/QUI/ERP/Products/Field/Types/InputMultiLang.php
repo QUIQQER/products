@@ -215,7 +215,7 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
      */
     public function cleanup(mixed $value): array
     {
-        $languages = QUI\Translator::getAvailableLanguages();
+        $languages = QUI\Translator::getAvailableLanguages() ?? [];
 
         if (!is_array($value)) {
             return array_fill_keys($languages, '');
