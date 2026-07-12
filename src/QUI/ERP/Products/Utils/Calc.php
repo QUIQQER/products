@@ -190,10 +190,10 @@ class Calc
     /**
      * Return the currency
      *
-     * @return Currency|null
+     * @return Currency
      * @throws Exception
      */
-    public function getCurrency(): ?QUI\ERP\Currency\Currency
+    public function getCurrency(): QUI\ERP\Currency\Currency
     {
         if (is_null($this->Currency)) {
             $this->Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();

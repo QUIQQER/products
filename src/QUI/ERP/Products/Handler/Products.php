@@ -933,9 +933,9 @@ class Products
     /**
      * Return global projects locale
      *
-     * @return Locale|null
+     * @return Locale
      */
-    public static function getLocale(): ?Locale
+    public static function getLocale(): Locale
     {
         if (!self::$Locale) {
             self::$Locale = new Locale();

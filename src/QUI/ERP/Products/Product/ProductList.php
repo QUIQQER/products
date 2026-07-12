@@ -586,9 +586,9 @@ class ProductList
     /**
      * Return the currency
      *
-     * @return Currency|null
+     * @return Currency
      */
-    public function getCurrency(): ?QUI\ERP\Currency\Currency
+    public function getCurrency(): QUI\ERP\Currency\Currency
     {
         if ($this->Currency !== null) {
             return $this->Currency;
