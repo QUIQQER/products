@@ -6,6 +6,8 @@ parameters:
         - types
     bootstrapFiles:
         - tests/phpstan-bootstrap.php
+    stubFiles:
+        - tests/stubs/quiqqer-order.stub
     treatPhpDocTypesAsCertain: false
     customRulesetUsed: true
 services:
