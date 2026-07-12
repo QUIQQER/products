@@ -61,16 +61,21 @@ class ProductListBackendView
     protected function parse(): void
     {
         $Locale = $this->Locale;
+        $User = $this->ProductList->getUser();
+
+        if (!$User instanceof QUI\Interfaces\Users\User) {
+            throw new QUI\Exception('Could not determine the product list user.');
+        }
 
         if ($Locale === null) {
-            $Locale = $this->ProductList->getUser()->getLocale();
+            $Locale = $User->getLocale();
         }
 
         $list = $this->ProductList->toArray($Locale);
         $products = $this->ProductList->getProducts();
 
-        $Locale = $this->ProductList->getUser()->getLocale();
-        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        $Locale = $User->getLocale();
+        $Currency = QUI\ERP\Defaults::getCurrency();
         $Currency->setLocale($Locale);
 
         $productList = [];
@@ -78,7 +83,7 @@ class ProductListBackendView
         foreach ($products as $Product) {
             $attributes = $Product->getAttributes();
             $fields = $Product->getFields();
-            $PriceFactors = new QUI\ERP\Products\Utils\PriceFactor();
+            $PriceFactors = new QUI\ERP\Products\Utils\PriceFactors();
 
             if (method_exists($Product, 'getPriceFactors')) {
                 $PriceFactors = $Product->getPriceFactors();
@@ -156,8 +161,10 @@ class ProductListBackendView
             ];
         }
 
+        $PriceFactors = $this->ProductList->getPriceFactors() ?? new QUI\ERP\Products\Utils\PriceFactors();
+
         /* @var $Factor QUI\ERP\Products\Utils\PriceFactor */
-        foreach ($this->ProductList->getPriceFactors()->sort() as $Factor) {
+        foreach ($PriceFactors->sort() as $Factor) {
             if (!$Factor->isVisible()) {
                 continue;
             }
@@ -225,7 +232,9 @@ class ProductListBackendView
      */
     public function toJSON(): string
     {
-        return json_encode($this->toArray());
+        $json = json_encode($this->toArray());
+
+        return $json === false ? '' : $json;
     }
 
     /**

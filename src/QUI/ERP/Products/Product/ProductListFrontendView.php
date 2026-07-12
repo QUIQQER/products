@@ -37,10 +37,7 @@ class ProductListFrontendView
      */
     protected ?QUI\Locale $Locale = null;
 
-    /**
-     * @var null|QUI\ERP\Currency\Currency
-     */
-    protected ?QUI\ERP\Currency\Currency $Currency = null;
+    protected QUI\ERP\Currency\Currency $Currency;
 
     /**
      * ProductListView constructor.
@@ -70,7 +67,13 @@ class ProductListFrontendView
         $Locale = $this->Locale;
 
         if ($Locale === null) {
-            $Locale = $this->ProductList->getUser()->getLocale();
+            $User = $this->ProductList->getUser();
+
+            if (!$User instanceof QUI\Interfaces\Users\User) {
+                throw new QUI\Exception('Could not determine the product list user.');
+            }
+
+            $Locale = $User->getLocale();
         }
 
         $list = $this->ProductList->toArray($Locale);
@@ -85,10 +88,19 @@ class ProductListFrontendView
         foreach ($products as $Product) {
             $attributes = $Product->getAttributes();
             $fields = $Product->getFields();
-            $PriceFactors = new QUI\ERP\Products\Utils\PriceFactor();
+            $PriceFactors = new QUI\ERP\Products\Utils\PriceFactors();
 
             if (method_exists($Product, 'getPriceFactors')) {
                 $PriceFactors = $Product->getPriceFactors();
+            }
+
+            $OriginalPrice = $Product->getOriginalPrice();
+
+            if (
+                !$OriginalPrice instanceof QUI\ERP\Money\Price
+                && !$OriginalPrice instanceof QUI\ERP\Products\Interfaces\UniqueFieldInterface
+            ) {
+                throw new QUI\Exception('Could not determine the original product price.');
             }
 
             $product = [
@@ -98,7 +110,7 @@ class ProductListFrontendView
                 'groupFields' => [],
                 'vatArray' => [],
                 'hasOfferPrice' => $Product->hasOfferPrice(),
-                'originalPrice' => $this->formatPrice($Product->getOriginalPrice()->getValue())
+                'originalPrice' => $this->formatPrice($OriginalPrice->getValue())
             ];
 
             foreach ($fields as $Field) {
@@ -230,10 +242,12 @@ class ProductListFrontendView
             ];
         }
 
+        $PriceFactors = $this->ProductList->getPriceFactors() ?? new QUI\ERP\Products\Utils\PriceFactors();
+
         /* @var $Factor QUI\ERP\Products\Utils\PriceFactor */
         $product['grandTotalFactors'] = [];
 
-        foreach ($this->ProductList->getPriceFactors()->sort() as $Factor) {
+        foreach ($PriceFactors->sort() as $Factor) {
             if (!$Factor->isVisible()) {
                 continue;
             }
@@ -338,7 +352,9 @@ class ProductListFrontendView
      */
     public function toJSON(): string
     {
-        return json_encode($this->toArray());
+        $json = json_encode($this->toArray());
+
+        return $json === false ? '' : $json;
     }
 
     /**
