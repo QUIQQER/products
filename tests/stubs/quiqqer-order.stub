@@ -4,7 +4,10 @@ namespace QUI\ERP\Order;
 
 abstract class AbstractOrder
 {
-    public function getArticles(): \QUI\ERP\Accounting\ArticleList
+    /**
+     * @return iterable<\QUI\ERP\Accounting\Article>
+     */
+    public function getArticles(): iterable
     {
     }
 }
