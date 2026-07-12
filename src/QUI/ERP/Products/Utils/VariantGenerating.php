@@ -58,6 +58,11 @@ class VariantGenerating extends Singleton
         $result = [];
 
         $children = $Product->getVariants();
+
+        if (!is_array($children)) {
+            $children = [];
+        }
+
         $exists = array_map(function ($Variant) {
             return $Variant->getAttribute('variantHash');
         }, $children);

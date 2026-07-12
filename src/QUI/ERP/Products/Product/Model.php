@@ -497,6 +497,7 @@ class Model extends QUI\QDOM
     {
         // create field folder
         if ($fieldId) {
+            $fieldId = (int)$fieldId;
             $Field = $this->getField($fieldId);
 
             if ($Field->getType() != Fields::TYPE_FOLDER) {

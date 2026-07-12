@@ -1233,6 +1233,13 @@ class Products
         }
 
         // replace placeholders
+        $replacements = array_map('strval', [
+            date('Y'),
+            date('m'),
+            date('d'),
+            $mainCategoryId
+        ]);
+
         return str_replace(
             [
                 '#YEAR',
@@ -1240,13 +1247,8 @@ class Products
                 '#DAY',
                 '#CAT_ID'
             ],
-            [
-                date('Y'),
-                date('m'),
-                date('d'),
-                $mainCategoryId
-            ],
-            $nextId
+            $replacements,
+            (string)$nextId
         );
     }
 

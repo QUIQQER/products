@@ -52,6 +52,10 @@ QUI::getAjax()->registerFunction(
             return '';
         }
 
+        if (!$Product instanceof QUI\ERP\Products\Product\Product) {
+            return '';
+        }
+
         $ExceptionStack = new QUI\ExceptionStack();
         $fields = json_decode($fields, true);
 

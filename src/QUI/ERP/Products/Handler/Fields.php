@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Handler;
 
 use DOMElement;
+use DOMNode;
 use DOMXPath;
 use Exception;
 use QUI;
@@ -745,7 +746,8 @@ class Fields
 
             foreach ($fields as $Field) {
                 if (
-                    !method_exists($Field, 'getAttribute')
+                    !$Field instanceof DOMNode
+                    || !method_exists($Field, 'getAttribute')
                     || !method_exists($Field, 'getElementsByTagName')
                 ) {
                     continue;

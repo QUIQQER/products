@@ -137,7 +137,7 @@ class Fields
                     $searchHashes[$generatedHash] = true;
 
                     if (!is_numeric($option['valueId'])) {
-                        $clone[$fieldId] = implode(unpack("H*", $option['valueId']));
+                        $clone[$fieldId] = implode(unpack("H*", $option['valueId']) ?: []);
                         $generatedHash = self::generateFieldHashFromArray($clone);
 
                         $searchHashes[$generatedHash] = true;

@@ -28,10 +28,10 @@ class Categories
     /**
      * Clears the category cache
      *
-     * @param bool|integer $categoryId - optional, Category-ID,
+     * @param false|int|string $categoryId - optional, Category-ID,
      *                                   if false => complete categories cache is cleared
      */
-    public static function clearCache(bool | int | string $categoryId = false): void
+    public static function clearCache(false | int | string $categoryId = false): void
     {
         if ($categoryId === false) {
             QUI\Cache\LongTermCache::clear('quiqqer/products/categories/');

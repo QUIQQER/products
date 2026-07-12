@@ -95,6 +95,10 @@ class Sortables
         $Package = QUI::getPackage('quiqqer/products')->getConfig();
         $sortingFields = $Package?->getValue('products', 'sortFields');
 
+        if (!is_string($sortingFields)) {
+            return [];
+        }
+
         return explode(',', $sortingFields);
     }
 
@@ -108,6 +112,11 @@ class Sortables
         // config
         $Package = QUI::getPackage('quiqqer/products')->getConfig();
         $sortingFields = $Package?->getValue('products', 'sortFields');
+
+        if (!is_string($sortingFields)) {
+            return [];
+        }
+
         $sortingFields = explode(',', $sortingFields);
         $sortingFields = array_flip($sortingFields);
 

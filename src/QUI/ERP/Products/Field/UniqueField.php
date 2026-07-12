@@ -522,6 +522,10 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
         } catch (\QUI\Exception) {
         }
 
+        if ($interfaces === false) {
+            $interfaces = [];
+        }
+
         return [
             'id' => $this->getId(),
             'title' => $this->getTitle(),

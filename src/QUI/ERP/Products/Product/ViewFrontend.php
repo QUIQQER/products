@@ -396,7 +396,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
             QUI\System\Log::addError(
                 'Wrong instance return at QUI\ERP\Products\Product\ViewFrontend',
                 [
-                    'return type' => get_class($Field),
+                    'return type' => get_debug_type($Field),
                     'line' => 402
                 ]
             );

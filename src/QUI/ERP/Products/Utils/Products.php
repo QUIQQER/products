@@ -318,7 +318,7 @@ class Products
                     $fieldValue = '';
                 }
 
-                $fieldValue = implode(unpack("H*", $fieldValue));
+                $fieldValue = implode(unpack("H*", $fieldValue) ?: []);
             }
 
             $hash[] = $fieldId . ':' . $fieldValue;
@@ -418,7 +418,7 @@ class Products
                 $hashedValueId = false;
 
                 if (!is_numeric($valueId)) {
-                    $hashedValueId = implode(unpack("H*", $valueId));
+                    $hashedValueId = implode(unpack("H*", $valueId) ?: []);
 
                     if (!isset($allowed[$valueId]) && !isset($allowed[$hashedValueId])) {
                         continue;
