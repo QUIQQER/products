@@ -11,3 +11,7 @@ if (!defined('QUIQQER_AJAX')) {
 putenv("QUIQQER_OTHER_AUTOLOADERS=KEEP");
 
 require_once __DIR__ . '/../../../../bootstrap.php';
+
+if (!class_exists(\QUI\ERP\Order\AbstractOrder::class)) {
+    require_once __DIR__ . '/stubs/quiqqer-order.php';
+}

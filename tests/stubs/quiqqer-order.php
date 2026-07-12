@@ -14,7 +14,5 @@ abstract class AbstractOrder
     /**
      * @return iterable<OrderArticle>
      */
-    public function getArticles(): iterable
-    {
-    }
+    abstract public function getArticles(): iterable;
 }
