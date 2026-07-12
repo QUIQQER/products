@@ -6,5 +6,5 @@ interface OrderDeliveryAddress
 {
     public function getUUID(): string;
 
-    public function getCountry(): string;
+    public function getCountry(): \QUI\Countries\Country;
 }
