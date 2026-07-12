@@ -19,6 +19,7 @@ class PDF
      *
      * @param QUI\Projects\Project|null $Project - optional, Project object
      * @return string
+     * @throws QUI\Exception
      */
     public static function getHeader(null | QUI\Projects\Project $Project = null): string
     {
@@ -32,6 +33,7 @@ class PDF
      *
      * @param QUI\Projects\Project|null $Project - optional, Project object
      * @return string
+     * @throws QUI\Exception
      */
     public static function getFooter(null | QUI\Projects\Project $Project = null): string
     {
@@ -49,6 +51,7 @@ class PDF
      *
      * @param QUI\Projects\Project|null $Project - optional, Project object
      * @return QUI\Interfaces\Template\EngineInterface
+     * @throws QUI\Exception
      */
     protected static function getEngine(null | QUI\Projects\Project $Project = null): QUI\Interfaces\Template\EngineInterface
     {
@@ -58,7 +61,15 @@ class PDF
             $Project = QUI::getRewrite()->getProject();
         }
 
+        if ($Project === null) {
+            throw new QUI\Exception('Project is unavailable.');
+        }
+
         $Logo = $Project->getMedia()->getLogoImage();
+
+        if ($Logo === null) {
+            throw new QUI\Exception('Project logo is unavailable.');
+        }
 
         $Engine->assign([
             'Project' => $Project,

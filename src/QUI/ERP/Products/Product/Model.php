@@ -644,6 +644,10 @@ class Model extends QUI\QDOM
             $Project = QUI::getRewrite()->getProject();
         }
 
+        if ($Project === null) {
+            throw new QUI\Exception('Project is unavailable.');
+        }
+
         $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
         $cacheName .= '/url';
         $cacheName .= '/' . $Project->getName();
@@ -657,6 +661,11 @@ class Model extends QUI\QDOM
 
         // look if category is in product and it is the correct site
         $Category = $this->getCategory();
+
+        if ($Category === null) {
+            throw new QUI\Exception('Product category is unavailable.');
+        }
+
         $sites = $Category->getSites($Project);
 
         $checkSitePath = function ($list) {
@@ -736,7 +745,16 @@ class Model extends QUI\QDOM
             $Project = QUI::getRewrite()->getProject();
         }
 
+        if ($Project === null) {
+            throw new QUI\Exception('Project is unavailable.');
+        }
+
         $Category = $this->getCategory();
+
+        if ($Category === null) {
+            throw new QUI\Exception('Product category is unavailable.');
+        }
+
         $Site = $Category->getSite($Project);
 
         if (

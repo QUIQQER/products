@@ -430,6 +430,10 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             $Project = QUI::getRewrite()->getProject();
         }
 
+        if ($Project === null) {
+            throw new QUI\Exception('Project is unavailable.');
+        }
+
         $defaults = $this->defaultSites;
         $name = $Project->getName();
         $lang = $Project->getLang();
