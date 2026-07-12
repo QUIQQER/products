@@ -1386,7 +1386,6 @@ class EventHandling
         $Articles = $Order->getArticles();
 
         foreach ($Articles as $Article) {
-            /* @var $Article QUI\ERP\Accounting\Article */
             $productId = $Article->getId();
             $quantity = $Article->getQuantity();
 
