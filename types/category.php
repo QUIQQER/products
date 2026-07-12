@@ -125,7 +125,11 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
 
         // set canonical always to the parent
         if ($Product instanceof Products\Product\Types\VariantChild) {
-            $Site->setAttribute('canonical', $Product->getParent()->getUrl($Project));
+            $Parent = $Product->getParent();
+
+            if ($Parent instanceof Products\Product\Types\VariantParent) {
+                $Site->setAttribute('canonical', $Parent->getUrl($Project));
+            }
         }
 
         // if product url is with lang flag /en/

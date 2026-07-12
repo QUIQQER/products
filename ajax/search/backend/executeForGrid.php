@@ -86,14 +86,22 @@ QUI::getAjax()->registerFunction(
             $result = [];
         }
 
-        $currencyCode = QUI\ERP\Currency\Handler::getDefaultCurrency()->getCode();
+        $currencyCode = QUI\ERP\Defaults::getCurrency()->getCode();
 
         // sort $result as $productIds
         usort($result, function ($rowA, $rowB) use ($productIds) {
             $keyA = array_search($rowA['id'], $productIds);
             $keyB = array_search($rowB['id'], $productIds);
 
-            return $keyA - $keyB;
+            if ($keyA === false) {
+                return $keyB === false ? 0 : 1;
+            }
+
+            if ($keyB === false) {
+                return -1;
+            }
+
+            return $keyA <=> $keyB;
         });
 
         foreach ($result as $row) {
