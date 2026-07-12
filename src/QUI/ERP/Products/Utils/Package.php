@@ -56,7 +56,7 @@ class Package
     {
         // Wenn in Session der Preis versteckt werden soll
         // Dann hat dies Vorrang
-        if (QUI::getSession()->get('QUIQQER_PRODUCTS_HIDE_PRICE') == 1) {
+        if (QUI::getSession()?->get('QUIQQER_PRODUCTS_HIDE_PRICE') == 1) {
             return true;
         }
 

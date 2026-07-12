@@ -130,7 +130,7 @@ class Manufacturers
 
         try {
             $StandardAddress = $User->getStandardAddress();
-            $company = $StandardAddress->getAttribute('company');
+            $company = $StandardAddress?->getAttribute('company');
 
             if (!empty($company)) {
                 return $company;
