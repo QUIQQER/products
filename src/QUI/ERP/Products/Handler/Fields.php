@@ -280,7 +280,13 @@ class Fields
         }
 
         // cache colum check
-        $columns = QUI::getDataBase()->table()->getColumns(
+        $Tables = QUI::getDataBase()->table();
+
+        if ($Tables === null) {
+            throw new QUI\Exception('Database table handler is unavailable.');
+        }
+
+        $columns = $Tables->getColumns(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName()
         );
 
@@ -360,7 +366,7 @@ class Fields
             $data
         );
 
-        $newId = $data['id'] ?? QUI::getDataBase()->getPDO()->lastInsertId();
+        $newId = (int)($data['id'] ?? QUI::getDataBase()->getPDO()?->lastInsertId());
 
         if (class_exists('\QUI\Watcher')) {
             QUI\Watcher::addString(
@@ -451,7 +457,13 @@ class Fields
      */
     public static function createCacheColumn(string $columnName, string $columnType = 'text'): void
     {
-        QUI::getDataBase()->table()->addColumn(
+        $Tables = QUI::getDataBase()->table();
+
+        if ($Tables === null) {
+            throw new QUI\Exception('Database table handler is unavailable.');
+        }
+
+        $Tables->addColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             [$columnName => $columnType]
         );

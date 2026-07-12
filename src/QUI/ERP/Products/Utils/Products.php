@@ -555,7 +555,11 @@ class Products
         ";
 
         $PDO = QUI::getDataBase()->getPDO();
-        $Statement = $PDO->prepare($query);
+        $Statement = $PDO?->prepare($query);
+
+        if (!$Statement) {
+            return;
+        }
 
         foreach ($binds as $bind => $value) {
             $Statement->bindValue($bind, $value);

@@ -283,7 +283,7 @@ class Categories
         }
 
 
-        $newId = QUI::getDataBase()->getPDO()->lastInsertId();
+        $newId = (int)QUI::getDataBase()->getPDO()?->lastInsertId();
 
         // translation - title
         try {

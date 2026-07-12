@@ -564,7 +564,7 @@ class Products
             ]
         );
 
-        $newId = QUI::getDataBase()->getPDO()->lastInsertId();
+        $newId = (int)QUI::getDataBase()->getPDO()?->lastInsertId();
 
         if (class_exists('\QUI\Watcher')) {
             QUI\Watcher::addString(

@@ -456,7 +456,13 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
 
         // delete column
-        QUI::getDataBase()->table()->deleteColumn(
+        $Tables = QUI::getDataBase()->table();
+
+        if ($Tables === null) {
+            throw new QUI\Exception('Database table handler is unavailable.');
+        }
+
+        $Tables->deleteColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             Search::getSearchFieldColumnName($this)
         );
@@ -528,7 +534,13 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         );
 
         // delete column
-        QUI::getDataBase()->table()->deleteColumn(
+        $Tables = QUI::getDataBase()->table();
+
+        if ($Tables === null) {
+            throw new QUI\Exception('Database table handler is unavailable.');
+        }
+
+        $Tables->deleteColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             Search::getSearchFieldColumnName($this)
         );

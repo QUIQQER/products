@@ -39,6 +39,10 @@ class NumberRange implements NumberRangeInterface
     {
         $Table = QUI::getDataBase()->table();
 
+        if ($Table === null) {
+            throw new QUI\Exception('Database table handler is unavailable.');
+        }
+
         return $Table->getAutoIncrementIndex(QUI\ERP\Products\Utils\Tables::getProductTableName());
     }
 
@@ -50,9 +54,13 @@ class NumberRange implements NumberRangeInterface
         $PDO = QUI::getDataBase()->getPDO();
         $tableName = QUI\ERP\Products\Utils\Tables::getProductTableName();
 
-        $Statement = $PDO->prepare(
+        $Statement = $PDO?->prepare(
             "ALTER TABLE $tableName AUTO_INCREMENT = " . (int)$range
         );
+
+        if (!$Statement) {
+            return;
+        }
 
         $Statement->execute();
     }
