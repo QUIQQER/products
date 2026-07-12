@@ -106,7 +106,7 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
             $displayDiscounts = false;
         }
 
-        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        $Currency = QUI\ERP\Defaults::getCurrency();
         $currentLC = strtolower($current) . '_' . strtoupper($current);
         $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
         $options = [];

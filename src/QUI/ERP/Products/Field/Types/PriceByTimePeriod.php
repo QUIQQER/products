@@ -92,6 +92,11 @@ class PriceByTimePeriod extends Price
         }
 
         $Now = date_create();
+
+        if ($Now === false) {
+            return false;
+        }
+
         $Now->setTime(0, 0);
 
         if ($From !== false && $From > $Now) {
@@ -123,7 +128,7 @@ class PriceByTimePeriod extends Price
 
         $Price = new QUI\ERP\Money\Price(
             $value['price'],
-            QUI\ERP\Currency\Handler::getDefaultCurrency()
+            QUI\ERP\Defaults::getCurrency()
         );
 
         $valueText = $Price->getDisplayPrice();

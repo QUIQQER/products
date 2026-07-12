@@ -108,7 +108,7 @@ class PriceByQuantity extends Price
 
         $Price = new QUI\ERP\Money\Price(
             $Calc->getPrice($value['price']),
-            QUI\ERP\Currency\Handler::getDefaultCurrency()
+            QUI\ERP\Defaults::getCurrency()
         );
 
         $valueText = QUI::getLocale()->get('quiqqer/products', 'fieldtype.PriceByQuantity.frontend.text', [

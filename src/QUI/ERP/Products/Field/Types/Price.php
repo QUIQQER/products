@@ -88,7 +88,7 @@ class Price extends QUI\ERP\Products\Field\Field
 
         $Price = new QUI\ERP\Money\Price(
             $value,
-            QUI\ERP\Currency\Handler::getDefaultCurrency()
+            QUI\ERP\Defaults::getCurrency()
         );
 
         return new View([

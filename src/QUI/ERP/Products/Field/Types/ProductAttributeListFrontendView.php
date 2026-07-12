@@ -52,7 +52,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             return $this->notChangeableDisplay();
         }
 
-        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        $Currency = QUI\ERP\Defaults::getCurrency();
         $current = QUI::getLocale()->getCurrent();
 
         $id = $this->getId();

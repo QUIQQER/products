@@ -54,6 +54,10 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
             $User = QUI::getUsers()->getNobody();
         }
 
+        if (!$User instanceof QUI\Interfaces\Users\User) {
+            throw new QUI\Exception('Could not determine a user for the text product.');
+        }
+
         $attributes = $this->getAttributes();
         $attributes['title'] = $this->getTitle();
         $attributes['description'] = $this->getDescription();

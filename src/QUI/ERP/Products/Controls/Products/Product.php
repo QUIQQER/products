@@ -250,7 +250,7 @@ class Product extends QUI\Control
             $PriceOldDisplay = new QUI\ERP\Products\Controls\Price([
                 'Price' => new QUI\ERP\Money\Price(
                     $View->getOriginalPrice()->getValue(),
-                    QUI\ERP\Currency\Handler::getDefaultCurrency()
+                    QUI\ERP\Defaults::getCurrency()
                 ),
                 'withVatText' => false
             ]);
