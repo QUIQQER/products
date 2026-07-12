@@ -51,7 +51,7 @@ class View extends UniqueField
             $value = '';
         }
 
-        $value = htmlspecialchars($value);
+        $value = htmlspecialchars((string)$value);
         $title = htmlspecialchars($this->getTitle());
 
         return '<div class="quiqqer-product-field">

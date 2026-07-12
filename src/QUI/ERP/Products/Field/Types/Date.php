@@ -37,7 +37,7 @@ class Date extends QUI\ERP\Products\Field\Field
         $dateTime = true;
 
         if (is_numeric($value)) {
-            $value = strtotime($value);
+            $value = strtotime((string)$value);
         }
 
         try {
@@ -80,7 +80,7 @@ class Date extends QUI\ERP\Products\Field\Field
     public function cleanup(mixed $value): int
     {
         if (is_numeric($value)) {
-            $value = strtotime($value);
+            $value = strtotime((string)$value);
         }
 
         try {
