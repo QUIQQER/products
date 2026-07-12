@@ -41,7 +41,7 @@ if (str_contains(QUI::getRequest()->getPathInfo(), '_p/')) {
 
     $siteUrl = '';
 
-    $_REQUEST['_url'] = urldecode($_REQUEST['_url']); // nginx fix
+    $_REQUEST['_url'] = urldecode((string)$_REQUEST['_url']); // nginx fix
     $url = $_REQUEST['_url'];
     $url = pathinfo($url);
 }
@@ -78,7 +78,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
      * PRODUCT
      */
     $baseName = str_replace(
-        QUI\Rewrite::getDefaultSuffix(),
+        (string)QUI\Rewrite::getDefaultSuffix(),
         '',
         $url['basename']
     );
@@ -101,11 +101,11 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     // get by url field
     try {
         $categoryId = (int)$Site->getAttribute('quiqqer.products.settings.categoryId');
-        $Product = Products\Handler\Products::getProductByUrl($refNo, $categoryId);
+        $Product = Products\Handler\Products::getProductByUrl((string)$refNo, $categoryId);
     } catch (QUI\Exception $Exception) {
         try {
             if (is_numeric($refNo)) {
-                $Product = Products\Handler\Products::getProduct($refNo);
+                $Product = Products\Handler\Products::getProduct((int)$refNo);
             }
         } catch (QUI\Exception $Exception) {
             Log::addDebug('Products::getProductByUrl :: ' . $Exception->getMessage());

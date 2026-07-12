@@ -277,7 +277,7 @@ class Fields
             $priority2 = $getFieldSortValue($Field2, $sort);
 
             if (is_string($priority1) || is_string($priority2)) {
-                return strnatcmp($priority1, $priority2);
+                return strnatcmp((string)$priority1, (string)$priority2);
             }
 
             // if sorting is priority, and both are equal, than use title
@@ -285,7 +285,7 @@ class Fields
                 $priority1 = $getFieldSortValue($Field1, 'title');
                 $priority2 = $getFieldSortValue($Field2, 'title');
 
-                return strnatcmp($priority1, $priority2);
+                return strnatcmp((string)$priority1, (string)$priority2);
             }
 
             if ($priority1 === 0) {

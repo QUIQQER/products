@@ -288,7 +288,7 @@ class VariantChild extends AbstractType
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_SHORT_DESC, $Locale);
 
-        $contentCheck = strip_tags($result);
+        $contentCheck = strip_tags((string)$result);
         $contentCheck = trim($contentCheck);
 
         if (!empty($contentCheck)) {
@@ -308,7 +308,7 @@ class VariantChild extends AbstractType
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_CONTENT, $Locale);
 
-        $contentCheck = strip_tags($result);
+        $contentCheck = strip_tags((string)$result);
         $contentCheck = trim($contentCheck);
 
         if (!empty($contentCheck)) {

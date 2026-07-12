@@ -72,7 +72,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
             foreach ($options['groupIds'] as $k => $groupId) {
                 if (is_numeric($groupId)) {
                     try {
-                        $options['groupIds'][$k] = QUI::getGroups()->get($groupId)->getUUID();
+                        $options['groupIds'][$k] = QUI::getGroups()->get((int)$groupId)->getUUID();
                     } catch (QUI\Exception) {
                     }
                 }
@@ -208,13 +208,13 @@ class GroupList extends QUI\ERP\Products\Field\Field
         if (is_string($value) || is_numeric($value)) {
             // Check if string is username
             try {
-                $User = QUI::getUsers()->getUserByName($value);
+                $User = QUI::getUsers()->getUserByName((string)$value);
                 $userIds[] = $User->getUUID();
             } catch (\Exception $Exception) {
                 QUI\System\Log::writeDebugException($Exception);
 
                 // If string is no username -> assume it is JSON with user IDs
-                $userIds = json_decode($value, true);
+                $userIds = json_decode((string)$value, true);
 
                 // Check if string was username
                 if (json_last_error() !== JSON_ERROR_NONE) {
@@ -305,13 +305,13 @@ class GroupList extends QUI\ERP\Products\Field\Field
         if (is_string($value) || is_numeric($value)) {
             // Check if string is username
             try {
-                $User = QUI::getUsers()->getUserByName($value);
+                $User = QUI::getUsers()->getUserByName((string)$value);
                 $userIds[] = $User->getUUID();
             } catch (\Exception $Exception) {
                 QUI\System\Log::writeDebugException($Exception);
 
                 // If string is no username -> assume it is JSON with user IDs
-                $userIds = json_decode($value, true);
+                $userIds = json_decode((string)$value, true);
 
                 // Check if string was username
                 if (json_last_error() !== JSON_ERROR_NONE) {

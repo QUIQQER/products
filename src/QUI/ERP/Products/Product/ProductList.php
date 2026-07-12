@@ -358,7 +358,7 @@ class ProductList
             $fieldValue = $Field->getValue();
 
             if (is_array($fieldValue)) {
-                $fieldValue = md5(json_encode($fieldValue));
+                $fieldValue = md5((string)json_encode($fieldValue));
             }
 
             if (!is_string($fieldValue) && !is_numeric($fieldValue)) {

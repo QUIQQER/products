@@ -80,7 +80,7 @@ class DesktopSearch implements ProviderInterface
 
         foreach ($products as $productId) {
             try {
-                $Product = QUI\ERP\Products\Handler\Products::getProduct($productId);
+                $Product = QUI\ERP\Products\Handler\Products::getProduct((int)$productId);
 
                 $result[] = [
                     'id' => (int)$productId,

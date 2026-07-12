@@ -463,7 +463,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function getId(): int
     {
-        return $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -511,7 +511,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $attributes['uid'] = $this->getUser()->getUUID();
         $attributes['maximumQuantity'] = $this->getMaximumQuantity();
 
-        return new UniqueProductFrontendView($this->id, $attributes);
+        return new UniqueProductFrontendView((int)$this->id, $attributes);
     }
 
     //region calculation

@@ -504,6 +504,8 @@ class ProductList extends QUI\Control
             $start = 1;
         }
 
+        $start = (int)$start;
+
         $more = true;
         $Search = $this->getSearch();
 
@@ -538,7 +540,7 @@ class ProductList extends QUI\Control
 
         foreach ($result as $product) {
             try {
-                $products[] = Products::getProduct($product);
+                $products[] = Products::getProduct((int)$product);
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
             }
