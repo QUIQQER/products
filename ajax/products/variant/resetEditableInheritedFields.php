@@ -6,6 +6,7 @@
 
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Product\Types\VariantChild;
+use QUI\ERP\Products\Product\Types\VariantParent;
 
 /**
  * Reset inherited fields
@@ -18,7 +19,13 @@ QUI::getAjax()->registerFunction(
         $Product = Products::getProduct($productId);
 
         if ($Product instanceof VariantChild) {
-            $Product = $Product->getParent();
+            $Parent = $Product->getParent();
+
+            if (!$Parent instanceof VariantParent) {
+                return;
+            }
+
+            $Product = $Parent;
         }
 
         $Product->setAttribute('editableVariantFields', false);

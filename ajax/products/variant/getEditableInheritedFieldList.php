@@ -58,12 +58,14 @@ QUI::getAjax()->registerFunction(
             if ($Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
                 $Parent = $Product->getParent();
 
-                if ($Parent->getAttribute('editableVariantFields')) {
-                    $editable = $Parent->getAttribute('editableVariantFields');
-                }
+                if ($Parent instanceof QUI\ERP\Products\Product\Types\VariantParent) {
+                    if ($Parent->getAttribute('editableVariantFields')) {
+                        $editable = $Parent->getAttribute('editableVariantFields');
+                    }
 
-                if ($Parent->getAttribute('inheritedVariantFields')) {
-                    $inherited = $Parent->getAttribute('inheritedVariantFields');
+                    if ($Parent->getAttribute('inheritedVariantFields')) {
+                        $inherited = $Parent->getAttribute('inheritedVariantFields');
+                    }
                 }
             }
 
