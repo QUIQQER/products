@@ -1564,9 +1564,15 @@ class Model extends QUI\QDOM
             $urls = $urlField[0]['value'];
         }
 
+        $Category = $this->getCategory();
+
+        if ($Category === null) {
+            throw new QUI\Exception('Product category is unavailable.');
+        }
+
         ProductUtils::checkUrlByUrlFieldValue(
             $urls,
-            $this->getCategory()->getId(),
+            $Category->getId(),
             $this->getId()
         );
     }

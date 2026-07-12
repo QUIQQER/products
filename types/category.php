@@ -150,11 +150,13 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         $CategoryMenu->setAttribute('disableCheckboxes', true);
         $CategoryMenu->setAttribute('breadcrumb', true);
 
+        $categoryId = $Product->getCategory()?->getId() ?? 0;
+
         $Engine->assign([
             'Product' => new Products\Controls\Products\Product([
                 'Product' => $Product
             ]),
-            'categoryId' => $Product->getCategory()->getId()
+            'categoryId' => $categoryId
         ]);
 
         // set site data

@@ -165,6 +165,12 @@ class Suggest extends QUI\Control
             return $this->getAttribute('Project');
         }
 
-        return QUI::getRewrite()->getProject();
+        $Project = QUI::getRewrite()->getProject();
+
+        if ($Project === null) {
+            throw new QUI\Exception('Project is unavailable.');
+        }
+
+        return $Project;
     }
 }

@@ -637,7 +637,11 @@ class Products
         );
 
         $New->setPermissions($Product->getPermissions());
-        $New->setMainCategory($Product->getCategory());
+        $MainCategory = $Product->getCategory();
+
+        if ($MainCategory !== null) {
+            $New->setMainCategory($MainCategory);
+        }
 
         $folders = $New->getFieldsByType(Fields::TYPE_FOLDER);
 
@@ -860,7 +864,13 @@ class Products
         try {
             $MainFolder = Products::getParentMediaFolder();
         } catch (QUI\Exception) {
-            $MainFolder = QUI::getProjectManager()->getStandard()->getMedia();
+            $Project = QUI::getProjectManager()->getStandard();
+
+            if ($Project === null) {
+                throw new QUI\Exception('Standard project is unavailable.');
+            }
+
+            $MainFolder = $Project->getMedia();
         }
 
         $Media = $MainFolder->getMedia();
@@ -1216,7 +1226,7 @@ class Products
         }
 
         // Category
-        $mainCategoryId = $Product->getCategory()->getId();
+        $mainCategoryId = $Product->getCategory()?->getId() ?? '';
 
         if (empty($mainCategoryId)) {
             $mainCategoryId = '';
