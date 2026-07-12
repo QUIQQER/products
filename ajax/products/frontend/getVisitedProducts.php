@@ -31,7 +31,7 @@ QUI::getAjax()->registerFunction(
             }
 
             try {
-                $Product = $Products->getProduct($productId);
+                $Product = $Products->getProduct((int)$productId);
                 $View = $Product->getViewFrontend();
 
                 // check if prices exists

@@ -20,8 +20,8 @@ QUI::getAjax()->registerFunction(
         $results = [];
 
         foreach ($fields as $fieldId => $val) {
-            if ($val) {
-                $Field = Fields::getField($fieldId);
+            if ($val && is_numeric($fieldId)) {
+                $Field = Fields::getField((int)$fieldId);
                 $data = $Field->getAttributes();
                 $data['title'] = $Field->getTitle();
 
