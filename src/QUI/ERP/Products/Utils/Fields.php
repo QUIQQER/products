@@ -524,6 +524,10 @@ class Fields
 
             $categoryList = $Path->query("//quiqqer/products/fieldCategories/fieldCategory");
 
+            if ($categoryList === false) {
+                continue;
+            }
+
             foreach ($categoryList as $Category) {
                 if (
                     !method_exists($Category, 'getAttribute')
@@ -638,6 +642,10 @@ class Fields
             $Path = new DOMXPath($Dom);
 
             $fieldList = $Path->query("//quiqqer/products/fields/field[@fieldCategory='$category']");
+
+            if ($fieldList === false) {
+                continue;
+            }
 
             foreach ($fieldList as $NodeField) {
                 if (!method_exists($NodeField, 'getAttribute')) {

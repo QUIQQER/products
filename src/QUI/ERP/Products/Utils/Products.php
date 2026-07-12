@@ -359,7 +359,7 @@ class Products
         $currentVariantHash = Products::generateVariantHashFromFields($groupList);
         $searchHashes = FieldUtils::getSearchHashesFromFieldHash($currentVariantHash);
 
-        foreach ($availableHashes as $hash) {
+        foreach ($availableHashes ?? [] as $hash) {
             $hashArray = FieldUtils::parseFieldHashToArray($hash);
 
             foreach ($hashArray as $fieldId => $fieldValue) {
@@ -465,7 +465,7 @@ class Products
         $availableHashes = $Product->availableActiveFieldHashes();
         $result = [];
 
-        foreach ($availableHashes as $hash) {
+        foreach ($availableHashes ?? [] as $hash) {
             $hashArray = FieldUtils::parseFieldHashToArray($hash);
 
             foreach ($hashArray as $fieldId => $value) {

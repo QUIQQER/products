@@ -269,6 +269,10 @@ class JsonLd
         $models = [];
         $variants = $Product->getVariants();
 
+        if (!is_array($variants)) {
+            $variants = [];
+        }
+
         foreach ($variants as $Variant) {
             if (!$Variant->isActive()) {
                 continue;

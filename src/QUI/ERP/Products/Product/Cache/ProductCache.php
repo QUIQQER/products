@@ -49,7 +49,7 @@ class ProductCache
         if (is_null($cacheName)) {
             self::$uniqueProductData = [];
         } else {
-            self::$uniqueProductData[$cacheName] = null;
+            unset(self::$uniqueProductData[$cacheName]);
         }
     }
 
@@ -73,6 +73,10 @@ class ProductCache
 
             if ($Product instanceof QUI\ERP\Products\Product\Types\VariantParent) {
                 $variants = $Product->getVariants();
+
+                if (!is_array($variants)) {
+                    $variants = [];
+                }
 
                 $Product->getImages();
                 $Product->availableActiveFieldHashes();

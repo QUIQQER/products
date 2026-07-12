@@ -663,7 +663,9 @@ class Fields
         try {
             self::$fieldTypes = QUI\Cache\LongTermCache::get($cacheName);
 
-            return self::$fieldTypes;
+            if (is_array(self::$fieldTypes)) {
+                return self::$fieldTypes;
+            }
         } catch (QUI\Exception) {
         }
 
@@ -711,6 +713,10 @@ class Fields
         // @todo use package manager when it can handle new packages (see quiqqer/core#1383)
         $productsXmls = glob(OPT_DIR . '*/*/products.xml');
 
+        if ($productsXmls === false) {
+            $productsXmls = [];
+        }
+
         foreach ($productsXmls as $xml) {
             if (!file_exists($xml)) {
                 continue;
@@ -732,6 +738,10 @@ class Fields
             $Path = new DOMXPath($Dom);
 
             $fields = $Path->query("//quiqqer/products/fields/field");
+
+            if ($fields === false) {
+                continue;
+            }
 
             foreach ($fields as $Field) {
                 if (

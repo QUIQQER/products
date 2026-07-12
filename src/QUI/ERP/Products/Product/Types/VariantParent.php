@@ -285,6 +285,10 @@ class VariantParent extends AbstractType
         // delete children
         $children = $this->getVariants();
 
+        if (!is_array($children)) {
+            $children = [];
+        }
+
         foreach ($children as $Child) {
             try {
                 $Child->delete();
@@ -486,8 +490,16 @@ class VariantParent extends AbstractType
         $images = [];
         $children = $this->getVariants();
 
+        if (!is_array($children)) {
+            $children = [];
+        }
+
         try {
             $images = $this->getMediaFolder()->getImages($params);
+
+            if (!is_array($images)) {
+                $images = [];
+            }
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addDebug($Exception->getMessage());
         }
@@ -503,7 +515,10 @@ class VariantParent extends AbstractType
             foreach ($children as $Child) {
                 try {
                     $childImages = $Child->getMediaFolder()->getImages($params);
-                    $images = array_merge($images, $childImages);
+
+                    if (is_array($childImages)) {
+                        $images = array_merge($images, $childImages);
+                    }
                 } catch (QUI\Exception $Exception) {
                     QUI\System\Log::addDebug($Exception->getMessage());
                 }
@@ -561,6 +576,10 @@ class VariantParent extends AbstractType
 
         $children = $this->getVariants();
 
+        if (!is_array($children)) {
+            $children = [];
+        }
+
         foreach ($children as $Child) {
             $Child->addField($Field);
             $Child->save();
@@ -579,6 +598,10 @@ class VariantParent extends AbstractType
         parent::removeField($Field);
 
         $children = $this->getVariants();
+
+        if (!is_array($children)) {
+            $children = [];
+        }
 
         foreach ($children as $Child) {
             $Child->removeField($Field);
@@ -980,6 +1003,10 @@ class VariantParent extends AbstractType
         // delete all children and generate new ones
         if ($generationType === self::GENERATION_TYPE_RESET) {
             $children = $this->getVariants();
+
+            if (!is_array($children)) {
+                $children = [];
+            }
 
             foreach ($children as $Child) {
                 try {
@@ -1678,6 +1705,10 @@ class VariantParent extends AbstractType
     public function hasVariantId(int $variantId): bool
     {
         $variants = $this->getVariants();
+
+        if (!is_array($variants)) {
+            $variants = [];
+        }
 
         foreach ($variants as $Variant) {
             if ($variantId === $Variant->getId()) {

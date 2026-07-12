@@ -868,12 +868,10 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      */
     public function addField(QUI\ERP\Products\Field\Field $Field): void
     {
-        if ($this->fields === null) {
-            $this->getFields();
-        }
+        $fields = $this->fields ?? $this->getFields();
 
         /* @var $CategoryField QUI\ERP\Products\Field\Field */
-        foreach ($this->fields as $CategoryField) {
+        foreach ($fields as $CategoryField) {
             if ($CategoryField->getId() == $Field->getId()) {
                 return;
             }

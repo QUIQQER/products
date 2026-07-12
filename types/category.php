@@ -299,6 +299,10 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     $filterList = $ProductList->getFilter();
     $fields = Products\Utils\Sortables::getSortableFieldsForSite($Site);
 
+    if (!is_array($fields)) {
+        $fields = [];
+    }
+
     foreach ($fields as $fieldId) {
         if (str_starts_with($fieldId, 'S')) {
             $title = QUI::getLocale()->get('quiqqer/products', 'sortable.' . mb_substr($fieldId, 1));
@@ -341,7 +345,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         $ProductList->setAttribute('showFilter', false);
     }
 
-    if ($CategoryMenu->countChildren() || count($filterList)) {
+    if ($CategoryMenu->countChildren() || count($filterList ?? [])) {
         $ProductList->setAttribute('forceMobileFilter', true);
     }
 
