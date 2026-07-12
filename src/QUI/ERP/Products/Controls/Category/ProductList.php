@@ -172,6 +172,10 @@ class ProductList extends QUI\Control
                 true
             );
 
+            if (!is_int($count)) {
+                $count = count($count);
+            }
+
             if ($Category) {
                 $this->setAttribute('data-cid', $Category->getId());
             }
@@ -459,10 +463,12 @@ class ProductList extends QUI\Control
     public function count(): int
     {
         try {
-            return $this->getSearch()->search(
+            $count = $this->getSearch()->search(
                 $this->getCountParams(),
                 true
             );
+
+            return is_int($count) ? $count : count($count);
         } catch (QUI\Exception) {
             return 0;
         }
@@ -513,6 +519,10 @@ class ProductList extends QUI\Control
             $searchParams = $this->getSearchParams($start, $max);
             $result = $Search->search($searchParams);
 
+            if (!is_array($result)) {
+                $result = [];
+            }
+
             // Send searched fields to frontend
             if (!empty($searchParams['fields'])) {
                 $this->setJavaScriptControlOption('searchfields', json_encode($searchParams['fields']));
@@ -520,6 +530,10 @@ class ProductList extends QUI\Control
 
             if ($count === false) {
                 $count = $Search->search($this->getCountParams(), true);
+
+                if (!is_int($count)) {
+                    $count = count($count);
+                }
             }
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_NOTICE);

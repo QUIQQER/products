@@ -2384,7 +2384,9 @@ class Model extends QUI\QDOM
     public function getImages(array $params = []): array
     {
         try {
-            return $this->getMediaFolder()->getImages($params);
+            $images = $this->getMediaFolder()->getImages($params);
+
+            return is_array($images) ? $images : [];
         } catch (QUI\Exception) {
             return [];
         }
@@ -2399,7 +2401,9 @@ class Model extends QUI\QDOM
     public function getFiles(array $params = []): array
     {
         try {
-            return $this->getMediaFolder()->getFiles($params);
+            $files = $this->getMediaFolder()->getFiles($params);
+
+            return is_array($files) ? $files : [];
         } catch (QUI\Exception) {
             return [];
         }

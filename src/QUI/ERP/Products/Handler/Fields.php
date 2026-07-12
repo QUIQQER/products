@@ -125,6 +125,9 @@ class Fields
     /**
      * @var array<mixed>
      */
+    /**
+     * @var array<int, QUI\ERP\Products\Field\Field>
+     */
     protected static array $list = [];
 
     /**
@@ -827,7 +830,11 @@ class Fields
         $class = 'QUI\ERP\Products\Field\Types\\' . $type;
 
         if (class_exists($class)) {
-            return new $class($fieldId, $fieldParams);
+            $Field = new $class($fieldId, $fieldParams);
+
+            if ($Field instanceof QUI\ERP\Products\Field\Field) {
+                return $Field;
+            }
         }
 
         throw new QUI\ERP\Products\Field\Exception([
@@ -938,10 +945,9 @@ class Fields
             'defaultValue' => json_decode($data['defaultValue'], true)
         ];
 
-        /* @var $Field QUI\ERP\Products\Field\Field */
         $Field = new $class($fieldId, $fieldData);
 
-        if (!QUI\ERP\Products\Utils\Fields::isField($Field)) {
+        if (!$Field instanceof QUI\ERP\Products\Field\Field) {
             throw new QUI\ERP\Products\Field\Exception(
                 [
                     'quiqqer/products',

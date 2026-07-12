@@ -223,7 +223,7 @@ class Manufacturers
             ]
         ]);
 
-        if (empty($manufacturerListSites)) {
+        if (!is_array($manufacturerListSites) || empty($manufacturerListSites)) {
             return false;
         }
 
@@ -294,6 +294,10 @@ class Manufacturers
                             'type' => self::SITE_TYPE_MANUFACTURER_LIST
                         ]
                     ]);
+
+                    if (!is_array($manufacturerListSites)) {
+                        $manufacturerListSites = [];
+                    }
 
                     /** @var QUI\Projects\Site $Site */
                     foreach ($manufacturerListSites as $Site) {

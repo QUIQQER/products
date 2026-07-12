@@ -133,11 +133,13 @@ class Menu extends QUI\Control
             $Site = $this->getSite();
         }
 
-        return $Site->getNavigation([
+        $children = $Site->getNavigation([
             'where' => [
                 'type' => 'quiqqer/products:types/category'
             ]
         ]);
+
+        return is_array($children) ? $children : [];
     }
 
     /**
@@ -158,12 +160,14 @@ class Menu extends QUI\Control
             return 0;
         }
 
-        return $Site->getNavigation([
+        $count = $Site->getNavigation([
             'count' => true,
             'where' => [
                 'type' => 'quiqqer/products:types/category'
             ]
         ]);
+
+        return is_int($count) ? $count : count($count);
     }
 
     /**

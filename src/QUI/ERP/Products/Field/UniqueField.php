@@ -269,7 +269,11 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
         $viewClass = 'QUI\ERP\Products\Field\Types\\' . $type . 'FrontendView';
 
         if (class_exists($viewClass)) {
-            return new $viewClass($this->getAttributes());
+            $View = new $viewClass($this->getAttributes());
+
+            if ($View instanceof View) {
+                return $View;
+            }
         }
 
         if ($this->parentFieldClass && class_exists($this->parentFieldClass)) {
@@ -294,7 +298,11 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
         $viewClass = 'QUI\ERP\Products\Field\Types\\' . $type . 'BackendView';
 
         if (class_exists($viewClass)) {
-            return new $viewClass($this->getAttributes());
+            $View = new $viewClass($this->getAttributes());
+
+            if ($View instanceof View) {
+                return $View;
+            }
         }
 
         if ($this->parentFieldClass && class_exists($this->parentFieldClass)) {

@@ -95,6 +95,9 @@ class Products
      * List of internal products
      * @var array<mixed>
      */
+    /**
+     * @var array<int, QUI\ERP\Products\Product\Types\AbstractType>
+     */
     private static array $list = [];
 
     /**
@@ -353,7 +356,13 @@ class Products
             $type = QUI\ERP\Products\Product\Types\Product::class;
         }
 
-        return new $type($pid, $result);
+        $Product = new $type($pid, $result);
+
+        if (!$Product instanceof QUI\ERP\Products\Product\Types\AbstractType) {
+            throw new QUI\ERP\Products\Product\Exception('Invalid product type: ' . $type);
+        }
+
+        return $Product;
     }
 
     /**
@@ -478,8 +487,7 @@ class Products
                 continue;
             }
 
-            if (Categories::isCategory($Category)) {
-                /* @var $Category Category */
+            if ($Category instanceof QUI\ERP\Products\Interfaces\CategoryInterface) {
                 $categoryIds[] = $Category->getId();
                 continue;
             }
@@ -500,7 +508,6 @@ class Products
         // fields
         $fieldData = [];
 
-        /* @var $Field Field|integer */
         foreach ($fields as $Field) {
             if (!is_object($Field)) {
                 try {
@@ -509,6 +516,13 @@ class Products
                     QUI\System\Log::addWarning($Exception->getMessage());
                     continue;
                 }
+            }
+
+            if (!$Field instanceof Field) {
+                throw new QUI\Exception([
+                    'quiqqer/products',
+                    'exception.field.is.invalid'
+                ]);
             }
 
             $value = $Field->getValue();
@@ -851,6 +865,10 @@ class Products
 
         $Media = $MainFolder->getMedia();
         $childIds = $MainFolder->getChildrenIds();
+
+        if (!is_array($childIds)) {
+            $childIds = [];
+        }
 
         foreach ($childIds as $folderId) {
             $Folder = null;

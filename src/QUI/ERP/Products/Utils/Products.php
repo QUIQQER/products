@@ -146,7 +146,7 @@ class Products
                 $FieldClass->setValue($Field->getValue());
             }
 
-            if (method_exists($FieldClass, 'onGetPriceFieldForProduct')) {
+            if (is_object($FieldClass) && method_exists($FieldClass, 'onGetPriceFieldForProduct')) {
                 try {
                     $value = $FieldClass->onGetPriceFieldForProduct($Product, $User);
                 } catch (QUI\Exception $Exception) {

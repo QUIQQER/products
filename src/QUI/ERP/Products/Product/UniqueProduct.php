@@ -815,7 +815,9 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             );
 
             if ($Folder instanceof Folder) {
-                return $Folder->getImages();
+                $images = $Folder->getImages();
+
+                return is_array($images) ? $images : [];
             }
         } catch (QUI\Exception) {
         }
@@ -1298,7 +1300,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * @param null|QUI\Locale $Locale
      * @param bool $fieldsAreChangeable - default = true
      *
-     * @return QUI\ERP\Accounting\Article
+     * @return QUI\ERP\Accounting\ArticleInterface
      *
      * @throws QUI\Users\Exception
      * @throws QUI\Exception
@@ -1306,7 +1308,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     public function toArticle(
         null | QUI\Locale $Locale = null,
         bool $fieldsAreChangeable = true
-    ): QUI\ERP\Accounting\Article {
+    ): QUI\ERP\Accounting\ArticleInterface {
         if (!$Locale) {
             $Locale = QUI\ERP\Products\Handler\Products::getLocale();
         }
@@ -1381,7 +1383,11 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $interfaces = class_implements($class);
 
             if (isset($interfaces[ArticleInterface::class])) {
-                return new $class($article);
+                $Article = new $class($article);
+
+                if ($Article instanceof ArticleInterface) {
+                    return $Article;
+                }
             }
         }
 

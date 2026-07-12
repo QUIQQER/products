@@ -492,7 +492,7 @@ class VariantChild extends AbstractType
         try {
             $images = $this->getMediaFolder()->getImages($params);
 
-            if (count($images)) {
+            if (is_array($images) && count($images)) {
                 return $images;
             }
         } catch (QUI\Exception $Exception) {
@@ -650,8 +650,14 @@ class VariantChild extends AbstractType
                 $QuiMediaFolder = $this->OwnMediaFolderField->getMediaFolder();
 
                 if ($QuiMediaFolder) {
+                    $images = $QuiMediaFolder->getImages();
+
+                    if (!is_array($images)) {
+                        $images = [];
+                    }
+
                     /** @var QUI\Projects\Media\Image $Image */
-                    foreach ($QuiMediaFolder->getImages() as $Image) {
+                    foreach ($images as $Image) {
                         $Image->setAttribute(Fields::MEDIA_ATTR_IMAGE_ATTRIBUTE_GROUP_DATA, $attributeGroupFieldData);
                         $Image->save($EditUser);
                     }

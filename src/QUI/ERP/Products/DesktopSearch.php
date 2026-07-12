@@ -73,6 +73,10 @@ class DesktopSearch implements ProviderInterface
             return [];
         }
 
+        if (!is_array($products)) {
+            return [];
+        }
+
         $groupLabel = QUI::getLocale()->get(
             'quiqqer/products',
             'search.group.products.label'

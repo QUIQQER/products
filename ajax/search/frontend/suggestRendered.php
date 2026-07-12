@@ -103,6 +103,14 @@ QUI::getAjax()->registerFunction(
         $result = $Search->search($searchParams);
         $count = $Search->search($searchParams, true);
 
+        if (!is_array($result)) {
+            $result = [];
+        }
+
+        if (!is_int($count)) {
+            $count = count($count);
+        }
+
         if (!count($result)) {
             return $html;
         }

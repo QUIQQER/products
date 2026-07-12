@@ -59,7 +59,7 @@ class ProductEdit extends QUI\Control
         $customFields = [];
 
         foreach ($Product->getFields() as $Field) {
-            if (method_exists($Field, 'isCustomField') && $Field->isCustomField()) {
+            if (is_object($Field) && method_exists($Field, 'isCustomField') && $Field->isCustomField()) {
                 $customFields[] = $Field;
             }
         }
