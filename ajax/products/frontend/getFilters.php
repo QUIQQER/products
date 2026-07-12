@@ -29,21 +29,17 @@ QUI::getAjax()->registerFunction(
 
             // category menu
             $searchParentCategorySite = function () use ($Site) {
-                $Parent = true;
+                while ($Site instanceof QUI\Projects\Site) {
+                    $Parent = $Site->getParent();
 
-                while ($Parent) {
                     if (
-                        $Site->getParent()
-                        && $Site->getParent()->getAttribute('type') != 'quiqqer/products:types/category'
+                        $Parent instanceof QUI\Projects\Site
+                        && $Parent->getAttribute('type') != 'quiqqer/products:types/category'
                     ) {
                         return $Site;
                     }
 
-                    $Site = $Site->getParent();
-
-                    if (!$Site) {
-                        break;
-                    }
+                    $Site = $Parent;
                 }
 
                 return $Site;
