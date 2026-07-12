@@ -228,18 +228,18 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         try {
             $Parent = $this->getParent();
 
-            if ($Parent) {
+            if ($Parent instanceof QUI\ERP\Products\Interfaces\CategoryInterface) {
                 $parents[] = $Parent;
             }
         } catch (QUI\Exception) {
             return $parents;
         }
 
-        while ($Parent) {
+        while ($Parent instanceof QUI\ERP\Products\Interfaces\CategoryInterface) {
             try {
                 $Parent = $Parent->getParent();
 
-                if (!$Parent) {
+                if (!$Parent instanceof QUI\ERP\Products\Interfaces\CategoryInterface) {
                     break;
                 }
 
