@@ -246,6 +246,10 @@ class Calc
         $Area = QUI\ERP\Utils\User::getUserArea($this->getUser());
         $DefaultArea = QUI\ERP\Defaults::getArea();
 
+        if (!$Area instanceof QUI\ERP\Areas\Area) {
+            $Area = $DefaultArea;
+        }
+
         // user order address
         $Order = $List->getOrder();
 
@@ -658,6 +662,10 @@ class Calc
         $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser());
         $Area = QUI\ERP\Utils\User::getUserArea($this->getUser());
         $Currency = $this->getCurrency();
+
+        if (!$Area instanceof QUI\ERP\Areas\Area) {
+            $Area = QUI\ERP\Defaults::getArea();
+        }
 
         $nettoPrice = $Product->getNettoPrice()->value();
         $priceFactors = $Product->getPriceFactors()->sort();
