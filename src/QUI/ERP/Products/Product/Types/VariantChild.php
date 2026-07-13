@@ -73,21 +73,6 @@ class VariantChild extends AbstractType
 
         $Parent = $this->getParent();
 
-        if (empty($Parent)) {
-            QUI\System\Log::addError(
-                QUI::getLocale()->get(
-                    'quiqqer/products',
-                    'exception.Product.Types.VariantChild.parent_not_found',
-                    [
-                        'childId' => $pid,
-                        'parentId' => $this->getAttribute('parent')
-                    ]
-                )
-            );
-
-            return;
-        }
-
         $fields = $Parent->getFields();
 
         $attributeListFieldValues = [];
@@ -239,9 +224,10 @@ class VariantChild extends AbstractType
     /**
      * Return the parent variant product
      *
-     * @return VariantParent|null
+     * @return VariantParent
+     * @throws QUI\ERP\Products\Product\Exception
      */
-    public function getParent(): ?VariantParent
+    public function getParent(): VariantParent
     {
         if ($this->Parent !== null) {
             return $this->Parent;
@@ -256,11 +242,43 @@ class VariantChild extends AbstractType
                     'childId' => $this->getId()
                 ]);
 
-                return null;
+                throw new QUI\ERP\Products\Product\Exception(
+                    [
+                        'quiqqer/products',
+                        'exception.Product.Types.VariantChild.parent_not_found',
+                        [
+                            'childId' => $this->getId(),
+                            'parentId' => $this->getAttribute('parent')
+                        ]
+                    ],
+                    404,
+                    [
+                        'childId' => $this->getId(),
+                        'parentId' => $this->getAttribute('parent')
+                    ]
+                );
             }
 
             $this->Parent = $Parent;
-        } catch (QUI\Exception) {
+        } catch (QUI\ERP\Products\Product\Exception $Exception) {
+            throw $Exception;
+        } catch (QUI\Exception $Exception) {
+            throw new QUI\ERP\Products\Product\Exception(
+                [
+                    'quiqqer/products',
+                    'exception.Product.Types.VariantChild.parent_not_found',
+                    [
+                        'childId' => $this->getId(),
+                        'parentId' => $this->getAttribute('parent')
+                    ]
+                ],
+                404,
+                [
+                    'childId' => $this->getId(),
+                    'parentId' => $this->getAttribute('parent')
+                ],
+                $Exception
+            );
         }
 
         return $this->Parent;
@@ -328,7 +346,7 @@ class VariantChild extends AbstractType
      */
     public function getCategories(): array
     {
-        return $this->getParent()?->getCategories() ?? [];
+        return $this->getParent()->getCategories();
     }
 
     /**
@@ -336,7 +354,7 @@ class VariantChild extends AbstractType
      */
     public function getCategory(): ?QUI\ERP\Products\Interfaces\CategoryInterface
     {
-        return $this->getParent()?->getCategory();
+        return $this->getParent()->getCategory();
     }
 
     /**
@@ -504,7 +522,7 @@ class VariantChild extends AbstractType
             QUI\System\Log::addDebug($Exception->getMessage());
         }
 
-        return $this->getParent()?->getImages($params) ?? [];
+        return $this->getParent()->getImages($params);
     }
 
     /**
@@ -566,7 +584,7 @@ class VariantChild extends AbstractType
      */
     public function availableActiveChildFields(): array
     {
-        return $this->getParent()?->availableActiveChildFields() ?? [];
+        return $this->getParent()->availableActiveChildFields() ?? [];
     }
 
     /**
@@ -574,7 +592,7 @@ class VariantChild extends AbstractType
      */
     public function availableActiveFieldHashes(): array
     {
-        return $this->getParent()?->availableActiveFieldHashes() ?? [];
+        return $this->getParent()->availableActiveFieldHashes() ?? [];
     }
 
     /**
@@ -685,7 +703,7 @@ class VariantChild extends AbstractType
      */
     public function availableChildFields(): array
     {
-        return $this->getParent()?->availableChildFields() ?? [];
+        return $this->getParent()->availableChildFields() ?? [];
     }
 
     //endregion
