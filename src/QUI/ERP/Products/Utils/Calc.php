@@ -195,8 +195,8 @@ class Calc
      */
     public function getCurrency(): QUI\ERP\Currency\Currency
     {
-        if (is_null($this->Currency)) {
-            $this->Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        if ($this->Currency === null) {
+            $this->Currency = QUI\ERP\Defaults::getCurrency();
         }
 
         return $this->Currency;
