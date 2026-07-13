@@ -294,7 +294,7 @@ class VariantChild extends AbstractType
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_TITLE, $Locale);
 
-        if (!empty($result)) {
+        if (is_string($result) && $result !== '') {
             return $result;
         }
 
