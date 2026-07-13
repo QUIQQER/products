@@ -844,10 +844,16 @@ class ProductList extends QUI\Control
      */
     protected function getSite(): QUI\Interfaces\Projects\Site
     {
-        if ($this->getAttribute('Site')) {
-            return $this->getAttribute('Site');
+        $Site = $this->getAttribute('Site');
+
+        if (!$Site instanceof QUI\Interfaces\Projects\Site) {
+            $Site = QUI::getRewrite()->getSite();
         }
 
-        return QUI::getRewrite()->getSite();
+        if (!$Site instanceof QUI\Interfaces\Projects\Site) {
+            throw new QUI\Exception('Could not determine the product list site.');
+        }
+
+        return $Site;
     }
 }
