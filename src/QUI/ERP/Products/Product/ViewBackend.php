@@ -146,7 +146,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     {
         return new QUI\ERP\Money\Price(
             $this->getAttribute('price'),
-            QUI\ERP\Currency\Handler::getDefaultCurrency()
+            QUI\ERP\Defaults::getCurrency()
         );
     }
 
@@ -222,11 +222,11 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
 
     /**
      * @param int|string $fieldId
-     * @return string|array<mixed>|null
+     * @return int|float|string|array<mixed>|null
      *
      * @throws Exception
      */
-    public function getFieldValue(int | string $fieldId): string | array | null
+    public function getFieldValue(int | string $fieldId): int | float | string | array | null
     {
         return $this->getProduct()->getFieldValue($fieldId);
     }
@@ -274,9 +274,9 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     }
 
     /**
-     * @return false|QUI\ERP\Products\Interfaces\UniqueFieldInterface
+     * @return bool|QUI\ERP\Money\Price|QUI\ERP\Products\Interfaces\UniqueFieldInterface
      */
-    public function getOriginalPrice(): QUI\ERP\Products\Interfaces\UniqueFieldInterface | bool
+    public function getOriginalPrice(): QUI\ERP\Products\Interfaces\UniqueFieldInterface | QUI\ERP\Money\Price | bool
     {
         try {
             return $this->getProduct()->getOriginalPrice();
