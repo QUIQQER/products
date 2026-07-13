@@ -248,6 +248,10 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
     public function getCurrency(): QUI\ERP\Currency\Currency
     {
+        if (!$this->Currency instanceof QUI\ERP\Currency\Currency) {
+            $this->Currency = QUI\ERP\Defaults::getCurrency();
+        }
+
         return $this->Currency;
     }
 
@@ -291,7 +295,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
                     return '+' . $this->getSumFormatted();
                 }
 
-                return $this->Currency->format($this->value);
+                return $this->getCurrency()->format($this->value);
 
             case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
                 return $this->value . '%';
@@ -339,14 +343,14 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
             default:
             case QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT:
                 if ($sum > 0) {
-                    return '+' . $this->Currency->format($sum);
+                    return '+' . $this->getCurrency()->format($sum);
                 }
 
-                return $this->Currency->format($sum);
+                return $this->getCurrency()->format($sum);
 
             case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
                 if ($this->getNettoSum()) {
-                    return $this->Currency->format($sum);
+                    return $this->getCurrency()->format($sum);
                 }
 
                 return $this->value . '%';
@@ -376,14 +380,14 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
             default:
             case QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT:
                 if ($sum > 0) {
-                    return $this->Currency->format($sum);
+                    return $this->getCurrency()->format($sum);
                 }
 
-                return $this->Currency->format($sum);
+                return $this->getCurrency()->format($sum);
 
             case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
                 if ($this->getSum()) {
-                    return $this->Currency->format($sum);
+                    return $this->getCurrency()->format($sum);
                 }
 
                 return $this->value . '%';
