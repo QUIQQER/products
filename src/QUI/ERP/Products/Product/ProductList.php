@@ -41,9 +41,9 @@ class ProductList
     protected mixed $sum;
 
     /**
-     * @var ?QUI\Interfaces\Users\User
+     * @var QUI\Interfaces\Users\User
      */
-    protected QUI\Interfaces\Users\User | null $User = null;
+    protected QUI\Interfaces\Users\User $User;
 
     /**
      * @var int|float
@@ -162,7 +162,7 @@ class ProductList
             $this->calculated = true;
         }
 
-        if (!QUI::getUsers()->isUser($User)) {
+        if (!$User instanceof User) {
             $User = QUI::getUserBySession();
         }
 
@@ -183,7 +183,7 @@ class ProductList
      */
     public function setUser(null | QUI\Interfaces\Users\User $User): void
     {
-        if (QUI::getUsers()->isUser($User)) {
+        if ($User instanceof User) {
             $this->User = $User;
         }
     }
@@ -191,9 +191,9 @@ class ProductList
     /**
      * Return the list user
      *
-     * @return ?QUI\Interfaces\Users\User
+     * @return QUI\Interfaces\Users\User
      */
-    public function getUser(): QUI\Interfaces\Users\User | null
+    public function getUser(): QUI\Interfaces\Users\User
     {
         return $this->User;
     }
