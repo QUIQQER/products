@@ -12,9 +12,20 @@ use QUI\ERP\Products\Utils\Calc;
 use QUI\ERP\Products\Utils\PriceFactor;
 use QUI\ERP\Products\Utils\PriceFactors;
 use QUITests\ERP\Products\Fixtures\TestUser;
+use QUITests\ERP\Products\Integration\IntegrationTestEnvironment;
 
 class CalcScenarioTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        IntegrationTestEnvironment::ensureDefaults();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        IntegrationTestEnvironment::cleanup();
+    }
+
     public function testNettoCustomerKeepsNetPricesAndQuantities(): void
     {
         $data = $this->calculate(new TestUser(TestUser::TYPE_NETTO), 100, 3);
