@@ -77,7 +77,7 @@ class Products
         QUI\ERP\Products\Interfaces\ProductInterface | QUI\ERP\Products\Product\Model $Product,
         null | QUI\Interfaces\Users\User $User = null
     ): QUI\ERP\Money\Price {
-        if (!QUI::getUsers()->isUser($User)) {
+        if (!$User instanceof QUI\Interfaces\Users\User) {
             $User = QUI::getUsers()->getNobody();
         }
 
