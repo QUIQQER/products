@@ -63,10 +63,6 @@ class ProductListBackendView
         $Locale = $this->Locale;
         $User = $this->ProductList->getUser();
 
-        if (!$User instanceof QUI\Interfaces\Users\User) {
-            throw new QUI\Exception('Could not determine the product list user.');
-        }
-
         if ($Locale === null) {
             $Locale = $User->getLocale();
         }
