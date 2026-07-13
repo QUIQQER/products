@@ -887,7 +887,7 @@ class Model extends QUI\QDOM
             $Locale
         );
 
-        if ($result) {
+        if (is_string($result) && $result !== '') {
             return $result;
         }
 
