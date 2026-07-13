@@ -340,7 +340,7 @@ class Calc
         }
 
         // price factors
-        $priceFactors = $List->getPriceFactors()->sort();
+        $priceFactors = $List->getPriceFactors()?->sort() ?? [];
         $nettoSubSum = $nettoSum;
         $priceFactorSum = 0;
 
