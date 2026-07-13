@@ -79,7 +79,7 @@ class Calc
      */
     const CALCULATION_BASIS_BRUTTO = ErpCalc::CALCULATION_BASIS_BRUTTO;
 
-    protected ?UserInterface $User = null;
+    protected UserInterface $User;
 
     protected ?Currency $Currency = null;
 
@@ -97,7 +97,7 @@ class Calc
      */
     public function __construct(null | UserInterface $User = null)
     {
-        if (!QUI::getUsers()->isUser($User)) {
+        if (!$User instanceof UserInterface) {
             $User = QUI::getUserBySession();
         }
 
@@ -151,9 +151,9 @@ class Calc
     /**
      * Return the calc user
      *
-     * @return ?UserInterface
+     * @return UserInterface
      */
-    public function getUser(): UserInterface | null
+    public function getUser(): UserInterface
     {
         return $this->User;
     }
