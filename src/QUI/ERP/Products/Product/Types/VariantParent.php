@@ -26,7 +26,10 @@ use function explode;
 use function implode;
 use function in_array;
 use function is_array;
+use function is_float;
+use function is_int;
 use function is_numeric;
+use function is_string;
 use function json_decode;
 use function json_encode;
 use function mb_strtolower;
@@ -1373,8 +1376,16 @@ class VariantParent extends AbstractType
         $parentProductNo = $this->getFieldValue(FieldHandler::FIELD_PRODUCT_NO);
         $newNumber = $this->getVariants(['count' => true]);
 
-        if (empty($parentProductNo)) {
-            $parentProductNo = $this->getId();
+        if (is_array($newNumber)) {
+            $newNumber = count($newNumber);
+        }
+
+        if (is_int($parentProductNo) || is_float($parentProductNo)) {
+            $parentProductNo = (string)$parentProductNo;
+        }
+
+        if (!is_string($parentProductNo) || empty($parentProductNo)) {
+            $parentProductNo = (string)$this->getId();
         }
 
         $Variant->getField(FieldHandler::FIELD_PRODUCT_NO)->setValue(
