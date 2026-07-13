@@ -865,6 +865,8 @@ class Products
         // media cleanup
         try {
             $MainFolder = Products::getParentMediaFolder();
+            $Media = $MainFolder->getMedia();
+            $childIds = $MainFolder->getChildrenIds();
         } catch (QUI\Exception) {
             $Project = QUI::getProjectManager()->getStandard();
 
@@ -872,11 +874,9 @@ class Products
                 throw new QUI\Exception('Standard project is unavailable.');
             }
 
-            $MainFolder = $Project->getMedia();
+            $Media = $Project->getMedia();
+            $childIds = $Media->getChildrenIds();
         }
-
-        $Media = $MainFolder->getMedia();
-        $childIds = $MainFolder->getChildrenIds();
 
         if (!is_array($childIds)) {
             $childIds = [];
