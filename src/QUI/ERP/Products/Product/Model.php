@@ -391,6 +391,12 @@ class Model extends QUI\QDOM
             $User = QUI::getUsers()->getNobody();
         }
 
+        if (!$User instanceof QUI\Interfaces\Users\User) {
+            throw new QUI\ERP\Products\Product\Exception(
+                'Could not determine a user for the unique product.'
+            );
+        }
+
         // $Locale = $User->getLocale(); // quiqqer/order#158
         $Locale = QUI\ERP\Products\Handler\Products::getLocale();
 
