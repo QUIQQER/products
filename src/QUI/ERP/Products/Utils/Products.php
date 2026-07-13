@@ -86,6 +86,11 @@ class Products
         }
 
         $PriceField = $Product->getField(FieldHandler::FIELD_PRICE);
+
+        if (!$PriceField instanceof QUI\ERP\Products\Interfaces\UniqueFieldInterface) {
+            throw new QUI\Exception('The product price field is unavailable.');
+        }
+
         $priceValue = $PriceField->getValue();
 
         // $priceValue may be NULL or empty string; in these cases, consider the default price field value as not set.
