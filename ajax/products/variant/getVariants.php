@@ -43,7 +43,7 @@ QUI::getAjax()->registerFunction(
         }
 
         // variants w search cache
-        $children = QUI::getDataBase()->fetch([
+        $children = QUI\ERP\Products\Utils\Database::fetch([
             'select' => ['id', 'parent'],
             'from' => ProductTables::getProductTableName(),
             'where' => [
@@ -72,7 +72,7 @@ QUI::getAjax()->registerFunction(
                 $Currency = $Product->getCurrency();
             }
 
-            $searchResult = QUI::getDataBase()->fetch($queryOptions);
+            $searchResult = QUI\ERP\Products\Utils\Database::fetch($queryOptions);
 
             // get field data for AttributeGroup fields for every found VariantChild
             $searchResultIds = array_column($searchResult, 'id');
@@ -113,7 +113,7 @@ QUI::getAjax()->registerFunction(
         }, $parentAttributeGroupFields);
 
         if (!empty($searchResultIds)) {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'select' => ['id', 'fieldData'],
                 'from' => ProductTables::getProductTableName(),
                 'where' => [

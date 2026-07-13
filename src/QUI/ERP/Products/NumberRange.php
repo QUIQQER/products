@@ -2,11 +2,11 @@
 
 namespace QUI\ERP\Products;
 
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+use Doctrine\DBAL\Platforms\SQLitePlatform;
 use QUI;
-use QUI\Database\Exception;
 use QUI\ERP\Api\NumberRangeInterface;
-
-use function is_numeric;
 
 /**
  * Class Order
@@ -37,13 +37,15 @@ class NumberRange implements NumberRangeInterface
      */
     public function getRange(): int
     {
-        $Table = QUI::getDataBase()->table();
+        $QueryBuilder = QUI::getQueryBuilder();
 
-        if ($Table === null) {
-            throw new QUI\Exception('Database table handler is unavailable.');
-        }
-
-        return $Table->getAutoIncrementIndex(QUI\ERP\Products\Utils\Tables::getProductTableName());
+        return (int)$QueryBuilder
+            ->select('COALESCE(MAX(' . QUI\Utils\Doctrine::quoteIdentifier('id') . '), 0) + 1')
+            ->from(QUI\Utils\Doctrine::quoteIdentifier(
+                QUI\ERP\Products\Utils\Tables::getProductTableName()
+            ))
+            ->executeQuery()
+            ->fetchOne();
     }
 
     /**
@@ -51,17 +53,39 @@ class NumberRange implements NumberRangeInterface
      */
     public function setRange(int $range): void
     {
-        $PDO = QUI::getDataBase()->getPDO();
         $tableName = QUI\ERP\Products\Utils\Tables::getProductTableName();
+        $Connection = QUI::getDataBaseConnection();
+        $Platform = $Connection->getDatabasePlatform();
 
-        $Statement = $PDO?->prepare(
-            "ALTER TABLE $tableName AUTO_INCREMENT = " . (int)$range
-        );
-
-        if (!$Statement) {
+        if ($Platform instanceof AbstractMySQLPlatform) {
+            $Connection->executeStatement(
+                'ALTER TABLE ' . QUI\Utils\Doctrine::quoteIdentifier($tableName) . ' AUTO_INCREMENT = ' . $range
+            );
             return;
         }
 
-        $Statement->execute();
+        if ($Platform instanceof PostgreSQLPlatform) {
+            $sequence = $Connection->fetchOne(
+                'SELECT pg_get_serial_sequence(:tableName, :columnName)',
+                ['tableName' => $tableName, 'columnName' => 'id']
+            );
+
+            if (!is_string($sequence) || $sequence === '') {
+                throw new QUI\Exception('Product ID sequence is unavailable.');
+            }
+
+            $Connection->executeStatement(
+                'SELECT setval(CAST(:sequence AS regclass), :range, false)',
+                ['sequence' => $sequence, 'range' => $range]
+            );
+            return;
+        }
+
+        if ($Platform instanceof SQLitePlatform) {
+            $Connection->update('sqlite_sequence', ['seq' => $range - 1], ['name' => $tableName]);
+            return;
+        }
+
+        throw new QUI\Exception('Setting the product number range is unsupported by this database platform.');
     }
 }

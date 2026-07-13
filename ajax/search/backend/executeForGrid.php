@@ -72,7 +72,7 @@ QUI::getAjax()->registerFunction(
         }
 
         if (is_array($productIds) && count($productIds)) {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => Tables::getProductCacheTableName(),
                 'where' => [
                     'id' => [

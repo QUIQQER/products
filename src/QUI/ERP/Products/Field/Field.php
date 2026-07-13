@@ -16,6 +16,7 @@ use QUI\Locale;
 
 use function array_filter;
 use function class_exists;
+use function date;
 use function floor;
 use function get_class;
 use function is_array;
@@ -359,6 +360,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             $data['options'] = json_encode($options);
         }
 
+        $data['e_date'] = date('Y-m-d H:i:s');
+
         if (class_exists('\QUI\Watcher')) {
             QUI\Watcher::addString(
                 QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.save', [
@@ -369,7 +372,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             );
         }
 
-        QUI::getDataBase()->update(
+        QUI::getDataBaseConnection()->update(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             $data,
             ['id' => $this->getId()]
@@ -420,7 +423,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         $fieldId = $this->getId();
 
-        QUI::getDataBase()->delete(
+        QUI::getDataBaseConnection()->delete(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             ['id' => $fieldId]
         );
@@ -456,13 +459,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
 
         // delete column
-        $Tables = QUI::getDataBase()->table();
-
-        if ($Tables === null) {
-            throw new QUI\Exception('Database table handler is unavailable.');
-        }
-
-        $Tables->deleteColumn(
+        QUI\ERP\Products\Utils\Database::dropColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             Search::getSearchFieldColumnName($this)
         );
@@ -497,7 +494,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         QUI\Permissions\Permission::checkPermission('field.delete');
         QUI\Permissions\Permission::checkPermission('field.delete.systemfield');
 
-        QUI::getDataBase()->delete(
+        QUI::getDataBaseConnection()->delete(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             ['id' => $this->getId()]
         );
@@ -534,13 +531,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         );
 
         // delete column
-        $Tables = QUI::getDataBase()->table();
-
-        if ($Tables === null) {
-            throw new QUI\Exception('Database table handler is unavailable.');
-        }
-
-        $Tables->deleteColumn(
+        QUI\ERP\Products\Utils\Database::dropColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             Search::getSearchFieldColumnName($this)
         );

@@ -46,7 +46,7 @@ class Manufacturers
                 return $userIds;
             }
 
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'select' => ['id'],
                 'from' => QUI\Users\Manager::table(),
                 'where' => [
@@ -252,7 +252,7 @@ class Manufacturers
             return self::$manufacturerData[$userId];
         }
 
-        $result = QUI::getDataBase()->fetch([
+        $result = QUI\ERP\Products\Utils\Database::fetch([
             'select' => ['username', 'firstname', 'lastname', 'avatar'],
             'from' => QUI::getUsers()::table(),
             'where' => [

@@ -692,7 +692,7 @@ class VariantChild extends AbstractType
             }
         }
 
-        QUI::getDataBase()->update(
+        QUI::getDataBaseConnection()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             ['variantHash' => $this->generateVariantHash()],
             ['id' => $this->getId()]

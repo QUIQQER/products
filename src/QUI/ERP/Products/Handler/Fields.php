@@ -18,6 +18,7 @@ use function array_keys;
 use function array_merge;
 use function class_exists;
 use function count;
+use function date;
 use function dirname;
 use function file_exists;
 use function get_class;
@@ -281,13 +282,7 @@ class Fields
         }
 
         // cache colum check
-        $Tables = QUI::getDataBase()->table();
-
-        if ($Tables === null) {
-            throw new QUI\Exception('Database table handler is unavailable.');
-        }
-
-        $columns = $Tables->getColumns(
+        $columns = QUI\ERP\Products\Utils\Database::getColumns(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName()
         );
 
@@ -300,7 +295,7 @@ class Fields
 
         // id checking
         if (isset($attributes['id'])) {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                 'where' => [
                     'id' => $attributes['id']
@@ -317,7 +312,7 @@ class Fields
             $data['id'] = $attributes['id'];
         } else {
             // exist an id with 1000? field-id begin at 1000
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                 'where' => [
                     'id' => [
@@ -345,6 +340,8 @@ class Fields
             $data['name'] = '';
         }
 
+        $data['e_date'] = date('Y-m-d H:i:s');
+
         // attributelisten options 'exclude_from_variant_generation' immer auf true
         if ($data['type'] === 'AttributeGroup') {
             $options = $data['options'] ?? '';
@@ -362,12 +359,12 @@ class Fields
         }
 
         // insert field data
-        QUI::getDataBase()->insert(
+        QUI::getDataBaseConnection()->insert(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             $data
         );
 
-        $newId = (int)($data['id'] ?? QUI::getDataBase()->getPDO()?->lastInsertId());
+        $newId = (int)($data['id'] ?? QUI::getDataBaseConnection()->lastInsertId());
 
         if (class_exists('\QUI\Watcher')) {
             QUI\Watcher::addString(
@@ -458,15 +455,10 @@ class Fields
      */
     public static function createCacheColumn(string $columnName, string $columnType = 'text'): void
     {
-        $Tables = QUI::getDataBase()->table();
-
-        if ($Tables === null) {
-            throw new QUI\Exception('Database table handler is unavailable.');
-        }
-
-        $Tables->addColumn(
+        QUI\ERP\Products\Utils\Database::addColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-            [$columnName => $columnType]
+            $columnName,
+            $columnType
         );
     }
 
@@ -896,7 +888,7 @@ class Fields
             $data = QUI\Cache\LongTermCache::get($cacheName);
         } catch (QUI\Exception) {
             try {
-                $result = QUI::getDataBase()->fetch([
+                $result = QUI\ERP\Products\Utils\Database::fetch([
                     'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                     'where' => [
                         'id' => $fieldId
@@ -1060,7 +1052,7 @@ class Fields
         //$query['debug'] = true;
 
         try {
-            $result = QUI::getDataBase()->fetch($query);
+            $result = QUI\ERP\Products\Utils\Database::fetch($query);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
@@ -1152,7 +1144,7 @@ class Fields
         }
 
         try {
-            $data = QUI::getDataBase()->fetch($query);
+            $data = QUI\ERP\Products\Utils\Database::fetch($query);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addError($Exception->getMessage(), $Exception->getContext());
 

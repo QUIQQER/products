@@ -1501,7 +1501,7 @@ class Model extends QUI\QDOM
                 );
             }
 
-            QUI::getDataBase()->update(
+            QUI::getDataBaseConnection()->update(
                 QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 [
                     'parent' => $parentId,
@@ -1541,7 +1541,7 @@ class Model extends QUI\QDOM
     {
         try {
             // cache db attributes
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 'where' => [
                     'id' => $this->getId()
@@ -1983,7 +1983,7 @@ class Model extends QUI\QDOM
         }
 
         // test if cache entry exists first
-        $result = QUI::getDataBase()->fetch([
+        $result = QUI\ERP\Products\Utils\Database::fetch([
             'from' => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             'where' => [
                 'id' => $this->getId(),
@@ -1998,7 +1998,7 @@ class Model extends QUI\QDOM
             $data['id'] = $this->id;
             $data['lang'] = $lang;
 
-            QUI::getDataBase()->insert(
+            QUI::getDataBaseConnection()->insert(
                 QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
                 $data
             );
@@ -2006,7 +2006,7 @@ class Model extends QUI\QDOM
             return;
         }
 
-        QUI::getDataBase()->update(
+        QUI::getDataBaseConnection()->update(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             $data,
             [
@@ -2056,12 +2056,12 @@ class Model extends QUI\QDOM
         }
 
 
-        QUI::getDataBase()->delete(
+        QUI::getDataBaseConnection()->delete(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             ['id' => $this->getId()]
         );
 
-        QUI::getDataBase()->delete(
+        QUI::getDataBaseConnection()->delete(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             ['id' => $this->getId()]
         );
@@ -2479,7 +2479,7 @@ class Model extends QUI\QDOM
             );
         }
 
-        QUI::getDataBase()->update(
+        QUI::getDataBaseConnection()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             ['active' => 0],
             ['id' => $this->getId()]
@@ -2553,7 +2553,7 @@ class Model extends QUI\QDOM
 
         $this->active = true;
 
-        QUI::getDataBase()->update(
+        QUI::getDataBaseConnection()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             ['active' => 1],
             ['id' => $this->getId()]
@@ -2901,15 +2901,39 @@ class Model extends QUI\QDOM
      */
     protected function checkDuplicateArticleNo(string $articleNo): void
     {
-        $subQuery = "SELECT `id` FROM " . QUI\ERP\Products\Utils\Tables::getProductTableName();
-        $subQuery .= " WHERE `active` = 1 AND `parent` IS NULL";
+        $productTable = QUI\Utils\Doctrine::quoteIdentifier(
+            QUI\ERP\Products\Utils\Tables::getProductTableName()
+        );
+        $cacheTable = QUI\Utils\Doctrine::quoteIdentifier(
+            QUI\ERP\Products\Utils\Tables::getProductCacheTableName()
+        );
+        $activeParentQuery = QUI::getQueryBuilder();
+        $activeParentQuery
+            ->select(QUI\Utils\Doctrine::quoteIdentifier('id'))
+            ->from($productTable)
+            ->where($activeParentQuery->expr()->eq(QUI\Utils\Doctrine::quoteIdentifier('active'), ':parentActive'))
+            ->andWhere($activeParentQuery->expr()->isNull(QUI\Utils\Doctrine::quoteIdentifier('parent')));
 
-        $sql = "SELECT `id` FROM " . QUI\ERP\Products\Utils\Tables::getProductCacheTableName();
-        $sql .= " WHERE `id` != " . $this->getId() . " AND `active` = 1";
-        $sql .= " AND (`parentId` IS NULL or `parentId` IN(" . $subQuery . "))";
-        $sql .= " AND `productNo` = '" . $articleNo . "'";
-
-        $result = QUI::getDataBase()->fetchSQL($sql);
+        $QueryBuilder = QUI::getQueryBuilder();
+        $result = $QueryBuilder
+            ->select(QUI\Utils\Doctrine::quoteIdentifier('id'))
+            ->from($cacheTable)
+            ->where($QueryBuilder->expr()->neq(QUI\Utils\Doctrine::quoteIdentifier('id'), ':productId'))
+            ->andWhere($QueryBuilder->expr()->eq(QUI\Utils\Doctrine::quoteIdentifier('active'), ':active'))
+            ->andWhere($QueryBuilder->expr()->or(
+                $QueryBuilder->expr()->isNull(QUI\Utils\Doctrine::quoteIdentifier('parentId')),
+                $QueryBuilder->expr()->in(
+                    QUI\Utils\Doctrine::quoteIdentifier('parentId'),
+                    $activeParentQuery->getSQL()
+                )
+            ))
+            ->andWhere($QueryBuilder->expr()->eq(QUI\Utils\Doctrine::quoteIdentifier('productNo'), ':productNo'))
+            ->setParameter('productId', $this->getId())
+            ->setParameter('active', 1)
+            ->setParameter('parentActive', 1)
+            ->setParameter('productNo', $articleNo)
+            ->executeQuery()
+            ->fetchAllAssociative();
         $duplicateArticleNoProductIds = array_unique(array_column($result, 'id'));
 
         foreach ($duplicateArticleNoProductIds as $productId) {

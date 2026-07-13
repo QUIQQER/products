@@ -869,7 +869,7 @@ class EventHandling
         ];
 
         foreach ($standardFields as $field) {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                 'where' => [
                     'id' => $field['id']
@@ -882,7 +882,7 @@ class EventHandling
                     continue;
                 }
 
-                QUI::getDataBase()->update(
+                QUI::getDataBaseConnection()->update(
                     QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                     [
                         'type' => $field['type'],
@@ -985,12 +985,12 @@ class EventHandling
     public static function patchProductTypes(): void
     {
         try {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 'where' => [
                     'type' => [
                         'type' => 'LIKE%',
-                        'value' => '\\\\QUI'
+                        'value' => '\\QUI'
                     ]
                 ],
                 'limit' => 1
@@ -1000,12 +1000,17 @@ class EventHandling
                 return;
             }
 
-            $sql = "UPDATE `" . Tables::getProductTableName() . "` SET `type` = REPLACE(`type`, '\\\\QUI', 'QUI');";
-            QUI::getDataBase()->execSQL($sql);
+            foreach ([Tables::getProductTableName(), Tables::getProductCacheTableName()] as $tableName) {
+                $QueryBuilder = QUI::getQueryBuilder();
+                $typeColumn = QUI\Utils\Doctrine::quoteIdentifier('type');
 
-            $sql = "UPDATE `" . Tables::getProductCacheTableName() .
-                "` SET `type` = REPLACE(`type`, '\\\\QUI', 'QUI');";
-            QUI::getDataBase()->execSQL($sql);
+                $QueryBuilder
+                    ->update(QUI\Utils\Doctrine::quoteIdentifier($tableName))
+                    ->set($typeColumn, "REPLACE($typeColumn, :leadingNamespace, :namespace)")
+                    ->setParameter('leadingNamespace', '\\QUI')
+                    ->setParameter('namespace', 'QUI')
+                    ->executeStatement();
+            }
         } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
         }
@@ -1018,23 +1023,21 @@ class EventHandling
      */
     public static function checkProductCacheTable(): void
     {
-        $DB = QUI::getDataBase();
-        $categoryColumn = $DB->table()?->getColumn('products_cache', 'category');
+        $cacheTbl = QUI::getDBTableName('products_cache');
+        $fieldColumns = QUI\ERP\Products\Utils\Database::getColumns($cacheTbl);
+        $categoryColumn = $fieldColumns['category'] ?? null;
 
-        if (($categoryColumn['Type'] ?? null) !== 'varchar(255)') {
-            $Stmnt = QUI::getDataBase()->getPDO()?->prepare(
-                "ALTER TABLE products_cache MODIFY `category` VARCHAR(255)"
-            );
-            if ($Stmnt !== null && $Stmnt !== false) {
-                $Stmnt->execute();
-            }
+        if (
+            $categoryColumn === null ||
+            \Doctrine\DBAL\Types\Type::lookupName($categoryColumn->getType()) !== 'string' ||
+            $categoryColumn->getLength() !== 255
+        ) {
+            QUI\ERP\Products\Utils\Database::changeColumn($cacheTbl, 'category', 'VARCHAR(255)');
+            $fieldColumns = QUI\ERP\Products\Utils\Database::getColumns($cacheTbl);
         }
 
         // check field columns
-        $fieldColumns = $DB->table()?->getColumns('products_cache') ?? [];
-        $cacheTbl = QUI::getDBTableName('products_cache');
-
-        foreach ($fieldColumns as $column) {
+        foreach ($fieldColumns as $column => $Column) {
             if (mb_substr($column, 0, 1) !== 'F') {
                 continue;
             }
@@ -1044,12 +1047,12 @@ class EventHandling
             try {
                 $Field = Fields::getField($fieldId);
                 $columnTypeExpected = mb_strtolower($Field->getColumnType());
-                $columnTypeExpectedVariant = preg_replace('#[\W\d]#i', '', $columnTypeExpected);
+                $columnTypeExpectedVariant = QUI\ERP\Products\Utils\Database::normalizeColumnType(
+                    $columnTypeExpected
+                );
+                $columnTypeActual = \Doctrine\DBAL\Types\Type::lookupName($Column->getType());
 
-                $columnInfo = $DB->table()->getColumn($cacheTbl, $column);
-                $columnTypeActual = preg_replace('#[\W\d]#i', '', $columnInfo['Type']);
-
-                if ($columnTypeActual !== $columnTypeExpected && $columnTypeActual !== $columnTypeExpectedVariant) {
+                if ($columnTypeActual !== $columnTypeExpectedVariant) {
                     QUI\System\Log::addCritical(
                         'Column "' . $column . '" in table "products_cache" has wrong type!'
                         . ' Expected: ' . $columnTypeExpected . ' or ' . $columnTypeExpectedVariant
@@ -1060,7 +1063,7 @@ class EventHandling
             } catch (QUI\ERP\Products\Field\Exception $Exception) {
                 // If field was not found -> remove from cache table
                 if ($Exception->getCode() === 404) {
-                    $DB->table()->deleteColumn($cacheTbl, $column);
+                    QUI\ERP\Products\Utils\Database::dropColumn($cacheTbl, $column);
 
                     QUI\System\Log::addInfo(
                         'quiqqer/products :: Deleted column "' . $column . '" from table "' . $cacheTbl . '" because'
@@ -1390,7 +1393,7 @@ class EventHandling
             $quantity = $Article->getQuantity();
 
             try {
-                $result = QUI::getDataBase()->fetch([
+                $result = QUI\ERP\Products\Utils\Database::fetch([
                     'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                     'where' => [
                         'id' => $productId
@@ -1402,7 +1405,7 @@ class EventHandling
                     $orderCount = (int)$result[0]['orderCount'];
                     $orderCount = $orderCount + $quantity;
 
-                    QUI::getDataBase()->update(
+                    QUI::getDataBaseConnection()->update(
                         QUI\ERP\Products\Utils\Tables::getProductTableName(),
                         ['orderCount' => $orderCount],
                         ['id' => $productId]
@@ -1450,7 +1453,7 @@ class EventHandling
             $desc = '';
 
             // title
-            $titleResult = QUI::getDataBase()->fetch([
+            $titleResult = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => $translationTable,
                 'where' => [
                     'groups' => 'quiqqer/products',
@@ -1464,7 +1467,7 @@ class EventHandling
             }
 
             // desc
-            $descResult = QUI::getDataBase()->fetch([
+            $descResult = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => $translationTable,
                 'where' => [
                     'groups' => 'quiqqer/products',
@@ -1477,7 +1480,7 @@ class EventHandling
                 $desc = json_encode($descResult[0]);
             }
 
-            QUI::getDataBase()->update($categoryTable, [
+            QUI::getDataBaseConnection()->update($categoryTable, [
                 'title_cache' => $title,
                 'description_cache' => $desc
             ], [

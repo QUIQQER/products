@@ -82,7 +82,7 @@ class Categories
         }
 
         try {
-            $data = QUI::getDataBase()->fetch($query);
+            $data = QUI\ERP\Products\Utils\Database::fetch($query);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
@@ -137,7 +137,7 @@ class Categories
         try {
             $categoryData = QUI\Cache\LongTermCache::get(self::getCacheName($id));
         } catch (Exception) {
-            $data = QUI::getDataBase()->fetch([
+            $data = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
                 'where' => [
                     'id' => $id
@@ -252,7 +252,7 @@ class Categories
 
         $parentId = (int)$parentId;
 
-        $result = QUI::getDataBase()->fetch([
+        $result = QUI\ERP\Products\Utils\Database::fetch([
             'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
             'limit' => 1
         ]);
@@ -266,7 +266,7 @@ class Categories
         }
 
         if (empty($result)) {
-            QUI::getDataBase()->insert(
+            QUI::getDataBaseConnection()->insert(
                 QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
                 [
                     'parentId' => $parentId,
@@ -274,7 +274,7 @@ class Categories
                 ]
             );
         } else {
-            QUI::getDataBase()->insert(
+            QUI::getDataBaseConnection()->insert(
                 QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
                 [
                     'parentId' => $parentId
@@ -283,7 +283,7 @@ class Categories
         }
 
 
-        $newId = (int)QUI::getDataBase()->getPDO()?->lastInsertId();
+        $newId = (int)QUI::getDataBaseConnection()->lastInsertId();
 
         // translation - title
         try {
@@ -401,7 +401,7 @@ class Categories
         $result = [];
 
         try {
-            $data = QUI::getDataBase()->fetch($query);
+            $data = QUI\ERP\Products\Utils\Database::fetch($query);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 

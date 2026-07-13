@@ -199,7 +199,7 @@ class VariantParent extends AbstractType
             $data['defaultVariantId'] = null;
         }
 
-        QUI::getDataBase()->update(
+        QUI::getDataBaseConnection()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             $data,
             ['id' => $this->getId()]
@@ -225,7 +225,7 @@ class VariantParent extends AbstractType
             $categoriesValue = ',' . implode(',', $catIds) . ',';
         }
 
-        QUI::getDataBase()->update(
+        QUI::getDataBaseConnection()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             [
                 'category' => $mainCategoryValue,
@@ -264,7 +264,7 @@ class VariantParent extends AbstractType
         }
 
         // Update cache table
-        QUI::getDataBase()->update(
+        QUI::getDataBaseConnection()->update(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             [
                 'category' => $categoryValue
@@ -335,7 +335,7 @@ class VariantParent extends AbstractType
     public function getMaximumPrice(null | User $User = null): QUI\ERP\Money\Price
     {
         // kinder ids
-        $children = QUI::getDataBase()->fetch([
+        $children = QUI\ERP\Products\Utils\Database::fetch([
             'select' => ['id', 'parent'],
             'from' => Tables::getProductTableName(),
             'where' => [
@@ -351,7 +351,7 @@ class VariantParent extends AbstractType
 
         // filter
         if (!empty($childrenIds)) {
-            $maxPrices = QUI::getDataBase()->fetch([
+            $maxPrices = QUI\ERP\Products\Utils\Database::fetch([
                 'select' => 'id, maxPrice, active',
                 'from' => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
                 'where' => [
@@ -402,7 +402,7 @@ class VariantParent extends AbstractType
     public function getMinimumPrice(null | User $User = null): QUI\ERP\Money\Price
     {
         // kinder ids
-        $children = QUI::getDataBase()->fetch([
+        $children = QUI\ERP\Products\Utils\Database::fetch([
             'select' => ['id', 'parent'],
             'from' => Tables::getProductTableName(),
             'where' => [
@@ -418,7 +418,7 @@ class VariantParent extends AbstractType
         $minPrices = false;
 
         if (!empty($childrenIds)) {
-            $minPrices = QUI::getDataBase()->fetch([
+            $minPrices = QUI\ERP\Products\Utils\Database::fetch([
                 'select' => 'id, minPrice, active',
                 'from' => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
                 'where' => [
@@ -741,7 +741,7 @@ class VariantParent extends AbstractType
 //         * the search cache entries have to include all child values as well.
 //         */
 //        if (QUI::getPackage('quiqqer/products')->getConfig()?->get('variants', 'findVariantParentByChildValues')) {
-//            $result = QUI::getDataBase()->fetch([
+//            $result = QUI\ERP\Products\Utils\Database::fetch([
 //                'select' => ['id', 'fieldData'],
 //                'from'   => QUI\ERP\Products\Utils\Tables::getProductTableName(),
 //                'where'  => [
@@ -798,7 +798,7 @@ class VariantParent extends AbstractType
 //        }
 //
 //        // test if cache entry exists first
-//        $result = QUI::getDataBase()->fetch([
+//        $result = QUI\ERP\Products\Utils\Database::fetch([
 //            'from'  => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
 //            'where' => [
 //                'id'   => $this->getId(),
@@ -810,7 +810,7 @@ class VariantParent extends AbstractType
 //            $data['id']   = $this->id;
 //            $data['lang'] = $lang;
 //
-//            QUI::getDataBase()->insert(
+//            QUI::getDataBaseConnection()->insert(
 //                QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
 //                $data
 //            );
@@ -818,7 +818,7 @@ class VariantParent extends AbstractType
 //            return;
 //        }
 //
-//        QUI::getDataBase()->update(
+//        QUI::getDataBaseConnection()->update(
 //            QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
 //            $data,
 //            [
@@ -892,7 +892,7 @@ class VariantParent extends AbstractType
                 $query['select'] = ['id', 'parent'];
             }
 
-            $result = QUI::getDataBase()->fetch($query);
+            $result = QUI\ERP\Products\Utils\Database::fetch($query);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
@@ -945,7 +945,7 @@ class VariantParent extends AbstractType
     public function getVariantByVariantHash(string $hash): AbstractType
     {
         try {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'select' => 'id, variantHash',
                 'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 'where' => [
@@ -1554,7 +1554,7 @@ class VariantParent extends AbstractType
         }
 
         try {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'select' => 'id, parent, fieldData, variantHash',
                 'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 'where' => [
@@ -1613,7 +1613,7 @@ class VariantParent extends AbstractType
             $fieldHashes = QUI\Cache\LongTermCache::get($cacheName);
         } catch (QUI\Exception) {
             try {
-                $result = QUI::getDataBase()->fetch([
+                $result = QUI\ERP\Products\Utils\Database::fetch([
                     'select' => 'id, parent, fieldData, variantHash',
                     'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                     'where' => [

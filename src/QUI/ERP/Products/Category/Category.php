@@ -395,7 +395,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     public function countChildren(): int
     {
         try {
-            $data = QUI::getDataBase()->fetch([
+            $data = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
                 'count' => [
                     'select' => 'id',
@@ -576,13 +576,21 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             $projectName = $Project->getName();
             $projectLang = $Project->getLang();
 
-            // Fetch sites directly via db for performance reasons
-            $sql = "SELECT `id` FROM `" . $Project->table() . "`";
-            $sql .= " WHERE `active` = 1";
-            $sql .= " AND (`extra` LIKE '%\"quiqqer.products.settings.categoryId\":\"" . $id . "\"%'";
-            $sql .= " OR `extra` LIKE '%\"quiqqer.products.settings.categoryId\":" . $id . "%')";
-
-            $result = QUI::getDataBase()->fetchSQL($sql);
+            // Fetch sites directly via DB for performance reasons
+            $QueryBuilder = QUI::getQueryBuilder();
+            $result = $QueryBuilder
+                ->select(QUI\Utils\Doctrine::quoteIdentifier('id'))
+                ->from(QUI\Utils\Doctrine::quoteIdentifier($Project->table()))
+                ->where($QueryBuilder->expr()->eq(QUI\Utils\Doctrine::quoteIdentifier('active'), ':active'))
+                ->andWhere($QueryBuilder->expr()->or(
+                    $QueryBuilder->expr()->like(QUI\Utils\Doctrine::quoteIdentifier('extra'), ':stringCategoryId'),
+                    $QueryBuilder->expr()->like(QUI\Utils\Doctrine::quoteIdentifier('extra'), ':integerCategoryId')
+                ))
+                ->setParameter('active', 1)
+                ->setParameter('stringCategoryId', '%"quiqqer.products.settings.categoryId":"' . $id . '"%')
+                ->setParameter('integerCategoryId', '%"quiqqer.products.settings.categoryId":' . $id . '%')
+                ->executeQuery()
+                ->fetchAllAssociative();
             $idList = array_column($result, 'id');
 
             foreach ($result as $row) {
@@ -953,7 +961,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             );
         }
 
-        QUI::getDataBase()->update(
+        QUI::getDataBaseConnection()->update(
             QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
             [
                 'fields' => json_encode($fields),
@@ -1022,7 +1030,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
                 continue;
             }
 
-            QUI::getDataBase()->delete(
+            QUI::getDataBaseConnection()->delete(
                 QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
                 ['id' => $id]
             );

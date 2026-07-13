@@ -528,8 +528,13 @@ class Products
         $urlCacheField = 'F' . FieldHandler::FIELD_URL;
         $table = QUI\ERP\Products\Utils\Tables::getProductCacheTableName();
 
+        $QueryBuilder = QUI::getQueryBuilder()
+            ->select(
+                QUI\Utils\Doctrine::quoteIdentifier('id'),
+                QUI\Utils\Doctrine::quoteIdentifier($urlCacheField)
+            )
+            ->from(QUI\Utils\Doctrine::quoteIdentifier($table));
         $where = [];
-        $binds = [];
         $i = 0;
 
         foreach ($urlFieldValue as $lang => $url) {
@@ -539,11 +544,15 @@ class Products
 
             self::checkUrlLength($url, $lang, $categoryId);
 
-            $binds[':lang' . $i] = $lang;
-            $binds[':url' . $i] = $url;
-            $binds[':category' . $i] = '%,' . $categoryId . ',%';
-
-            $where[] = "(F19 LIKE :url$i AND lang LIKE :lang$i AND category LIKE :category$i)";
+            $where[] = $QueryBuilder->expr()->and(
+                $QueryBuilder->expr()->like(QUI\Utils\Doctrine::quoteIdentifier($urlCacheField), ':url' . $i),
+                $QueryBuilder->expr()->eq(QUI\Utils\Doctrine::quoteIdentifier('lang'), ':lang' . $i),
+                $QueryBuilder->expr()->like(QUI\Utils\Doctrine::quoteIdentifier('category'), ':category' . $i)
+            );
+            $QueryBuilder
+                ->setParameter('lang' . $i, $lang)
+                ->setParameter('url' . $i, $url)
+                ->setParameter('category' . $i, '%,' . $categoryId . ',%');
             $i++;
         }
 
@@ -551,27 +560,10 @@ class Products
             return;
         }
 
-        $where = implode(' OR ', $where);
-
-        $query = "
-            SELECT id, $urlCacheField 
-            FROM {$table}
-            WHERE {$where}
-        ";
-
-        $PDO = QUI::getDataBase()->getPDO();
-        $Statement = $PDO?->prepare($query);
-
-        if (!$Statement) {
-            return;
-        }
-
-        foreach ($binds as $bind => $value) {
-            $Statement->bindValue($bind, $value);
-        }
-
-        $Statement->execute();
-        $result = $Statement->fetchAll();
+        $result = $QueryBuilder
+            ->where($QueryBuilder->expr()->or(...$where))
+            ->executeQuery()
+            ->fetchAllAssociative();
 
         // no results, all is fine
         if (empty($result)) {

@@ -257,7 +257,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         }
 
         if ($min === null || $max === null) {
-            $priceResult = QUI::getDataBase()->fetch([
+            $priceResult = QUI\ERP\Products\Utils\Database::fetch([
                 'select' => 'id, minPrice, maxPrice',
                 'from' => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
                 'where' => [

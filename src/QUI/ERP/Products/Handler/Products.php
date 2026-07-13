@@ -225,7 +225,7 @@ class Products
         $field = 'F' . QUI\ERP\Products\Handler\Fields::FIELD_URL;
 
         try {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'select' => [$field, 'category', 'id'],
                 'from' => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
                 'where' => [
@@ -282,7 +282,7 @@ class Products
         $pid = (int)$pid;
 
         try {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 'where' => [
                     'id' => $pid
@@ -305,7 +305,7 @@ class Products
         if (!isset($result[0])) {
             try {
                 // if not exists, so we clean up the cache table, too
-                QUI::getDataBase()->delete(
+                QUI::getDataBaseConnection()->delete(
                     QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
                     ['id' => $pid]
                 );
@@ -380,7 +380,7 @@ class Products
         }
 
         try {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 'where' => [
                     'id' => $pid
@@ -405,7 +405,7 @@ class Products
     public static function getProductByProductNo(string $productNo): ProductTypeInterface
     {
         try {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'select' => [
                     'id'
                 ],
@@ -553,7 +553,7 @@ class Products
             $fieldData[] = $Field->toProductArray();
         }
 
-        QUI::getDataBase()->insert(
+        QUI::getDataBaseConnection()->insert(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             [
                 'fieldData' => json_encode($fieldData),
@@ -566,7 +566,7 @@ class Products
             ]
         );
 
-        $newId = (int)QUI::getDataBase()->getPDO()?->lastInsertId();
+        $newId = (int)QUI::getDataBaseConnection()->lastInsertId();
 
         if (class_exists('\QUI\Watcher')) {
             QUI\Watcher::addString(
@@ -725,14 +725,14 @@ class Products
 
         if (
             isset($queryParams['where']) &&
-            QUI\Database\DB::isWhereValid($queryParams['where'], $allowedFields)
+            QUI\ERP\Products\Utils\Database::areConditionsValid($queryParams['where'], $allowedFields)
         ) {
             $query['where'] = $queryParams['where'];
         }
 
         if (
             isset($queryParams['where_or']) &&
-            QUI\Database\DB::isWhereValid($queryParams['where_or'], $allowedFields)
+            QUI\ERP\Products\Utils\Database::areConditionsValid($queryParams['where_or'], $allowedFields)
         ) {
             $query['where_or'] = $queryParams['where_or'];
         }
@@ -743,7 +743,7 @@ class Products
 
         if (
             isset($queryParams['order']) &&
-            QUI\Database\DB::isOrderValid($queryParams['order'], $allowedFields)
+            QUI\ERP\Products\Utils\Database::isOrderValid($queryParams['order'], $allowedFields)
         ) {
             $query['order'] = $queryParams['order'];
         }
@@ -761,7 +761,7 @@ class Products
         $result = [];
 
         try {
-            $data = QUI::getDataBase()->fetch($query);
+            $data = QUI\ERP\Products\Utils\Database::fetch($query);
         } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
@@ -810,7 +810,7 @@ class Products
         }
 
         try {
-            $data = QUI::getDataBase()->fetch($query);
+            $data = QUI\ERP\Products\Utils\Database::fetch($query);
         } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
@@ -902,15 +902,27 @@ class Products
         }
 
         // Delete all product IDs from the products_cache that do not exist anymore
-        QUI::getDataBase()->delete(
-            QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-            [
-                'id' => [
-                    'type' => 'NOT IN',
-                    'value' => $ids
-                ]
-            ]
-        );
+        $QueryBuilder = QUI::getQueryBuilder()
+            ->delete(QUI\Utils\Doctrine::quoteIdentifier(
+                QUI\ERP\Products\Utils\Tables::getProductCacheTableName()
+            ));
+
+        if ($ids !== []) {
+            $placeholders = [];
+
+            foreach (array_values($ids) as $index => $id) {
+                $parameter = 'existingProduct' . $index;
+                $placeholders[] = ':' . $parameter;
+                $QueryBuilder->setParameter($parameter, $id);
+            }
+
+            $QueryBuilder->where($QueryBuilder->expr()->notIn(
+                QUI\Utils\Doctrine::quoteIdentifier('id'),
+                $placeholders
+            ));
+        }
+
+        $QueryBuilder->executeStatement();
 
         // cache cleanup
         QUI\ERP\Products\Search\Cache::clear();

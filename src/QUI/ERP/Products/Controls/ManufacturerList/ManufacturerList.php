@@ -159,7 +159,7 @@ class ManufacturerList extends QUI\Control
             $userIds = ManufacturersHandler::getManufacturerUserIds(true);
 
             if (!empty($userIds)) {
-                $result = QUI::getDataBase()->fetch([
+                $result = QUI\ERP\Products\Utils\Database::fetch([
                     'select' => ['id'],
                     'from' => $Users::table(),
                     'where' => [
