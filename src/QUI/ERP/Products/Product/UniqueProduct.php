@@ -973,6 +973,20 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         $Field = $this->getField($fieldId);
 
+        if (!$Field instanceof UniqueFieldInterface) {
+            throw new QUI\ERP\Products\Product\Exception(
+                [
+                    'quiqqer/products',
+                    'exception.field.id_in_product_not_found',
+                    [
+                        'fieldId' => $fieldId,
+                        'productId' => $this->getId()
+                    ]
+                ],
+                1002
+            );
+        }
+
         try {
             $Calc->getProductPrice(
                 $this,
