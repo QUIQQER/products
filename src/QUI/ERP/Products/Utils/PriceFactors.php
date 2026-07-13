@@ -11,6 +11,8 @@ use QUI;
 use function array_merge;
 use function class_exists;
 use function count;
+use function is_a;
+use function is_string;
 use function json_encode;
 use function strnatcmp;
 use function usort;
@@ -231,8 +233,19 @@ class PriceFactors
             $end = $list['end'];
         }
 
-        $getFactor = function ($attributes) {
-            if (isset($attributes['class']) && class_exists($attributes['class'])) {
+        $getFactor = function (
+            array $attributes
+        ): QUI\ERP\Products\Interfaces\PriceFactorInterface {
+            if (
+                isset($attributes['class'])
+                && is_string($attributes['class'])
+                && class_exists($attributes['class'])
+                && is_a(
+                    $attributes['class'],
+                    QUI\ERP\Products\Interfaces\PriceFactorInterface::class,
+                    true
+                )
+            ) {
                 return new $attributes['class']($attributes);
             }
 
