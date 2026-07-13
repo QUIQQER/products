@@ -20,4 +20,7 @@
 
     <!-- Scan everything in the current folder -->
     <file>.</file>
+
+    <!-- Historical, installation-specific examples are not part of the active test suite. -->
+    <exclude-pattern>legacy-tests/*</exclude-pattern>
 </ruleset>

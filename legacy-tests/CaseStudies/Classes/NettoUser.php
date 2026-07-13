@@ -7,16 +7,15 @@ use QUI;
 /**
  * Class BruttoUser
  */
-class BruttoUser extends QUI\Users\User
+class NettoUser extends QUI\Users\User
 {
     public function __construct()
     {
         $this->refresh();
     }
-
     public function refresh(): void
     {
-        $this->name = 'brutto_user';
+        $this->name = 'netto_user';
         $this->id = 0;
         $this->active = 1;
         $this->company = false;
@@ -27,7 +26,8 @@ class BruttoUser extends QUI\Users\User
 
         $this->setAttribute(
             'quiqqer.erp.isNettoUser',
-            QUI\ERP\Utils\User::IS_BRUTTO_USER
+            QUI\ERP\Utils\User::IS_NETTO_USER
         );
     }
 }
+

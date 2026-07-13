@@ -709,7 +709,6 @@ class Calc
                         $nettoPriceNotRounded = $PriceFactor->getValue();
 
                         $priceFactorSum = 0;
-                        $factors[] = $PriceFactor->toArray();
                         break;
 
                     // Prozent Angabe
@@ -866,6 +865,15 @@ class Calc
             if ($checkVatBrutto !== $bruttoPrice) {
                 $vatSum = $checkVat;
                 $bruttoPrice = $checkVatBrutto;
+            }
+
+            // Related: pcsg/buero#344
+            // Related: pcsg/buero#436
+            if ($nettoSum + $checkVat !== $bruttoPrice * $Product->getQuantity()) {
+                $diff = $nettoSum + $checkVat - ($bruttoPrice * $Product->getQuantity());
+
+                $vatSum = $vatSum - $diff;
+                $vatSum = round($vatSum, $Currency->getPrecision());
             }
 
             // if the user is brutto,
