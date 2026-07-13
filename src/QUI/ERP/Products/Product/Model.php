@@ -662,7 +662,14 @@ class Model extends QUI\QDOM
 
         try {
             $url = QUI\Cache\LongTermCache::get($cacheName);
-            return parse_url($url, PHP_URL_PATH);
+
+            if (is_string($url)) {
+                $path = parse_url($url, PHP_URL_PATH);
+
+                if (is_string($path)) {
+                    return $path;
+                }
+            }
         } catch (QUI\Exception) {
         }
 
