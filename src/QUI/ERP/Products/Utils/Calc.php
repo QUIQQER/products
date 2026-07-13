@@ -565,7 +565,7 @@ class Calc
             // counterbalance - gegenrechnung
             // works only for one vat entry
             if (count($vatArray) === 1) {
-                $vat = key($vatArray);
+                $vat = (float)key($vatArray);
                 $netto = $bruttoSum / ($vat / 100 + 1);
 
                 $vatSum = $bruttoSum - $netto;
