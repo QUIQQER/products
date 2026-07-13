@@ -1412,7 +1412,10 @@ class Model extends QUI\QDOM
             $urls[$lang] = QUI\Projects\Site\Utils::clearUrl($url);
         }
 
-        $fieldData[$urlKey]['value'] = $urls;
+        if ($urlKey !== null) {
+            $fieldData[$urlKey]['value'] = $urls;
+        }
+
         $this->getField(Fields::FIELD_URL)->setValue($urls);
 
         // Check if article no. is unique
