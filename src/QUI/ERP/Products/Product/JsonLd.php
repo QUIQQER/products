@@ -121,11 +121,14 @@ class JsonLd
         try {
             $User = QUI::getUsers()->get($uid);
             $Address = $User->getStandardAddress();
+            $brand = '';
 
-            $brand = $Address->getAttribute('company');
+            if ($Address instanceof QUI\Users\Address) {
+                $brand = $Address->getAttribute('company');
 
-            if (empty($brand)) {
-                $brand = $Address->getName();
+                if (empty($brand)) {
+                    $brand = $Address->getName();
+                }
             }
 
             if (empty($brand)) {
@@ -311,15 +314,17 @@ class JsonLd
     ): array {
         $MaxPrice = $Product->getMaximumPrice();
         $MinPrice = $Product->getMinimumPrice();
+        $maximumPrice = $MaxPrice->getValue();
+        $minimumPrice = $MinPrice->getValue();
 
         $offers = [];
 
-        if ($MinPrice->getValue()) {
-            $offers['lowPrice'] = $Formatter->format($MinPrice->getValue());
+        if ($minimumPrice !== null && $minimumPrice != 0) {
+            $offers['lowPrice'] = $Formatter->format($minimumPrice);
         }
 
-        if ($MaxPrice->getValue()) {
-            $offers['highPrice'] = $Formatter->format($MaxPrice->getValue());
+        if ($maximumPrice !== null && $maximumPrice != 0) {
+            $offers['highPrice'] = $Formatter->format($maximumPrice);
         }
 
         return $offers;
@@ -337,6 +342,10 @@ class JsonLd
         $User = QUI::getUsers()->getUserBySession();
         $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
         $price = $Product->getPrice()->getValue();
+
+        if ($price === null) {
+            return [];
+        }
 
         if (!QUI\ERP\Utils\User::isNettoUser($User)) {
             try {
