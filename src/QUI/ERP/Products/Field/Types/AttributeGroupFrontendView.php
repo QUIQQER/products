@@ -99,7 +99,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
         ) {
             $currentId = $this->Product->getId();
             $Variant = $this->Product->getParent();
-            $variants = $Variant?->getVariants() ?? [];
+            $variants = $Variant->getVariants();
             $entries = [];
 
             if (!is_array($variants)) {

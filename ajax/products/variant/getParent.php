@@ -24,7 +24,7 @@ QUI::getAjax()->registerFunction(
         }
 
         if ($Product instanceof VariantChild) {
-            return $Product->getParent()?->getId() ?? false;
+            return $Product->getParent()->getId();
         }
 
         return false;
