@@ -144,9 +144,9 @@ class Fields
     /**
      * Runtime cache for price factor settings
      *
-     * @var array<mixed>|bool
+     * @var array<mixed>|false
      */
-    protected static array | bool $priceFactorSettings = false;
+    protected static array | false $priceFactorSettings = false;
 
     /**
      * Return the child attributes
@@ -1273,7 +1273,7 @@ class Fields
      */
     public static function getPriceFactorSettings(): array
     {
-        if (self::$priceFactorSettings !== false) {
+        if (is_array(self::$priceFactorSettings)) {
             return self::$priceFactorSettings;
         }
 
@@ -1284,7 +1284,8 @@ class Fields
             if (empty($settings)) {
                 self::$priceFactorSettings = [];
             } else {
-                self::$priceFactorSettings = json_decode($settings, true);
+                $priceFactorSettings = json_decode($settings, true);
+                self::$priceFactorSettings = is_array($priceFactorSettings) ? $priceFactorSettings : [];
             }
         } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
