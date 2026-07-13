@@ -904,7 +904,7 @@ class Model extends QUI\QDOM
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_CONTENT, $Locale);
 
-        if ($result) {
+        if (is_string($result) && $result !== '') {
             return $result;
         }
 
