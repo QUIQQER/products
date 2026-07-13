@@ -252,8 +252,11 @@ final class IntegrationTestEnvironment
         }
 
         self::$cleanupRegistered = true;
-        register_shutdown_function(static function (): void {
-            self::cleanup();
-        });
+        QUI::getEvents()->addEvent(
+            QUI\System\TestCleanup::EVENT,
+            static function (): void {
+                self::cleanup();
+            }
+        );
     }
 }

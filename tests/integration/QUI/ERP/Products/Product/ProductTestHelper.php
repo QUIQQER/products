@@ -232,7 +232,6 @@ final class ProductTestHelper
 
         self::$categoryId = null;
         self::$siteId = null;
-        ProjectTestHelper::cleanup();
         IntegrationTestEnvironment::cleanup();
     }
 
@@ -263,16 +262,19 @@ final class ProductTestHelper
         return $siteId;
     }
 
-    private static function registerCleanup(): void
+    public static function registerCleanup(): void
     {
         if (self::$cleanupRegistered) {
             return;
         }
 
         self::$cleanupRegistered = true;
-        register_shutdown_function(static function (): void {
-            self::cleanupAll();
-        });
+        QUI::getEvents()->addEvent(
+            QUI\System\TestCleanup::EVENT,
+            static function (): void {
+                self::cleanupAll();
+            }
+        );
     }
 
     /**
