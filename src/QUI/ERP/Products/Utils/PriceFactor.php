@@ -321,9 +321,9 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     }
 
     /**
-     * @return float|bool|int
+     * @return float|int
      */
-    public function getNettoSum(): float | bool | int
+    public function getNettoSum(): float | int
     {
         return $this->nettoSum;
     }
@@ -358,9 +358,9 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     }
 
     /**
-     * @return float|bool|int
+     * @return float|int
      */
-    public function getSum(): float | bool | int
+    public function getSum(): float | int
     {
         return $this->sum;
     }
