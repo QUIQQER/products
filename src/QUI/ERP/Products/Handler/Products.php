@@ -279,6 +279,8 @@ class Products
             );
         }
 
+        $pid = (int)$pid;
+
         try {
             $result = QUI::getDataBase()->fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
