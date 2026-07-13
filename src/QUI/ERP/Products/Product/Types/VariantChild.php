@@ -333,11 +333,13 @@ class VariantChild extends AbstractType
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_CONTENT, $Locale);
 
-        $contentCheck = strip_tags((string)$result);
-        $contentCheck = trim($contentCheck);
+        if (is_string($result)) {
+            $contentCheck = strip_tags($result);
+            $contentCheck = trim($contentCheck);
 
-        if (!empty($contentCheck)) {
-            return $result;
+            if (!empty($contentCheck)) {
+                return $result;
+            }
         }
 
         return $this->getParent()->getContent($Locale);
