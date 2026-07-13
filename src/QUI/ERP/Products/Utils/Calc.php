@@ -798,18 +798,20 @@ class Calc
             // Wenn Produkt eigene VAT gesetzt hat und diese zum Benutzer passt
             $ProductVat = $Product->getField(FieldHandler::FIELD_VAT);
 
-            try {
-                $TaxType = new QUI\ERP\Tax\TaxType($ProductVat->getValue());
-                $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
+            if ($ProductVat instanceof UniqueFieldInterface) {
+                try {
+                    $TaxType = new QUI\ERP\Tax\TaxType($ProductVat->getValue());
+                    $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
 
-                if ($TaxEntry->isActive()) {
-                    $Vat = $TaxEntry;
+                    if ($TaxEntry->isActive()) {
+                        $Vat = $TaxEntry;
+                    }
+                } catch (QUI\Exception) {
+                    QUI\ERP\Debug::getInstance()->log(
+                        'Product Vat ist nicht für den Benutzer gültig',
+                        'quiqqer/products'
+                    );
                 }
-            } catch (QUI\Exception) {
-                QUI\ERP\Debug::getInstance()->log(
-                    'Product Vat ist nicht für den Benutzer gültig',
-                    'quiqqer/products'
-                );
             }
         }
 
