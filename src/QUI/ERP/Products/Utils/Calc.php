@@ -327,8 +327,8 @@ class Calc
 //        $subSum   = \round($subSum, $Currency->getPrecision());
 //        $nettoSum = \round($nettoSum, $Currency->getPrecision());
 
-        QUI\ERP\Debug::getInstance()->log('Berechnete Produktliste MwSt', 'quiqqer/product');
-        QUI\ERP\Debug::getInstance()->log($vatArray, 'quiqqer/product');
+        self::getDebug()?->log('Berechnete Produktliste MwSt', 'quiqqer/product');
+        self::getDebug()?->log($vatArray, 'quiqqer/product');
 
         try {
             QUI::getEvents()->fireEvent(
@@ -778,7 +778,7 @@ class Calc
                 $TaxType = new QUI\ERP\Tax\TaxType($Tax->getValue());
                 $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
             } catch (QUI\Exception $Exception) {
-                QUI\ERP\Debug::getInstance()->log($Exception, 'quiqqer/products');
+                self::getDebug()?->log($Exception, 'quiqqer/products');
                 continue;
             }
 
@@ -806,7 +806,7 @@ class Calc
                         $Vat = $TaxEntry;
                     }
                 } catch (QUI\Exception) {
-                    QUI\ERP\Debug::getInstance()->log(
+                    self::getDebug()?->log(
                         'Product Vat ist nicht für den Benutzer gültig',
                         'quiqqer/products'
                     );
@@ -914,12 +914,12 @@ class Calc
         }
 
 
-        QUI\ERP\Debug::getInstance()->log(
+        self::getDebug()?->log(
             'Kalkulierter Produkt Preis ' . $Product->getId(),
             'quiqqer/products'
         );
 
-        QUI\ERP\Debug::getInstance()->log([
+        self::getDebug()?->log([
             'nettoPriceNotRounded' => $nettoPriceNotRounded,
             'basisPrice' => $basisPrice,
             'price' => $price,
@@ -1129,5 +1129,17 @@ class Calc
             $this->getUser(),
             $this->Locale
         );
+    }
+
+    /**
+     * ERP versions before the non-null Debug singleton contract may return null.
+     */
+    private static function getDebug(): ?QUI\ERP\Debug
+    {
+        try {
+            return QUI\ERP\Debug::getInstance();
+        } catch (\Throwable) {
+            return null;
+        }
     }
 }

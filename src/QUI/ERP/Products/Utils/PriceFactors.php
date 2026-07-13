@@ -6,7 +6,10 @@
 
 namespace QUI\ERP\Products\Utils;
 
+use IteratorAggregate;
 use QUI;
+use QUI\ERP\Accounting\PriceFactors\Factor;
+use QUI\ERP\Accounting\PriceFactors\FactorList;
 
 use function array_merge;
 use function class_exists;
@@ -270,11 +273,11 @@ class PriceFactors
     /**
      * Return this price factor list to a none changeable erp price factor list
      *
-     * @return QUI\ERP\Accounting\PriceFactors\FactorList
+     * @return FactorList&IteratorAggregate<int, Factor>
      *
      * @throws QUI\ERP\Exception
      */
-    public function toErpPriceFactorList(): QUI\ERP\Accounting\PriceFactors\FactorList
+    public function toErpPriceFactorList(): FactorList
     {
         $list = [];
         $sorted = $this->sort();
@@ -284,6 +287,6 @@ class PriceFactors
             $list[] = $PriceFactor->toErpPriceFactor()->toArray();
         }
 
-        return new QUI\ERP\Accounting\PriceFactors\FactorList($list);
+        return new FactorList($list);
     }
 }
