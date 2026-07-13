@@ -2861,9 +2861,9 @@ class Model extends QUI\QDOM
 
                     if ($buildPriceByConcat) {
                         if (!empty($settings['rounding']['custom'])) {
-                            $targetPrice = $targetPriceInt . '.' . $settings['rounding']['custom'];
+                            $targetPrice = (float)($targetPriceInt . '.' . $settings['rounding']['custom']);
                         } else {
-                            $targetPrice = $targetPriceInt . '.' . $targetPriceDecimals;
+                            $targetPrice = (float)($targetPriceInt . '.' . $targetPriceDecimals);
                         }
                     }
 
