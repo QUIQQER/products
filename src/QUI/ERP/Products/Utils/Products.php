@@ -98,7 +98,7 @@ class Products
             $priceValue = null;
         }
 
-        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        $Currency = QUI\ERP\Defaults::getCurrency();
 
         // exists more price fields?
         // is user in group filter
