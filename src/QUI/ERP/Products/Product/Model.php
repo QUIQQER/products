@@ -1002,7 +1002,7 @@ class Model extends QUI\QDOM
      * @throws Exception
      * @throws QUI\Exception
      */
-    public function getOriginalPrice(): bool | QUI\ERP\Products\Field\UniqueField | QUI\ERP\Money\Price
+    public function getOriginalPrice(): bool | UniqueFieldInterface | QUI\ERP\Money\Price
     {
         return $this->createUniqueProduct()->getOriginalPrice();
     }
