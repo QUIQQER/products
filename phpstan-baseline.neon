@@ -1,0 +1,6 @@
+parameters:
+    ignoreErrors:
+        # Temporary compatibility for ERP versions without IteratorAggregate<int, Factor> on FactorList.
+        -
+            identifier: missingType.iterableValue
+            path: src/QUI/ERP/Products/Utils/PriceFactors.php

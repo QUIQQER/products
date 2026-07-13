@@ -1,3 +1,6 @@
+includes:
+    - phpstan-baseline.neon
+
 parameters:
     level: 8
     phpVersion:
@@ -9,6 +12,8 @@ parameters:
         - types
     bootstrapFiles:
         - tests/phpstan-bootstrap.php
+    # Remove together with phpstan-baseline.neon once the minimum ERP version types FactorList values.
+    reportUnmatchedIgnoredErrors: false
     treatPhpDocTypesAsCertain: false
     customRulesetUsed: true
 services:
