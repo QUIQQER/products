@@ -22,6 +22,7 @@ use function count;
 use function implode;
 use function in_array;
 use function is_null;
+use function is_string;
 use function str_replace;
 
 /**
@@ -165,6 +166,10 @@ class VariantChild extends AbstractType
         if (!empty($attributeListFieldValues)) {
             $shortDesc = $this->getFieldValueByLocale(Fields::FIELD_SHORT_DESC);
             $lang = QUI::getLocale()->getCurrent();
+
+            if (!is_string($shortDesc)) {
+                $shortDesc = '';
+            }
 
             $shortDescLines = [];
 
