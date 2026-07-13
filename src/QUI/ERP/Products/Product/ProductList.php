@@ -574,6 +574,10 @@ class ProductList
             $Product->convert($Currency);
         }
 
+        if (!$this->PriceFactors instanceof PriceFactors) {
+            $this->PriceFactors = new PriceFactors();
+        }
+
         $this->PriceFactors->setCurrency($this->Currency);
 
         try {
