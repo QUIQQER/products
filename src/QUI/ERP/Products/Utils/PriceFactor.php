@@ -62,9 +62,9 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     protected int | float $bruttoSum = 0;
 
     /**
-     * @var bool|float|int
+     * @var false|float|int
      */
-    protected int | bool | float $vat = false;
+    protected int | float | false $vat = false;
 
     /**
      * @var integer|float
@@ -397,9 +397,9 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * Return the specific vat  (eq: 19%)
      *
-     * @return bool|float|int
+     * @return false|float|int
      */
-    public function getVat(): float | bool | int
+    public function getVat(): float | int | false
     {
         return $this->vat;
     }
