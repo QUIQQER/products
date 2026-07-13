@@ -2533,7 +2533,15 @@ class Model extends QUI\QDOM
         // duplicate article no. check
         $articleNo = $this->getFieldValue(Fields::FIELD_PRODUCT_NO);
 
-        if (!empty($articleNo) && Products::isCheckDuplicteArticleNo()) {
+        if (is_int($articleNo) || is_float($articleNo)) {
+            $articleNo = (string)$articleNo;
+        }
+
+        if (
+            is_string($articleNo)
+            && $articleNo !== ''
+            && Products::isCheckDuplicteArticleNo()
+        ) {
             $this->checkDuplicateArticleNo($articleNo);
         }
 
