@@ -334,7 +334,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      */
     public function getPrice(): QUI\ERP\Money\Price
     {
-        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        $Currency = QUI\ERP\Defaults::getCurrency();
 
         if (is_numeric($this->value)) {
             $Price = new QUI\ERP\Money\Price((float)$this->value, $Currency);
