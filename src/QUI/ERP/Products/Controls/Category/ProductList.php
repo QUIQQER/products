@@ -40,6 +40,8 @@ class ProductList extends QUI\Control
      */
     protected ?QUI\ERP\Products\Search\FrontendSearch $Search = null;
 
+    protected bool $searchInitializationFailed = false;
+
     /**
      * @var array<mixed>|null
      */
@@ -167,10 +169,14 @@ class ProductList extends QUI\Control
         $count = 0;
 
         try {
-            $count = $this->getSearch()->search(
-                $this->getCountParams(),
-                true
-            );
+            $Search = $this->getSearch();
+
+            if ($Search instanceof FrontendSearch) {
+                $count = $Search->search(
+                    $this->getCountParams(),
+                    true
+                );
+            }
 
             if (!is_int($count)) {
                 $count = count($count);
@@ -345,7 +351,7 @@ class ProductList extends QUI\Control
             }
         }
 
-        $fields = $this->getSearch()->getSearchFieldData();
+        $fields = $this->getSearch()?->getSearchFieldData() ?? [];
 
         foreach ($fields as $field) {
             try {
@@ -463,7 +469,13 @@ class ProductList extends QUI\Control
     public function count(): int
     {
         try {
-            $count = $this->getSearch()->search(
+            $Search = $this->getSearch();
+
+            if (!$Search instanceof FrontendSearch) {
+                return 0;
+            }
+
+            $count = $Search->search(
                 $this->getCountParams(),
                 true
             );
@@ -517,7 +529,11 @@ class ProductList extends QUI\Control
 
         try {
             $searchParams = $this->getSearchParams($start, $max);
-            $result = $Search->search($searchParams);
+            $result = [];
+
+            if ($Search instanceof FrontendSearch) {
+                $result = $Search->search($searchParams);
+            }
 
             if (!is_array($result)) {
                 $result = [];
@@ -529,7 +545,11 @@ class ProductList extends QUI\Control
             }
 
             if ($count === false) {
-                $count = $Search->search($this->getCountParams(), true);
+                if ($Search instanceof FrontendSearch) {
+                    $count = $Search->search($this->getCountParams(), true);
+                } else {
+                    $count = 0;
+                }
 
                 if (!is_int($count)) {
                     $count = count($count);
@@ -785,17 +805,23 @@ class ProductList extends QUI\Control
     /**
      * Return the search
      *
-     * @return bool|FrontendSearch|null
+     * @return FrontendSearch|null
      */
-    protected function getSearch(): bool | QUI\ERP\Products\Search\FrontendSearch | null
+    protected function getSearch(): ?FrontendSearch
     {
+        if ($this->searchInitializationFailed) {
+            return null;
+        }
+
         try {
             if ($this->Search === null) {
-                $this->Search = new QUI\ERP\Products\Search\FrontendSearch($this->getSite());
+                $this->Search = new FrontendSearch($this->getSite());
             }
         } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_DEBUG);
-            $this->Search = null;
+            $this->searchInitializationFailed = true;
+            QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_ERROR);
+
+            return null;
         }
 
         return $this->Search;
