@@ -89,7 +89,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     protected ?QUI\ERP\Products\Interfaces\CategoryInterface $Category = null;
 
     /**
-     * @var QUI\ERP\Products\Interfaces\FieldInterface[]
+     * @var QUI\ERP\Products\Interfaces\UniqueFieldInterface[]
      */
     protected array $fields = [];
 
@@ -708,6 +708,11 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         $current = $Locale->getCurrent();
         $Description = $this->getField(Fields::FIELD_SHORT_DESC);
+
+        if (!$Description) {
+            return '';
+        }
+
         $values = $Description->getValue();
 
         if (is_string($values)) {
@@ -890,7 +895,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         $Price = new QUI\ERP\Money\Price(
             $this->sum,
-            QUI\ERP\Currency\Handler::getDefaultCurrency(),
+            QUI\ERP\Defaults::getCurrency(),
             $this->getUser()
         );
 
@@ -1003,7 +1008,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         if ($this->minimumPrice !== null) {
             return new QUI\ERP\Money\Price(
                 $this->minimumPrice,
-                QUI\ERP\Currency\Handler::getDefaultCurrency()
+                QUI\ERP\Defaults::getCurrency()
             );
         }
 
@@ -1021,7 +1026,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         if ($this->maximumPrice !== null) {
             return new QUI\ERP\Money\Price(
                 $this->maximumPrice,
-                QUI\ERP\Currency\Handler::getDefaultCurrency()
+                QUI\ERP\Defaults::getCurrency()
             );
         }
 
@@ -1050,7 +1055,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         return new QUI\ERP\Money\Price(
             $this->nettoPrice,
-            QUI\ERP\Currency\Handler::getDefaultCurrency()
+            QUI\ERP\Defaults::getCurrency()
         );
     }
 
