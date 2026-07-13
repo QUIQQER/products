@@ -296,7 +296,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getPrice(): QUI\ERP\Money\Price
     {
-        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        $Currency = QUI\ERP\Defaults::getCurrency();
 
         return new QUI\ERP\Money\Price(0, $Currency);
     }
@@ -1053,7 +1053,13 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             return $class;
         }
 
-        $this->type = reset($fieldTypes)['name'];
+        $fieldType = reset($fieldTypes);
+
+        if (!isset($fieldType['name']) || !is_string($fieldType['name'])) {
+            return $class;
+        }
+
+        $this->type = $fieldType['name'];
 
         return $this->type;
     }

@@ -135,13 +135,20 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
         try {
             // Offer price (Angebotspreis) - it has higher priority than retail price
             if ($Product->hasOfferPrice()) {
-                $CrossedOutPrice = new QUI\ERP\Products\Controls\Price([
-                    'Price' => new QUI\ERP\Money\Price(
-                        $Product->getOriginalPrice()->getValue(),
-                        QUI\ERP\Currency\Handler::getDefaultCurrency()
-                    ),
-                    'withVatText' => false
-                ]);
+                $OriginalPrice = $Product->getOriginalPrice();
+
+                if (
+                    $OriginalPrice instanceof QUI\ERP\Money\Price
+                    || $OriginalPrice instanceof QUI\ERP\Products\Interfaces\UniqueFieldInterface
+                ) {
+                    $CrossedOutPrice = new QUI\ERP\Products\Controls\Price([
+                        'Price' => new QUI\ERP\Money\Price(
+                            $OriginalPrice->getValue(),
+                            QUI\ERP\Defaults::getCurrency()
+                        ),
+                        'withVatText' => false
+                    ]);
+                }
             } else {
                 // retail price (UVP)
                 if (
