@@ -633,22 +633,33 @@ class ProductList extends QUI\Control
 
             // Offer price has higher priority than retail price
             if ($Product->hasOfferPrice()) {
-                $OldPrice = new QUI\ERP\Products\Controls\Price([
-                    'Price' => new QUI\ERP\Money\Price(
-                        $Product->getOriginalPrice()->getValue(),
-                        QUI\ERP\Currency\Handler::getDefaultCurrency()
-                    ),
-                    'withVatText' => false
-                ]);
-            } elseif ($Product->getFieldValue('FIELD_PRICE_RETAIL')) {
-                // retail price
-                $PriceRetail = $Product->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL)->getPrice();
+                $OriginalPrice = $Product->getOriginalPrice();
 
-                if ($Price->getPrice() < $PriceRetail->getPrice()) {
+                if (
+                    $OriginalPrice instanceof QUI\ERP\Money\Price
+                    || $OriginalPrice instanceof QUI\ERP\Products\Interfaces\UniqueFieldInterface
+                ) {
                     $OldPrice = new QUI\ERP\Products\Controls\Price([
-                        'Price' => $PriceRetail,
+                        'Price' => new QUI\ERP\Money\Price(
+                            $OriginalPrice->getValue(),
+                            QUI\ERP\Defaults::getCurrency()
+                        ),
                         'withVatText' => false
                     ]);
+                }
+            } elseif ($Product->getFieldValue('FIELD_PRICE_RETAIL')) {
+                // retail price
+                $CalculatedPrice = $Product->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL);
+
+                if ($CalculatedPrice instanceof QUI\ERP\Products\Field\UniqueField) {
+                    $PriceRetail = $CalculatedPrice->getPrice();
+
+                    if ($Price->getPrice() < $PriceRetail->getPrice()) {
+                        $OldPrice = new QUI\ERP\Products\Controls\Price([
+                            'Price' => $PriceRetail,
+                            'withVatText' => false
+                        ]);
+                    }
                 }
             }
         } catch (QUI\Exception $Exception) {
