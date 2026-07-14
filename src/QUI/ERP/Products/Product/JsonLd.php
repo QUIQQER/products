@@ -319,11 +319,11 @@ class JsonLd
 
         $offers = [];
 
-        if ($minimumPrice !== null && $minimumPrice != 0) {
+        if ($minimumPrice != 0) {
             $offers['lowPrice'] = $Formatter->format($minimumPrice);
         }
 
-        if ($maximumPrice !== null && $maximumPrice != 0) {
+        if ($maximumPrice != 0) {
             $offers['highPrice'] = $Formatter->format($maximumPrice);
         }
 
@@ -342,10 +342,6 @@ class JsonLd
         $User = QUI::getUsers()->getUserBySession();
         $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
         $price = $Product->getPrice()->getValue();
-
-        if ($price === null) {
-            return [];
-        }
 
         if (!QUI\ERP\Utils\User::isNettoUser($User)) {
             try {
