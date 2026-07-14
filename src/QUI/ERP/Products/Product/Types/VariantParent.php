@@ -26,7 +26,10 @@ use function explode;
 use function implode;
 use function in_array;
 use function is_array;
+use function is_float;
+use function is_int;
 use function is_numeric;
+use function is_string;
 use function json_decode;
 use function json_encode;
 use function mb_strtolower;
@@ -58,22 +61,22 @@ class VariantParent extends AbstractType
     const GENERATION_TYPE_ADD = 2;
 
     /**
-     * @var ?array
+     * @var array<mixed>|null
      */
     protected ?array $children = null;
 
     /**
-     * @var array|null
+     * @var array<mixed>|null
      */
     protected ?array $childFields = null;
 
     /**
-     * @var array|null
+     * @var array<mixed>|null
      */
     protected ?array $childFieldsActive = null;
 
     /**
-     * @var array|null
+     * @var array<mixed>|null
      */
     protected ?array $childFieldHashes = null;
 
@@ -81,7 +84,7 @@ class VariantParent extends AbstractType
      * Model constructor
      *
      * @param integer $pid - Product-ID
-     * @param array $product - Product Data
+     * @param array<mixed> $product - Product Data
      *
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
@@ -140,7 +143,7 @@ class VariantParent extends AbstractType
     /**
      * Internal saving method
      *
-     * @param array $fieldData - field data
+     * @param array<mixed> $fieldData - field data
      * @param null|QUI\Interfaces\Users\User $EditUser
      *
      * @throws QUI\Permissions\Exception
@@ -196,7 +199,7 @@ class VariantParent extends AbstractType
             $data['defaultVariantId'] = null;
         }
 
-        QUI::getDataBase()->update(
+        QUI::getDataBaseConnection()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             $data,
             ['id' => $this->getId()]
@@ -222,7 +225,7 @@ class VariantParent extends AbstractType
             $categoriesValue = ',' . implode(',', $catIds) . ',';
         }
 
-        QUI::getDataBase()->update(
+        QUI::getDataBaseConnection()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             [
                 'category' => $mainCategoryValue,
@@ -261,7 +264,7 @@ class VariantParent extends AbstractType
         }
 
         // Update cache table
-        QUI::getDataBase()->update(
+        QUI::getDataBaseConnection()->update(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             [
                 'category' => $categoryValue
@@ -284,6 +287,10 @@ class VariantParent extends AbstractType
 
         // delete children
         $children = $this->getVariants();
+
+        if (!is_array($children)) {
+            $children = [];
+        }
 
         foreach ($children as $Child) {
             try {
@@ -328,7 +335,7 @@ class VariantParent extends AbstractType
     public function getMaximumPrice(null | User $User = null): QUI\ERP\Money\Price
     {
         // kinder ids
-        $children = QUI::getDataBase()->fetch([
+        $children = QUI\ERP\Products\Utils\Database::fetch([
             'select' => ['id', 'parent'],
             'from' => Tables::getProductTableName(),
             'where' => [
@@ -344,7 +351,7 @@ class VariantParent extends AbstractType
 
         // filter
         if (!empty($childrenIds)) {
-            $maxPrices = QUI::getDataBase()->fetch([
+            $maxPrices = QUI\ERP\Products\Utils\Database::fetch([
                 'select' => 'id, maxPrice, active',
                 'from' => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
                 'where' => [
@@ -381,7 +388,7 @@ class VariantParent extends AbstractType
 
         return new QUI\ERP\Money\Price(
             (float)$maxPrices[0]['maxPrice'],
-            $this->getCurrency() ?: QUI\ERP\Currency\Handler::getDefaultCurrency(),
+            $this->getCurrency() ?: QUI\ERP\Defaults::getCurrency(),
             $User
         );
     }
@@ -395,7 +402,7 @@ class VariantParent extends AbstractType
     public function getMinimumPrice(null | User $User = null): QUI\ERP\Money\Price
     {
         // kinder ids
-        $children = QUI::getDataBase()->fetch([
+        $children = QUI\ERP\Products\Utils\Database::fetch([
             'select' => ['id', 'parent'],
             'from' => Tables::getProductTableName(),
             'where' => [
@@ -411,7 +418,7 @@ class VariantParent extends AbstractType
         $minPrices = false;
 
         if (!empty($childrenIds)) {
-            $minPrices = QUI::getDataBase()->fetch([
+            $minPrices = QUI\ERP\Products\Utils\Database::fetch([
                 'select' => 'id, minPrice, active',
                 'from' => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
                 'where' => [
@@ -448,7 +455,7 @@ class VariantParent extends AbstractType
 
         return new QUI\ERP\Money\Price(
             (float)$minPrices[0]['minPrice'],
-            $this->getCurrency() ?: QUI\ERP\Currency\Handler::getDefaultCurrency(),
+            $this->getCurrency() ?: QUI\ERP\Defaults::getCurrency(),
             $User
         );
     }
@@ -457,8 +464,8 @@ class VariantParent extends AbstractType
      * Return all images of the product
      * The Variant Parent return all images of the children, too
      *
-     * @param array $params - optional, select params
-     * @return array
+     * @param array<mixed> $params - optional, select params
+     * @return array<mixed>
      */
     public function getImages(array $params = []): array
     {
@@ -486,15 +493,23 @@ class VariantParent extends AbstractType
         $images = [];
         $children = $this->getVariants();
 
+        if (!is_array($children)) {
+            $children = [];
+        }
+
         try {
             $images = $this->getMediaFolder()->getImages($params);
+
+            if (!is_array($images)) {
+                $images = [];
+            }
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addDebug($Exception->getMessage());
         }
 
         try {
             $Config = QUI::getPackage('quiqqer/products')->getConfig();
-            $parentHasChildImages = !!$Config->getValue('variants', 'parentHasChildImages');
+            $parentHasChildImages = !!$Config?->getValue('variants', 'parentHasChildImages');
         } catch (QUI\Exception) {
             $parentHasChildImages = true;
         }
@@ -503,7 +518,10 @@ class VariantParent extends AbstractType
             foreach ($children as $Child) {
                 try {
                     $childImages = $Child->getMediaFolder()->getImages($params);
-                    $images = array_merge($images, $childImages);
+
+                    if (is_array($childImages)) {
+                        $images = array_merge($images, $childImages);
+                    }
                 } catch (QUI\Exception $Exception) {
                     QUI\System\Log::addDebug($Exception->getMessage());
                 }
@@ -561,6 +579,10 @@ class VariantParent extends AbstractType
 
         $children = $this->getVariants();
 
+        if (!is_array($children)) {
+            $children = [];
+        }
+
         foreach ($children as $Child) {
             $Child->addField($Field);
             $Child->save();
@@ -579,6 +601,10 @@ class VariantParent extends AbstractType
         parent::removeField($Field);
 
         $children = $this->getVariants();
+
+        if (!is_array($children)) {
+            $children = [];
+        }
 
         foreach ($children as $Child) {
             $Child->removeField($Field);
@@ -714,8 +740,8 @@ class VariantParent extends AbstractType
 //         * If the VariantParent shall also be found when searching for values of its VariantChildren
 //         * the search cache entries have to include all child values as well.
 //         */
-//        if (QUI::getPackage('quiqqer/products')->getConfig()->get('variants', 'findVariantParentByChildValues')) {
-//            $result = QUI::getDataBase()->fetch([
+//        if (QUI::getPackage('quiqqer/products')->getConfig()?->get('variants', 'findVariantParentByChildValues')) {
+//            $result = QUI\ERP\Products\Utils\Database::fetch([
 //                'select' => ['id', 'fieldData'],
 //                'from'   => QUI\ERP\Products\Utils\Tables::getProductTableName(),
 //                'where'  => [
@@ -772,7 +798,7 @@ class VariantParent extends AbstractType
 //        }
 //
 //        // test if cache entry exists first
-//        $result = QUI::getDataBase()->fetch([
+//        $result = QUI\ERP\Products\Utils\Database::fetch([
 //            'from'  => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
 //            'where' => [
 //                'id'   => $this->getId(),
@@ -784,7 +810,7 @@ class VariantParent extends AbstractType
 //            $data['id']   = $this->id;
 //            $data['lang'] = $lang;
 //
-//            QUI::getDataBase()->insert(
+//            QUI::getDataBaseConnection()->insert(
 //                QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
 //                $data
 //            );
@@ -792,7 +818,7 @@ class VariantParent extends AbstractType
 //            return;
 //        }
 //
-//        QUI::getDataBase()->update(
+//        QUI::getDataBaseConnection()->update(
 //            QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
 //            $data,
 //            [
@@ -807,8 +833,8 @@ class VariantParent extends AbstractType
     /**
      * Return all variants
      *
-     * @param array $params - query params
-     * @return array|int
+     * @param array<mixed> $params - query params
+     * @return array<mixed>|int
      *
      * @todo cache
      */
@@ -866,7 +892,7 @@ class VariantParent extends AbstractType
                 $query['select'] = ['id', 'parent'];
             }
 
-            $result = QUI::getDataBase()->fetch($query);
+            $result = QUI\ERP\Products\Utils\Database::fetch($query);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
@@ -919,7 +945,7 @@ class VariantParent extends AbstractType
     public function getVariantByVariantHash(string $hash): AbstractType
     {
         try {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'select' => 'id, variantHash',
                 'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 'where' => [
@@ -956,7 +982,7 @@ class VariantParent extends AbstractType
     /**
      * Generate all variants from the given field combinations
      *
-     * @param array $fields - list of field values
+     * @param array<mixed> $fields - list of field values
      *  [
      *      [
      *          fieldId => 1111,
@@ -980,6 +1006,10 @@ class VariantParent extends AbstractType
         // delete all children and generate new ones
         if ($generationType === self::GENERATION_TYPE_RESET) {
             $children = $this->getVariants();
+
+            if (!is_array($children)) {
+                $children = [];
+            }
 
             foreach ($children as $Child) {
                 try {
@@ -1097,8 +1127,8 @@ class VariantParent extends AbstractType
     /**
      * Generate permutation array (all combinations) from a php array list
      *
-     * @param array $lists
-     * @return array
+     * @param array<mixed> $lists
+     * @return array<mixed>
      */
     protected function permutations(array $lists): array
     {
@@ -1172,7 +1202,7 @@ class VariantParent extends AbstractType
      * Create a variant by a field array
      * - the url will be adapted to the list fields under certain circumstances
      *
-     * @param array $fields
+     * @param array<mixed> $fields
      * @return VariantChild
      *
      * @throws Exception
@@ -1346,8 +1376,16 @@ class VariantParent extends AbstractType
         $parentProductNo = $this->getFieldValue(FieldHandler::FIELD_PRODUCT_NO);
         $newNumber = $this->getVariants(['count' => true]);
 
-        if (empty($parentProductNo)) {
-            $parentProductNo = $this->getId();
+        if (is_array($newNumber)) {
+            $newNumber = count($newNumber);
+        }
+
+        if (is_int($parentProductNo) || is_float($parentProductNo)) {
+            $parentProductNo = (string)$parentProductNo;
+        }
+
+        if (!is_string($parentProductNo) || empty($parentProductNo)) {
+            $parentProductNo = (string)$this->getId();
         }
 
         $Variant->getField(FieldHandler::FIELD_PRODUCT_NO)->setValue(
@@ -1355,7 +1393,7 @@ class VariantParent extends AbstractType
         );
 
         // set URL
-        if (!QUI::getPackage('quiqqer/products')->getConfig()->get('variants', 'useAttributesForVariantUrl')) {
+        if (!QUI::getPackage('quiqqer/products')->getConfig()?->get('variants', 'useAttributesForVariantUrl')) {
             $Variant->save();
 
             return $Variant;
@@ -1465,7 +1503,7 @@ class VariantParent extends AbstractType
      * -> parent variant can have non-valid attribute fields and non-valid attribute groups.
      * -> the children have to validate them.
      *
-     * @return array
+     * @return array<mixed>
      *
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
@@ -1507,7 +1545,7 @@ class VariantParent extends AbstractType
      * return all available fields from the variant children
      * this array contains all field ids and field values that are in use in the children
      *
-     * @return array|null
+     * @return array<mixed>|null
      */
     public function availableChildFields(): ?array
     {
@@ -1516,7 +1554,7 @@ class VariantParent extends AbstractType
         }
 
         try {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'select' => 'id, parent, fieldData, variantHash',
                 'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 'where' => [
@@ -1535,7 +1573,7 @@ class VariantParent extends AbstractType
     /**
      * Get all field values of attribute groups and attribute lists of children products that are active
      *
-     * @return array|null
+     * @return array<mixed>|null
      */
     public function availableActiveChildFields(): ?array
     {
@@ -1551,7 +1589,7 @@ class VariantParent extends AbstractType
     /**
      * Get all hashes of attribute groups and attribute lists of children products that are active
      *
-     * @return array|null
+     * @return array<mixed>|null
      */
     public function availableActiveFieldHashes(): ?array
     {
@@ -1575,7 +1613,7 @@ class VariantParent extends AbstractType
             $fieldHashes = QUI\Cache\LongTermCache::get($cacheName);
         } catch (QUI\Exception) {
             try {
-                $result = QUI::getDataBase()->fetch([
+                $result = QUI\ERP\Products\Utils\Database::fetch([
                     'select' => 'id, parent, fieldData, variantHash',
                     'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                     'where' => [
@@ -1598,8 +1636,8 @@ class VariantParent extends AbstractType
     }
 
     /**
-     * @param array $result - all variant children field hashes
-     * @return array
+     * @param array<mixed> $result - all variant children field hashes
+     * @return array<mixed>
      */
     protected function parseAvailableFields(array $result): array
     {
@@ -1678,6 +1716,10 @@ class VariantParent extends AbstractType
     public function hasVariantId(int $variantId): bool
     {
         $variants = $this->getVariants();
+
+        if (!is_array($variants)) {
+            $variants = [];
+        }
 
         foreach ($variants as $Variant) {
             if ($variantId === $Variant->getId()) {

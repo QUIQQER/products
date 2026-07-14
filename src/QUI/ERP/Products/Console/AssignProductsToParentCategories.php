@@ -82,8 +82,10 @@ class AssignProductsToParentCategories extends QUI\System\Console\Tool
         $assign = function (QUI\ERP\Products\Interfaces\CategoryInterface $Category) use ($Product, &$assign) {
             $Product->addCategory($Category);
 
-            if ($Category->getParent()) {
-                $assign($Category->getParent());
+            $Parent = $Category->getParent();
+
+            if ($Parent instanceof QUI\ERP\Products\Interfaces\CategoryInterface) {
+                $assign($Parent);
             }
         };
 

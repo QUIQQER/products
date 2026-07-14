@@ -59,7 +59,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             $value = '';
         }
 
-        $value = htmlspecialchars($value);
+        $value = htmlspecialchars((string)$value);
         $Engine = QUI::getTemplateManager()->getEngine();
 
         $Engine->assign([
@@ -77,6 +77,10 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
         ) {
             $variants = $this->Product->getVariants();
             $entries = [];
+
+            if (!is_array($variants)) {
+                $variants = [];
+            }
 
             foreach ($variants as $Variants) {
                 if ($Variants->isActive()) {
@@ -97,6 +101,10 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             $Variant = $this->Product->getParent();
             $variants = $Variant->getVariants();
             $entries = [];
+
+            if (!is_array($variants)) {
+                $variants = [];
+            }
 
             foreach ($variants as $Variants) {
                 if ($Variants->isActive()) {
@@ -176,7 +184,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
         if (!$optionsAvailable) {
             $Conf = QUI\ERP\Products\Utils\Package::getConfig();
 
-            if ($Conf->getValue('variants', 'hideAttributeGroupsWithNoOptions')) {
+            if ($Conf?->getValue('variants', 'hideAttributeGroupsWithNoOptions')) {
                 return '';
             }
         }
@@ -208,7 +216,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             $value = '';
         }
 
-        $value = htmlspecialchars($value);
+        $value = htmlspecialchars((string)$value);
         $Engine = QUI::getTemplateManager()->getEngine();
 
         $Engine->assign([

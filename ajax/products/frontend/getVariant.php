@@ -81,7 +81,7 @@ QUI::getAjax()->registerFunction(
                     ) {
                         if (
                             $ignoreDefaultVariant
-                            && PackageUtils::getConfig()->getValue('products', 'resetFieldsAction')
+                            && PackageUtils::getConfig()?->getValue('products', 'resetFieldsAction')
                         ) {
                             $Field->clearDefaultValue();
                         }
@@ -99,8 +99,13 @@ QUI::getAjax()->registerFunction(
 
             if (!$ExceptionStack->isEmpty()) {
                 $list = $ExceptionStack->getExceptionList();
+                $Exception = $list[0] ?? null;
 
-                throw new $list[0]();
+                if ($Exception instanceof Throwable) {
+                    throw $Exception;
+                }
+
+                throw new QUI\Exception('Variant field validation failed.');
             }
 
             try {

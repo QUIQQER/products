@@ -45,7 +45,13 @@ QUI::getAjax()->registerFunction(
             }
 
             $variantUrl = trim($variantUrl, '/');
-            $categoryId = $Product->getCategory()->getId();
+            $Category = $Product->getCategory();
+
+            if ($Category === null) {
+                return [];
+            }
+
+            $categoryId = $Category->getId();
 
             try {
                 $Variant = ProductHandler::getProductByUrl($variantUrl, $categoryId);

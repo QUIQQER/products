@@ -41,9 +41,9 @@ class ProductList
     protected mixed $sum;
 
     /**
-     * @var ?QUI\Interfaces\Users\User
+     * @var QUI\Interfaces\Users\User
      */
-    protected QUI\Interfaces\Users\User | null $User = null;
+    protected QUI\Interfaces\Users\User $User;
 
     /**
      * @var int|float
@@ -67,7 +67,7 @@ class ProductList
 
     /**
      * key 19% value[sum] = sum value[text] = text value[display_sum] formatiert
-     * @var array
+     * @var array<mixed>
      */
     protected mixed $vatArray = [];
 
@@ -101,7 +101,7 @@ class ProductList
 
     /**
      * Currency information
-     * @var array
+     * @var array<mixed>
      */
     protected mixed $currencyData = [
         'currency_sign' => '',
@@ -136,7 +136,7 @@ class ProductList
     /**
      * ProductList constructor.
      *
-     * @param array $params - optional, list settings
+     * @param array<mixed> $params - optional, list settings
      * @param User|null $User - optional, User for calculation
      */
     public function __construct(array $params = [], null | QUI\Interfaces\Users\User $User = null)
@@ -162,7 +162,7 @@ class ProductList
             $this->calculated = true;
         }
 
-        if (!QUI::getUsers()->isUser($User)) {
+        if (!$User instanceof User) {
             $User = QUI::getUserBySession();
         }
 
@@ -183,7 +183,7 @@ class ProductList
      */
     public function setUser(null | QUI\Interfaces\Users\User $User): void
     {
-        if (QUI::getUsers()->isUser($User)) {
+        if ($User instanceof User) {
             $this->User = $User;
         }
     }
@@ -191,9 +191,9 @@ class ProductList
     /**
      * Return the list user
      *
-     * @return ?QUI\Interfaces\Users\User
+     * @return QUI\Interfaces\Users\User
      */
-    public function getUser(): QUI\Interfaces\Users\User | null
+    public function getUser(): QUI\Interfaces\Users\User
     {
         return $this->User;
     }
@@ -303,7 +303,7 @@ class ProductList
     /**
      * Return the products
      *
-     * @return QUI\ERP\Products\Interfaces\ProductInterface[]
+     * @return array<int, UniqueProduct>
      */
     public function getProducts(): array
     {
@@ -358,7 +358,7 @@ class ProductList
             $fieldValue = $Field->getValue();
 
             if (is_array($fieldValue)) {
-                $fieldValue = md5(json_encode($fieldValue));
+                $fieldValue = md5((string)json_encode($fieldValue));
             }
 
             if (!is_string($fieldValue) && !is_numeric($fieldValue)) {
@@ -420,7 +420,7 @@ class ProductList
      * Return the products as array list
      *
      * @param null|QUI\Locale $Locale - optional
-     * @return array
+     * @return array<mixed>
      *
      * @throws QUI\Exception
      */
@@ -499,7 +499,7 @@ class ProductList
      */
     public function toJSON(): string
     {
-        return json_encode($this->toArray());
+        return json_encode($this->toArray()) ?: '';
     }
 
     //region Price methods
@@ -574,6 +574,10 @@ class ProductList
             $Product->convert($Currency);
         }
 
+        if (!$this->PriceFactors instanceof PriceFactors) {
+            $this->PriceFactors = new PriceFactors();
+        }
+
         $this->PriceFactors->setCurrency($this->Currency);
 
         try {
@@ -586,9 +590,9 @@ class ProductList
     /**
      * Return the currency
      *
-     * @return Currency|null
+     * @return Currency
      */
-    public function getCurrency(): ?QUI\ERP\Currency\Currency
+    public function getCurrency(): QUI\ERP\Currency\Currency
     {
         if ($this->Currency !== null) {
             return $this->Currency;

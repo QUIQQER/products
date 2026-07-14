@@ -78,17 +78,17 @@ class EventHandling
         } catch (QUI\Exception) {
             // no produkt folder, we create one
             $Project = QUI::getProjectManager()->getStandard();
-            $Media = $Project->getMedia();
+            $Media = $Project?->getMedia();
 
-            $Folder = $Media->firstChild();
+            $Folder = $Media?->firstChild();
 
             try {
-                $Products = $Folder->createFolder('Products');
-                $Products->activate();
+                $Products = $Folder?->createFolder('Products');
+                $Products?->activate();
 
                 $Config = QUI::getPackage('quiqqer/products')->getConfig();
-                $Config->set('products', 'folder', $Products->getUrl());
-                $Config->save();
+                $Config?->set('products', 'folder', $Products?->getUrl());
+                $Config?->save();
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addWarning($Exception->getMessage());
             }
@@ -111,7 +111,7 @@ class EventHandling
         }
 
         // Check current config for fields that may not exist anymore
-        $editableFields = $Config->getSection('editableFields');
+        $editableFields = $Config?->getSection('editableFields');
 
         if (!empty($editableFields) && is_array($editableFields)) {
             foreach ($editableFields as $fieldId => $active) {
@@ -134,7 +134,7 @@ class EventHandling
             $Config->setSection('editableFields', $editableFields);
         }
 
-        $inheritedFields = $Config->getSection('inheritedFields');
+        $inheritedFields = $Config?->getSection('inheritedFields');
 
         if (!empty($inheritedFields) && is_array($inheritedFields)) {
             foreach ($inheritedFields as $fieldId => $active) {
@@ -196,14 +196,14 @@ class EventHandling
 
         try {
             foreach ($defaultEditableFields as $fieldId) {
-                $Config->set('editableFields', (string)$fieldId, 1);
+                $Config?->set('editableFields', (string)$fieldId, 1);
             }
 
             foreach ($defaultInheritedFields as $fieldId) {
-                $Config->set('inheritedFields', (string)$fieldId, 1);
+                $Config?->set('inheritedFields', (string)$fieldId, 1);
             }
 
-            $Config->save();
+            $Config?->save();
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
         }
@@ -869,7 +869,7 @@ class EventHandling
         ];
 
         foreach ($standardFields as $field) {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                 'where' => [
                     'id' => $field['id']
@@ -882,7 +882,7 @@ class EventHandling
                     continue;
                 }
 
-                QUI::getDataBase()->update(
+                QUI::getDataBaseConnection()->update(
                     QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                     [
                         'type' => $field['type'],
@@ -985,12 +985,12 @@ class EventHandling
     public static function patchProductTypes(): void
     {
         try {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 'where' => [
                     'type' => [
                         'type' => 'LIKE%',
-                        'value' => '\\\\QUI'
+                        'value' => '\\QUI'
                     ]
                 ],
                 'limit' => 1
@@ -1000,12 +1000,17 @@ class EventHandling
                 return;
             }
 
-            $sql = "UPDATE `" . Tables::getProductTableName() . "` SET `type` = REPLACE(`type`, '\\\\QUI', 'QUI');";
-            QUI::getDataBase()->execSQL($sql);
+            foreach ([Tables::getProductTableName(), Tables::getProductCacheTableName()] as $tableName) {
+                $QueryBuilder = QUI::getQueryBuilder();
+                $typeColumn = QUI\Utils\Doctrine::quoteIdentifier('type');
 
-            $sql = "UPDATE `" . Tables::getProductCacheTableName() .
-                "` SET `type` = REPLACE(`type`, '\\\\QUI', 'QUI');";
-            QUI::getDataBase()->execSQL($sql);
+                $QueryBuilder
+                    ->update(QUI\Utils\Doctrine::quoteIdentifier($tableName))
+                    ->set($typeColumn, "REPLACE($typeColumn, :leadingNamespace, :namespace)")
+                    ->setParameter('leadingNamespace', '\\QUI')
+                    ->setParameter('namespace', 'QUI')
+                    ->executeStatement();
+            }
         } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
         }
@@ -1018,19 +1023,21 @@ class EventHandling
      */
     public static function checkProductCacheTable(): void
     {
-        $DB = QUI::getDataBase();
-        $categoryColumn = $DB->table()->getColumn('products_cache', 'category');
+        $cacheTbl = QUI::getDBTableName('products_cache');
+        $fieldColumns = QUI\ERP\Products\Utils\Database::getColumns($cacheTbl);
+        $categoryColumn = $fieldColumns['category'] ?? null;
 
-        if ($categoryColumn['Type'] !== 'varchar(255)') {
-            $Stmnt = QUI::getDataBase()->getPDO()->prepare("ALTER TABLE products_cache MODIFY `category` VARCHAR(255)");
-            $Stmnt->execute();
+        if (
+            $categoryColumn === null ||
+            \Doctrine\DBAL\Types\Type::lookupName($categoryColumn->getType()) !== 'string' ||
+            $categoryColumn->getLength() !== 255
+        ) {
+            QUI\ERP\Products\Utils\Database::changeColumn($cacheTbl, 'category', 'VARCHAR(255)');
+            $fieldColumns = QUI\ERP\Products\Utils\Database::getColumns($cacheTbl);
         }
 
         // check field columns
-        $fieldColumns = $DB->table()->getColumns('products_cache');
-        $cacheTbl = QUI::getDBTableName('products_cache');
-
-        foreach ($fieldColumns as $column) {
+        foreach ($fieldColumns as $column => $Column) {
             if (mb_substr($column, 0, 1) !== 'F') {
                 continue;
             }
@@ -1040,12 +1047,12 @@ class EventHandling
             try {
                 $Field = Fields::getField($fieldId);
                 $columnTypeExpected = mb_strtolower($Field->getColumnType());
-                $columnTypeExpectedVariant = preg_replace('#[\W\d]#i', '', $columnTypeExpected);
+                $columnTypeExpectedVariant = QUI\ERP\Products\Utils\Database::normalizeColumnType(
+                    $columnTypeExpected
+                );
+                $columnTypeActual = \Doctrine\DBAL\Types\Type::lookupName($Column->getType());
 
-                $columnInfo = $DB->table()->getColumn($cacheTbl, $column);
-                $columnTypeActual = preg_replace('#[\W\d]#i', '', $columnInfo['Type']);
-
-                if ($columnTypeActual !== $columnTypeExpected && $columnTypeActual !== $columnTypeExpectedVariant) {
+                if ($columnTypeActual !== $columnTypeExpectedVariant) {
                     QUI\System\Log::addCritical(
                         'Column "' . $column . '" in table "products_cache" has wrong type!'
                         . ' Expected: ' . $columnTypeExpected . ' or ' . $columnTypeExpectedVariant
@@ -1056,7 +1063,7 @@ class EventHandling
             } catch (QUI\ERP\Products\Field\Exception $Exception) {
                 // If field was not found -> remove from cache table
                 if ($Exception->getCode() === 404) {
-                    $DB->table()->deleteColumn($cacheTbl, $column);
+                    QUI\ERP\Products\Utils\Database::dropColumn($cacheTbl, $column);
 
                     QUI\System\Log::addInfo(
                         'quiqqer/products :: Deleted column "' . $column . '" from table "' . $cacheTbl . '" because'
@@ -1171,11 +1178,11 @@ class EventHandling
         $Site = new Edit($Project, $newId);
         $Config = $Package->getConfig();
 
-        if ($Config->getValue('products', 'categoryShowFilterLeft')) {
+        if ($Config?->getValue('products', 'categoryShowFilterLeft')) {
             $Site->setAttribute('quiqqer.products.settings.showFilterLeft', 1);
         }
 
-        if ($Config->getValue('products', 'categoryAsFilter')) {
+        if ($Config?->getValue('products', 'categoryAsFilter')) {
             $Site->setAttribute('quiqqer.products.settings.categoryAsFilter', 1);
         }
 
@@ -1210,7 +1217,7 @@ class EventHandling
 
         if (empty($fieldsIds) && $Site->getAttribute('quiqqer.products.settings.searchFieldIds.edited') === false) {
             $Package = QUI::getPackage('quiqqer/products');
-            $defaultIds = $Package->getConfig()->get('search', 'frontend');
+            $defaultIds = $Package->getConfig()?->get('search', 'frontend');
 
             if ($defaultIds) {
                 $defaultIds = explode(',', $defaultIds);
@@ -1248,7 +1255,7 @@ class EventHandling
      * event: onPackageInstall
      *
      * @param Package $Package
-     * @param array $params
+     * @param array<mixed> $params
      * @throws QUI\Exception
      */
     public static function onPackageConfigSave(Package $Package, array $params): void
@@ -1273,7 +1280,7 @@ class EventHandling
             $hide = 1;
         }
 
-        $frontendAnimation = (int)QUI\ERP\Products\Utils\Package::getConfig()->get(
+        $frontendAnimation = (int)QUI\ERP\Products\Utils\Package::getConfig()?->get(
             'products',
             'frontendAnimationDuration'
         );
@@ -1291,7 +1298,7 @@ class EventHandling
      * event: on set permission to object
      *
      * @param QUI\Users\User|QUI\Groups\Group|QUI\Projects\Project|QUI\Projects\Site|QUI\Projects\Site\Edit $Obj
-     * @param array $permissions
+     * @param array<mixed> $permissions
      *
      * @throws QUI\Exception
      */
@@ -1306,7 +1313,7 @@ class EventHandling
      * event : on request
      *
      * @param QUI\Rewrite $Rewrite
-     * @param $url
+     * @param mixed $url
      */
     public static function onRequest(QUI\Rewrite $Rewrite, $url): void
     {
@@ -1333,7 +1340,7 @@ class EventHandling
         }
 
         try {
-            $Product = Handler\Products::getProduct($params[1]);
+            $Product = Handler\Products::getProduct((int)$params[1]);
             $Project = $Rewrite->getProject();
             $productUrl = $Product->getUrl();
 
@@ -1350,16 +1357,18 @@ class EventHandling
                 'There is no product category for the products. Please create a product category in your project.'
             );
 
-            $Site = $Project->firstChild();
-            $Site->setAttribute('type', 'quiqqer/products:types/category');
-            $Site->setAttribute('quiqqer.products.settings.categoryId', 0);
-            $Site->setAttribute('quiqqer.products.fake.type', 1);
-            $Site->setAttribute('layout', 'layout/noSidebar');
-            $Site->setAttribute('quiqqer.bricks.areas', '');
+            $Site = $Project?->firstChild();
+            $Site?->setAttribute('type', 'quiqqer/products:types/category');
+            $Site?->setAttribute('quiqqer.products.settings.categoryId', 0);
+            $Site?->setAttribute('quiqqer.products.fake.type', 1);
+            $Site?->setAttribute('layout', 'layout/noSidebar');
+            $Site?->setAttribute('quiqqer.bricks.areas', '');
 
             $_REQUEST['_url'] = '';
 
-            $Rewrite->setSite($Site);
+            if ($Site !== null) {
+                $Rewrite->setSite($Site);
+            }
         } catch (QUI\Exception) {
         }
     }
@@ -1380,12 +1389,11 @@ class EventHandling
         $Articles = $Order->getArticles();
 
         foreach ($Articles as $Article) {
-            /* @var $Article QUI\ERP\Accounting\Article */
             $productId = $Article->getId();
             $quantity = $Article->getQuantity();
 
             try {
-                $result = QUI::getDataBase()->fetch([
+                $result = QUI\ERP\Products\Utils\Database::fetch([
                     'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                     'where' => [
                         'id' => $productId
@@ -1397,7 +1405,7 @@ class EventHandling
                     $orderCount = (int)$result[0]['orderCount'];
                     $orderCount = $orderCount + $quantity;
 
-                    QUI::getDataBase()->update(
+                    QUI::getDataBaseConnection()->update(
                         QUI\ERP\Products\Utils\Tables::getProductTableName(),
                         ['orderCount' => $orderCount],
                         ['id' => $productId]
@@ -1412,7 +1420,7 @@ class EventHandling
      * @param string $group
      * @param string $var
      * @param string $packageName
-     * @param array $data
+     * @param array<mixed> $data
      */
     public static function onQuiqqerTranslatorEdit(
         string $group,
@@ -1445,7 +1453,7 @@ class EventHandling
             $desc = '';
 
             // title
-            $titleResult = QUI::getDataBase()->fetch([
+            $titleResult = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => $translationTable,
                 'where' => [
                     'groups' => 'quiqqer/products',
@@ -1459,7 +1467,7 @@ class EventHandling
             }
 
             // desc
-            $descResult = QUI::getDataBase()->fetch([
+            $descResult = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => $translationTable,
                 'where' => [
                     'groups' => 'quiqqer/products',
@@ -1472,7 +1480,7 @@ class EventHandling
                 $desc = json_encode($descResult[0]);
             }
 
-            QUI::getDataBase()->update($categoryTable, [
+            QUI::getDataBaseConnection()->update($categoryTable, [
                 'title_cache' => $title,
                 'description_cache' => $desc
             ], [
@@ -1486,8 +1494,8 @@ class EventHandling
     /**
      * event: on quiqqer translator edit by id
      *
-     * @param $id
-     * @param $data
+     * @param mixed $id
+     * @param mixed $data
      */
     public static function onQuiqqerTranslatorEditById($id, $data): void
     {
@@ -1502,6 +1510,7 @@ class EventHandling
      * Update category title & description locale
      *
      * @deprecated replaced by onQuiqqerTranslatorEditById & onQuiqqerTranslatorEdit
+     * @return void
      */
     public static function onQuiqqerTranslatorPublish()
     {

@@ -7,7 +7,7 @@
 /**
  * Return all product types
  *
- * @return array
+ * @return array<mixed>
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_getProductTypes',
@@ -18,6 +18,16 @@ QUI::getAjax()->registerFunction(
         $result = [];
 
         foreach ($types as $type) {
+            if (
+                !is_string($type)
+                || !is_callable([$type, 'getTypeTitle'])
+                || !is_callable([$type, 'getTypeDescription'])
+                || !is_callable([$type, 'getTypeBackendPanel'])
+                || !is_callable([$type, 'isTypeSelectable'])
+            ) {
+                continue;
+            }
+
             $title = call_user_func([$type, 'getTypeTitle']);
             $description = call_user_func([$type, 'getTypeDescription']);
             $panel = call_user_func([$type, 'getTypeBackendPanel']);

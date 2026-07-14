@@ -28,3 +28,4 @@ class CompanyUser extends QUI\Users\User
         $this->setAttribute('quiqqer.erp.euVatId', 'DE263620766');
     }
 }
+

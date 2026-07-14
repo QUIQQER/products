@@ -51,7 +51,7 @@ class JsonLd
      * @param ProductInterface $Product
      * @param null|QUI\Locale $Locale - optional
      *
-     * @return array
+     * @return array<mixed>
      */
     public static function parse(
         ProductInterface $Product,
@@ -78,7 +78,7 @@ class JsonLd
 
     /**
      * @param ProductInterface $Product
-     * @return array
+     * @return array<mixed>
      */
     protected static function getSKU(ProductInterface $Product): array
     {
@@ -91,7 +91,7 @@ class JsonLd
 
     /**
      * @param ProductInterface $Product
-     * @return array
+     * @return array<mixed>
      */
     protected static function getGTIN(ProductInterface $Product): array
     {
@@ -104,7 +104,7 @@ class JsonLd
 
     /**
      * @param ProductInterface $Product
-     * @return array
+     * @return array<mixed>
      */
     protected static function getBrand(ProductInterface $Product): array
     {
@@ -121,11 +121,14 @@ class JsonLd
         try {
             $User = QUI::getUsers()->get($uid);
             $Address = $User->getStandardAddress();
+            $brand = '';
 
-            $brand = $Address->getAttribute('company');
+            if ($Address instanceof QUI\Users\Address) {
+                $brand = $Address->getAttribute('company');
 
-            if (empty($brand)) {
-                $brand = $Address->getName();
+                if (empty($brand)) {
+                    $brand = $Address->getName();
+                }
             }
 
             if (empty($brand)) {
@@ -149,7 +152,7 @@ class JsonLd
      * Return the image array
      *
      * @param ProductInterface $Product
-     * @return array
+     * @return array<mixed>
      */
     protected static function getImages(ProductInterface $Product): array
     {
@@ -169,7 +172,7 @@ class JsonLd
 
         // only show the main product image
         try {
-            if (QUI::getPackage('quiqqer/products')->getConfig()->get('products', 'onlyProductImageAtJsonLd')) {
+            if (QUI::getPackage('quiqqer/products')->getConfig()?->get('products', 'onlyProductImageAtJsonLd')) {
                 return [
                     'image' => $images
                 ];
@@ -208,7 +211,7 @@ class JsonLd
      * @param ProductInterface $Product
      * @param QUI\Locale|null $Locale
      *
-     * @return array
+     * @return array<mixed>
      */
     protected static function getOffer(ProductInterface $Product, ?QUI\Locale $Locale = null): array
     {
@@ -269,6 +272,10 @@ class JsonLd
         $models = [];
         $variants = $Product->getVariants();
 
+        if (!is_array($variants)) {
+            $variants = [];
+        }
+
         foreach ($variants as $Variant) {
             if (!$Variant->isActive()) {
                 continue;
@@ -299,7 +306,7 @@ class JsonLd
      * @param ProductInterface $Product
      * @param NumberFormatter $Formatter
      *
-     * @return array
+     * @return array<mixed>
      */
     protected static function getMaxMin(
         ProductInterface $Product,
@@ -307,15 +314,17 @@ class JsonLd
     ): array {
         $MaxPrice = $Product->getMaximumPrice();
         $MinPrice = $Product->getMinimumPrice();
+        $maximumPrice = $MaxPrice->getValue();
+        $minimumPrice = $MinPrice->getValue();
 
         $offers = [];
 
-        if ($MinPrice->getValue()) {
-            $offers['lowPrice'] = $Formatter->format($MinPrice->getValue());
+        if ($minimumPrice != 0) {
+            $offers['lowPrice'] = $Formatter->format($minimumPrice);
         }
 
-        if ($MaxPrice->getValue()) {
-            $offers['highPrice'] = $Formatter->format($MaxPrice->getValue());
+        if ($maximumPrice != 0) {
+            $offers['highPrice'] = $Formatter->format($maximumPrice);
         }
 
         return $offers;
@@ -324,7 +333,7 @@ class JsonLd
     /**
      * @param ProductInterface $Product
      * @param NumberFormatter $Formatter
-     * @return array
+     * @return array<mixed>
      */
     protected static function getOfferEntry(
         ProductInterface $Product,
@@ -393,7 +402,7 @@ class JsonLd
 
     /**
      * @param string $name
-     * @param array $arguments
+     * @param array<mixed> $arguments
      * @return void
      */
     public function __call(string $name, array $arguments)

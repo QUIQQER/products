@@ -30,7 +30,7 @@ class Folder extends QUI\ERP\Products\Field\Field
     /**
      * GroupList constructor.
      * @param int $fieldId
-     * @param array $params
+     * @param array<mixed> $params
      */
     public function __construct(int $fieldId, array $params)
     {
@@ -172,7 +172,7 @@ class Folder extends QUI\ERP\Products\Field\Field
     /**
      * Return the current value
      *
-     * @return string|array
+     * @return string|array<mixed>
      */
     public function getValue(): mixed
     {

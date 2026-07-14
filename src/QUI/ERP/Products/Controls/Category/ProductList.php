@@ -40,14 +40,16 @@ class ProductList extends QUI\Control
      */
     protected ?QUI\ERP\Products\Search\FrontendSearch $Search = null;
 
+    protected bool $searchInitializationFailed = false;
+
     /**
-     * @var array|null
+     * @var array<mixed>|null
      */
     protected ?array $filter = null;
 
     /**
      * Sorting fields -> can be added via addSort
-     * @var array
+     * @var array<mixed>
      */
     protected array $sort = [];
 
@@ -61,7 +63,7 @@ class ProductList extends QUI\Control
     /**
      * constructor
      *
-     * @param array $attributes
+     * @param array<mixed> $attributes
      * @throws Exception
      */
     public function __construct(array $attributes = [])
@@ -133,24 +135,24 @@ class ProductList extends QUI\Control
         }
 
         if (!$categoryPos) {
-            $this->setAttribute('categoryPos', $Config->get('products', 'categoryPos'));
+            $this->setAttribute('categoryPos', $Config?->get('products', 'categoryPos'));
         }
 
         // global settings: product load number
         if ($this->getAttribute('productLoadNumber') == '' || !$this->getAttribute('productLoadNumber')) {
-            $this->setAttribute('productLoadNumber', $Config->get('products', 'productLoadNumber'));
+            $this->setAttribute('productLoadNumber', $Config?->get('products', 'productLoadNumber'));
         }
 
         // global settings: product autoload after x clicks
         if ($this->getAttribute('autoloadAfter') == '' || !$this->getAttribute('autoloadAfter')) {
-            $this->setAttribute('autoloadAfter', $Config->get('products', 'autoloadAfter'));
+            $this->setAttribute('autoloadAfter', $Config?->get('products', 'autoloadAfter'));
         }
 
         // global settings: open product mode (normal or asynchronously)
         $openProductMode = match ($this->getAttribute('openProductMode')) {
             'async' => 1,
             'normal' => 0,
-            default => $Config->get('products', 'openProductAsync')
+            default => $Config?->get('products', 'openProductAsync')
         };
 
         $this->setAttribute('data-project', $this->getSite()->getProject()->getName());
@@ -167,10 +169,18 @@ class ProductList extends QUI\Control
         $count = 0;
 
         try {
-            $count = $this->getSearch()->search(
-                $this->getCountParams(),
-                true
-            );
+            $Search = $this->getSearch();
+
+            if ($Search instanceof FrontendSearch) {
+                $count = $Search->search(
+                    $this->getCountParams(),
+                    true
+                );
+            }
+
+            if (!is_int($count)) {
+                $count = count($count);
+            }
 
             if ($Category) {
                 $this->setAttribute('data-cid', $Category->getId());
@@ -314,7 +324,7 @@ class ProductList extends QUI\Control
     /**
      * Return the available filter in sorted sequence
      *
-     * @return array|null
+     * @return array<mixed>|null
      * @throws Exception
      */
     public function getFilter(): ?array
@@ -341,7 +351,7 @@ class ProductList extends QUI\Control
             }
         }
 
-        $fields = $this->getSearch()->getSearchFieldData();
+        $fields = $this->getSearch()?->getSearchFieldData() ?? [];
 
         foreach ($fields as $field) {
             try {
@@ -428,7 +438,7 @@ class ProductList extends QUI\Control
      * Return the first articles as html array
      *
      * @param boolean|integer $count - (optional) count of the children
-     * @return array [html, count, more]
+     * @return array<mixed> [html, count, more]
      *
      * @throws QUI\Exception
      */
@@ -442,7 +452,7 @@ class ProductList extends QUI\Control
      *
      * @param boolean|integer $start - (optional) start position
      * @param boolean|integer $count - (optional) count of the children
-     * @return array [html, count, more]
+     * @return array<mixed> [html, count, more]
      *
      * @throws QUI\Exception
      */
@@ -459,10 +469,18 @@ class ProductList extends QUI\Control
     public function count(): int
     {
         try {
-            return $this->getSearch()->search(
+            $Search = $this->getSearch();
+
+            if (!$Search instanceof FrontendSearch) {
+                return 0;
+            }
+
+            $count = $Search->search(
                 $this->getCountParams(),
                 true
             );
+
+            return is_int($count) ? $count : count($count);
         } catch (QUI\Exception) {
             return 0;
         }
@@ -474,7 +492,7 @@ class ProductList extends QUI\Control
      * @param boolean|integer $start - (optional) start position
      * @param boolean|integer $max - (optional) max children
      * @param boolean|integer $count - (optional) count of the children
-     * @return array [html, count, more]
+     * @return array<mixed> [html, count, more]
      *
      * @throws QUI\Exception
      */
@@ -504,12 +522,22 @@ class ProductList extends QUI\Control
             $start = 1;
         }
 
+        $start = (int)$start;
+
         $more = true;
         $Search = $this->getSearch();
 
         try {
             $searchParams = $this->getSearchParams($start, $max);
-            $result = $Search->search($searchParams);
+            $result = [];
+
+            if ($Search instanceof FrontendSearch) {
+                $result = $Search->search($searchParams);
+            }
+
+            if (!is_array($result)) {
+                $result = [];
+            }
 
             // Send searched fields to frontend
             if (!empty($searchParams['fields'])) {
@@ -517,7 +545,15 @@ class ProductList extends QUI\Control
             }
 
             if ($count === false) {
-                $count = $Search->search($this->getCountParams(), true);
+                if ($Search instanceof FrontendSearch) {
+                    $count = $Search->search($this->getCountParams(), true);
+                } else {
+                    $count = 0;
+                }
+
+                if (!is_int($count)) {
+                    $count = count($count);
+                }
             }
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_NOTICE);
@@ -538,7 +574,7 @@ class ProductList extends QUI\Control
 
         foreach ($result as $product) {
             try {
-                $products[] = Products::getProduct($product);
+                $products[] = Products::getProduct((int)$product);
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
             }
@@ -597,22 +633,33 @@ class ProductList extends QUI\Control
 
             // Offer price has higher priority than retail price
             if ($Product->hasOfferPrice()) {
-                $OldPrice = new QUI\ERP\Products\Controls\Price([
-                    'Price' => new QUI\ERP\Money\Price(
-                        $Product->getOriginalPrice()->getValue(),
-                        QUI\ERP\Currency\Handler::getDefaultCurrency()
-                    ),
-                    'withVatText' => false
-                ]);
-            } elseif ($Product->getFieldValue('FIELD_PRICE_RETAIL')) {
-                // retail price
-                $PriceRetail = $Product->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL)->getPrice();
+                $OriginalPrice = $Product->getOriginalPrice();
 
-                if ($Price->getPrice() < $PriceRetail->getPrice()) {
+                if (
+                    $OriginalPrice instanceof QUI\ERP\Money\Price
+                    || $OriginalPrice instanceof QUI\ERP\Products\Interfaces\UniqueFieldInterface
+                ) {
                     $OldPrice = new QUI\ERP\Products\Controls\Price([
-                        'Price' => $PriceRetail,
+                        'Price' => new QUI\ERP\Money\Price(
+                            $OriginalPrice->getValue(),
+                            QUI\ERP\Defaults::getCurrency()
+                        ),
                         'withVatText' => false
                     ]);
+                }
+            } elseif ($Product->getFieldValue('FIELD_PRICE_RETAIL')) {
+                // retail price
+                $CalculatedPrice = $Product->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL);
+
+                if ($CalculatedPrice instanceof QUI\ERP\Products\Field\UniqueField) {
+                    $PriceRetail = $CalculatedPrice->getPrice();
+
+                    if ($Price->getPrice() < $PriceRetail->getPrice()) {
+                        $OldPrice = new QUI\ERP\Products\Controls\Price([
+                            'Price' => $PriceRetail,
+                            'withVatText' => false
+                        ]);
+                    }
                 }
             }
         } catch (QUI\Exception $Exception) {
@@ -625,7 +672,7 @@ class ProductList extends QUI\Control
     /**
      * Render the category list
      *
-     * @param array $categories - list of site categories
+     * @param array<mixed> $categories - list of site categories
      * @param string $categoryTpl - view type tpl
      * @return string
      * @throws QUI\Exception|\Exception
@@ -648,7 +695,7 @@ class ProductList extends QUI\Control
      *
      * @param integer $start - start
      * @param bool|integer $max - optional, ax
-     * @return array|mixed
+     * @return array<mixed>|mixed
      *
      * @throws QUI\Exception
      */
@@ -683,7 +730,7 @@ class ProductList extends QUI\Control
     }
 
     /**
-     * @return array|mixed
+     * @return array<mixed>|mixed
      *
      * @throws QUI\Exception
      */
@@ -769,17 +816,23 @@ class ProductList extends QUI\Control
     /**
      * Return the search
      *
-     * @return bool|FrontendSearch|null
+     * @return FrontendSearch|null
      */
-    protected function getSearch(): bool | QUI\ERP\Products\Search\FrontendSearch | null
+    protected function getSearch(): ?FrontendSearch
     {
+        if ($this->searchInitializationFailed) {
+            return null;
+        }
+
         try {
             if ($this->Search === null) {
-                $this->Search = new QUI\ERP\Products\Search\FrontendSearch($this->getSite());
+                $this->Search = new FrontendSearch($this->getSite());
             }
         } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_DEBUG);
-            $this->Search = null;
+            $this->searchInitializationFailed = true;
+            QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_ERROR);
+
+            return null;
         }
 
         return $this->Search;
@@ -791,10 +844,16 @@ class ProductList extends QUI\Control
      */
     protected function getSite(): QUI\Interfaces\Projects\Site
     {
-        if ($this->getAttribute('Site')) {
-            return $this->getAttribute('Site');
+        $Site = $this->getAttribute('Site');
+
+        if (!$Site instanceof QUI\Interfaces\Projects\Site) {
+            $Site = QUI::getRewrite()->getSite();
         }
 
-        return QUI::getRewrite()->getSite();
+        if (!$Site instanceof QUI\Interfaces\Projects\Site) {
+            throw new QUI\Exception('Could not determine the product list site.');
+        }
+
+        return $Site;
     }
 }

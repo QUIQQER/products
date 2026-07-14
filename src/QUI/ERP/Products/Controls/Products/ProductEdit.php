@@ -22,7 +22,7 @@ class ProductEdit extends QUI\Control
     /**
      * constructor
      *
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -59,7 +59,7 @@ class ProductEdit extends QUI\Control
         $customFields = [];
 
         foreach ($Product->getFields() as $Field) {
-            if (method_exists($Field, 'isCustomField') && $Field->isCustomField()) {
+            if (is_object($Field) && method_exists($Field, 'isCustomField') && $Field->isCustomField()) {
                 $customFields[] = $Field;
             }
         }

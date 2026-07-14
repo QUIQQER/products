@@ -16,6 +16,7 @@ use QUI\Locale;
 
 use function array_filter;
 use function class_exists;
+use function date;
 use function floor;
 use function get_class;
 use function is_array;
@@ -64,6 +65,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
     protected mixed $defaultValue = null;
 
+    /** @var array<mixed> */
     protected array $options = [];
 
     /**
@@ -93,6 +95,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     protected string $columnType = 'LONGTEXT';
 
+    /** @var array<mixed> */
     protected array $searchTypes = [];
 
     /**
@@ -101,7 +104,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     protected int | bool $searchDataType = false;
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected array $titles = [];
 
@@ -118,7 +121,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * Model constructor.
      *
      * @param integer $fieldId
-     * @param array $params - optional, field params (system, require, standard)
+     * @param array<mixed> $params - optional, field params (system, require, standard)
      */
     public function __construct(int $fieldId, array $params = [])
     {
@@ -216,7 +219,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the field data for a view
      *
-     * @return array
+     * @return array<mixed>
      */
     protected function getFieldDataForView(): array
     {
@@ -294,7 +297,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getPrice(): QUI\ERP\Money\Price
     {
-        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        $Currency = QUI\ERP\Defaults::getCurrency();
 
         return new QUI\ERP\Money\Price(0, $Currency);
     }
@@ -357,6 +360,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             $data['options'] = json_encode($options);
         }
 
+        $data['e_date'] = date('Y-m-d H:i:s');
+
         if (class_exists('\QUI\Watcher')) {
             QUI\Watcher::addString(
                 QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.save', [
@@ -367,7 +372,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             );
         }
 
-        QUI::getDataBase()->update(
+        QUI::getDataBaseConnection()->update(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             $data,
             ['id' => $this->getId()]
@@ -418,7 +423,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         $fieldId = $this->getId();
 
-        QUI::getDataBase()->delete(
+        QUI::getDataBaseConnection()->delete(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             ['id' => $fieldId]
         );
@@ -454,7 +459,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
 
         // delete column
-        QUI::getDataBase()->table()->deleteColumn(
+        QUI\ERP\Products\Utils\Database::dropColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             Search::getSearchFieldColumnName($this)
         );
@@ -489,7 +494,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         QUI\Permissions\Permission::checkPermission('field.delete');
         QUI\Permissions\Permission::checkPermission('field.delete.systemfield');
 
-        QUI::getDataBase()->delete(
+        QUI::getDataBaseConnection()->delete(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             ['id' => $this->getId()]
         );
@@ -526,7 +531,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         );
 
         // delete column
-        QUI::getDataBase()->table()->deleteColumn(
+        QUI\ERP\Products\Utils\Database::dropColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             Search::getSearchFieldColumnName($this)
         );
@@ -696,7 +701,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
-     * @param array|string $options - field options
+     * @param array<mixed>|string $options - field options
      */
     public function setOptions(array | string $options): void
     {
@@ -814,7 +819,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * Return value for use in product search cache
      *
      * @param Locale|null $Locale
-     * @return string|array|null
+     * @return string|array<mixed>|null
      */
     public function getSearchCacheValue(?Locale $Locale = null): null | string | array
     {
@@ -826,7 +831,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getOptions(): array
     {
@@ -1039,7 +1044,13 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             return $class;
         }
 
-        $this->type = reset($fieldTypes)['name'];
+        $fieldType = reset($fieldTypes);
+
+        if (!isset($fieldType['name']) || !is_string($fieldType['name'])) {
+            return $class;
+        }
+
+        $this->type = $fieldType['name'];
 
         return $this->type;
     }
@@ -1075,7 +1086,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Get all available search types for this field
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getSearchTypes(): array
     {
@@ -1099,7 +1110,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the attributes
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getAttributes(): array
     {
@@ -1135,7 +1146,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the attributes for a unique field
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getAttributesForUniqueField(): array
     {
@@ -1188,7 +1199,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the field attributes for a product
      *
-     * @return array
+     * @return array<mixed>
      */
     public function toProductArray(): array
     {
@@ -1262,7 +1273,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @param float|integer $min
      * @param float|integer $max
-     * @return array - contains values from min to max with calculated steps in between
+     * @return array<mixed> - contains values from min to max with calculated steps in between
      */
     public function calculateValueRange(float | int $min, float | int $max): array
     {
@@ -1331,7 +1342,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
-     * @param $Product - Product instance
+     * @param mixed $Product - Product instance
      */
     public function setProduct($Product): void
     {

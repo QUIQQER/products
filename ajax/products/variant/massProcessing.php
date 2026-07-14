@@ -7,7 +7,7 @@
 /**
  * Activate a product
  *
- * @param string|array $productIds - Product-ID
+ * @param string|array<mixed> $productIds - Product-ID
  */
 
 use QUI\ERP\Products\Handler\Products;

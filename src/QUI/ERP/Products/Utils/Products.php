@@ -44,7 +44,7 @@ class Products
      * - QUI\ERP\Products\Product\Model
      * - QUI\ERP\Products\Product\Product
      *
-     * @param $mixed
+     * @param mixed $mixed
      * @return bool
      */
     public static function isProduct($mixed): bool
@@ -77,7 +77,7 @@ class Products
         QUI\ERP\Products\Interfaces\ProductInterface | QUI\ERP\Products\Product\Model $Product,
         null | QUI\Interfaces\Users\User $User = null
     ): QUI\ERP\Money\Price {
-        if (!QUI::getUsers()->isUser($User)) {
+        if (!$User instanceof QUI\Interfaces\Users\User) {
             $User = QUI::getUsers()->getNobody();
         }
 
@@ -86,6 +86,11 @@ class Products
         }
 
         $PriceField = $Product->getField(FieldHandler::FIELD_PRICE);
+
+        if (!$PriceField instanceof QUI\ERP\Products\Interfaces\UniqueFieldInterface) {
+            throw new QUI\Exception('The product price field is unavailable.');
+        }
+
         $priceValue = $PriceField->getValue();
 
         // $priceValue may be NULL or empty string; in these cases, consider the default price field value as not set.
@@ -93,7 +98,7 @@ class Products
             $priceValue = null;
         }
 
-        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        $Currency = QUI\ERP\Defaults::getCurrency();
 
         // exists more price fields?
         // is user in group filter
@@ -146,7 +151,7 @@ class Products
                 $FieldClass->setValue($Field->getValue());
             }
 
-            if (method_exists($FieldClass, 'onGetPriceFieldForProduct')) {
+            if (is_object($FieldClass) && method_exists($FieldClass, 'onGetPriceFieldForProduct')) {
                 try {
                     $value = $FieldClass->onGetPriceFieldForProduct($Product, $User);
                 } catch (QUI\Exception $Exception) {
@@ -178,7 +183,7 @@ class Products
      * editable fields can be changed by the user via the GUI
      *
      * @param ProductTypeInterface|null $Product
-     * @return array
+     * @return array<mixed>
      */
     public static function getEditableFieldIdsForProduct(null | ProductTypeInterface $Product = null): array
     {
@@ -207,7 +212,7 @@ class Products
             return [];
         }
 
-        $fields = $Config->getSection('editableFields');
+        $fields = $Config?->getSection('editableFields');
 
         if ($fields) {
             $fieldIds = [];
@@ -232,7 +237,7 @@ class Products
      * Return the inherited fields for the project
      *
      * @param ProductTypeInterface|null $Product
-     * @return array
+     * @return array<mixed>
      */
     public static function getInheritedFieldIdsForProduct(null | ProductTypeInterface $Product = null): array
     {
@@ -261,7 +266,7 @@ class Products
             return [];
         }
 
-        $fields = $Config->getSection('inheritedFields');
+        $fields = $Config?->getSection('inheritedFields');
 
         if ($fields) {
             $fieldIds = [];
@@ -286,7 +291,7 @@ class Products
     /**
      * Return generate variant hash
      *
-     * @param array $fields - could be a field array [Field, Field, Field],
+     * @param array<mixed> $fields - could be a field array<mixed> [Field, Field, Field],
      *                        or could be a field object list ['field-1':2, 'field-1':'value']
      * @return string
      */
@@ -318,7 +323,7 @@ class Products
                     $fieldValue = '';
                 }
 
-                $fieldValue = implode(unpack("H*", $fieldValue));
+                $fieldValue = implode(unpack("H*", $fieldValue) ?: []);
             }
 
             $hash[] = $fieldId . ':' . $fieldValue;
@@ -359,7 +364,7 @@ class Products
         $currentVariantHash = Products::generateVariantHashFromFields($groupList);
         $searchHashes = FieldUtils::getSearchHashesFromFieldHash($currentVariantHash);
 
-        foreach ($availableHashes as $hash) {
+        foreach ($availableHashes ?? [] as $hash) {
             $hashArray = FieldUtils::parseFieldHashToArray($hash);
 
             foreach ($hashArray as $fieldId => $fieldValue) {
@@ -418,7 +423,7 @@ class Products
                 $hashedValueId = false;
 
                 if (!is_numeric($valueId)) {
-                    $hashedValueId = implode(unpack("H*", $valueId));
+                    $hashedValueId = implode(unpack("H*", $valueId) ?: []);
 
                     if (!isset($allowed[$valueId]) && !isset($allowed[$hashedValueId])) {
                         continue;
@@ -451,7 +456,7 @@ class Products
 
     /**
      * @param QUI\ERP\Products\Product\Product $Product
-     * @return array
+     * @return array<mixed>
      */
     public static function getJsFieldHashArray(QUI\ERP\Products\Product\Product $Product): array
     {
@@ -465,7 +470,7 @@ class Products
         $availableHashes = $Product->availableActiveFieldHashes();
         $result = [];
 
-        foreach ($availableHashes as $hash) {
+        foreach ($availableHashes ?? [] as $hash) {
             $hashArray = FieldUtils::parseFieldHashToArray($hash);
 
             foreach ($hashArray as $fieldId => $value) {
@@ -485,7 +490,7 @@ class Products
     /**
      * Is the product a variant product
      *
-     * @param $Product
+     * @param mixed $Product
      * @return bool
      */
     public static function isVariant($Product): bool
@@ -505,7 +510,7 @@ class Products
     }
 
     /**
-     * @param array $urlFieldValue
+     * @param array<mixed> $urlFieldValue
      * @param integer $categoryId
      * @param bool|integer $ignoreProductId - optional
      *
@@ -523,8 +528,13 @@ class Products
         $urlCacheField = 'F' . FieldHandler::FIELD_URL;
         $table = QUI\ERP\Products\Utils\Tables::getProductCacheTableName();
 
+        $QueryBuilder = QUI::getQueryBuilder()
+            ->select(
+                QUI\Utils\Doctrine::quoteIdentifier('id'),
+                QUI\Utils\Doctrine::quoteIdentifier($urlCacheField)
+            )
+            ->from(QUI\Utils\Doctrine::quoteIdentifier($table));
         $where = [];
-        $binds = [];
         $i = 0;
 
         foreach ($urlFieldValue as $lang => $url) {
@@ -534,11 +544,15 @@ class Products
 
             self::checkUrlLength($url, $lang, $categoryId);
 
-            $binds[':lang' . $i] = $lang;
-            $binds[':url' . $i] = $url;
-            $binds[':category' . $i] = '%,' . $categoryId . ',%';
-
-            $where[] = "(F19 LIKE :url$i AND lang LIKE :lang$i AND category LIKE :category$i)";
+            $where[] = $QueryBuilder->expr()->and(
+                $QueryBuilder->expr()->like(QUI\Utils\Doctrine::quoteIdentifier($urlCacheField), ':url' . $i),
+                $QueryBuilder->expr()->eq(QUI\Utils\Doctrine::quoteIdentifier('lang'), ':lang' . $i),
+                $QueryBuilder->expr()->like(QUI\Utils\Doctrine::quoteIdentifier('category'), ':category' . $i)
+            );
+            $QueryBuilder
+                ->setParameter('lang' . $i, $lang)
+                ->setParameter('url' . $i, $url)
+                ->setParameter('category' . $i, '%,' . $categoryId . ',%');
             $i++;
         }
 
@@ -546,23 +560,10 @@ class Products
             return;
         }
 
-        $where = implode(' OR ', $where);
-
-        $query = "
-            SELECT id, $urlCacheField 
-            FROM {$table}
-            WHERE {$where}
-        ";
-
-        $PDO = QUI::getDataBase()->getPDO();
-        $Statement = $PDO->prepare($query);
-
-        foreach ($binds as $bind => $value) {
-            $Statement->bindValue($bind, $value);
-        }
-
-        $Statement->execute();
-        $result = $Statement->fetchAll();
+        $result = $QueryBuilder
+            ->where($QueryBuilder->expr()->or(...$where))
+            ->executeQuery()
+            ->fetchAllAssociative();
 
         // no results, all is fine
         if (empty($result)) {
@@ -618,7 +619,7 @@ class Products
     }
 
     /**
-     * @param $Product
+     * @param mixed $Product
      * @return int
      */
     public static function getBasketCondition($Product): int

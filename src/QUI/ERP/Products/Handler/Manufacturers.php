@@ -25,7 +25,7 @@ class Manufacturers
     const SITE_TYPE_MANUFACTURER_LIST = 'quiqqer/products:types/manufacturerList';
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected static array $manufacturerData = [];
 
@@ -46,7 +46,7 @@ class Manufacturers
                 return $userIds;
             }
 
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'select' => ['id'],
                 'from' => QUI\Users\Manager::table(),
                 'where' => [
@@ -130,7 +130,7 @@ class Manufacturers
 
         try {
             $StandardAddress = $User->getStandardAddress();
-            $company = $StandardAddress->getAttribute('company');
+            $company = $StandardAddress?->getAttribute('company');
 
             if (!empty($company)) {
                 return $company;
@@ -178,7 +178,12 @@ class Manufacturers
             }
         }
 
-        $Image = QUI::getProjectManager()->getStandard()->getMedia()->getPlaceholderImage();
+        $Project = QUI::getProjectManager()->getStandard();
+        $Image = null;
+
+        if ($Project) {
+            $Image = $Project->getMedia()->getPlaceholderImage();
+        }
 
         if (!empty($Image)) {
             return $Image;
@@ -207,6 +212,10 @@ class Manufacturers
             }
         }
 
+        if (!$Project) {
+            return false;
+        }
+
         $manufacturerListSites = $Project->getSites([
             'where' => [
                 'active' => 1,
@@ -214,7 +223,7 @@ class Manufacturers
             ]
         ]);
 
-        if (empty($manufacturerListSites)) {
+        if (!is_array($manufacturerListSites) || empty($manufacturerListSites)) {
             return false;
         }
 
@@ -234,7 +243,7 @@ class Manufacturers
      * Get manufacturer data
      *
      * @param int|string $userId - QUIQQER User ID of manufacturer user
-     * @return array
+     * @return array<mixed>
      * @throws QUI\Database\Exception
      */
     protected static function getManufacturerData(int | string $userId): array
@@ -243,7 +252,7 @@ class Manufacturers
             return self::$manufacturerData[$userId];
         }
 
-        $result = QUI::getDataBase()->fetch([
+        $result = QUI\ERP\Products\Utils\Database::fetch([
             'select' => ['username', 'firstname', 'lastname', 'avatar'],
             'from' => QUI::getUsers()::table(),
             'where' => [
@@ -285,6 +294,10 @@ class Manufacturers
                             'type' => self::SITE_TYPE_MANUFACTURER_LIST
                         ]
                     ]);
+
+                    if (!is_array($manufacturerListSites)) {
+                        $manufacturerListSites = [];
+                    }
 
                     /** @var QUI\Projects\Site $Site */
                     foreach ($manufacturerListSites as $Site) {

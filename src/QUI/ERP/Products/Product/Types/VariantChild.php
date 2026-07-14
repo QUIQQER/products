@@ -22,6 +22,7 @@ use function count;
 use function implode;
 use function in_array;
 use function is_null;
+use function is_string;
 use function str_replace;
 
 /**
@@ -40,13 +41,14 @@ class VariantChild extends AbstractType
      */
     protected mixed $OwnMediaFolderField = null;
 
+    /** @var array<mixed>|null */
     protected ?array $shortDescAddition = null;
 
     /**
      * VariantChild constructor.
      *
-     * @param $pid
-     * @param array $product
+     * @param mixed $pid
+     * @param array<mixed> $product
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
      */
@@ -70,21 +72,6 @@ class VariantChild extends AbstractType
         $editableFields = array_flip($editableFields);
 
         $Parent = $this->getParent();
-
-        if (empty($Parent)) {
-            QUI\System\Log::addError(
-                QUI::getLocale()->get(
-                    'quiqqer/products',
-                    'exception.Product.Types.VariantChild.parent_not_found',
-                    [
-                        'childId' => $pid,
-                        'parentId' => $this->getAttribute('parent')
-                    ]
-                )
-            );
-
-            return;
-        }
 
         $fields = $Parent->getFields();
 
@@ -165,6 +152,10 @@ class VariantChild extends AbstractType
             $shortDesc = $this->getFieldValueByLocale(Fields::FIELD_SHORT_DESC);
             $lang = QUI::getLocale()->getCurrent();
 
+            if (!is_string($shortDesc)) {
+                $shortDesc = '';
+            }
+
             $shortDescLines = [];
 
             foreach ($attributeListFieldValues as $field) {
@@ -233,9 +224,10 @@ class VariantChild extends AbstractType
     /**
      * Return the parent variant product
      *
-     * @return VariantParent|null
+     * @return VariantParent
+     * @throws QUI\ERP\Products\Product\Exception
      */
-    public function getParent(): ?VariantParent
+    public function getParent(): VariantParent
     {
         if ($this->Parent !== null) {
             return $this->Parent;
@@ -250,11 +242,43 @@ class VariantChild extends AbstractType
                     'childId' => $this->getId()
                 ]);
 
-                return null;
+                throw new QUI\ERP\Products\Product\Exception(
+                    [
+                        'quiqqer/products',
+                        'exception.Product.Types.VariantChild.parent_not_found',
+                        [
+                            'childId' => $this->getId(),
+                            'parentId' => $this->getAttribute('parent')
+                        ]
+                    ],
+                    404,
+                    [
+                        'childId' => $this->getId(),
+                        'parentId' => $this->getAttribute('parent')
+                    ]
+                );
             }
 
             $this->Parent = $Parent;
-        } catch (QUI\Exception) {
+        } catch (QUI\ERP\Products\Product\Exception $Exception) {
+            throw $Exception;
+        } catch (QUI\Exception $Exception) {
+            throw new QUI\ERP\Products\Product\Exception(
+                [
+                    'quiqqer/products',
+                    'exception.Product.Types.VariantChild.parent_not_found',
+                    [
+                        'childId' => $this->getId(),
+                        'parentId' => $this->getAttribute('parent')
+                    ]
+                ],
+                404,
+                [
+                    'childId' => $this->getId(),
+                    'parentId' => $this->getAttribute('parent')
+                ],
+                $Exception
+            );
         }
 
         return $this->Parent;
@@ -270,7 +294,7 @@ class VariantChild extends AbstractType
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_TITLE, $Locale);
 
-        if (!empty($result)) {
+        if (is_string($result) && $result !== '') {
             return $result;
         }
 
@@ -287,11 +311,13 @@ class VariantChild extends AbstractType
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_SHORT_DESC, $Locale);
 
-        $contentCheck = strip_tags($result);
-        $contentCheck = trim($contentCheck);
+        if (is_string($result)) {
+            $contentCheck = strip_tags($result);
+            $contentCheck = trim($contentCheck);
 
-        if (!empty($contentCheck)) {
-            return $result;
+            if (!empty($contentCheck)) {
+                return $result;
+            }
         }
 
         return $this->getParent()->getDescription($Locale);
@@ -307,18 +333,20 @@ class VariantChild extends AbstractType
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_CONTENT, $Locale);
 
-        $contentCheck = strip_tags($result);
-        $contentCheck = trim($contentCheck);
+        if (is_string($result)) {
+            $contentCheck = strip_tags($result);
+            $contentCheck = trim($contentCheck);
 
-        if (!empty($contentCheck)) {
-            return $result;
+            if (!empty($contentCheck)) {
+                return $result;
+            }
         }
 
         return $this->getParent()->getContent($Locale);
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getCategories(): array
     {
@@ -347,6 +375,11 @@ class VariantChild extends AbstractType
 
         try {
             $Project = QUI::getRewrite()->getProject();
+
+            if (!$Project) {
+                return $Image;
+            }
+
             $Media = $Project->getMedia();
             $Placeholder = $Media->getPlaceholderImage();
 
@@ -478,15 +511,15 @@ class VariantChild extends AbstractType
      * Return all images of the product
      * The Variant Parent return all images of the children, too
      *
-     * @param array $params - optional, select params
-     * @return array
+     * @param array<mixed> $params - optional, select params
+     * @return array<mixed>
      */
     public function getImages(array $params = []): array
     {
         try {
             $images = $this->getMediaFolder()->getImages($params);
 
-            if (count($images)) {
+            if (is_array($images) && count($images)) {
                 return $images;
             }
         } catch (QUI\Exception $Exception) {
@@ -551,23 +584,23 @@ class VariantChild extends AbstractType
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function availableActiveChildFields(): array
     {
-        return $this->getParent()->availableActiveChildFields();
+        return $this->getParent()->availableActiveChildFields() ?? [];
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function availableActiveFieldHashes(): array
     {
-        return $this->getParent()->availableActiveFieldHashes();
+        return $this->getParent()->availableActiveFieldHashes() ?? [];
     }
 
     /**
-     * @param array $fieldData
+     * @param array<mixed> $fieldData
      * @param QUI\Interfaces\Users\User|null $EditUser
      *
      * @throws QUI\Database\Exception
@@ -644,8 +677,14 @@ class VariantChild extends AbstractType
                 $QuiMediaFolder = $this->OwnMediaFolderField->getMediaFolder();
 
                 if ($QuiMediaFolder) {
+                    $images = $QuiMediaFolder->getImages();
+
+                    if (!is_array($images)) {
+                        $images = [];
+                    }
+
                     /** @var QUI\Projects\Media\Image $Image */
-                    foreach ($QuiMediaFolder->getImages() as $Image) {
+                    foreach ($images as $Image) {
                         $Image->setAttribute(Fields::MEDIA_ATTR_IMAGE_ATTRIBUTE_GROUP_DATA, $attributeGroupFieldData);
                         $Image->save($EditUser);
                     }
@@ -653,7 +692,7 @@ class VariantChild extends AbstractType
             }
         }
 
-        QUI::getDataBase()->update(
+        QUI::getDataBaseConnection()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             ['variantHash' => $this->generateVariantHash()],
             ['id' => $this->getId()]
@@ -664,11 +703,11 @@ class VariantChild extends AbstractType
      * return all available fields from the variant children
      * this array contains all field ids and field values that are in use in the children
      *
-     * @return array
+     * @return array<mixed>
      */
     public function availableChildFields(): array
     {
-        return $this->getParent()->availableChildFields();
+        return $this->getParent()->availableChildFields() ?? [];
     }
 
     //endregion

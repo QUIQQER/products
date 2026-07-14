@@ -3,7 +3,7 @@
 /**
  * Returns all sortable fields
  *
- * @return array
+ * @return array<mixed>
  */
 
 QUI::getAjax()->registerFunction(

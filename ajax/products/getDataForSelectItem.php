@@ -4,7 +4,7 @@
  * Returns product data needed for a Product SelectItem
  *
  * @param string $productId - Product-ID
- * @return array
+ * @return array<mixed>
  */
 
 use QUI\ERP\Products\Handler\Fields;

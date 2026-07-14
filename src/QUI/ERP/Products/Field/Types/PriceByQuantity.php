@@ -108,7 +108,7 @@ class PriceByQuantity extends Price
 
         $Price = new QUI\ERP\Money\Price(
             $Calc->getPrice($value['price']),
-            QUI\ERP\Currency\Handler::getDefaultCurrency()
+            QUI\ERP\Defaults::getCurrency()
         );
 
         $valueText = QUI::getLocale()->get('quiqqer/products', 'fieldtype.PriceByQuantity.frontend.text', [
@@ -132,7 +132,7 @@ class PriceByQuantity extends Price
      * Precision: 8 (important for currencies like BitCoin)
      *
      * @param mixed $value
-     * @return array
+     * @return array<mixed>
      */
     public function cleanup(mixed $value): array
     {

@@ -21,7 +21,7 @@ class Suggest extends QUI\Control
     /**
      * constructor
      *
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -68,13 +68,13 @@ class Suggest extends QUI\Control
         $limit = $this->getAttribute('limit');
 
         if (!$limit) {
-            $limit = $Config->get('frontendSuggestSearch', 'limit');
+            $limit = $Config?->get('frontendSuggestSearch', 'limit');
         }
 
         $showLinkToSearchSite = $this->getAttribute('showLinkToSearchSite');
 
         if (!$showLinkToSearchSite) {
-            $showLinkToSearchSite = $Config->get('frontendSuggestSearch', 'showLinkToSearchSite');
+            $showLinkToSearchSite = $Config?->get('frontendSuggestSearch', 'showLinkToSearchSite');
         }
 
         $this->setJavaScriptControlOption('searchurl', $Search->getUrlRewritten());
@@ -165,6 +165,12 @@ class Suggest extends QUI\Control
             return $this->getAttribute('Project');
         }
 
-        return QUI::getRewrite()->getProject();
+        $Project = QUI::getRewrite()->getProject();
+
+        if ($Project === null) {
+            throw new QUI\Exception('Project is unavailable.');
+        }
+
+        return $Project;
     }
 }

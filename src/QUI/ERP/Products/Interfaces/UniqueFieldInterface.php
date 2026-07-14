@@ -55,7 +55,7 @@ interface UniqueFieldInterface
      * Return value for use in product search cache
      *
      * @param Locale|null $Locale
-     * @return string|array|null
+     * @return string|array<mixed>|null
      */
     public function getSearchCacheValue(null | Locale $Locale = null): null|string|array;
 
@@ -67,10 +67,20 @@ interface UniqueFieldInterface
     public function getView(): View;
 
     /**
+     * Return the backend view
+     */
+    public function getBackendView(): View;
+
+    /**
+     * Return the field type
+     */
+    public function getType(): string;
+
+    /**
      * Return the feld as array
      * return all attributes of the field
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getAttributes(): array;
 

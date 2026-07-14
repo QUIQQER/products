@@ -6,11 +6,16 @@
 
 namespace QUI\ERP\Products\Utils;
 
+use IteratorAggregate;
 use QUI;
+use QUI\ERP\Accounting\PriceFactors\Factor;
+use QUI\ERP\Accounting\PriceFactors\FactorList;
 
 use function array_merge;
 use function class_exists;
 use function count;
+use function is_a;
+use function is_string;
 use function json_encode;
 use function strnatcmp;
 use function usort;
@@ -38,7 +43,7 @@ class PriceFactors
      * internal list of price factors
      * be sorted at the beginning
      *
-     * @var array
+     * @var array<mixed>
      */
     protected array $listBeginning = [];
 
@@ -46,7 +51,7 @@ class PriceFactors
      * internal list of price factors
      * be sorted at the end
      *
-     * @var array
+     * @var array<mixed>
      */
     protected array $listEnd = [];
 
@@ -165,7 +170,7 @@ class PriceFactors
      * Return the price factor list as an array
      * This can be imported
      *
-     * @return array
+     * @return array<mixed>
      */
     public function toArray(): array
     {
@@ -197,13 +202,13 @@ class PriceFactors
      */
     public function toJSON(): string
     {
-        return json_encode($this->toArray());
+        return json_encode($this->toArray()) ?: '';
     }
 
     /**
      * Imports a price factor array list
      *
-     * @param array $list
+     * @param array<mixed> $list
      */
     public function importList(array $list): void
     {
@@ -231,8 +236,19 @@ class PriceFactors
             $end = $list['end'];
         }
 
-        $getFactor = function ($attributes) {
-            if (isset($attributes['class']) && class_exists($attributes['class'])) {
+        $getFactor = function (
+            array $attributes
+        ): QUI\ERP\Products\Interfaces\PriceFactorInterface {
+            if (
+                isset($attributes['class'])
+                && is_string($attributes['class'])
+                && class_exists($attributes['class'])
+                && is_a(
+                    $attributes['class'],
+                    QUI\ERP\Products\Interfaces\PriceFactorInterface::class,
+                    true
+                )
+            ) {
                 return new $attributes['class']($attributes);
             }
 
@@ -257,11 +273,11 @@ class PriceFactors
     /**
      * Return this price factor list to a none changeable erp price factor list
      *
-     * @return QUI\ERP\Accounting\PriceFactors\FactorList
+     * @return FactorList&IteratorAggregate<int, Factor>
      *
      * @throws QUI\ERP\Exception
      */
-    public function toErpPriceFactorList(): QUI\ERP\Accounting\PriceFactors\FactorList
+    public function toErpPriceFactorList(): FactorList
     {
         $list = [];
         $sorted = $this->sort();
@@ -271,6 +287,6 @@ class PriceFactors
             $list[] = $PriceFactor->toErpPriceFactor()->toArray();
         }
 
-        return new QUI\ERP\Accounting\PriceFactors\FactorList($list);
+        return new FactorList($list);
     }
 }

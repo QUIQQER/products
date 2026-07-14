@@ -14,10 +14,11 @@ use function is_null;
  */
 class ProductCache
 {
+    /** @var array<string, array<mixed>> */
     protected static array $uniqueProductData = [];
 
     /**
-     * @param array $uniqueProductData
+     * @param array<mixed> $uniqueProductData
      * @param string $cacheName
      * @return void
      */
@@ -32,7 +33,7 @@ class ProductCache
 
     /**
      * @param string $cacheName
-     * @return array|null
+     * @return array<mixed>|null
      */
     public static function getUniqueProductData(string $cacheName): ?array
     {
@@ -48,7 +49,7 @@ class ProductCache
         if (is_null($cacheName)) {
             self::$uniqueProductData = [];
         } else {
-            self::$uniqueProductData[$cacheName] = null;
+            unset(self::$uniqueProductData[$cacheName]);
         }
     }
 
@@ -72,6 +73,10 @@ class ProductCache
 
             if ($Product instanceof QUI\ERP\Products\Product\Types\VariantParent) {
                 $variants = $Product->getVariants();
+
+                if (!is_array($variants)) {
+                    $variants = [];
+                }
 
                 $Product->getImages();
                 $Product->availableActiveFieldHashes();

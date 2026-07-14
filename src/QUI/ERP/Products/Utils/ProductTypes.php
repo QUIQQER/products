@@ -12,6 +12,7 @@ use QUI\Utils\Singleton;
 use function array_filter;
 use function array_merge;
 use function is_a;
+use function is_string;
 
 /**
  * Class ProductTypes
@@ -21,7 +22,7 @@ class ProductTypes extends Singleton
     /**
      * Return the product type provider classes
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getProductTypes(): array
     {
@@ -76,7 +77,8 @@ class ProductTypes extends Singleton
         }
 
         $variantParentTypes = array_filter($this->getProductTypes(), function ($productType) {
-            return is_a($productType, QUI\ERP\Products\Product\Types\VariantParent::class, true);
+            return is_string($productType)
+                && is_a($productType, QUI\ERP\Products\Product\Types\VariantParent::class, true);
         });
 
         QUI\Cache\LongTermCache::set($cache, $variantParentTypes);
@@ -100,7 +102,8 @@ class ProductTypes extends Singleton
         }
 
         $variantChildTypes = array_filter($this->getProductTypes(), function ($productType) {
-            return is_a($productType, QUI\ERP\Products\Product\Types\VariantChild::class, true);
+            return is_string($productType)
+                && is_a($productType, QUI\ERP\Products\Product\Types\VariantChild::class, true);
         });
 
         QUI\Cache\LongTermCache::set($cache, $variantChildTypes);

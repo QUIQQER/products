@@ -9,7 +9,7 @@ use QUI\ERP\Products\Handler\Products;
 /**
  * Set the global editable variant fields
  *
- * @param array $fields - field ids
+ * @param array<mixed> $fields - field ids
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_variant_saveEditableInheritedERPFields',

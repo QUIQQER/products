@@ -3,7 +3,7 @@
 /**
  * Get vat entries that can be selected for automatic product price multiplier rounding.
  *
- * @return array
+ * @return array<mixed>
  */
 
 QUI::getAjax()->registerFunction(

@@ -93,7 +93,10 @@ class Products
 
     /**
      * List of internal products
-     * @var array
+     * @var array<mixed>
+     */
+    /**
+     * @var array<int, QUI\ERP\Products\Product\Types\AbstractType>
      */
     private static array $list = [];
 
@@ -127,7 +130,7 @@ class Products
     public static function getParentMediaFolder(): QUI\Projects\Media\Folder
     {
         $Config = QUI::getPackage('quiqqer/products')->getConfig();
-        $folderUrl = $Config->get('products', 'folder');
+        $folderUrl = $Config?->get('products', 'folder');
 
         if (empty($folderUrl)) {
             throw new QUI\Exception([
@@ -222,7 +225,7 @@ class Products
         $field = 'F' . QUI\ERP\Products\Handler\Fields::FIELD_URL;
 
         try {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'select' => [$field, 'category', 'id'],
                 'from' => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
                 'where' => [
@@ -259,6 +262,7 @@ class Products
      * Return a new product instance
      * this function does not look into the instance cache
      *
+     * @param int|string $pid
      * @throws QUI\ERP\Products\Product\Exception
      */
     public static function getNewProductInstance($pid): QUI\ERP\Products\Product\Types\AbstractType
@@ -275,8 +279,10 @@ class Products
             );
         }
 
+        $pid = (int)$pid;
+
         try {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 'where' => [
                     'id' => $pid
@@ -299,7 +305,7 @@ class Products
         if (!isset($result[0])) {
             try {
                 // if not exists, so we clean up the cache table, too
-                QUI::getDataBase()->delete(
+                QUI::getDataBaseConnection()->delete(
                     QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
                     ['id' => $pid]
                 );
@@ -338,8 +344,8 @@ class Products
     }
 
     /**
-     * @param $pid
-     * @param $result
+     * @param mixed $pid
+     * @param mixed $result
      * @return QUI\ERP\Products\Product\Types\AbstractType
      *
      * // @todo interface check
@@ -352,7 +358,13 @@ class Products
             $type = QUI\ERP\Products\Product\Types\Product::class;
         }
 
-        return new $type($pid, $result);
+        $Product = new $type($pid, $result);
+
+        if (!$Product instanceof QUI\ERP\Products\Product\Types\AbstractType) {
+            throw new QUI\ERP\Products\Product\Exception('Invalid product type: ' . $type);
+        }
+
+        return $Product;
     }
 
     /**
@@ -368,7 +380,7 @@ class Products
         }
 
         try {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 'where' => [
                     'id' => $pid
@@ -393,7 +405,7 @@ class Products
     public static function getProductByProductNo(string $productNo): ProductTypeInterface
     {
         try {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'select' => [
                     'id'
                 ],
@@ -427,8 +439,8 @@ class Products
     /**
      * Create a new Product
      *
-     * @param array $categories - list of category IDs or category Objects
-     * @param array $fields - optional, list of fields (Field, Field, Field)
+     * @param array<mixed> $categories - list of category IDs or category Objects
+     * @param array<mixed> $fields - optional, list of fields (Field, Field, Field)
      * @param string $productType - optional, product type
      * @param integer|null $parent - optional, parent product
      * @param bool $validation - optional, should a validation executed? (default=true)
@@ -477,8 +489,7 @@ class Products
                 continue;
             }
 
-            if (Categories::isCategory($Category)) {
-                /* @var $Category Category */
+            if ($Category instanceof QUI\ERP\Products\Interfaces\CategoryInterface) {
                 $categoryIds[] = $Category->getId();
                 continue;
             }
@@ -499,7 +510,6 @@ class Products
         // fields
         $fieldData = [];
 
-        /* @var $Field Field|integer */
         foreach ($fields as $Field) {
             if (!is_object($Field)) {
                 try {
@@ -508,6 +518,13 @@ class Products
                     QUI\System\Log::addWarning($Exception->getMessage());
                     continue;
                 }
+            }
+
+            if (!$Field instanceof Field) {
+                throw new QUI\Exception([
+                    'quiqqer/products',
+                    'exception.field.is.invalid'
+                ]);
             }
 
             $value = $Field->getValue();
@@ -536,7 +553,7 @@ class Products
             $fieldData[] = $Field->toProductArray();
         }
 
-        QUI::getDataBase()->insert(
+        QUI::getDataBaseConnection()->insert(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             [
                 'fieldData' => json_encode($fieldData),
@@ -549,7 +566,7 @@ class Products
             ]
         );
 
-        $newId = QUI::getDataBase()->getPDO()->lastInsertId();
+        $newId = (int)QUI::getDataBaseConnection()->lastInsertId();
 
         if (class_exists('\QUI\Watcher')) {
             QUI\Watcher::addString(
@@ -622,7 +639,11 @@ class Products
         );
 
         $New->setPermissions($Product->getPermissions());
-        $New->setMainCategory($Product->getCategory());
+        $MainCategory = $Product->getCategory();
+
+        if ($MainCategory !== null) {
+            $New->setMainCategory($MainCategory);
+        }
 
         $folders = $New->getFieldsByType(Fields::TYPE_FOLDER);
 
@@ -650,12 +671,12 @@ class Products
      * Return a list of products
      * if $queryParams is empty, all fields are returned
      *
-     * @param array $queryParams - query parameter
+     * @param array<mixed> $queryParams - query parameter
      *                              $queryParams['where'],
      *                              $queryParams['where_or'],
      *                              $queryParams['limit']
      *                              $queryParams['order']
-     * @return array
+     * @return array<mixed>
      */
     public static function getProducts(array $queryParams = []): array
     {
@@ -676,12 +697,12 @@ class Products
      * Return a list of product ids
      * if $queryParams is empty, all products are returned
      *
-     * @param array $queryParams - query parameter
+     * @param array<mixed> $queryParams - query parameter
      *                              $queryParams['where'],
      *                              $queryParams['where_or'],
      *                              $queryParams['limit']
      *                              $queryParams['order']
-     * @return array
+     * @return array<mixed>
      */
     public static function getProductIds(array $queryParams = []): array
     {
@@ -704,14 +725,14 @@ class Products
 
         if (
             isset($queryParams['where']) &&
-            QUI\Database\DB::isWhereValid($queryParams['where'], $allowedFields)
+            QUI\ERP\Products\Utils\Database::areConditionsValid($queryParams['where'], $allowedFields)
         ) {
             $query['where'] = $queryParams['where'];
         }
 
         if (
             isset($queryParams['where_or']) &&
-            QUI\Database\DB::isWhereValid($queryParams['where_or'], $allowedFields)
+            QUI\ERP\Products\Utils\Database::areConditionsValid($queryParams['where_or'], $allowedFields)
         ) {
             $query['where_or'] = $queryParams['where_or'];
         }
@@ -722,7 +743,7 @@ class Products
 
         if (
             isset($queryParams['order']) &&
-            QUI\Database\DB::isOrderValid($queryParams['order'], $allowedFields)
+            QUI\ERP\Products\Utils\Database::isOrderValid($queryParams['order'], $allowedFields)
         ) {
             $query['order'] = $queryParams['order'];
         }
@@ -740,7 +761,7 @@ class Products
         $result = [];
 
         try {
-            $data = QUI::getDataBase()->fetch($query);
+            $data = QUI\ERP\Products\Utils\Database::fetch($query);
         } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
@@ -767,7 +788,7 @@ class Products
      * Return the number of the products
      * Count products
      *
-     * @param array $queryParams - query params (where, where_or)
+     * @param array<mixed> $queryParams - query params (where, where_or)
      * @return integer
      */
     public static function countProducts(array $queryParams = []): int
@@ -789,7 +810,7 @@ class Products
         }
 
         try {
-            $data = QUI::getDataBase()->fetch($query);
+            $data = QUI\ERP\Products\Utils\Database::fetch($query);
         } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
@@ -844,12 +865,22 @@ class Products
         // media cleanup
         try {
             $MainFolder = Products::getParentMediaFolder();
+            $Media = $MainFolder->getMedia();
+            $childIds = $MainFolder->getChildrenIds();
         } catch (QUI\Exception) {
-            $MainFolder = QUI::getProjectManager()->getStandard()->getMedia();
+            $Project = QUI::getProjectManager()->getStandard();
+
+            if ($Project === null) {
+                throw new QUI\Exception('Standard project is unavailable.');
+            }
+
+            $Media = $Project->getMedia();
+            $childIds = $Media->getChildrenIds();
         }
 
-        $Media = $MainFolder->getMedia();
-        $childIds = $MainFolder->getChildrenIds();
+        if (!is_array($childIds)) {
+            $childIds = [];
+        }
 
         foreach ($childIds as $folderId) {
             $Folder = null;
@@ -861,7 +892,7 @@ class Products
                 Products::getProduct($Folder->getAttribute('name'));
             } catch (QUI\ERP\Products\Product\Exception $Exception) {
                 if ($Exception->getCode() == 404 && Utils::isFolder($Folder)) {
-                    $Folder->delete();
+                    $Folder?->delete();
                 }
 
                 QUI\System\Log::writeException($Exception);
@@ -871,15 +902,27 @@ class Products
         }
 
         // Delete all product IDs from the products_cache that do not exist anymore
-        QUI::getDataBase()->delete(
-            QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-            [
-                'id' => [
-                    'type' => 'NOT IN',
-                    'value' => $ids
-                ]
-            ]
-        );
+        $QueryBuilder = QUI::getQueryBuilder()
+            ->delete(QUI\Utils\Doctrine::quoteIdentifier(
+                QUI\ERP\Products\Utils\Tables::getProductCacheTableName()
+            ));
+
+        if ($ids !== []) {
+            $placeholders = [];
+
+            foreach (array_values($ids) as $index => $id) {
+                $parameter = 'existingProduct' . $index;
+                $placeholders[] = ':' . $parameter;
+                $QueryBuilder->setParameter($parameter, $id);
+            }
+
+            $QueryBuilder->where($QueryBuilder->expr()->notIn(
+                QUI\Utils\Doctrine::quoteIdentifier('id'),
+                $placeholders
+            ));
+        }
+
+        $QueryBuilder->executeStatement();
 
         // cache cleanup
         QUI\ERP\Products\Search\Cache::clear();
@@ -913,7 +956,7 @@ class Products
             return false;
         }
 
-        $usePermission = (int)$Config->get('products', 'usePermissions');
+        $usePermission = (int)$Config?->get('products', 'usePermissions');
         self::$usePermissions = (bool)$usePermission;
 
         return self::$usePermissions;
@@ -932,9 +975,9 @@ class Products
     /**
      * Return global projects locale
      *
-     * @return Locale|null
+     * @return Locale
      */
-    public static function getLocale(): ?Locale
+    public static function getLocale(): Locale
     {
         if (!self::$Locale) {
             self::$Locale = new Locale();
@@ -962,7 +1005,7 @@ class Products
         }
 
         $result = [];
-        $fields = $Config->getSection('editableFields');
+        $fields = $Config?->getSection('editableFields');
 
         if (empty($fields)) {
             return [];
@@ -986,20 +1029,20 @@ class Products
     /**
      * Set global editable variant fields
      *
-     * @param array $fieldIds
+     * @param array<mixed> $fieldIds
      *
      * @throws QUI\Exception
      */
     public static function setGlobalEditableVariantFields(array $fieldIds): void
     {
         $Config = QUI::getPackage('quiqqer/products')->getConfig();
-        $Config->setSection('editableFields');
+        $Config?->setSection('editableFields');
 
         foreach ($fieldIds as $field) {
-            $Config->setValue('editableFields', $field, 1);
+            $Config?->setValue('editableFields', $field, 1);
         }
 
-        $Config->save();
+        $Config?->save();
     }
 
     //endregion
@@ -1023,7 +1066,7 @@ class Products
         }
 
         $result = [];
-        $fields = $Config->getSection('inheritedFields');
+        $fields = $Config?->getSection('inheritedFields');
 
         if (empty($fields)) {
             return [];
@@ -1047,20 +1090,20 @@ class Products
     /**
      * Set global inherited variant fields
      *
-     * @param array $fieldIds
+     * @param array<mixed> $fieldIds
      *
      * @throws QUI\Exception
      */
     public static function setGlobalInheritedVariantFields(array $fieldIds): void
     {
         $Config = QUI::getPackage('quiqqer/products')->getConfig();
-        $Config->setSection('inheritedFields');
+        $Config?->setSection('inheritedFields');
 
         foreach ($fieldIds as $field) {
-            $Config->setValue('inheritedFields', $field, 1);
+            $Config?->setValue('inheritedFields', $field, 1);
         }
 
-        $Config->save();
+        $Config?->save();
     }
 
     //endregion
@@ -1186,7 +1229,7 @@ class Products
             return (string)$nextId;
         }
 
-        $articleNoConf = $Conf->getSection('autoArticleNos');
+        $articleNoConf = $Conf?->getSection('autoArticleNos');
 
         if (!empty($articleNoConf['prefix'])) {
             $nextId = $articleNoConf['prefix'] . $nextId;
@@ -1197,13 +1240,20 @@ class Products
         }
 
         // Category
-        $mainCategoryId = $Product->getCategory()->getId();
+        $mainCategoryId = $Product->getCategory()?->getId() ?? '';
 
         if (empty($mainCategoryId)) {
             $mainCategoryId = '';
         }
 
         // replace placeholders
+        $replacements = array_map('strval', [
+            date('Y'),
+            date('m'),
+            date('d'),
+            $mainCategoryId
+        ]);
+
         return str_replace(
             [
                 '#YEAR',
@@ -1211,13 +1261,8 @@ class Products
                 '#DAY',
                 '#CAT_ID'
             ],
-            [
-                date('Y'),
-                date('m'),
-                date('d'),
-                $mainCategoryId
-            ],
-            $nextId
+            $replacements,
+            (string)$nextId
         );
     }
 
@@ -1230,7 +1275,7 @@ class Products
     {
         try {
             $Conf = QUI::getPackage('quiqqer/products')->getConfig();
-            return !empty($Conf->get('autoArticleNos', 'generate'));
+            return !empty($Conf?->get('autoArticleNos', 'generate'));
         } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
         }
@@ -1255,7 +1300,7 @@ class Products
         try {
             $Conf = QUI::getPackage('quiqqer/products')->getConfig();
 
-            self::$extendVariantChildShortDesc = !empty($Conf->get('variants', 'extendShortDesc'));
+            self::$extendVariantChildShortDesc = !empty($Conf?->get('variants', 'extendShortDesc'));
 
             return self::$extendVariantChildShortDesc;
         } catch (Exception $Exception) {
@@ -1279,7 +1324,7 @@ class Products
         try {
             $Conf = QUI::getPackage('quiqqer/products')->getConfig();
 
-            self::$checkDuplicateArticleNo = !empty($Conf->get('products', 'checkDuplicateArticleNo'));
+            self::$checkDuplicateArticleNo = !empty($Conf?->get('products', 'checkDuplicateArticleNo'));
 
             return self::$checkDuplicateArticleNo;
         } catch (Exception $Exception) {

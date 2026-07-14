@@ -160,7 +160,7 @@ interface PriceFactorInterface
     /**
      * Returns the price factor as an array
      *
-     * @return array
+     * @return array<mixed>
      */
     public function toArray(): array;
 

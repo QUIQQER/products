@@ -3,7 +3,7 @@
 /**
  * Returns all public fields
  *
- * @return array
+ * @return array<mixed>
  */
 
 use QUI\ERP\Products\Handler\Cache;

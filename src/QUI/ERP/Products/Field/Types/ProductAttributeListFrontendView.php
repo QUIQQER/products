@@ -52,7 +52,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             return $this->notChangeableDisplay();
         }
 
-        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        $Currency = QUI\ERP\Defaults::getCurrency();
         $current = QUI::getLocale()->getCurrent();
 
         $id = $this->getId();
@@ -95,7 +95,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $value = (int)$value;
         }
 
-        $value = htmlspecialchars($value);
+        $value = htmlspecialchars((string)$value);
         $Engine = QUI::getTemplateManager()->getEngine();
 
         $Engine->assign([
@@ -204,7 +204,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $value = '';
         }
 
-        $value = htmlspecialchars($value);
+        $value = htmlspecialchars((string)$value);
         $Engine = QUI::getTemplateManager()->getEngine();
 
         $Engine->assign([

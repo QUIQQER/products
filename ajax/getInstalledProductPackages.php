@@ -4,7 +4,7 @@
  * Get list of all packages that belong to the quiqqer/products ecosystem
  * but are not necessarily required.
  *
- * @return array
+ * @return array<mixed>
  */
 
 QUI::getAjax()->registerFunction(

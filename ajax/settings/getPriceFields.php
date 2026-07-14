@@ -3,7 +3,7 @@
 /**
  * Get price fields for price multiplier config
  *
- * @return array - price field data
+ * @return array<mixed> - price field data
  */
 
 use QUI\ERP\Products\Handler\Fields;

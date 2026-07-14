@@ -12,7 +12,7 @@ use QUI\ERP\Products\Handler\Products;
  *
  * @param integer $productId - Product-ID
  * @param string $fields - JSON fields
- * @return array
+ * @return array<mixed>
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_calc',

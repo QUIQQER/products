@@ -9,7 +9,7 @@
  *
  * @param string $params - JSON query params
  *
- * @return array
+ * @return array<mixed>
  */
 
 use QUI\ERP\Products\Interfaces\CategoryInterface;
@@ -25,8 +25,7 @@ QUI::getAjax()->registerFunction(
 
         $Parent = $Category->getParent();
 
-        while ($Parent) {
-            /* @var $Parent CategoryInterface */
+        while ($Parent instanceof CategoryInterface) {
             try {
                 $result[] = $Parent->getId();
                 $Parent = $Parent->getParent();

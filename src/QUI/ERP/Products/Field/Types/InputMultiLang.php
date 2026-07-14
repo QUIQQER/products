@@ -211,11 +211,11 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @return array
+     * @return array<mixed>
      */
     public function cleanup(mixed $value): array
     {
-        $languages = QUI\Translator::getAvailableLanguages();
+        $languages = QUI\Translator::getAvailableLanguages() ?? [];
 
         if (!is_array($value)) {
             return array_fill_keys($languages, '');
@@ -261,7 +261,7 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
     /**
      * Get all available search types
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getSearchTypes(): array
     {

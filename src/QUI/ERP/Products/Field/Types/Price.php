@@ -88,7 +88,7 @@ class Price extends QUI\ERP\Products\Field\Field
 
         $Price = new QUI\ERP\Money\Price(
             $value,
-            QUI\ERP\Currency\Handler::getDefaultCurrency()
+            QUI\ERP\Defaults::getCurrency()
         );
 
         return new View([
@@ -185,7 +185,7 @@ class Price extends QUI\ERP\Products\Field\Field
     /**
      * Get all available search types
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getSearchTypes(): array
     {
@@ -212,7 +212,7 @@ class Price extends QUI\ERP\Products\Field\Field
      *
      * @param float|integer $min
      * @param float|integer $max
-     * @return array - contains values from min to max with calculated steps inbetween
+     * @return array<mixed> - contains values from min to max with calculated steps inbetween
      */
     public function calculateValueRange(null | float | int $min, null | float | int $max): array
     {
