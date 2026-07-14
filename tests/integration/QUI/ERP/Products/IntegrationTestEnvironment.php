@@ -9,7 +9,6 @@ use QUI\ERP\Areas\Utils;
 use QUI\ERP\Currency\Handler as CurrencyHandler;
 use QUI\ERP\Tax\Handler as TaxHandler;
 use QUI\ERP\Tax\Utils as TaxUtils;
-use QUI\Projects\ProjectTestHelper;
 use ReflectionProperty;
 use RuntimeException;
 use Throwable;

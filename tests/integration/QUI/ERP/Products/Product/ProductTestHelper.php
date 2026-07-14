@@ -12,9 +12,9 @@ use QUI\ERP\Products\Product\Types\AbstractType;
 use QUI\ERP\Products\Utils\Tables;
 use QUI\Interfaces\Users\User as UserInterface;
 use QUI\Projects\Project;
-use QUI\Projects\ProjectTestHelper;
 use QUI\Projects\Site\Edit;
 use QUITests\ERP\Products\Integration\IntegrationTestEnvironment;
+use QUITests\ERP\Products\Integration\ProjectTestHelper;
 use RuntimeException;
 use Throwable;
 
