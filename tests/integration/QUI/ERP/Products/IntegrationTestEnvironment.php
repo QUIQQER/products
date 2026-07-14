@@ -48,12 +48,15 @@ final class IntegrationTestEnvironment
         $Areas = new Handler();
 
         try {
-            $Area = ProjectTestHelper::runAsSystemUser(static fn (): Area => $Areas->createChild([
+            $Connection = QUI::getDataBaseConnection();
+            $Connection->insert(QUI::getDBTableName('areas'), [
                 'countries' => $countryCode,
                 'data' => json_encode([
                     'importLocale' => self::PREFIX . 'default-area'
                 ], JSON_THROW_ON_ERROR)
-            ]));
+            ]);
+            self::$createdAreaId = (int)$Connection->lastInsertId();
+            $Area = $Areas->getChild(self::$createdAreaId);
         } catch (Throwable $Exception) {
             self::cleanup();
 
@@ -63,8 +66,6 @@ final class IntegrationTestEnvironment
                 $Exception
             );
         }
-
-        self::$createdAreaId = (int)$Area->getId();
 
         return $Area;
     }
