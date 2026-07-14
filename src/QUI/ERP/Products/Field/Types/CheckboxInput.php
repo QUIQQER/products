@@ -81,7 +81,7 @@ class CheckboxInput extends QUI\ERP\Products\Field\Field
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @return array
+     * @return array<mixed>
      */
     public function cleanup(mixed $value): mixed
     {

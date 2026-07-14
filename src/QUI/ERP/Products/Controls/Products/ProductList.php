@@ -24,7 +24,7 @@ class ProductList extends QUI\Control
 
     /**
      * ChildrenSlider constructor.
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -69,7 +69,7 @@ class ProductList extends QUI\Control
             }
 
             try {
-                $Product = $Products->getProduct($productId);
+                $Product = $Products->getProduct((int)$productId);
                 $this->Slider->addProduct($Product->getViewFrontend());
             } catch (QUI\Exception) {
             }

@@ -9,7 +9,7 @@
  *
  * @param string $params - JSON query params
  *
- * @return array
+ * @return array<mixed>
  */
 
 use QUI\ERP\Products\Product\Product;

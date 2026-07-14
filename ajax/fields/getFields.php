@@ -10,7 +10,7 @@ use QUI\ERP\Products\Handler\Fields;
  * Returns multiple fields
  *
  * @param string $fieldId - Field-IDs JSON
- * @return array
+ * @return array<mixed>
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_fields_getFields',

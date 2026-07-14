@@ -32,7 +32,7 @@ class Product extends QUI\Control
     /**
      * constructor
      *
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -250,7 +250,7 @@ class Product extends QUI\Control
             $PriceOldDisplay = new QUI\ERP\Products\Controls\Price([
                 'Price' => new QUI\ERP\Money\Price(
                     $View->getOriginalPrice()->getValue(),
-                    QUI\ERP\Currency\Handler::getDefaultCurrency()
+                    QUI\ERP\Defaults::getCurrency()
                 ),
                 'withVatText' => false
             ]);
@@ -431,14 +431,14 @@ class Product extends QUI\Control
      *
      * package/quiqqer/products/bin/controls/frontend/products/ProductVariant
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getVariantControlSettings(): array
     {
         $controlSettings = [];
 
         $Conf = QUI\ERP\Products\Utils\Package::getConfig();
-        $linkVariantsWithImages = !empty($Conf->getValue('variants', 'linkVariantChildrenWithImages'));
+        $linkVariantsWithImages = !empty($Conf?->getValue('variants', 'linkVariantChildrenWithImages'));
         $images = $this->getVariantImages($this->getAttribute('Product'));
 
         if (!empty($images) && $linkVariantsWithImages) {

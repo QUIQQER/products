@@ -79,7 +79,7 @@ class Calc
      */
     const CALCULATION_BASIS_BRUTTO = ErpCalc::CALCULATION_BASIS_BRUTTO;
 
-    protected ?UserInterface $User = null;
+    protected UserInterface $User;
 
     protected ?Currency $Currency = null;
 
@@ -97,7 +97,7 @@ class Calc
      */
     public function __construct(null | UserInterface $User = null)
     {
-        if (!QUI::getUsers()->isUser($User)) {
+        if (!$User instanceof UserInterface) {
             $User = QUI::getUserBySession();
         }
 
@@ -151,9 +151,9 @@ class Calc
     /**
      * Return the calc user
      *
-     * @return ?UserInterface
+     * @return UserInterface
      */
-    public function getUser(): UserInterface | null
+    public function getUser(): UserInterface
     {
         return $this->User;
     }
@@ -190,13 +190,13 @@ class Calc
     /**
      * Return the currency
      *
-     * @return Currency|null
+     * @return Currency
      * @throws Exception
      */
-    public function getCurrency(): ?QUI\ERP\Currency\Currency
+    public function getCurrency(): QUI\ERP\Currency\Currency
     {
-        if (is_null($this->Currency)) {
-            $this->Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        if ($this->Currency === null) {
+            $this->Currency = QUI\ERP\Defaults::getCurrency();
         }
 
         return $this->Currency;
@@ -206,7 +206,7 @@ class Calc
      * Calculate a complete product list
      *
      * @param ProductList $List
-     * @param callable|boolean $callback - optional, callback function for the data array
+     * @param callable|boolean $callback - optional, callback function for the data array<mixed>
      * @return ProductList
      *
      * @throws QUI\Exception
@@ -245,6 +245,10 @@ class Calc
 
         $Area = QUI\ERP\Utils\User::getUserArea($this->getUser());
         $DefaultArea = QUI\ERP\Defaults::getArea();
+
+        if (!$Area instanceof QUI\ERP\Areas\Area) {
+            $Area = $DefaultArea;
+        }
 
         // user order address
         $Order = $List->getOrder();
@@ -323,8 +327,8 @@ class Calc
 //        $subSum   = \round($subSum, $Currency->getPrecision());
 //        $nettoSum = \round($nettoSum, $Currency->getPrecision());
 
-        QUI\ERP\Debug::getInstance()->log('Berechnete Produktliste MwSt', 'quiqqer/product');
-        QUI\ERP\Debug::getInstance()->log($vatArray, 'quiqqer/product');
+        self::getDebug()?->log('Berechnete Produktliste MwSt', 'quiqqer/product');
+        self::getDebug()?->log($vatArray, 'quiqqer/product');
 
         try {
             QUI::getEvents()->fireEvent(
@@ -340,7 +344,7 @@ class Calc
         }
 
         // price factors
-        $priceFactors = $List->getPriceFactors()->sort();
+        $priceFactors = $List->getPriceFactors()?->sort() ?? [];
         $nettoSubSum = $nettoSum;
         $priceFactorSum = 0;
 
@@ -561,7 +565,7 @@ class Calc
             // counterbalance - gegenrechnung
             // works only for one vat entry
             if (count($vatArray) === 1) {
-                $vat = key($vatArray);
+                $vat = (float)key($vatArray);
                 $netto = $bruttoSum / ($vat / 100 + 1);
 
                 $vatSum = $bruttoSum - $netto;
@@ -619,7 +623,7 @@ class Calc
      * only fields
      *
      * @param UniqueProduct $Product
-     * @param callable|boolean $callback - optional, callback function for the calculated data array
+     * @param callable|boolean $callback - optional, callback function for the calculated data array<mixed>
      * @param Price|UniqueFieldInterface|null $Price - optional, price object to calc with
      * @param bool $ignorePriceFactors - ignore price factors, default = false
      *
@@ -658,6 +662,10 @@ class Calc
         $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser());
         $Area = QUI\ERP\Utils\User::getUserArea($this->getUser());
         $Currency = $this->getCurrency();
+
+        if (!$Area instanceof QUI\ERP\Areas\Area) {
+            $Area = QUI\ERP\Defaults::getArea();
+        }
 
         $nettoPrice = $Product->getNettoPrice()->value();
         $priceFactors = $Product->getPriceFactors()->sort();
@@ -701,7 +709,6 @@ class Calc
                         $nettoPriceNotRounded = $PriceFactor->getValue();
 
                         $priceFactorSum = 0;
-                        $factors[] = $PriceFactor->toArray();
                         break;
 
                     // Prozent Angabe
@@ -771,7 +778,7 @@ class Calc
                 $TaxType = new QUI\ERP\Tax\TaxType($Tax->getValue());
                 $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
             } catch (QUI\Exception $Exception) {
-                QUI\ERP\Debug::getInstance()->log($Exception, 'quiqqer/products');
+                self::getDebug()?->log($Exception, 'quiqqer/products');
                 continue;
             }
 
@@ -790,18 +797,20 @@ class Calc
             // Wenn Produkt eigene VAT gesetzt hat und diese zum Benutzer passt
             $ProductVat = $Product->getField(FieldHandler::FIELD_VAT);
 
-            try {
-                $TaxType = new QUI\ERP\Tax\TaxType($ProductVat->getValue());
-                $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
+            if ($ProductVat instanceof UniqueFieldInterface) {
+                try {
+                    $TaxType = new QUI\ERP\Tax\TaxType($ProductVat->getValue());
+                    $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
 
-                if ($TaxEntry->isActive()) {
-                    $Vat = $TaxEntry;
+                    if ($TaxEntry->isActive()) {
+                        $Vat = $TaxEntry;
+                    }
+                } catch (QUI\Exception) {
+                    self::getDebug()?->log(
+                        'Product Vat ist nicht für den Benutzer gültig',
+                        'quiqqer/products'
+                    );
                 }
-            } catch (QUI\Exception) {
-                QUI\ERP\Debug::getInstance()->log(
-                    'Product Vat ist nicht für den Benutzer gültig',
-                    'quiqqer/products'
-                );
             }
         }
 
@@ -858,6 +867,15 @@ class Calc
                 $bruttoPrice = $checkVatBrutto;
             }
 
+            // Related: pcsg/buero#344
+            // Related: pcsg/buero#436
+            if ($nettoSum + $checkVat !== $bruttoPrice * $Product->getQuantity()) {
+                $diff = $nettoSum + $checkVat - ($bruttoPrice * $Product->getQuantity());
+
+                $vatSum = $vatSum - $diff;
+                $vatSum = round($vatSum, $Currency->getPrecision());
+            }
+
             // if the user is brutto,
             // and we have a quantity
             // we need to calc first the brutto product price of one product
@@ -896,12 +914,12 @@ class Calc
         }
 
 
-        QUI\ERP\Debug::getInstance()->log(
+        self::getDebug()?->log(
             'Kalkulierter Produkt Preis ' . $Product->getId(),
             'quiqqer/products'
         );
 
-        QUI\ERP\Debug::getInstance()->log([
+        self::getDebug()?->log([
             'nettoPriceNotRounded' => $nettoPriceNotRounded,
             'basisPrice' => $basisPrice,
             'price' => $price,
@@ -1111,5 +1129,17 @@ class Calc
             $this->getUser(),
             $this->Locale
         );
+    }
+
+    /**
+     * ERP versions before the non-null Debug singleton contract may return null.
+     */
+    private static function getDebug(): ?QUI\ERP\Debug
+    {
+        try {
+            return QUI\ERP\Debug::getInstance();
+        } catch (\Throwable) {
+            return null;
+        }
     }
 }

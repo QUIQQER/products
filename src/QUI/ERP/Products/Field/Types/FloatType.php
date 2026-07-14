@@ -114,7 +114,7 @@ class FloatType extends QUI\ERP\Products\Field\Field
         }
 
         $value = (string)$value;
-        $value = preg_replace('#[^\d,.]#i', '', $value);
+        $value = preg_replace('#[^\d,.]#i', '', $value) ?? '';
 
         if (trim($value) === '') {
             return null;
@@ -160,7 +160,7 @@ class FloatType extends QUI\ERP\Products\Field\Field
     /**
      * Get all available search types
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getSearchTypes(): array
     {

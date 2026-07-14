@@ -20,10 +20,8 @@ class ViewFrontend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
 {
     /**
      * Real category
-     *
-     * @var Category|null
      */
-    protected ?Category $Category = null;
+    protected Category $Category;
 
     /**
      * View constructor
@@ -48,7 +46,7 @@ class ViewFrontend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
     /**
      * Return the sub categories
      *
-     * @param array $params
+     * @param array<mixed> $params
      * @return integer
      */
     public function countProducts(array $params = []): int
@@ -61,7 +59,7 @@ class ViewFrontend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
     /**
      * Return the attributes
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getAttributes(): array
     {
@@ -71,7 +69,7 @@ class ViewFrontend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
     /**
      * Return the sub categories
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getChildren(): array
     {
@@ -101,7 +99,7 @@ class ViewFrontend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
     /**
      * Return the category fields
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getFields(): array
     {
@@ -122,7 +120,7 @@ class ViewFrontend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
      * Return the parent category
      * - Category 0 has no parent => returns false
      *
-     * @return bool|Category
+     * @return bool|QUI\ERP\Products\Interfaces\CategoryInterface
      * @throws Exception
      */
     public function getParent(): bool | QUI\ERP\Products\Interfaces\CategoryInterface
@@ -144,8 +142,8 @@ class ViewFrontend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
     /**
      * Return all active products from the category
      *
-     * @param array $params
-     * @return array
+     * @param array<mixed> $params
+     * @return array<mixed>
      */
     public function getProducts(array $params = []): array
     {
@@ -157,8 +155,8 @@ class ViewFrontend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
     /**
      * Return the number of active products in the category
      *
-     * @param array $params
-     * @return array
+     * @param array<mixed> $params
+     * @return array<mixed>
      */
     public function getProductIds(array $params = []): array
     {
@@ -170,7 +168,7 @@ class ViewFrontend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
     /**
      * Get all fields that are set as searchable for this category
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getSearchFields(): array
     {
@@ -194,7 +192,7 @@ class ViewFrontend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
      * Return all sites which assigned the category
      *
      * @param Project|null $Project
-     * @return array
+     * @return array<mixed>
      * @throws Exception
      */
     public function getSites(null | Project $Project = null): array

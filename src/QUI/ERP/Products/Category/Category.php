@@ -58,33 +58,33 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     protected int $parentId;
 
     /**
-     * @var ?array
+     * @var array<mixed>|null
      */
     protected ?array $fields = null;
 
     /**
-     * @var ?array
+     * @var array<mixed>|null
      */
     protected ?array $sites = null;
 
     /**
-     * @var array|null
+     * @var array<mixed>|null
      */
     protected array | null $defaultSites = [];
 
     /**
      * db data
-     * @var array
+     * @var array<mixed>
      */
     protected array $data = [];
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected array $caches = [];
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected mixed $customData = [];
 
@@ -92,7 +92,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      * Model constructor.
      *
      * @param integer $categoryId
-     * @param array $data - optional, category data
+     * @param array<mixed> $data - optional, category data
      */
     public function __construct(int $categoryId, array $data)
     {
@@ -228,18 +228,18 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         try {
             $Parent = $this->getParent();
 
-            if ($Parent) {
+            if ($Parent instanceof QUI\ERP\Products\Interfaces\CategoryInterface) {
                 $parents[] = $Parent;
             }
         } catch (QUI\Exception) {
             return $parents;
         }
 
-        while ($Parent) {
+        while ($Parent instanceof QUI\ERP\Products\Interfaces\CategoryInterface) {
             try {
                 $Parent = $Parent->getParent();
 
-                if (!$Parent) {
+                if (!$Parent instanceof QUI\ERP\Products\Interfaces\CategoryInterface) {
                     break;
                 }
 
@@ -306,7 +306,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * Return the attributes
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getAttributes(): array
     {
@@ -376,7 +376,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getChildren(): array
     {
@@ -395,7 +395,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     public function countChildren(): int
     {
         try {
-            $data = QUI::getDataBase()->fetch([
+            $data = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
                 'count' => [
                     'select' => 'id',
@@ -428,6 +428,10 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     {
         if (!$Project) {
             $Project = QUI::getRewrite()->getProject();
+        }
+
+        if ($Project === null) {
+            throw new QUI\Exception('Project is unavailable.');
         }
 
         $defaults = $this->defaultSites;
@@ -538,7 +542,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * refresh the internal sites bind
      *
-     * @return array|null
+     * @return array<mixed>|null
      *
      * @throws Exception
      * @throws QUI\Exception
@@ -572,13 +576,21 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             $projectName = $Project->getName();
             $projectLang = $Project->getLang();
 
-            // Fetch sites directly via db for performance reasons
-            $sql = "SELECT `id` FROM `" . $Project->table() . "`";
-            $sql .= " WHERE `active` = 1";
-            $sql .= " AND (`extra` LIKE '%\"quiqqer.products.settings.categoryId\":\"" . $id . "\"%'";
-            $sql .= " OR `extra` LIKE '%\"quiqqer.products.settings.categoryId\":" . $id . "%')";
-
-            $result = QUI::getDataBase()->fetchSQL($sql);
+            // Fetch sites directly via DB for performance reasons
+            $QueryBuilder = QUI::getQueryBuilder();
+            $result = $QueryBuilder
+                ->select(QUI\Utils\Doctrine::quoteIdentifier('id'))
+                ->from(QUI\Utils\Doctrine::quoteIdentifier($Project->table()))
+                ->where($QueryBuilder->expr()->eq(QUI\Utils\Doctrine::quoteIdentifier('active'), ':active'))
+                ->andWhere($QueryBuilder->expr()->or(
+                    $QueryBuilder->expr()->like(QUI\Utils\Doctrine::quoteIdentifier('extra'), ':stringCategoryId'),
+                    $QueryBuilder->expr()->like(QUI\Utils\Doctrine::quoteIdentifier('extra'), ':integerCategoryId')
+                ))
+                ->setParameter('active', 1)
+                ->setParameter('stringCategoryId', '%"quiqqer.products.settings.categoryId":"' . $id . '"%')
+                ->setParameter('integerCategoryId', '%"quiqqer.products.settings.categoryId":' . $id . '%')
+                ->executeQuery()
+                ->fetchAllAssociative();
             $idList = array_column($result, 'id');
 
             foreach ($result as $row) {
@@ -615,12 +627,12 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * Return all products from the category
      *
-     * @param array $params - query parameter
+     * @param array<mixed> $params - query parameter
      *                              $queryParams['where']
      *                              $queryParams['limit']
      *                              $queryParams['order']
      *                              $queryParams['debug']
-     * @return array
+     * @return array<mixed>
      */
     public function getProducts(array $params = []): array
     {
@@ -659,12 +671,12 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * Return all product ids from the category
      *
-     * @param array $params - query parameter
+     * @param array<mixed> $params - query parameter
      *                              $queryParams['where']
      *                              $queryParams['limit']
      *                              $queryParams['order']
      *                              $queryParams['debug']
-     * @return array
+     * @return array<mixed>
      */
     public function getProductIds(array $params = []): array
     {
@@ -701,7 +713,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * Return the number of the products in the category
      *
-     * @param array $params - query parameter
+     * @param array<mixed> $params - query parameter
      *                              $queryParams['where']
      *                              $queryParams['debug']
      * @return integer
@@ -784,7 +796,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * Return the category fields
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getFields(): array
     {
@@ -864,12 +876,10 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      */
     public function addField(QUI\ERP\Products\Field\Field $Field): void
     {
-        if ($this->fields === null) {
-            $this->getFields();
-        }
+        $fields = $this->fields ?? $this->getFields();
 
         /* @var $CategoryField QUI\ERP\Products\Field\Field */
-        foreach ($this->fields as $CategoryField) {
+        foreach ($fields as $CategoryField) {
             if ($CategoryField->getId() == $Field->getId()) {
                 return;
             }
@@ -951,7 +961,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             );
         }
 
-        QUI::getDataBase()->update(
+        QUI::getDataBaseConnection()->update(
             QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
             [
                 'fields' => json_encode($fields),
@@ -1020,7 +1030,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
                 continue;
             }
 
-            QUI::getDataBase()->delete(
+            QUI::getDataBaseConnection()->delete(
                 QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
                 ['id' => $id]
             );
@@ -1044,7 +1054,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * Get all fields that are set as searchable for this category
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getSearchFields(): array
     {
@@ -1077,7 +1087,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
     /**
      * @param string $key
-     * @param float|array|int|string|null $value - Must be serializable
+     * @param float|array<mixed>|int|string|null $value - Must be serializable
      */
     public function setCustomDataEntry(string $key, float | array | int | string | null $value): void
     {
@@ -1102,7 +1112,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getCustomData(): array
     {

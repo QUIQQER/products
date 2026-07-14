@@ -6,7 +6,7 @@
  * @param integer $siteId
  * @param string $project
  *
- * @return array
+ * @return array<mixed>
  */
 
 use QUI\ERP\Products\Handler\Search as SearchHandler;

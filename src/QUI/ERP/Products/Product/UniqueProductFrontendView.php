@@ -33,7 +33,7 @@ class UniqueProductFrontendView extends UniqueProduct
      * UniqueProductFrontendView constructor.
      *
      * @param int $pid
-     * @param array $attributes
+     * @param array<mixed> $attributes
      *
      * @throws QUI\Exception
      */
@@ -96,7 +96,7 @@ class UniqueProductFrontendView extends UniqueProduct
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             return new QUI\ERP\Money\Price(
                 null,
-                QUI\ERP\Currency\Handler::getDefaultCurrency()
+                QUI\ERP\Defaults::getCurrency()
             );
         }
 
@@ -105,7 +105,7 @@ class UniqueProductFrontendView extends UniqueProduct
         } catch (QUI\Exception) {
             return new QUI\ERP\Money\Price(
                 null,
-                QUI\ERP\Currency\Handler::getDefaultCurrency()
+                QUI\ERP\Defaults::getCurrency()
             );
         }
     }
@@ -120,7 +120,7 @@ class UniqueProductFrontendView extends UniqueProduct
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             return new QUI\ERP\Money\Price(
                 null,
-                QUI\ERP\Currency\Handler::getDefaultCurrency()
+                QUI\ERP\Defaults::getCurrency()
             );
         }
 
@@ -129,7 +129,7 @@ class UniqueProductFrontendView extends UniqueProduct
         } catch (QUI\Exception) {
             return new QUI\ERP\Money\Price(
                 null,
-                QUI\ERP\Currency\Handler::getDefaultCurrency()
+                QUI\ERP\Defaults::getCurrency()
             );
         }
     }
@@ -152,10 +152,10 @@ class UniqueProductFrontendView extends UniqueProduct
      */
     public function getOriginalPrice(): QUI\ERP\Money\Price
     {
-        if ($this->originalPrice) {
+        if (is_float($this->originalPrice) && $this->originalPrice !== 0.0) {
             return new QUI\ERP\Money\Price(
                 $this->originalPrice,
-                QUI\ERP\Currency\Handler::getDefaultCurrency()
+                QUI\ERP\Defaults::getCurrency()
             );
         }
 
@@ -172,7 +172,7 @@ class UniqueProductFrontendView extends UniqueProduct
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             return new QUI\ERP\Money\Price(
                 null,
-                QUI\ERP\Currency\Handler::getDefaultCurrency()
+                QUI\ERP\Defaults::getCurrency()
             );
         }
 
@@ -181,7 +181,7 @@ class UniqueProductFrontendView extends UniqueProduct
         } catch (QUI\Exception) {
             return new QUI\ERP\Money\Price(
                 null,
-                QUI\ERP\Currency\Handler::getDefaultCurrency()
+                QUI\ERP\Defaults::getCurrency()
             );
         }
     }
@@ -189,7 +189,7 @@ class UniqueProductFrontendView extends UniqueProduct
     /**
      * Return the product attributes
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getAttributes(): array
     {

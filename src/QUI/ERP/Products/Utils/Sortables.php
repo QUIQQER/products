@@ -18,7 +18,7 @@ class Sortables
 {
     /**
      * @param Site $Site
-     * @return array|bool
+     * @return array<mixed>|bool
      * @throws Exception
      */
     public static function getSortableFieldsForSite(QUI\Projects\Site $Site): array|bool
@@ -45,7 +45,7 @@ class Sortables
 
     /**
      * @param Site $Site
-     * @return array
+     * @return array<mixed>
      * @throws Exception
      */
     public static function getFieldSettingsForSite(QUI\Projects\Site $Site): array
@@ -93,13 +93,17 @@ class Sortables
     public static function getDefaultFields(): array
     {
         $Package = QUI::getPackage('quiqqer/products')->getConfig();
-        $sortingFields = $Package->getValue('products', 'sortFields');
+        $sortingFields = $Package?->getValue('products', 'sortFields');
+
+        if (!is_string($sortingFields)) {
+            return [];
+        }
 
         return explode(',', $sortingFields);
     }
 
     /**
-     * @return array[]
+     * @return array<int, array<string, mixed>>
      *
      * @throws QUI\Exception
      */
@@ -107,7 +111,12 @@ class Sortables
     {
         // config
         $Package = QUI::getPackage('quiqqer/products')->getConfig();
-        $sortingFields = $Package->getValue('products', 'sortFields');
+        $sortingFields = $Package?->getValue('products', 'sortFields');
+
+        if (!is_string($sortingFields)) {
+            return [];
+        }
+
         $sortingFields = explode(',', $sortingFields);
         $sortingFields = array_flip($sortingFields);
 

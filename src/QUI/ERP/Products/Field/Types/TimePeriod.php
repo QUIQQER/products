@@ -110,7 +110,7 @@ class TimePeriod extends QUI\ERP\Products\Field\Field
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @return array|null
+     * @return array<mixed>|null
      */
     public function cleanup(mixed $value): mixed
     {

@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Handler;
 
 use DOMElement;
+use DOMNode;
 use DOMXPath;
 use Exception;
 use QUI;
@@ -17,6 +18,7 @@ use function array_keys;
 use function array_merge;
 use function class_exists;
 use function count;
+use function date;
 use function dirname;
 use function file_exists;
 use function get_class;
@@ -114,7 +116,7 @@ class Fields
     /**
      * List of cache names
      *
-     * @var array
+     * @var array<mixed>
      */
     protected static array $cacheNames = [
         'quiqqer/products/fields',
@@ -123,31 +125,34 @@ class Fields
     ];
 
     /**
-     * @var array
+     * @var array<mixed>
+     */
+    /**
+     * @var array<int, QUI\ERP\Products\Field\Field>
      */
     protected static array $list = [];
 
     /**
-     * @var array|null
+     * @var array<mixed>|null
      */
     protected static ?array $fieldTypes = null;
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected static array $fieldTypeData = [];
 
     /**
      * Runtime cache for price factor settings
      *
-     * @var array|bool
+     * @var array<mixed>|false
      */
-    protected static array | bool $priceFactorSettings = false;
+    protected static array | false $priceFactorSettings = false;
 
     /**
      * Return the child attributes
      *
-     * @return array
+     * @return array<mixed>
      */
     public static function getChildAttributes(): array
     {
@@ -172,7 +177,7 @@ class Fields
     /**
      * Return all standard fields
      *
-     * @return array
+     * @return array<mixed>
      */
     public static function getStandardFields(): array
     {
@@ -186,7 +191,7 @@ class Fields
     /**
      * Return all system fields
      *
-     * @return array
+     * @return array<mixed>
      */
     public static function getSystemFields(): array
     {
@@ -239,7 +244,7 @@ class Fields
     /**
      * Create a new field
      *
-     * @param array $attributes - field attributes
+     * @param array<mixed> $attributes - field attributes
      * @return QUI\ERP\Products\Field\Field
      *
      * @throws Exception
@@ -277,7 +282,7 @@ class Fields
         }
 
         // cache colum check
-        $columns = QUI::getDataBase()->table()->getColumns(
+        $columns = QUI\ERP\Products\Utils\Database::getColumns(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName()
         );
 
@@ -290,7 +295,7 @@ class Fields
 
         // id checking
         if (isset($attributes['id'])) {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                 'where' => [
                     'id' => $attributes['id']
@@ -307,7 +312,7 @@ class Fields
             $data['id'] = $attributes['id'];
         } else {
             // exist an id with 1000? field-id begin at 1000
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                 'where' => [
                     'id' => [
@@ -335,6 +340,8 @@ class Fields
             $data['name'] = '';
         }
 
+        $data['e_date'] = date('Y-m-d H:i:s');
+
         // attributelisten options 'exclude_from_variant_generation' immer auf true
         if ($data['type'] === 'AttributeGroup') {
             $options = $data['options'] ?? '';
@@ -352,12 +359,12 @@ class Fields
         }
 
         // insert field data
-        QUI::getDataBase()->insert(
+        QUI::getDataBaseConnection()->insert(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             $data
         );
 
-        $newId = $data['id'] ?? QUI::getDataBase()->getPDO()->lastInsertId();
+        $newId = (int)($data['id'] ?? QUI::getDataBaseConnection()->lastInsertId());
 
         if (class_exists('\QUI\Watcher')) {
             QUI\Watcher::addString(
@@ -411,8 +418,8 @@ class Fields
         // vererbbar und editiert
         try {
             $Config = QUI::getPackage('quiqqer/products')->getConfig();
-            $editable = $Config->getSection('editableFields');
-            $inherited = $Config->getSection('inheritedFields');
+            $editable = $Config?->getSection('editableFields');
+            $inherited = $Config?->getSection('inheritedFields');
 
             if (!isset($attributes['fieldEditable'])) {
                 $attributes['fieldEditable'] = 1;
@@ -448,9 +455,10 @@ class Fields
      */
     public static function createCacheColumn(string $columnName, string $columnType = 'text'): void
     {
-        QUI::getDataBase()->table()->addColumn(
+        QUI\ERP\Products\Utils\Database::addColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-            [$columnName => $columnType]
+            $columnName,
+            $columnType
         );
     }
 
@@ -485,8 +493,8 @@ class Fields
      * Set the field translations of a field
      * but only if there is no translation
      *
-     * @param $fieldId
-     * @param $attributes
+     * @param mixed $fieldId
+     * @param mixed $attributes
      */
     public static function setFieldTranslations($fieldId, $attributes): void
     {
@@ -598,7 +606,7 @@ class Fields
      *
      * @param string $group
      * @param string $var
-     * @param array $data
+     * @param array<mixed> $data
      */
     protected static function insertTranslations(string $group, string $var, array $data = []): void
     {
@@ -624,7 +632,7 @@ class Fields
     /**
      * Return the cache name of a field
      *
-     * @param $fieldId
+     * @param mixed $fieldId
      * @return string
      */
     public static function getFieldCacheName($fieldId): string
@@ -635,7 +643,7 @@ class Fields
     /**
      * Return all available Fields
      *
-     * @return array
+     * @return array<mixed>
      */
     public static function getFieldTypes(): array
     {
@@ -648,7 +656,9 @@ class Fields
         try {
             self::$fieldTypes = QUI\Cache\LongTermCache::get($cacheName);
 
-            return self::$fieldTypes;
+            if (is_array(self::$fieldTypes)) {
+                return self::$fieldTypes;
+            }
         } catch (QUI\Exception) {
         }
 
@@ -665,6 +675,7 @@ class Fields
      * This iterates through all packages and reads their files from disk.
      * Therefore, this is slow  and should only be used when you know that it's necessary.
      * You would generally want to use @return array
+     * @return array<mixed>
      * @see self::getFieldTypes()
      */
     private static function getFieldTypesFromDisk(): array
@@ -695,6 +706,10 @@ class Fields
         // @todo use package manager when it can handle new packages (see quiqqer/core#1383)
         $productsXmls = glob(OPT_DIR . '*/*/products.xml');
 
+        if ($productsXmls === false) {
+            $productsXmls = [];
+        }
+
         foreach ($productsXmls as $xml) {
             if (!file_exists($xml)) {
                 continue;
@@ -717,9 +732,14 @@ class Fields
 
             $fields = $Path->query("//quiqqer/products/fields/field");
 
+            if ($fields === false) {
+                continue;
+            }
+
             foreach ($fields as $Field) {
                 if (
-                    !method_exists($Field, 'getAttribute')
+                    !$Field instanceof DOMNode
+                    || !method_exists($Field, 'getAttribute')
                     || !method_exists($Field, 'getElementsByTagName')
                 ) {
                     continue;
@@ -759,7 +779,7 @@ class Fields
      * Return internal field init data for a field type
      *
      * @param string $type - field type
-     * @return array
+     * @return array<mixed>
      */
     public static function getFieldTypeData(string $type): array
     {
@@ -788,7 +808,7 @@ class Fields
      * This iterates through all packages and reads their files from disk.
      * Therefore, this is slow and should only be used when you know that it's necessary.
      * You would generally want to use @param string $type - field type
-     * @return array
+     * @return array<mixed>
      * @see self::getFieldTypeData()
      */
     private static function getFieldTypeDataFromDisk(string $type): array
@@ -813,7 +833,7 @@ class Fields
      *
      * @param string $type - wanted field type
      * @param integer $fieldId - ID of the field
-     * @param array $fieldParams - optional,  Params of the field
+     * @param array<mixed> $fieldParams - optional,  Params of the field
      * @return QUI\ERP\Products\Field\Field
      *
      * @throws QUI\Exception
@@ -826,7 +846,11 @@ class Fields
         $class = 'QUI\ERP\Products\Field\Types\\' . $type;
 
         if (class_exists($class)) {
-            return new $class($fieldId, $fieldParams);
+            $Field = new $class($fieldId, $fieldParams);
+
+            if ($Field instanceof QUI\ERP\Products\Field\Field) {
+                return $Field;
+            }
         }
 
         throw new QUI\ERP\Products\Field\Exception([
@@ -864,7 +888,7 @@ class Fields
             $data = QUI\Cache\LongTermCache::get($cacheName);
         } catch (QUI\Exception) {
             try {
-                $result = QUI::getDataBase()->fetch([
+                $result = QUI\ERP\Products\Utils\Database::fetch([
                     'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                     'where' => [
                         'id' => $fieldId
@@ -937,10 +961,9 @@ class Fields
             'defaultValue' => json_decode($data['defaultValue'], true)
         ];
 
-        /* @var $Field QUI\ERP\Products\Field\Field */
         $Field = new $class($fieldId, $fieldData);
 
-        if (!QUI\ERP\Products\Utils\Fields::isField($Field)) {
+        if (!$Field instanceof QUI\ERP\Products\Field\Field) {
             throw new QUI\ERP\Products\Field\Exception(
                 [
                     'quiqqer/products',
@@ -991,12 +1014,12 @@ class Fields
      * Return a list of field ids
      * if $queryParams is empty, all fields are returned
      *
-     * @param array $queryParams - query parameter
+     * @param array<mixed> $queryParams - query parameter
      *                              $queryParams['where'],
      *                              $queryParams['where_or'],
      *                              $queryParams['limit']
      *                              $queryParams['order']
-     * @return array
+     * @return array<mixed>
      */
     public static function getFieldIds(array $queryParams = []): array
     {
@@ -1029,7 +1052,7 @@ class Fields
         //$query['debug'] = true;
 
         try {
-            $result = QUI::getDataBase()->fetch($query);
+            $result = QUI\ERP\Products\Utils\Database::fetch($query);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
@@ -1043,7 +1066,7 @@ class Fields
      * Return a list of fields
      * if $queryParams is empty, all fields are returned
      *
-     * @param array $queryParams - query parameter
+     * @param array<mixed> $queryParams - query parameter
      *                              $queryParams['where'],
      *                              $queryParams['where_or'],
      *                              $queryParams['limit']
@@ -1079,7 +1102,7 @@ class Fields
     /**
      * Return all fields by a specific type
      *
-     * @param $type
+     * @param mixed $type
      * @return QUI\ERP\Products\Interfaces\FieldInterface[]
      */
     public static function getFieldsByType($type): array
@@ -1099,7 +1122,7 @@ class Fields
     /**
      * Return the number of the fields
      *
-     * @param array $queryParams - query params (where, where_or)
+     * @param array<mixed> $queryParams - query params (where, where_or)
      * @return integer
      */
     public static function countFields(array $queryParams = []): int
@@ -1121,7 +1144,7 @@ class Fields
         }
 
         try {
-            $data = QUI::getDataBase()->fetch($query);
+            $data = QUI\ERP\Products\Utils\Database::fetch($query);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addError($Exception->getMessage(), $Exception->getContext());
 
@@ -1145,7 +1168,7 @@ class Fields
      * - showInDetails
      *
      * @param int|null $fieldId (optional) - Restrict to one field [default: all fields]
-     * @param array $customAttributes (optional) - Set custom attributes that are set to
+     * @param array<mixed> $customAttributes (optional) - Set custom attributes that are set to
      * every product field
      * @return void
      */
@@ -1238,22 +1261,23 @@ class Fields
     /**
      * Get current price factor settings
      *
-     * @return array
+     * @return array<mixed>
      */
     public static function getPriceFactorSettings(): array
     {
-        if (self::$priceFactorSettings !== false) {
+        if (is_array(self::$priceFactorSettings)) {
             return self::$priceFactorSettings;
         }
 
         try {
             $Conf = QUI::getPackage('quiqqer/products')->getConfig();
-            $settings = $Conf->get('products', 'priceFieldFactors');
+            $settings = $Conf?->get('products', 'priceFieldFactors');
 
             if (empty($settings)) {
                 self::$priceFactorSettings = [];
             } else {
-                self::$priceFactorSettings = json_decode($settings, true);
+                $priceFactorSettings = json_decode($settings, true);
+                self::$priceFactorSettings = is_array($priceFactorSettings) ? $priceFactorSettings : [];
             }
         } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
@@ -1269,7 +1293,7 @@ class Fields
     /**
      * Get all price field types.
      *
-     * @return array
+     * @return array<mixed>
      */
     public static function getAllPriceFieldTypes(): array
     {
@@ -1285,6 +1309,8 @@ class Fields
 
     /**
      * Get all price field types provided by package providers
+     *
+     * @return array<mixed>
      */
     public static function getPriceFieldTypesByProviders(): array
     {

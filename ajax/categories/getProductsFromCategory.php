@@ -28,7 +28,7 @@ QUI::getAjax()->registerFunction(
 
         // Get data from cache
         if (!empty($productIds)) {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'select' => [
                     'id',
                     'title',

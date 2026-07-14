@@ -3,27 +3,24 @@
 
     <global>
         <table name="products">
-            <field type="BIGINT(10) NOT NULL AUTO_INCREMENT PRIMARY KEY">id</field>
-            <field type="VARCHAR(255) NOT NULL">type</field>
-            <field type="BIGINT(20) NULL">category</field>
-            <field type="TEXT NULL">categories</field>
-            <field type="LONGTEXT NULL">fieldData</field>
-            <field type="LONGTEXT NULL">editableVariantFields</field>
-            <field type="LONGTEXT NULL">inheritedVariantFields</field>
-            <field type="BIGINT(10) NULL">defaultVariantId</field>
-            <field type="text NULL">variantHash</field>
-            <field type="TINYINT(1) DEFAULT 0">active</field>
-            <field type="BIGINT(10) NULL">parent</field>
-            <field type="TEXT NULL">permissions</field>
+            <field type="bigint" autoincrement="true" primary="true">id</field>
+            <field type="string" length="255">type</field>
+            <field type="bigint" nullable="true" default="null">category</field>
+            <field type="text" nullable="true" default="null">categories</field>
+            <field type="text" nullable="true" default="null">fieldData</field>
+            <field type="text" nullable="true" default="null">editableVariantFields</field>
+            <field type="text" nullable="true" default="null">inheritedVariantFields</field>
+            <field type="bigint" nullable="true" default="null">defaultVariantId</field>
+            <field type="text" nullable="true" default="null">variantHash</field>
+            <field type="boolean" default="0">active</field>
+            <field type="bigint" nullable="true" default="null">parent</field>
+            <field type="text" nullable="true" default="null">permissions</field>
 
-            <field type="timestamp NULL default NULL">c_date</field>
-            <field type="timestamp NULL default NULL">e_date</field>
-            <field type="VARCHAR(50) NULL">c_user</field>
-            <field type="VARCHAR(50) NULL">e_user</field>
-            <field type="INT(11) DEFAULT 0">orderCount</field>
-
-            <primary>id</primary>
-            <auto_increment>id</auto_increment>
+            <field type="datetime" nullable="true" default="null">c_date</field>
+            <field type="datetime" nullable="true" default="null">e_date</field>
+            <field type="string" length="50" nullable="true" default="null">c_user</field>
+            <field type="string" length="50" nullable="true" default="null">e_user</field>
+            <field type="integer" default="0">orderCount</field>
             <index>parent</index>
             <index>category</index>
             <index>active</index>
@@ -31,38 +28,32 @@
         </table>
 
         <table name="product_categories">
-            <field type="BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY">id</field>
-            <field type="BIGINT(20) DEFAULT 0">parentId</field>
-            <field type="TEXT NULL">fields</field>
-            <field type="TEXT NULL">sites</field>
-            <field type="TEXT NULL">title_cache</field>
-            <field type="TEXT NULL">description_cache</field>
-            <field type="LONGTEXT NULL">custom_data</field>
-
-            <primary>id</primary>
-            <auto_increment>id</auto_increment>
+            <field type="bigint" autoincrement="true" primary="true">id</field>
+            <field type="bigint" default="0">parentId</field>
+            <field type="text" nullable="true" default="null">fields</field>
+            <field type="text" nullable="true" default="null">sites</field>
+            <field type="text" nullable="true" default="null">title_cache</field>
+            <field type="text" nullable="true" default="null">description_cache</field>
+            <field type="text" nullable="true" default="null">custom_data</field>
             <index>parentId</index>
         </table>
 
         <table name="product_fields">
-            <field type="BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY">id</field>
-            <field type="VARCHAR(255) NOT NULL">name</field>
-            <field type="VARCHAR(255) NOT NULL">type</field>
-            <field type="VARCHAR(255) NULL DEFAULT ''">search_type</field>
-            <field type="TEXT NULL">prefix</field>
-            <field type="TEXT NULL">suffix</field>
-            <field type="INT NOT NULL DEFAULT 0">priority</field>
-            <field type="TINYINT(1) NOT NULL DEFAULT 0">systemField</field>
-            <field type="TINYINT(1) NOT NULL DEFAULT 0">standardField</field>
-            <field type="TINYINT(1) NOT NULL DEFAULT 0">requiredField</field>
-            <field type="TINYINT(1) NOT NULL DEFAULT 0">publicField</field>
-            <field type="TINYINT(1) NOT NULL DEFAULT 0">showInDetails</field>
-            <field type="TEXT NULL">options</field>
-            <field type="TEXT NULL">defaultValue</field>
-            <field type="timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP">e_date</field>
-
-            <primary>id</primary>
-            <auto_increment>id</auto_increment>
+            <field type="bigint" autoincrement="true" primary="true">id</field>
+            <field type="string" length="255">name</field>
+            <field type="string" length="255">type</field>
+            <field type="string" length="255" nullable="true" default="">search_type</field>
+            <field type="text" nullable="true" default="null">prefix</field>
+            <field type="text" nullable="true" default="null">suffix</field>
+            <field type="integer" default="0">priority</field>
+            <field type="boolean" default="0">systemField</field>
+            <field type="boolean" default="0">standardField</field>
+            <field type="boolean" default="0">requiredField</field>
+            <field type="boolean" default="0">publicField</field>
+            <field type="boolean" default="0">showInDetails</field>
+            <field type="text" nullable="true" default="null">options</field>
+            <field type="text" nullable="true" default="null">defaultValue</field>
+            <field type="datetime" nullable="true" default="null">e_date</field>
 
             <index>systemField</index>
             <index>standardField</index>
@@ -72,22 +63,22 @@
         </table>
 
         <table name="products_cache">
-            <field type="BIGINT(10) NOT NULL">id</field>
-            <field type="VARCHAR(255) NOT NULL">type</field>
-            <field type="VARCHAR(2) NOT NULL">lang</field>
-            <field type="VARCHAR(255) NULL">productNo</field>
-            <field type="DOUBLE NULL">minPrice</field>
-            <field type="DOUBLE NULL">maxPrice</field>
-            <field type="DOUBLE NULL">currentPrice</field>
-            <field type="VARCHAR(255) NOT NULL">title</field>
-            <field type="TEXT NULL">description</field>
-            <field type="VARCHAR(255) NULL">category</field>
-            <field type="TINYINT(1)">active</field>
-            <field type="LONGTEXT NULL">tags</field>
-            <field type="TEXT NULL">viewUsersGroups</field>
-            <field type="timestamp NULL default NULL">c_date</field>
-            <field type="timestamp NULL default NULL">e_date</field>
-            <field type="BIGINT(10) NULL DEFAULT NULL">parentId</field>
+            <field type="bigint">id</field>
+            <field type="string" length="255">type</field>
+            <field type="string" length="2">lang</field>
+            <field type="string" length="255" nullable="true" default="null">productNo</field>
+            <field type="float" nullable="true" default="null">minPrice</field>
+            <field type="float" nullable="true" default="null">maxPrice</field>
+            <field type="float" nullable="true" default="null">currentPrice</field>
+            <field type="string" length="255">title</field>
+            <field type="text" nullable="true" default="null">description</field>
+            <field type="string" length="255" nullable="true" default="null">category</field>
+            <field type="boolean" default="0">active</field>
+            <field type="text" nullable="true" default="null">tags</field>
+            <field type="text" nullable="true" default="null">viewUsersGroups</field>
+            <field type="datetime" nullable="true" default="null">c_date</field>
+            <field type="datetime" nullable="true" default="null">e_date</field>
+            <field type="bigint" nullable="true" default="null">parentId</field>
 
             <primary>id,lang</primary>
             <index>type</index>

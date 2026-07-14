@@ -50,7 +50,7 @@ class VariantGenerating extends Singleton
 
     /**
      * @param VariantParent $Product
-     * @return array
+     * @return array<mixed>
      * @todo was ist hiermit?
      */
     public function getMissingVariantsList(VariantParent $Product): array
@@ -58,6 +58,11 @@ class VariantGenerating extends Singleton
         $result = [];
 
         $children = $Product->getVariants();
+
+        if (!is_array($children)) {
+            $children = [];
+        }
+
         $exists = array_map(function ($Variant) {
             return $Variant->getAttribute('variantHash');
         }, $children);

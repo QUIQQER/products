@@ -21,14 +21,14 @@ class Search extends QUI\Control
     protected bool | null | FrontendSearch $Search = null;
 
     /**
-     * @var array|null
+     * @var array<mixed>|null
      */
     protected ?array $fields = null;
 
     /**
      * constructor
      *
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -100,7 +100,7 @@ class Search extends QUI\Control
     /**
      * Return the search field data
      *
-     * @return array
+     * @return array<mixed>
      * @throws Exception
      */
     protected function getSearchFieldData(): array
@@ -108,7 +108,7 @@ class Search extends QUI\Control
         if (is_null($this->fields)) {
             $Search = $this->getSearch();
 
-            if ($Search) {
+            if ($Search instanceof FrontendSearch) {
                 $this->fields = $Search->getSearchFieldData();
             } else {
                 $this->fields = [];
@@ -127,10 +127,16 @@ class Search extends QUI\Control
      */
     protected function getSite(): QUI\Interfaces\Projects\Site
     {
-        if ($this->getAttribute('Site')) {
-            return $this->getAttribute('Site');
+        $Site = $this->getAttribute('Site');
+
+        if (!$Site instanceof QUI\Interfaces\Projects\Site) {
+            $Site = QUI::getRewrite()->getSite();
         }
 
-        return QUI::getRewrite()->getSite();
+        if (!$Site instanceof QUI\Interfaces\Projects\Site) {
+            throw new QUI\Exception('Could not determine the search site.');
+        }
+
+        return $Site;
     }
 }

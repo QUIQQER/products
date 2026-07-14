@@ -92,6 +92,11 @@ class PriceByTimePeriod extends Price
         }
 
         $Now = date_create();
+
+        if ($Now === false) {
+            return false;
+        }
+
         $Now->setTime(0, 0);
 
         if ($From !== false && $From > $Now) {
@@ -123,7 +128,7 @@ class PriceByTimePeriod extends Price
 
         $Price = new QUI\ERP\Money\Price(
             $value['price'],
-            QUI\ERP\Currency\Handler::getDefaultCurrency()
+            QUI\ERP\Defaults::getCurrency()
         );
 
         $valueText = $Price->getDisplayPrice();
@@ -144,7 +149,7 @@ class PriceByTimePeriod extends Price
      * Precision: 8 (important for currencies like BitCoin)
      *
      * @param mixed $value
-     * @return array
+     * @return array<mixed>
      */
     public function cleanup(mixed $value): array
     {

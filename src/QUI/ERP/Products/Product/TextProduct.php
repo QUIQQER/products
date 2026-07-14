@@ -25,7 +25,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * TextProduct constructor.
      *
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -52,6 +52,10 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     {
         if (!QUI::getUsers()->isUser($User)) {
             $User = QUI::getUsers()->getNobody();
+        }
+
+        if (!$User instanceof QUI\Interfaces\Users\User) {
+            throw new QUI\Exception('Could not determine a user for the text product.');
         }
 
         $attributes = $this->getAttributes();
@@ -133,7 +137,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * Return all fields
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getFields(): array
     {
@@ -223,8 +227,8 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * Return all fields from the wanted type
      *
-     * @param string|array $type
-     * @return array
+     * @param string|array<mixed> $type
+     * @return array<mixed>
      */
     public function getFieldsByType(string|array $type): array
     {
@@ -239,7 +243,12 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      */
     public function getImage(): Image
     {
-        $Placeholder = QUI::getRewrite()->getProject()->getMedia()->getPlaceholderImage();
+        $Project = QUI::getRewrite()->getProject();
+        $Placeholder = null;
+
+        if ($Project) {
+            $Placeholder = $Project->getMedia()->getPlaceholderImage();
+        }
 
         if ($Placeholder instanceof Image) {
             return $Placeholder;
@@ -321,7 +330,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * Return the product categories
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getCategories(): array
     {
@@ -348,11 +357,17 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
 
     //region calc
 
+    /**
+     * @param QUI\ERP\Products\Utils\Calc|null $Calc
+     */
     public function calc($Calc = null): static
     {
         return $this;
     }
 
+    /**
+     * @return void
+     */
     public function resetCalculation()
     {
         // nothing - placeholder

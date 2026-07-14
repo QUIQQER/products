@@ -70,14 +70,14 @@ interface CategoryViewInterface
     /**
      * Return the attributes
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getAttributes(): array;
 
     /**
      * Return the sub categories
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getChildren(): array;
 
@@ -102,38 +102,38 @@ interface CategoryViewInterface
      * Return all sites which assigned the category
      *
      * @param Project|null $Project
-     * @return array
+     * @return array<mixed>
      */
     public function getSites(null | Project $Project = null): array;
 
     /**
      * Return all products from the category
      *
-     * @param array $params - query parameter
+     * @param array<mixed> $params - query parameter
      *                              $queryParams['where']
      *                              $queryParams['limit']
      *                              $queryParams['order']
      *                              $queryParams['debug']
-     * @return array
+     * @return array<mixed>
      */
     public function getProducts(array $params = []): array;
 
     /**
      * Return all product ids from the category
      *
-     * @param array $params - query parameter
+     * @param array<mixed> $params - query parameter
      *                              $queryParams['where']
      *                              $queryParams['limit']
      *                              $queryParams['order']
      *                              $queryParams['debug']
-     * @return array
+     * @return array<mixed>
      */
     public function getProductIds(array $params = []): array;
 
     /**
      * Return the number of the products in the category
      *
-     * @param array $params - query parameter
+     * @param array<mixed> $params - query parameter
      *                              $queryParams['where']
      *                              $queryParams['debug']
      * @return integer
@@ -143,7 +143,7 @@ interface CategoryViewInterface
     /**
      * Return the category fields
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getFields(): array;
 
@@ -158,7 +158,7 @@ interface CategoryViewInterface
     /**
      * Get all fields that are set as searchable for this category
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getSearchFields(): array;
 }

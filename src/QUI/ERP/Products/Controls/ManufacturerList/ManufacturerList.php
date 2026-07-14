@@ -21,7 +21,7 @@ class ManufacturerList extends QUI\Control
     /**
      * constructor
      *
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -51,7 +51,7 @@ class ManufacturerList extends QUI\Control
         // global settings: product autoload after x clicks
         if ($this->getAttribute('autoloadAfter') == '' || !$this->getAttribute('autoloadAfter')) {
             // @todo get setting from site
-            $this->setAttribute('autoloadAfter', $Config->get('products', 'autoloadAfter'));
+            $this->setAttribute('autoloadAfter', $Config?->get('products', 'autoloadAfter'));
         }
 
         $this->setAttribute('data-project', $this->getSite()->getProject()->getName());
@@ -116,7 +116,7 @@ class ManufacturerList extends QUI\Control
      * Return the first articles as html array
      *
      * @param boolean|integer $count - (optional) count of the children
-     * @return array [html, count, more]
+     * @return array<mixed> [html, count, more]
      */
     public function getStart(bool|int $count = false): array
     {
@@ -128,7 +128,7 @@ class ManufacturerList extends QUI\Control
      *
      * @param boolean|integer $start - (optional) start position
      * @param boolean|integer $count - (optional) count of the children
-     * @return array [html, count, more]
+     * @return array<mixed> [html, count, more]
      */
     public function getNext(bool|int $start = false, bool|int $count = false): array
     {
@@ -141,7 +141,7 @@ class ManufacturerList extends QUI\Control
      * @param boolean|integer $start - (optional) start position
      * @param boolean|integer $max - (optional) max children
      * @param boolean|integer $count - (optional) count of the children
-     * @return array [html, count, more]
+     * @return array<mixed> [html, count, more]
      */
     protected function renderData(bool|int $start, bool|int $max, bool|int $count = false): array
     {
@@ -159,7 +159,7 @@ class ManufacturerList extends QUI\Control
             $userIds = ManufacturersHandler::getManufacturerUserIds(true);
 
             if (!empty($userIds)) {
-                $result = QUI::getDataBase()->fetch([
+                $result = QUI\ERP\Products\Utils\Database::fetch([
                     'select' => ['id'],
                     'from' => $Users::table(),
                     'where' => [
@@ -251,10 +251,16 @@ class ManufacturerList extends QUI\Control
      */
     protected function getSite(): QUI\Interfaces\Projects\Site
     {
-        if ($this->getAttribute('Site')) {
-            return $this->getAttribute('Site');
+        $Site = $this->getAttribute('Site');
+
+        if (!$Site instanceof QUI\Interfaces\Projects\Site) {
+            $Site = QUI::getRewrite()->getSite();
         }
 
-        return QUI::getRewrite()->getSite();
+        if (!$Site instanceof QUI\Interfaces\Projects\Site) {
+            throw new QUI\Exception('Could not determine the manufacturer list site.');
+        }
+
+        return $Site;
     }
 }

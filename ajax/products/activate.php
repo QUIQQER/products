@@ -16,7 +16,7 @@ QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_activate',
     function ($productId) {
         if (is_numeric($productId)) {
-            $Product = Products::getProduct($productId);
+            $Product = Products::getProduct((int)$productId);
             $Product->activate();
 
             return;

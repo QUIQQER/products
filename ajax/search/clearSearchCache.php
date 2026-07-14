@@ -9,7 +9,7 @@ use QUI\ERP\Products\Search\Cache;
 /**
  * Clear the search cache for all cached search values
  *
- * @return array
+ * @return array<mixed>
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_search_clearSearchCache',

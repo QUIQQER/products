@@ -12,7 +12,7 @@ use QUI\ERP\Products\Handler\Search as SearchHandler;
  * @param integer $siteId
  * @param string $project
  *
- * @return array
+ * @return array<mixed>
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_search_frontend_getSearchFieldData',

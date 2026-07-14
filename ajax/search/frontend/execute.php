@@ -9,8 +9,8 @@ use QUI\ERP\Products\Handler\Search as SearchHandler;
 /**
  * Execute a product search
  *
- * @param array $searchData
- * @return array - product ids
+ * @param array<mixed> $searchData
+ * @return array<mixed> - product ids
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_search_frontend_execute',

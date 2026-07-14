@@ -17,15 +17,15 @@ use function sort;
 class FieldSortCache
 {
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected static array $fieldsCache = [];
 
     /**
-     * @param array $fields - FieldInterface[]
+     * @param array<mixed> $fields - FieldInterface[]
      * @param string $sort
      *
-     * @return array|false
+     * @return array<mixed>|false
      */
     public static function getFieldCache(array $fields, string $sort): bool|array
     {
@@ -58,9 +58,9 @@ class FieldSortCache
     /**
      * Set field cache
      *
-     * @param array $fields - FieldInterface[]
+     * @param array<mixed> $fields - FieldInterface[]
      * @param string $sort
-     * @param array $cache
+     * @param array<mixed> $cache
      */
     public static function setFieldCache(array $fields, string $sort, array $cache): void
     {

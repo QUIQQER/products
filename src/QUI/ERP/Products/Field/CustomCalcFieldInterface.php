@@ -23,7 +23,7 @@ interface CustomCalcFieldInterface
      * );
      *
      * @param Locale|null $Locale
-     * @return array
+     * @return array<mixed>
      */
     public function getCalculationData(null | Locale $Locale = null): array;
 }

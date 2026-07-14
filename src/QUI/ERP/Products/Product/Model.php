@@ -87,18 +87,18 @@ class Model extends QUI\QDOM
     protected int $id;
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected array $fields = [];
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected array $categories = [];
 
     /**
      * Permissions list
-     * @var array
+     * @var array<mixed>
      */
     protected mixed $permissions = [];
 
@@ -133,7 +133,7 @@ class Model extends QUI\QDOM
      * Model constructor
      *
      * @param integer $pid - Product-ID
-     * @param array $product - Product Data
+     * @param array<mixed> $product - Product Data
      *
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
@@ -391,6 +391,12 @@ class Model extends QUI\QDOM
             $User = QUI::getUsers()->getNobody();
         }
 
+        if (!$User instanceof QUI\Interfaces\Users\User) {
+            throw new QUI\ERP\Products\Product\Exception(
+                'Could not determine a user for the unique product.'
+            );
+        }
+
         // $Locale = $User->getLocale(); // quiqqer/order#158
         $Locale = QUI\ERP\Products\Handler\Products::getLocale();
 
@@ -497,6 +503,7 @@ class Model extends QUI\QDOM
     {
         // create field folder
         if ($fieldId) {
+            $fieldId = (int)$fieldId;
             $Field = $this->getField($fieldId);
 
             if ($Field->getType() != Fields::TYPE_FOLDER) {
@@ -644,6 +651,10 @@ class Model extends QUI\QDOM
             $Project = QUI::getRewrite()->getProject();
         }
 
+        if ($Project === null) {
+            throw new QUI\Exception('Project is unavailable.');
+        }
+
         $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
         $cacheName .= '/url';
         $cacheName .= '/' . $Project->getName();
@@ -651,12 +662,24 @@ class Model extends QUI\QDOM
 
         try {
             $url = QUI\Cache\LongTermCache::get($cacheName);
-            return parse_url($url, PHP_URL_PATH);
+
+            if (is_string($url)) {
+                $path = parse_url($url, PHP_URL_PATH);
+
+                if (is_string($path)) {
+                    return $path;
+                }
+            }
         } catch (QUI\Exception) {
         }
 
         // look if category is in product and it is the correct site
         $Category = $this->getCategory();
+
+        if ($Category === null) {
+            throw new QUI\Exception('Product category is unavailable.');
+        }
+
         $sites = $Category->getSites($Project);
 
         $checkSitePath = function ($list) {
@@ -736,7 +759,16 @@ class Model extends QUI\QDOM
             $Project = QUI::getRewrite()->getProject();
         }
 
+        if ($Project === null) {
+            throw new QUI\Exception('Project is unavailable.');
+        }
+
         $Category = $this->getCategory();
+
+        if ($Category === null) {
+            throw new QUI\Exception('Product category is unavailable.');
+        }
+
         $Site = $Category->getSite($Project);
 
         if (
@@ -824,7 +856,7 @@ class Model extends QUI\QDOM
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_TITLE, $Locale);
 
-        if ($result) {
+        if (is_string($result) && $result !== '') {
             return $result;
         }
 
@@ -855,7 +887,7 @@ class Model extends QUI\QDOM
             $Locale
         );
 
-        if ($result) {
+        if (is_string($result) && $result !== '') {
             return $result;
         }
 
@@ -872,7 +904,7 @@ class Model extends QUI\QDOM
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_CONTENT, $Locale);
 
-        if ($result) {
+        if (is_string($result) && $result !== '') {
             return $result;
         }
 
@@ -970,7 +1002,7 @@ class Model extends QUI\QDOM
      * @throws Exception
      * @throws QUI\Exception
      */
-    public function getOriginalPrice(): bool | QUI\ERP\Products\Field\UniqueField | QUI\ERP\Money\Price
+    public function getOriginalPrice(): bool | UniqueFieldInterface | QUI\ERP\Money\Price
     {
         return $this->createUniqueProduct()->getOriginalPrice();
     }
@@ -1054,7 +1086,7 @@ class Model extends QUI\QDOM
         if (
             QUI::getPackage('quiqqer/products')
                 ->getConfig()
-                ->get('products', 'useAttributeListsForMinMaxPriceCalculation')
+                ?->get('products', 'useAttributeListsForMinMaxPriceCalculation')
         ) {
             $fields = $Clone->getFieldsByType([
                 Fields::TYPE_ATTRIBUTE_LIST
@@ -1145,7 +1177,7 @@ class Model extends QUI\QDOM
         if (
             QUI::getPackage('quiqqer/products')
                 ->getConfig()
-                ->get('products', 'useAttributeListsForMinMaxPriceCalculation')
+                ?->get('products', 'useAttributeListsForMinMaxPriceCalculation')
         ) {
             $fields = $Clone->getFieldsByType([
                 Fields::TYPE_ATTRIBUTE_LIST
@@ -1199,7 +1231,7 @@ class Model extends QUI\QDOM
     /**
      * Return the attributes
      *
-     * @return array
+     * @return array<mixed>
      *
      * @throws QUI\Exception
      */
@@ -1298,7 +1330,7 @@ class Model extends QUI\QDOM
     /**
      * Internal saving method
      *
-     * @param array $fieldData - field data
+     * @param array<mixed> $fieldData - field data
      * @param User|null $EditUser (optional) - The user that executes the operation
      *
      * @throws Exception
@@ -1380,7 +1412,10 @@ class Model extends QUI\QDOM
             $urls[$lang] = QUI\Projects\Site\Utils::clearUrl($url);
         }
 
-        $fieldData[$urlKey]['value'] = $urls;
+        if ($urlKey !== null) {
+            $fieldData[$urlKey]['value'] = $urls;
+        }
+
         $this->getField(Fields::FIELD_URL)->setValue($urls);
 
         // Check if article no. is unique
@@ -1466,7 +1501,7 @@ class Model extends QUI\QDOM
                 );
             }
 
-            QUI::getDataBase()->update(
+            QUI::getDataBaseConnection()->update(
                 QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 [
                     'parent' => $parentId,
@@ -1506,7 +1541,7 @@ class Model extends QUI\QDOM
     {
         try {
             // cache db attributes
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 'where' => [
                     'id' => $this->getId()
@@ -1528,7 +1563,7 @@ class Model extends QUI\QDOM
     /**
      * Check if the product url already exists in the category
      *
-     * @param array $fieldData
+     * @param array<mixed> $fieldData
      * @throws QUI\Exception
      * @throws Exception
      */
@@ -1546,9 +1581,15 @@ class Model extends QUI\QDOM
             $urls = $urlField[0]['value'];
         }
 
+        $Category = $this->getCategory();
+
+        if ($Category === null) {
+            throw new QUI\Exception('Product category is unavailable.');
+        }
+
         ProductUtils::checkUrlByUrlFieldValue(
             $urls,
-            $this->getCategory()->getId(),
+            $Category->getId(),
             $this->getId()
         );
     }
@@ -1578,7 +1619,7 @@ class Model extends QUI\QDOM
     /**
      * Validate the fields and return the field data
      *
-     * @return array
+     * @return array<mixed>
      *
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
@@ -1669,7 +1710,7 @@ class Model extends QUI\QDOM
      * Return the field data of all fields
      * if the product is active, the fields would be validated, too
      *
-     * @return array
+     * @return array<mixed>
      */
     protected function getFieldData(): array
     {
@@ -1942,7 +1983,7 @@ class Model extends QUI\QDOM
         }
 
         // test if cache entry exists first
-        $result = QUI::getDataBase()->fetch([
+        $result = QUI\ERP\Products\Utils\Database::fetch([
             'from' => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             'where' => [
                 'id' => $this->getId(),
@@ -1957,7 +1998,7 @@ class Model extends QUI\QDOM
             $data['id'] = $this->id;
             $data['lang'] = $lang;
 
-            QUI::getDataBase()->insert(
+            QUI::getDataBaseConnection()->insert(
                 QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
                 $data
             );
@@ -1965,7 +2006,7 @@ class Model extends QUI\QDOM
             return;
         }
 
-        QUI::getDataBase()->update(
+        QUI::getDataBaseConnection()->update(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             $data,
             [
@@ -2015,12 +2056,12 @@ class Model extends QUI\QDOM
         }
 
 
-        QUI::getDataBase()->delete(
+        QUI::getDataBaseConnection()->delete(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             ['id' => $this->getId()]
         );
 
-        QUI::getDataBase()->delete(
+        QUI::getDataBaseConnection()->delete(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             ['id' => $this->getId()]
         );
@@ -2059,7 +2100,7 @@ class Model extends QUI\QDOM
     /**
      * Return all fields from the specific type
      *
-     * @param array|string $type - field type (eq: ProductAttributeList, Price ...) or list of field types
+     * @param array<mixed>|string $type - field type (eq: ProductAttributeList, Price ...) or list of field types
      * @return FieldInterface[]
      */
     public function getFieldsByType(array | string $type): array
@@ -2128,7 +2169,7 @@ class Model extends QUI\QDOM
      * Return the field value
      *
      * @param integer|string $fieldId - Field ID or FIELD constant name -> FIELD_PRICE, FIELD_PRODUCT_NO ...
-     * @return int|float|string|array|null
+     * @return int|float|string|array<mixed>|null
      * @throws Exception
      */
     public function getFieldValue(int | string $fieldId): int | float | string | array | null
@@ -2141,7 +2182,7 @@ class Model extends QUI\QDOM
      *
      * @param integer $fieldId
      * @param Locale|null $Locale (optional)
-     * @return int|float|string|array|null
+     * @return int|float|string|array<mixed>|null
      * @throws Exception
      */
     public function getFieldValueByLocale(int $fieldId, ?QUI\Locale $Locale = null): int | float | string | array | null
@@ -2150,8 +2191,8 @@ class Model extends QUI\QDOM
     }
 
     /**
-     * @param $fieldId
-     * @return array
+     * @param mixed $fieldId
+     * @return array<mixed>
      *
      * @throws Exception
      * @throws QUI\Exception
@@ -2210,7 +2251,7 @@ class Model extends QUI\QDOM
     /**
      * Return the product categories
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getCategories(): array
     {
@@ -2325,22 +2366,27 @@ class Model extends QUI\QDOM
                 $Project = QUI::getProjectManager()->getStandard();
             }
 
-            $Media = $Project->getMedia();
-            $Placeholder = $Media->getPlaceholderImage();
+            if ($Project) {
+                $Media = $Project->getMedia();
+                $Placeholder = $Media->getPlaceholderImage();
 
-            if ($Placeholder instanceof QUI\Projects\Media\Image) {
-                return $Placeholder;
+                if ($Placeholder instanceof QUI\Projects\Media\Image) {
+                    return $Placeholder;
+                }
             }
         } catch (QUI\Exception) {
         }
 
         try {
             $Project = QUI::getProjectManager()->getStandard();
-            $Media = $Project->getMedia();
-            $Placeholder = $Media->getPlaceholderImage();
 
-            if ($Placeholder instanceof QUI\Projects\Media\Image) {
-                return $Placeholder;
+            if ($Project) {
+                $Media = $Project->getMedia();
+                $Placeholder = $Media->getPlaceholderImage();
+
+                if ($Placeholder instanceof QUI\Projects\Media\Image) {
+                    return $Placeholder;
+                }
             }
         } catch (QUI\Exception) {
         }
@@ -2373,13 +2419,15 @@ class Model extends QUI\QDOM
     /**
      * Return all images for the product
      *
-     * @param array $params - optional, select params
-     * @return array
+     * @param array<mixed> $params - optional, select params
+     * @return array<mixed>
      */
     public function getImages(array $params = []): array
     {
         try {
-            return $this->getMediaFolder()->getImages($params);
+            $images = $this->getMediaFolder()->getImages($params);
+
+            return is_array($images) ? $images : [];
         } catch (QUI\Exception) {
             return [];
         }
@@ -2388,13 +2436,15 @@ class Model extends QUI\QDOM
     /**
      * Return all files for the product
      *
-     * @param array $params - optional, select params
-     * @return array
+     * @param array<mixed> $params - optional, select params
+     * @return array<mixed>
      */
     public function getFiles(array $params = []): array
     {
         try {
-            return $this->getMediaFolder()->getFiles($params);
+            $files = $this->getMediaFolder()->getFiles($params);
+
+            return is_array($files) ? $files : [];
         } catch (QUI\Exception) {
             return [];
         }
@@ -2429,7 +2479,7 @@ class Model extends QUI\QDOM
             );
         }
 
-        QUI::getDataBase()->update(
+        QUI::getDataBaseConnection()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             ['active' => 0],
             ['id' => $this->getId()]
@@ -2486,7 +2536,15 @@ class Model extends QUI\QDOM
         // duplicate article no. check
         $articleNo = $this->getFieldValue(Fields::FIELD_PRODUCT_NO);
 
-        if (!empty($articleNo) && Products::isCheckDuplicteArticleNo()) {
+        if (is_int($articleNo) || is_float($articleNo)) {
+            $articleNo = (string)$articleNo;
+        }
+
+        if (
+            is_string($articleNo)
+            && $articleNo !== ''
+            && Products::isCheckDuplicteArticleNo()
+        ) {
             $this->checkDuplicateArticleNo($articleNo);
         }
 
@@ -2495,7 +2553,7 @@ class Model extends QUI\QDOM
 
         $this->active = true;
 
-        QUI::getDataBase()->update(
+        QUI::getDataBaseConnection()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             ['active' => 1],
             ['id' => $this->getId()]
@@ -2579,7 +2637,7 @@ class Model extends QUI\QDOM
     }
 
     /**
-     * @return array|mixed
+     * @return array<mixed>|mixed
      */
     public function getPermissions(): mixed
     {
@@ -2652,7 +2710,7 @@ class Model extends QUI\QDOM
     /**
      * Get price field factors that apply to this product.
      *
-     * @return array
+     * @return array<mixed>
      */
     protected function getApplicableProductPriceFactors(): array
     {
@@ -2806,9 +2864,9 @@ class Model extends QUI\QDOM
 
                     if ($buildPriceByConcat) {
                         if (!empty($settings['rounding']['custom'])) {
-                            $targetPrice = $targetPriceInt . '.' . $settings['rounding']['custom'];
+                            $targetPrice = (float)($targetPriceInt . '.' . $settings['rounding']['custom']);
                         } else {
-                            $targetPrice = $targetPriceInt . '.' . $targetPriceDecimals;
+                            $targetPrice = (float)($targetPriceInt . '.' . $targetPriceDecimals);
                         }
                     }
 
@@ -2843,15 +2901,39 @@ class Model extends QUI\QDOM
      */
     protected function checkDuplicateArticleNo(string $articleNo): void
     {
-        $subQuery = "SELECT `id` FROM " . QUI\ERP\Products\Utils\Tables::getProductTableName();
-        $subQuery .= " WHERE `active` = 1 AND `parent` IS NULL";
+        $productTable = QUI\Utils\Doctrine::quoteIdentifier(
+            QUI\ERP\Products\Utils\Tables::getProductTableName()
+        );
+        $cacheTable = QUI\Utils\Doctrine::quoteIdentifier(
+            QUI\ERP\Products\Utils\Tables::getProductCacheTableName()
+        );
+        $activeParentQuery = QUI::getQueryBuilder();
+        $activeParentQuery
+            ->select(QUI\Utils\Doctrine::quoteIdentifier('id'))
+            ->from($productTable)
+            ->where($activeParentQuery->expr()->eq(QUI\Utils\Doctrine::quoteIdentifier('active'), ':parentActive'))
+            ->andWhere($activeParentQuery->expr()->isNull(QUI\Utils\Doctrine::quoteIdentifier('parent')));
 
-        $sql = "SELECT `id` FROM " . QUI\ERP\Products\Utils\Tables::getProductCacheTableName();
-        $sql .= " WHERE `id` != " . $this->getId() . " AND `active` = 1";
-        $sql .= " AND (`parentId` IS NULL or `parentId` IN(" . $subQuery . "))";
-        $sql .= " AND `productNo` = '" . $articleNo . "'";
-
-        $result = QUI::getDataBase()->fetchSQL($sql);
+        $QueryBuilder = QUI::getQueryBuilder();
+        $result = $QueryBuilder
+            ->select(QUI\Utils\Doctrine::quoteIdentifier('id'))
+            ->from($cacheTable)
+            ->where($QueryBuilder->expr()->neq(QUI\Utils\Doctrine::quoteIdentifier('id'), ':productId'))
+            ->andWhere($QueryBuilder->expr()->eq(QUI\Utils\Doctrine::quoteIdentifier('active'), ':active'))
+            ->andWhere($QueryBuilder->expr()->or(
+                $QueryBuilder->expr()->isNull(QUI\Utils\Doctrine::quoteIdentifier('parentId')),
+                $QueryBuilder->expr()->in(
+                    QUI\Utils\Doctrine::quoteIdentifier('parentId'),
+                    $activeParentQuery->getSQL()
+                )
+            ))
+            ->andWhere($QueryBuilder->expr()->eq(QUI\Utils\Doctrine::quoteIdentifier('productNo'), ':productNo'))
+            ->setParameter('productId', $this->getId())
+            ->setParameter('active', 1)
+            ->setParameter('parentActive', 1)
+            ->setParameter('productNo', $articleNo)
+            ->executeQuery()
+            ->fetchAllAssociative();
         $duplicateArticleNoProductIds = array_unique(array_column($result, 'id'));
 
         foreach ($duplicateArticleNoProductIds as $productId) {

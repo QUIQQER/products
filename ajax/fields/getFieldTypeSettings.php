@@ -7,7 +7,7 @@
 /**
  * Returns all available extra field settings
  *
- * @return array
+ * @return array<mixed>
  */
 
 use QUI\ERP\Products\Field\Field;

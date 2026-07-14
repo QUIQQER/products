@@ -40,7 +40,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     protected mixed $defaultValue = null;
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected array $disabled = [];
 
@@ -48,7 +48,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
      * Attribute group constructor.
      *
      * @param int $fieldId
-     * @param array $params
+     * @param array<mixed> $params
      */
     public function __construct(int $fieldId, array $params)
     {
@@ -98,7 +98,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     /**
      * Add an product attribute entry
      *
-     * @param array $entry - data entry
+     * @param array<mixed> $entry - data entry
      *
      * @example $this->addEntry(array(
      *       'title' => '',    // translation json string {de: "", en: ""}

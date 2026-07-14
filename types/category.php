@@ -41,28 +41,24 @@ if (str_contains(QUI::getRequest()->getPathInfo(), '_p/')) {
 
     $siteUrl = '';
 
-    $_REQUEST['_url'] = urldecode($_REQUEST['_url']); // nginx fix
+    $_REQUEST['_url'] = urldecode((string)$_REQUEST['_url']); // nginx fix
     $url = $_REQUEST['_url'];
     $url = pathinfo($url);
 }
 
 // category menu
 $searchParentCategorySite = function () use ($Site) {
-    $Parent = true;
+    while ($Site instanceof QUI\Projects\Site) {
+        $Parent = $Site->getParent();
 
-    while ($Parent) {
         if (
-            $Site->getParent()
-            && $Site->getParent()->getAttribute('type') != 'quiqqer/products:types/category'
+            $Parent instanceof QUI\Projects\Site
+            && $Parent->getAttribute('type') != 'quiqqer/products:types/category'
         ) {
             return $Site;
         }
 
-        $Site = $Site->getParent();
-
-        if (!$Site) {
-            break;
-        }
+        $Site = $Parent;
     }
 
     return $Site;
@@ -82,7 +78,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
      * PRODUCT
      */
     $baseName = str_replace(
-        QUI\Rewrite::getDefaultSuffix(),
+        (string)QUI\Rewrite::getDefaultSuffix(),
         '',
         $url['basename']
     );
@@ -105,11 +101,11 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     // get by url field
     try {
         $categoryId = (int)$Site->getAttribute('quiqqer.products.settings.categoryId');
-        $Product = Products\Handler\Products::getProductByUrl($refNo, $categoryId);
+        $Product = Products\Handler\Products::getProductByUrl((string)$refNo, $categoryId);
     } catch (QUI\Exception $Exception) {
         try {
             if (is_numeric($refNo)) {
-                $Product = Products\Handler\Products::getProduct($refNo);
+                $Product = Products\Handler\Products::getProduct((int)$refNo);
             }
         } catch (QUI\Exception $Exception) {
             Log::addDebug('Products::getProductByUrl :: ' . $Exception->getMessage());
@@ -129,7 +125,8 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
 
         // set canonical always to the parent
         if ($Product instanceof Products\Product\Types\VariantChild) {
-            $Site->setAttribute('canonical', $Product->getParent()->getUrl($Project));
+            $Parent = $Product->getParent();
+            $Site->setAttribute('canonical', $Parent->getUrl($Project));
         }
 
         // if product url is with lang flag /en/
@@ -154,11 +151,13 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         $CategoryMenu->setAttribute('disableCheckboxes', true);
         $CategoryMenu->setAttribute('breadcrumb', true);
 
+        $categoryId = $Product->getCategory()?->getId() ?? 0;
+
         $Engine->assign([
             'Product' => new Products\Controls\Products\Product([
                 'Product' => $Product
             ]),
-            'categoryId' => $Product->getCategory()->getId()
+            'categoryId' => $categoryId
         ]);
 
         // set site data
@@ -303,6 +302,10 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     $filterList = $ProductList->getFilter();
     $fields = Products\Utils\Sortables::getSortableFieldsForSite($Site);
 
+    if (!is_array($fields)) {
+        $fields = [];
+    }
+
     foreach ($fields as $fieldId) {
         if (str_starts_with($fieldId, 'S')) {
             $title = QUI::getLocale()->get('quiqqer/products', 'sortable.' . mb_substr($fieldId, 1));
@@ -345,7 +348,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         $ProductList->setAttribute('showFilter', false);
     }
 
-    if ($CategoryMenu->countChildren() || count($filterList)) {
+    if ($CategoryMenu->countChildren() || count($filterList ?? [])) {
         $ProductList->setAttribute('forceMobileFilter', true);
     }
 

@@ -19,7 +19,7 @@ QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_calcBruttoPrice',
     function ($price, $formatted, $productId) {
         try {
-            $price = QUI\ERP\Money\Price::validatePrice($price);
+            $price = QUI\ERP\Money\Price::validatePrice($price) ?? 0;
             $baseFormatted = QUI\ERP\Defaults::getCurrency()->format($price);
 
             $bruttoPrice = Calc::calcBruttoPrice($price, false, $productId);

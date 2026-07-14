@@ -42,7 +42,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getAttributes(): array
     {
@@ -146,7 +146,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     {
         return new QUI\ERP\Money\Price(
             $this->getAttribute('price'),
-            QUI\ERP\Currency\Handler::getDefaultCurrency()
+            QUI\ERP\Defaults::getCurrency()
         );
     }
 
@@ -194,8 +194,8 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     }
 
     /**
-     * @param string|array $type
-     * @return array
+     * @param string|array<mixed> $type
+     * @return array<mixed>
      */
     public function getFieldsByType(string | array $type): array
     {
@@ -213,7 +213,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getFields(): array
     {
@@ -222,11 +222,11 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
 
     /**
      * @param int|string $fieldId
-     * @return string|array|null
+     * @return int|float|string|array<mixed>|null
      *
      * @throws Exception
      */
-    public function getFieldValue(int | string $fieldId): string | array | null
+    public function getFieldValue(int | string $fieldId): int | float | string | array | null
     {
         return $this->getProduct()->getFieldValue($fieldId);
     }
@@ -246,7 +246,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     }
 
     /**
-     * @return array|QUI\Projects\Media\Image[]
+     * @return array<mixed>|QUI\Projects\Media\Image[]
      */
     public function getImages(): array
     {
@@ -254,7 +254,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getCategories(): array
     {
@@ -274,9 +274,9 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     }
 
     /**
-     * @return false|QUI\ERP\Products\Interfaces\UniqueFieldInterface
+     * @return bool|QUI\ERP\Money\Price|QUI\ERP\Products\Interfaces\UniqueFieldInterface
      */
-    public function getOriginalPrice(): QUI\ERP\Products\Interfaces\UniqueFieldInterface | bool
+    public function getOriginalPrice(): QUI\ERP\Products\Interfaces\UniqueFieldInterface | QUI\ERP\Money\Price | bool
     {
         try {
             return $this->getProduct()->getOriginalPrice();

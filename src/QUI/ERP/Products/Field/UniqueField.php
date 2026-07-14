@@ -46,7 +46,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
 
     /**
      * Field title
-     * @var string|array
+     * @var string|array<mixed>
      */
     protected string | array $title;
 
@@ -87,14 +87,14 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
 
     /**
      * custom field calculation data
-     * @var array
+     * @var array<mixed>
      */
     protected array $custom_calc = [];
 
     /**
      * search cache value
      *
-     * @var string|array|null
+     * @var string|array<mixed>|null
      */
     protected string | array | null $searchvalue;
 
@@ -141,7 +141,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     protected bool $ownField = false;
 
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected array $options = [];
 
@@ -179,7 +179,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      * Model constructor.
      *
      * @param integer $fieldId
-     * @param array $params - optional, field params (system, require, standard)
+     * @param array<mixed> $params - optional, field params (system, require, standard)
      */
     public function __construct(int $fieldId, array $params = [])
     {
@@ -269,7 +269,11 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
         $viewClass = 'QUI\ERP\Products\Field\Types\\' . $type . 'FrontendView';
 
         if (class_exists($viewClass)) {
-            return new $viewClass($this->getAttributes());
+            $View = new $viewClass($this->getAttributes());
+
+            if ($View instanceof View) {
+                return $View;
+            }
         }
 
         if ($this->parentFieldClass && class_exists($this->parentFieldClass)) {
@@ -294,7 +298,11 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
         $viewClass = 'QUI\ERP\Products\Field\Types\\' . $type . 'BackendView';
 
         if (class_exists($viewClass)) {
-            return new $viewClass($this->getAttributes());
+            $View = new $viewClass($this->getAttributes());
+
+            if ($View instanceof View) {
+                return $View;
+            }
         }
 
         if ($this->parentFieldClass && class_exists($this->parentFieldClass)) {
@@ -326,10 +334,10 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      */
     public function getPrice(): QUI\ERP\Money\Price
     {
-        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        $Currency = QUI\ERP\Defaults::getCurrency();
 
         if (is_numeric($this->value)) {
-            $Price = new QUI\ERP\Money\Price($this->value, $Currency);
+            $Price = new QUI\ERP\Money\Price((float)$this->value, $Currency);
         } else {
             $Price = new QUI\ERP\Money\Price(0, $Currency);
         }
@@ -428,7 +436,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      * Return the value in dependence of a locale (language)
      *
      * @param Locale|null $Locale $Locale
-     * @return array|string
+     * @return array<mixed>|string
      */
     public function getValueByLocale(?Locale $Locale = null): mixed
     {
@@ -436,7 +444,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getOptions(): array
     {
@@ -445,7 +453,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
 
     /**
      * @param Locale|null $Locale
-     * @return string|array|null
+     * @return string|array<mixed>|null
      */
     public function getSearchCacheValue(null | QUI\Locale $Locale = null): null | string | array
     {
@@ -477,7 +485,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     /**
      * Return the attributes
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getAttributes(): array
     {
@@ -512,6 +520,10 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
                 $interfaces = class_implements($this->getParentClass());
             }
         } catch (\QUI\Exception) {
+        }
+
+        if ($interfaces === false) {
+            $interfaces = [];
         }
 
         return [
@@ -774,7 +786,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     }
 
     /**
-     * @param $Product - Product instance
+     * @param mixed $Product - Product instance
      */
     public function setProduct($Product): void
     {

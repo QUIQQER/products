@@ -20,7 +20,7 @@ class Menu extends QUI\Control
     /**
      * constructor
      *
-     * @param array $attributes
+     * @param array<mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -87,6 +87,10 @@ class Menu extends QUI\Control
 
         $CurrentSide = QUI::getRewrite()->getSite();
 
+        if (!$CurrentSide instanceof QUI\Interfaces\Projects\Site) {
+            return false;
+        }
+
         if (
             $this->getSite()->getAttribute('quiqqer.products.settings.categoryAsFilter')
             && $CurrentSide->getId() === 1
@@ -123,7 +127,7 @@ class Menu extends QUI\Control
      * Return the quiqqer/products:types/category children
      *
      * @param QUI\Interfaces\Projects\Site|null $Site
-     * @return array
+     * @return array<mixed>
      *
      * @throws QUI\Exception
      */
@@ -133,11 +137,13 @@ class Menu extends QUI\Control
             $Site = $this->getSite();
         }
 
-        return $Site->getNavigation([
+        $children = $Site->getNavigation([
             'where' => [
                 'type' => 'quiqqer/products:types/category'
             ]
         ]);
+
+        return is_array($children) ? $children : [];
     }
 
     /**
@@ -158,12 +164,14 @@ class Menu extends QUI\Control
             return 0;
         }
 
-        return $Site->getNavigation([
+        $count = $Site->getNavigation([
             'count' => true,
             'where' => [
                 'type' => 'quiqqer/products:types/category'
             ]
         ]);
+
+        return is_int($count) ? $count : count($count);
     }
 
     /**
@@ -200,11 +208,17 @@ class Menu extends QUI\Control
      */
     protected function getSite(): QUI\Interfaces\Projects\Site
     {
-        if ($this->getAttribute('Site')) {
-            return $this->getAttribute('Site');
+        $Site = $this->getAttribute('Site');
+
+        if (!$Site instanceof QUI\Interfaces\Projects\Site) {
+            $Site = QUI::getRewrite()->getSite();
         }
 
-        return QUI::getRewrite()->getSite();
+        if (!$Site instanceof QUI\Interfaces\Projects\Site) {
+            throw new QUI\Exception('Could not determine the category menu site.');
+        }
+
+        return $Site;
     }
 
     /**
@@ -215,12 +229,17 @@ class Menu extends QUI\Control
         try {
             $Site = $this->getSite();
             $Project = $Site->getProject();
+            $RewriteSite = QUI::getRewrite()->getSite();
+
+            if (!$RewriteSite instanceof QUI\Interfaces\Projects\Site) {
+                throw new QUI\Exception('Could not determine the current rewrite site.');
+            }
 
             $params = [
                 'project' => $Project->getName(),
                 'lang' => $Project->getLang(),
                 'id' => $Site->getId(),
-                'idRewrite' => QUI::getRewrite()->getSite()->getId(),
+                'idRewrite' => $RewriteSite->getId(),
                 'data-qui' => 'package/quiqqer/products/bin/controls/frontend/category/Menu',
                 'disableCheckboxes' => $this->getAttribute('disableCheckboxes'),
                 'breadcrumb' => $this->getAttribute('breadcrumb'),

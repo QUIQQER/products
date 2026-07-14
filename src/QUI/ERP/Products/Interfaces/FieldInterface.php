@@ -16,7 +16,7 @@ interface FieldInterface extends UniqueFieldInterface
     /**
      * Return the field for the product as an array
      *
-     * @return array
+     * @return array<mixed>
      */
     public function toProductArray(): array;
 

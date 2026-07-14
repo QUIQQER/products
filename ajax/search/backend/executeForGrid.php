@@ -4,8 +4,8 @@
  * Get all fields that are available for search for a specific Site
  * Return teh result for grid
  *
- * @param array $searchData
- * @return array - product list
+ * @param array<mixed> $searchData
+ * @return array<mixed> - product list
  */
 
 use QUI\ERP\Products\Handler\Fields;
@@ -72,7 +72,7 @@ QUI::getAjax()->registerFunction(
         }
 
         if (is_array($productIds) && count($productIds)) {
-            $result = QUI::getDataBase()->fetch([
+            $result = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => Tables::getProductCacheTableName(),
                 'where' => [
                     'id' => [
@@ -86,14 +86,22 @@ QUI::getAjax()->registerFunction(
             $result = [];
         }
 
-        $currencyCode = QUI\ERP\Currency\Handler::getDefaultCurrency()->getCode();
+        $currencyCode = QUI\ERP\Defaults::getCurrency()->getCode();
 
         // sort $result as $productIds
         usort($result, function ($rowA, $rowB) use ($productIds) {
             $keyA = array_search($rowA['id'], $productIds);
             $keyB = array_search($rowB['id'], $productIds);
 
-            return $keyA - $keyB;
+            if ($keyA === false) {
+                return $keyB === false ? 0 : 1;
+            }
+
+            if ($keyB === false) {
+                return -1;
+            }
+
+            return $keyA <=> $keyB;
         });
 
         foreach ($result as $row) {

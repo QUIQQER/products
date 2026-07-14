@@ -56,7 +56,7 @@ class Products extends QUI\ERP\Products\Field\Field
      * Check the value
      * is the value valid for the field type?
      *
-     * @param array $value
+     * @param array<mixed> $value
      * @throws Exception
      */
     public function validate($value): void
@@ -82,7 +82,7 @@ class Products extends QUI\ERP\Products\Field\Field
      * Clean up the product ids
      *
      * @param mixed $value - [productId, productId, productId]
-     * @return array
+     * @return array<mixed>
      */
     public function cleanup(mixed $value): array
     {

@@ -77,7 +77,13 @@ class User
      */
     public static function getUserERPAddress(UserInterface $User): bool|QUI\Users\Address
     {
-        return Utils::getUserERPAddress($User);
+        $Address = Utils::getUserERPAddress($User);
+
+        if ($Address instanceof QUI\Users\Address) {
+            return $Address;
+        }
+
+        return false;
     }
 
     /**

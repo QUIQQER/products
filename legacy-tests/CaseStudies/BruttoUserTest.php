@@ -39,3 +39,4 @@ class BruttoUserTest extends TestCase
         );
     }
 }
+

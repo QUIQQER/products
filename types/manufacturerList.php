@@ -70,6 +70,10 @@ if ($siteUrl !== $requestUrl) {
         // Assign sort fields
         $fields = Sortables::getSortableFieldsForSite($Site);
 
+        if (!is_array($fields)) {
+            $fields = [];
+        }
+
         foreach ($fields as $fieldId) {
             if (str_starts_with($fieldId, 'S')) {
                 $title = QUI::getLocale()->get('quiqqer/products', 'sortable.' . mb_substr($fieldId, 1));

@@ -29,9 +29,9 @@ class Package
     /**
      * Return config
      *
-     * @return QUI\Config
+     * @return QUI\Config|null
      */
-    public static function getConfig(): QUI\Config
+    public static function getConfig(): ?QUI\Config
     {
         return QUI::getPackage(self::PACKAGE)->getConfig();
     }
@@ -56,7 +56,7 @@ class Package
     {
         // Wenn in Session der Preis versteckt werden soll
         // Dann hat dies Vorrang
-        if (QUI::getSession()->get('QUIQQER_PRODUCTS_HIDE_PRICE') == 1) {
+        if (QUI::getSession()?->get('QUIQQER_PRODUCTS_HIDE_PRICE') == 1) {
             return true;
         }
 
@@ -68,7 +68,7 @@ class Package
         $Config = $Package->getConfig();
         $User = QUI::getUserBySession();
 
-        self::$hidePrice = (bool)((int)$Config->get('products', 'hidePrices'));
+        self::$hidePrice = (bool)((int)$Config?->get('products', 'hidePrices'));
 
         if ($User->getUUID() && Permission::hasPermission('product.view.prices')) {
             self::$hidePrice = false;

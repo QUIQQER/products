@@ -12,7 +12,7 @@ use QUI\ERP\Products\Handler\Products;
  * Return the product data for tracking
  *
  * @param string $productId - ID of a product
- * @return array
+ * @return array<mixed>
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getTrackingDataForProduct',

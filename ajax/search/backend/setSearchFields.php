@@ -9,8 +9,8 @@ use QUI\ERP\Products\Handler\Search as SearchHandler;
 /**
  * Get all fields that are available for search for a specific Site
  *
- * @param array $searchFields
- * @return array - search fields after set
+ * @param array<mixed> $searchFields
+ * @return array<mixed> - search fields after set
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_search_backend_setSearchFields',

@@ -34,8 +34,8 @@ use function usort;
 class Fields
 {
     /**
-     * @param array $fields
-     * @return array
+     * @param array<mixed> $fields
+     * @return array<mixed>
      * @deprecated riesen quatsch
      *
      * @todo wer hat diese methode gebaut? ToJson = return string, wieso array?
@@ -62,8 +62,8 @@ class Fields
     }
 
     /**
-     * @param $fieldHash
-     * @return array
+     * @param mixed $fieldHash
+     * @return array<mixed>
      */
     public static function parseFieldHashToArray($fieldHash): array
     {
@@ -90,7 +90,7 @@ class Fields
      * Return all search hashes from one field hash
      *
      * @param string $hash
-     * @return array
+     * @return array<mixed>
      */
     public static function getSearchHashesFromFieldHash(string $hash): array
     {
@@ -137,7 +137,7 @@ class Fields
                     $searchHashes[$generatedHash] = true;
 
                     if (!is_numeric($option['valueId'])) {
-                        $clone[$fieldId] = implode(unpack("H*", $option['valueId']));
+                        $clone[$fieldId] = implode(unpack("H*", $option['valueId']) ?: []);
                         $generatedHash = self::generateFieldHashFromArray($clone);
 
                         $searchHashes[$generatedHash] = true;
@@ -153,7 +153,7 @@ class Fields
     }
 
     /**
-     * @param $field
+     * @param mixed $field
      * @return string
      */
     protected static function generateFieldHashFromArray($field): string
@@ -200,7 +200,7 @@ class Fields
     /**
      * Sort the fields by priority
      *
-     * @param array $fields - FieldInterface[]
+     * @param array<mixed> $fields - FieldInterface[]
      * @param string $sort - sorting field
      * @return FieldInterface[]
      */
@@ -277,7 +277,7 @@ class Fields
             $priority2 = $getFieldSortValue($Field2, $sort);
 
             if (is_string($priority1) || is_string($priority2)) {
-                return strnatcmp($priority1, $priority2);
+                return strnatcmp((string)$priority1, (string)$priority2);
             }
 
             // if sorting is priority, and both are equal, than use title
@@ -285,7 +285,7 @@ class Fields
                 $priority1 = $getFieldSortValue($Field1, 'title');
                 $priority2 = $getFieldSortValue($Field2, 'title');
 
-                return strnatcmp($priority1, $priority2);
+                return strnatcmp((string)$priority1, (string)$priority2);
             }
 
             if ($priority1 === 0) {
@@ -422,7 +422,7 @@ class Fields
     /**
      * is the value a weight specification
      *
-     * @param $weight
+     * @param mixed $weight
      * @return bool
      */
     public static function isWeight($weight): bool
@@ -436,9 +436,9 @@ class Fields
     /**
      * compares to numbers
      *
-     * @param $no1
-     * @param $no2
-     * @param $type
+     * @param mixed $no1
+     * @param mixed $no2
+     * @param mixed $type
      *
      * @return bool
      */
@@ -472,7 +472,7 @@ class Fields
      *
      * egt = >=
      *
-     * @param $term
+     * @param mixed $term
      * @return string
      */
     public static function termToHuman($term): string
@@ -503,7 +503,7 @@ class Fields
     /**
      *
      * @param ProductModel|null $Product (optional) - Get panel field categories for this specific product only
-     * @return array
+     * @return array<mixed>
      *
      * @todo cachinge
      */
@@ -523,6 +523,10 @@ class Fields
             $Path = new DOMXPath($Dom);
 
             $categoryList = $Path->query("//quiqqer/products/fieldCategories/fieldCategory");
+
+            if ($categoryList === false) {
+                continue;
+            }
 
             foreach ($categoryList as $Category) {
                 if (
@@ -589,7 +593,7 @@ class Fields
      *
      * @param String $category - name of the category
      * @param ProductModel|null $Product (optional) - Get category fields for this specific product only
-     * @return array
+     * @return array<mixed>
      */
     public static function getPanelFieldCategoryFields(string $category, ?ProductModel $Product = null): array
     {
@@ -638,6 +642,10 @@ class Fields
             $Path = new DOMXPath($Dom);
 
             $fieldList = $Path->query("//quiqqer/products/fields/field[@fieldCategory='$category']");
+
+            if ($fieldList === false) {
+                continue;
+            }
 
             foreach ($fieldList as $NodeField) {
                 if (!method_exists($NodeField, 'getAttribute')) {

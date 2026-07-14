@@ -21,17 +21,17 @@ class Categories
 {
     /**
      * List of internal categories
-     * @var array
+     * @var array<mixed>
      */
     private static array $list = [];
 
     /**
      * Clears the category cache
      *
-     * @param bool|integer $categoryId - optional, Category-ID,
+     * @param false|int|string $categoryId - optional, Category-ID,
      *                                   if false => complete categories cache is cleared
      */
-    public static function clearCache(bool | int | string $categoryId = false): void
+    public static function clearCache(false | int | string $categoryId = false): void
     {
         if ($categoryId === false) {
             QUI\Cache\LongTermCache::clear('quiqqer/products/categories/');
@@ -60,7 +60,7 @@ class Categories
     /**
      * Return the number of the children
      *
-     * @param array $queryParams - query params (where, where_or)
+     * @param array<mixed> $queryParams - query params (where, where_or)
      * @return integer
      */
     public function countCategories(array $queryParams = []): int
@@ -82,7 +82,7 @@ class Categories
         }
 
         try {
-            $data = QUI::getDataBase()->fetch($query);
+            $data = QUI\ERP\Products\Utils\Database::fetch($query);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
@@ -98,7 +98,7 @@ class Categories
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public static function getChildAttributes(): array
     {
@@ -137,7 +137,7 @@ class Categories
         try {
             $categoryData = QUI\Cache\LongTermCache::get(self::getCacheName($id));
         } catch (Exception) {
-            $data = QUI::getDataBase()->fetch([
+            $data = QUI\ERP\Products\Utils\Database::fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
                 'where' => [
                     'id' => $id
@@ -175,7 +175,7 @@ class Categories
     public static function getMainCategory(): QUI\ERP\Products\Interfaces\CategoryInterface
     {
         $Config = QUI::getPackage('quiqqer/products')->getConfig();
-        $mainCategory = $Config->get('products', 'mainCategory');
+        $mainCategory = $Config?->get('products', 'mainCategory');
 
         if (!$mainCategory) {
             return self::getCategory(0);
@@ -252,7 +252,7 @@ class Categories
 
         $parentId = (int)$parentId;
 
-        $result = QUI::getDataBase()->fetch([
+        $result = QUI\ERP\Products\Utils\Database::fetch([
             'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
             'limit' => 1
         ]);
@@ -266,7 +266,7 @@ class Categories
         }
 
         if (empty($result)) {
-            QUI::getDataBase()->insert(
+            QUI::getDataBaseConnection()->insert(
                 QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
                 [
                     'parentId' => $parentId,
@@ -274,7 +274,7 @@ class Categories
                 ]
             );
         } else {
-            QUI::getDataBase()->insert(
+            QUI::getDataBaseConnection()->insert(
                 QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
                 [
                     'parentId' => $parentId
@@ -283,7 +283,7 @@ class Categories
         }
 
 
-        $newId = QUI::getDataBase()->getPDO()->lastInsertId();
+        $newId = (int)QUI::getDataBaseConnection()->lastInsertId();
 
         // translation - title
         try {
@@ -347,7 +347,7 @@ class Categories
      * Return a list of categories
      * if $queryParams is empty, all fields are returned
      *
-     * @param array $queryParams - query parameter
+     * @param array<mixed> $queryParams - query parameter
      *                              $queryParams['where'],
      *                              $queryParams['where_or'],
      *                              $queryParams['limit']
@@ -372,8 +372,8 @@ class Categories
 
     /**
      *
-     * @param array $queryParams
-     * @return array
+     * @param array<mixed> $queryParams
+     * @return array<mixed>
      */
     public static function getCategoryIds(array $queryParams = []): array
     {
@@ -401,7 +401,7 @@ class Categories
         $result = [];
 
         try {
-            $data = QUI::getDataBase()->fetch($query);
+            $data = QUI\ERP\Products\Utils\Database::fetch($query);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 

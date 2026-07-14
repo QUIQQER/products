@@ -10,6 +10,9 @@ use QUI;
  */
 class Cache
 {
+    /**
+     * @return string
+     */
     public static function getBasicCachePath()
     {
         return 'products/';
@@ -18,7 +21,7 @@ class Cache
     /**
      * Cache name for a product
      *
-     * @param $productId
+     * @param mixed $productId
      * @return string
      */
     public static function getProductCachePath($productId)
@@ -28,7 +31,7 @@ class Cache
 
     /**
      * @param int $productId
-     * @param array $params
+     * @param array<mixed> $params
      * @return string
      */
     public static function frontendProductCacheName($productId, $params = [])
@@ -44,6 +47,7 @@ class Cache
 
     /**
      * @param integer $productId
+     * @return void
      */
     public static function clearProductFrontendCache($productId)
     {

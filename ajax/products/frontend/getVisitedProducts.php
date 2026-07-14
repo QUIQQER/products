@@ -8,7 +8,7 @@
  * Get the fields for a frontend product
  *
  * @param integer $productId - Product-ID
- * @param array $fields
+ * @param array<mixed> $fields
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getVisitedProducts',
@@ -31,7 +31,7 @@ QUI::getAjax()->registerFunction(
             }
 
             try {
-                $Product = $Products->getProduct($productId);
+                $Product = $Products->getProduct((int)$productId);
                 $View = $Product->getViewFrontend();
 
                 // check if prices exists

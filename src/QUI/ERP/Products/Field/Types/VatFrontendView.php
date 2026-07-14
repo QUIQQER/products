@@ -33,6 +33,11 @@ class VatFrontendView extends View
         if ($value >= 0) {
             try {
                 $Area = QUI\ERP\Utils\User::getUserArea(QUI::getUserBySession());
+
+                if (!$Area instanceof QUI\ERP\Areas\Area) {
+                    throw new QUI\Exception('Could not determine the user area.');
+                }
+
                 $TaxType = QUI\ERP\Tax\Handler::getInstance()->getTaxType($value);
                 $Tax = QUI\ERP\Tax\Utils::getTaxEntry($TaxType, $Area);
 

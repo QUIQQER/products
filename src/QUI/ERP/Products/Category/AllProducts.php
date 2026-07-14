@@ -23,7 +23,7 @@ class AllProducts extends Category
      * AllProducts constructor.
      *
      * @param int $categoryId - can't be used, id is always 0
-     * @param array $data
+     * @param array<mixed> $data
      */
     public function __construct(protected int $categoryId = 0, array $data = [])
     {
@@ -35,12 +35,12 @@ class AllProducts extends Category
     /**
      * Return all products
      *
-     * @param array $params - query parameter
+     * @param array<mixed> $params - query parameter
      *                              $queryParams['where']
      *                              $queryParams['limit']
      *                              $queryParams['order']
      *                              $queryParams['debug']
-     * @return array
+     * @return array<mixed>
      */
     public function getProducts(array $params = []): array
     {
@@ -70,12 +70,12 @@ class AllProducts extends Category
     /**
      * Return all product ids
      *
-     * @param array $params - query parameter
+     * @param array<mixed> $params - query parameter
      *                              $queryParams['where']
      *                              $queryParams['limit']
      *                              $queryParams['order']
      *                              $queryParams['debug']
-     * @return array
+     * @return array<mixed>
      */
     public function getProductIds(array $params = []): array
     {
@@ -103,7 +103,7 @@ class AllProducts extends Category
     /**
      * Return the number of all products
      *
-     * @param array $params - query parameter
+     * @param array<mixed> $params - query parameter
      *                              $queryParams['where']
      *                              $queryParams['debug']
      * @return integer
@@ -124,12 +124,12 @@ class AllProducts extends Category
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      * @throws Exception
      */
     public function getFields(): array
     {
-        return QUI\ERP\Products\Search\Utils::getDefaultFrontendFields();
+        return QUI\ERP\Products\Search\Utils::getDefaultFrontendFields() ?? [];
     }
 
     /**
