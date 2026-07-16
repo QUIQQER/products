@@ -64,7 +64,7 @@ class ProductListFlowTest extends TestCase
     {
         $List = new ProductList([], new TestUser());
         $List->addProduct($this->product(2));
-        $List->getPriceFactors()?->add(new \QUI\ERP\Products\Utils\PriceFactor(['value' => 10]));
+        $List->getPriceFactors()->add(new \QUI\ERP\Products\Utils\PriceFactor(['value' => 10]));
 
         $List->hidePrices();
         self::assertTrue($List->isPriceHidden());
@@ -74,7 +74,7 @@ class ProductListFlowTest extends TestCase
 
         $List->clear();
         self::assertSame(0, $List->count());
-        self::assertSame(0, $List->getPriceFactors()?->count());
+        self::assertSame(0, $List->getPriceFactors()->count());
     }
 
     /**

@@ -157,7 +157,7 @@ class ProductListBackendView
             ];
         }
 
-        $PriceFactors = $this->ProductList->getPriceFactors() ?? new QUI\ERP\Products\Utils\PriceFactors();
+        $PriceFactors = $this->ProductList->getPriceFactors();
 
         /* @var $Factor QUI\ERP\Products\Utils\PriceFactor */
         foreach ($PriceFactors->sort() as $Factor) {
