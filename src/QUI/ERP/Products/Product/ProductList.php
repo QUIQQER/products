@@ -124,9 +124,9 @@ class ProductList
 
     /**
      * PriceFactor List
-     * @var ?QUI\ERP\Products\Utils\PriceFactors
+     * @var QUI\ERP\Products\Utils\PriceFactors
      */
-    protected ?QUI\ERP\Products\Utils\PriceFactors $PriceFactors = null;
+    protected QUI\ERP\Products\Utils\PriceFactors $PriceFactors;
 
     /**
      * @var bool
@@ -313,9 +313,9 @@ class ProductList
     /**
      * Return the price factors list (list of price indicators)
      *
-     * @return PriceFactors|null
+     * @return PriceFactors
      */
-    public function getPriceFactors(): ?QUI\ERP\Products\Utils\PriceFactors
+    public function getPriceFactors(): QUI\ERP\Products\Utils\PriceFactors
     {
         return $this->PriceFactors;
     }
@@ -572,10 +572,6 @@ class ProductList
 
         foreach ($this->products as $Product) {
             $Product->convert($Currency);
-        }
-
-        if (!$this->PriceFactors instanceof PriceFactors) {
-            $this->PriceFactors = new PriceFactors();
         }
 
         $this->PriceFactors->setCurrency($this->Currency);
