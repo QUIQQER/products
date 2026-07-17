@@ -41,7 +41,7 @@ class TimePeriod extends QUI\ERP\Products\Field\Field
     /**
      * Return the FrontendView
      *
-     * @return UnitSelectFrontendView
+     * @return QUI\ERP\Products\Field\View
      */
     public function getFrontendView(): QUI\ERP\Products\Field\View
     {
