@@ -712,6 +712,7 @@ class Products
 
         $allowedFields = [
             'id',
+            'type',
             'category',
             'categories',
             'fieldData',

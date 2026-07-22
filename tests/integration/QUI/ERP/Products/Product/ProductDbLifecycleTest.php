@@ -49,11 +49,25 @@ class ProductDbLifecycleTest extends ProductIntegrationTestCase
         Products::cleanProductInstanceMemCache($productId);
         self::assertTrue(Products::getNewProductInstance($productId)->isActive());
 
+        $activeProductQuery = [
+            'where' => [
+                'id' => $productId,
+                'active' => 1,
+                'type' => [
+                    'type' => 'IN',
+                    'value' => [$Reloaded::class]
+                ]
+            ]
+        ];
+
+        self::assertSame([$productId], array_map('intval', Products::getProductIds($activeProductQuery)));
+
         ProductTestHelper::runAsSystemUser(static function ($SystemUser) use ($productId): void {
             Products::getNewProductInstance($productId)->deactivate($SystemUser);
         });
         Products::cleanProductInstanceMemCache($productId);
         self::assertFalse(Products::getNewProductInstance($productId)->isActive());
+        self::assertSame([], Products::getProductIds($activeProductQuery));
 
         self::assertSame([$productId], array_map('intval', Products::getProductIds([
             'where' => ['id' => $productId]
