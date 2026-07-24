@@ -602,6 +602,7 @@ class Products
         QUI::getEvents()->fireEvent('onQuiqqerProductsProductCreate', [$Product]);
 
         $Product->save();
+        self::$list[$newId] = $Product;
 
         return $Product;
     }
