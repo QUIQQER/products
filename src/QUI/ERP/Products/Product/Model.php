@@ -41,6 +41,7 @@ use function date;
 use function defined;
 use function explode;
 use function floor;
+use function get_object_vars;
 use function implode;
 use function is_array;
 use function is_int;
@@ -319,6 +320,34 @@ class Model extends QUI\QDOM
         foreach ($this->fields as $Field) {
             $Field->setProduct($this);
         }
+    }
+
+    /**
+     * Reload the product state from the database
+     *
+     * @throws QUI\ERP\Products\Product\Exception
+     */
+    public function refresh(): void
+    {
+        $Product = Products::getNewProductInstance($this->id);
+
+        if ($Product::class !== static::class) {
+            throw new QUI\ERP\Products\Product\Exception(
+                'The product type changed and cannot be refreshed in place.'
+            );
+        }
+
+        foreach (get_object_vars($Product) as $property => $value) {
+            $this->{$property} = $value;
+        }
+
+        foreach ($this->fields as $Field) {
+            if ($Field instanceof QUI\ERP\Products\Field\Field) {
+                $Field->setProduct($this);
+            }
+        }
+
+        Products::cleanProductInstanceMemCache($this->id);
     }
 
     /**
