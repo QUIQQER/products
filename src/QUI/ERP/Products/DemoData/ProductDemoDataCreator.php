@@ -29,7 +29,8 @@ final class ProductDemoDataCreator implements DemoDataCreatorInterface
         $systemUser = QUI::getUsers()->getSystemUser();
         $createdDemoData = [];
 
-        foreach (['Demo product Basic', 'Demo product Business', 'Demo product Premium'] as $index => $title) {
+        for ($index = 0; $index < 10; $index++) {
+            $title = 'Demo product ' . ($index + 1);
             $productNumber = $this->getAvailableProductNumber();
             $localizedTitle = [];
 
