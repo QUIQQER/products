@@ -26,6 +26,7 @@
 
         <provider>
             <erp src="\QUI\ERP\Products\ErpProvider"/>
+            <erpDemoDataProvider src="\QUI\ERP\Products\DemoData\ProductDemoDataProvider"/>
             <desktopSearch src="\QUI\ERP\Products\DesktopSearch"/>
 
             <productType src="\QUI\ERP\Products\Product\Types\Product"/>
