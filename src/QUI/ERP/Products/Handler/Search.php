@@ -70,7 +70,7 @@ class Search
     /**
      * Get FrontendSearch
      *
-     * @param QUI\Projects\Site $Site - Search Site or Category Site
+     * @param QUI\Interfaces\Projects\Site $Site - Search Site or Category Site
      * @return FrontendSearch
      * @throws QUI\Exception
      */
