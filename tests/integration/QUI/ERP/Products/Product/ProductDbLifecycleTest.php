@@ -9,6 +9,52 @@ use QUI\ERP\Products\Utils\Tables;
 
 class ProductDbLifecycleTest extends ProductIntegrationTestCase
 {
+    public function testProductRefreshUpdatesTheExistingRuntimeInstance(): void
+    {
+        $title = ProductTestHelper::PREFIX . 'refresh-' . bin2hex(random_bytes(6));
+        $changedTitle = $title . '-changed';
+        $Product = ProductTestHelper::createProduct($title);
+        $productId = $Product->getId();
+
+        self::assertSame($Product, Products::getProduct($productId));
+
+        ProductTestHelper::runAsSystemUser(static function ($SystemUser) use ($Product): void {
+            $Product->activate($SystemUser);
+        });
+
+        $ChangedProduct = Products::getNewProductInstance($productId);
+        $localizedTitle = $ChangedProduct->getField(Fields::FIELD_TITLE)->getValue();
+
+        foreach ($localizedTitle as $language => $value) {
+            $localizedTitle[$language] = $changedTitle;
+        }
+
+        $ChangedProduct->getField(Fields::FIELD_TITLE)->setValue($localizedTitle);
+
+        ProductTestHelper::runAsSystemUser(
+            static function ($SystemUser) use ($ChangedProduct): void {
+                $ChangedProduct->deactivate($SystemUser);
+                $ChangedProduct->save($SystemUser);
+            }
+        );
+
+        self::assertSame($title, $Product->getTitle());
+        self::assertTrue($Product->isActive());
+
+        $ProductReference = $Product;
+        $Product->refresh();
+
+        self::assertSame($ProductReference, $Product);
+        self::assertSame($changedTitle, $Product->getTitle());
+        self::assertFalse($Product->isActive());
+
+        $ReloadedProduct = Products::getProduct($productId);
+
+        self::assertNotSame($Product, $ReloadedProduct);
+        self::assertSame($changedTitle, $ReloadedProduct->getTitle());
+        self::assertFalse($ReloadedProduct->isActive());
+    }
+
     public function testProductCanBeCreatedChangedActivatedDeactivatedAndDeleted(): void
     {
         $title = ProductTestHelper::PREFIX . 'lifecycle-' . bin2hex(random_bytes(6));
