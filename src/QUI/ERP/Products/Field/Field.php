@@ -1005,7 +1005,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $var = $typeData['help'][1];
 
         if ($Locale->exists($group, $var)) {
-            return $Locale->get($group, $var);
+            $help = $Locale->get($group, $var);
+
+            return is_string($help) ? $help : '';
         }
 
         return '';

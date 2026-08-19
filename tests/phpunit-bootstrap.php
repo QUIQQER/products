@@ -19,6 +19,7 @@ function writePhpUnitMessage(string $str = ''): void
 }
 
 require_once __DIR__ . '/../../../../bootstrap.php';
+require_once __DIR__ . '/stubs/QUI/ERP/DemoData/DemoDataStubs.php';
 require_once __DIR__ . '/Fixtures/TestUser.php';
 require_once __DIR__ . '/Fixtures/RecordingCalc.php';
 require_once __DIR__ . '/integration/QUI/ERP/Products/ProjectTestHelper.php';
