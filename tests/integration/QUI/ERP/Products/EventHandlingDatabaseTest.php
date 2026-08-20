@@ -46,16 +46,18 @@ class EventHandlingDatabaseTest extends TestCase
     protected function tearDown(): void
     {
         $Connection = QUI::getDataBaseConnection();
+        $groupsColumn = QUI\Utils\Doctrine::quoteIdentifier('groups');
+        $varColumn = QUI\Utils\Doctrine::quoteIdentifier('var');
         $Connection->delete(Tables::getProductTableName(), ['id' => 8801]);
         $Connection->delete(Tables::getProductCacheTableName(), ['id' => 8801]);
         $Connection->delete(Tables::getCategoryTableName(), ['id' => 7701]);
         $Connection->delete(QUI\Translator::table(), [
-            'groups' => 'quiqqer/products',
-            'var' => 'products.category.7701.title'
+            $groupsColumn => 'quiqqer/products',
+            $varColumn => 'products.category.7701.title'
         ]);
         $Connection->delete(QUI\Translator::table(), [
-            'groups' => 'quiqqer/products',
-            'var' => 'products.category.7701.description'
+            $groupsColumn => 'quiqqer/products',
+            $varColumn => 'products.category.7701.description'
         ]);
 
         foreach ($this->originalFieldState as $property => $value) {
@@ -369,14 +371,16 @@ class EventHandlingDatabaseTest extends TestCase
     public function testTranslatorEventsRefreshCategoryTitleAndDescriptionCaches(): void
     {
         $Connection = QUI::getDataBaseConnection();
+        $groupsColumn = QUI\Utils\Doctrine::quoteIdentifier('groups');
+        $varColumn = QUI\Utils\Doctrine::quoteIdentifier('var');
         $Connection->insert(Tables::getCategoryTableName(), [
             'id' => 7701,
             'title_cache' => '',
             'description_cache' => ''
         ]);
         $Connection->insert(QUI\Translator::table(), [
-            'groups' => 'quiqqer/products',
-            'var' => 'products.category.7701.title',
+            $groupsColumn => 'quiqqer/products',
+            $varColumn => 'products.category.7701.title',
             'datatype' => 'php',
             'datadefine' => '',
             'html' => 0,
@@ -384,8 +388,8 @@ class EventHandlingDatabaseTest extends TestCase
             'package' => 'quiqqer/products'
         ]);
         $Connection->insert(QUI\Translator::table(), [
-            'groups' => 'quiqqer/products',
-            'var' => 'products.category.7701.description',
+            $groupsColumn => 'quiqqer/products',
+            $varColumn => 'products.category.7701.description',
             'datatype' => 'php',
             'datadefine' => '',
             'html' => 0,

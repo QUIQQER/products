@@ -2,7 +2,10 @@
 
 namespace QUITests\ERP\Products\Integration\Ajax;
 
+use QUI;
 use QUI\Ajax;
+use QUI\Messages\Handler as MessageHandler;
+use QUI\Messages\Message;
 use QUI\Permissions\Permission;
 use QUI\Users\User;
 use QUITests\ERP\Products\Integration\Product\ProductIntegrationTestCase;
@@ -13,6 +16,9 @@ abstract class AjaxTestCase extends ProductIntegrationTestCase
     /** @var array<string, mixed> */
     private array $ajaxState = [];
 
+    /** @var array<string, Message> */
+    private array $messageState = [];
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -21,6 +27,10 @@ abstract class AjaxTestCase extends ProductIntegrationTestCase
             $Property = new ReflectionProperty(Ajax::class, $property);
             $this->ajaxState[$property] = $Property->getValue();
         }
+
+        $Messages = new ReflectionProperty(MessageHandler::class, 'messages');
+        $this->messageState = $Messages->getValue(QUI::getMessagesHandler());
+        $Messages->setValue(QUI::getMessagesHandler(), []);
     }
 
     protected function tearDown(): void
@@ -28,6 +38,11 @@ abstract class AjaxTestCase extends ProductIntegrationTestCase
         foreach ($this->ajaxState as $property => $value) {
             (new ReflectionProperty(Ajax::class, $property))->setValue(null, $value);
         }
+
+        (new ReflectionProperty(MessageHandler::class, 'messages'))->setValue(
+            QUI::getMessagesHandler(),
+            $this->messageState
+        );
 
         parent::tearDown();
     }
