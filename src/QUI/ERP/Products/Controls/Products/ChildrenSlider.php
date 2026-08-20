@@ -64,6 +64,12 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
                 'Product' => $Product
             ];
 
+            try {
+                $details['Image'] = $Product->getImage();
+            } catch (QUI\Exception) {
+                $details['Image'] = null;
+            }
+
             if ($this->getAttribute('showPrices')) {
                 $details['Price'] = new QUI\ERP\Products\Controls\Price([
                     'Price' => $Product->getPrice()

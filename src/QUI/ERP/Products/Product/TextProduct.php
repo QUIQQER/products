@@ -200,6 +200,11 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
                 $Field->setDefaultValue($this->getTitle());
                 $Field->setValue($this->getTitle());
                 break;
+
+            case Fields::FIELD_SHORT_DESC:
+                $Field->setDefaultValue($this->getDescription());
+                $Field->setValue($this->getDescription());
+                break;
         }
 
         return $Field;

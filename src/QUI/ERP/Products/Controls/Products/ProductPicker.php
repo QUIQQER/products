@@ -11,8 +11,6 @@ class ProductPicker extends QUI\Control
      */
     public function __construct($params = [])
     {
-        parent::__construct($params);
-
         $this->setAttributes([
             'nodeName' => 'section',
             'class' => 'quiqqer-products-controls-product-productPicker',
@@ -22,6 +20,8 @@ class ProductPicker extends QUI\Control
             'showProductDetails' => true,
             'zeroProduct' => false
         ]);
+
+        parent::__construct($params);
 
         $this->setJavaScriptControl(
             'package/quiqqer/products/bin/controls/frontend/products/ProductPicker'

@@ -11,7 +11,7 @@ use QUI\ERP\Products\Handler\Products;
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_settings_checkSystem',
     function ($categoryId = null) {
-        $maxExecTime = ini_get('max_execution_time');
+        $maxExecTime = (int)ini_get('max_execution_time');
         $where = [];
 
         if (!empty($categoryId)) {
@@ -33,7 +33,7 @@ QUI::getAjax()->registerFunction(
                 'active' => 'cd ' . CMS_DIR . ' && ./console products:update-prices --activeOnly'
                     . ($categoryId ? ' --categoryId=' . $categoryId : '')
             ],
-            'timeSufficient' => $estExecTime < $maxExecTime
+            'timeSufficient' => $maxExecTime === 0 || $estExecTime < $maxExecTime
         ];
     },
     [
