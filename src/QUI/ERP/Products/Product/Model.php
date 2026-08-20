@@ -131,6 +131,14 @@ class Model extends QUI\QDOM
     protected bool $forcePriceFactorUse = false;
 
     /**
+     * Runtime generations prevent stale price cache entries from being reused
+     * after a product has been saved in the same request.
+     *
+     * @var array<int, int>
+     */
+    protected static array $priceCacheVersions = [];
+
+    /**
      * Model constructor
      *
      * @param integer $pid - Product-ID
@@ -644,6 +652,10 @@ class Model extends QUI\QDOM
      */
     public function getPriority(): ?int
     {
+        if (!$this->hasField(Fields::FIELD_PRIORITY)) {
+            return 0;
+        }
+
         $priority = $this->getFieldValue(Fields::FIELD_PRIORITY);
 
         if (is_numeric($priority)) {
@@ -1087,10 +1099,16 @@ class Model extends QUI\QDOM
     public function getMinimumPrice(User | null $User = null): QUI\ERP\Money\Price
     {
         $baseCacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
-        $cacheName = $baseCacheName . '/prices/min';
+        $priceCacheName = $baseCacheName . '/prices';
+
+        if (isset(self::$priceCacheVersions[$this->getId()])) {
+            $priceCacheName .= '/' . self::$priceCacheVersions[$this->getId()];
+        }
+
+        $cacheName = $priceCacheName . '/min';
 
         if ($User instanceof QUI\Interfaces\Users\User && !QUI::getUsers()->isNobodyUser($User)) {
-            $cacheName = $baseCacheName . '/prices/' . $User->getUUID() . '/min';
+            $cacheName = $priceCacheName . '/' . $User->getUUID() . '/min';
         }
 
         try {
@@ -1179,10 +1197,16 @@ class Model extends QUI\QDOM
     public function getMaximumPrice(User | null $User = null): QUI\ERP\Money\Price
     {
         $baseCacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
-        $cacheName = $baseCacheName . '/prices/max';
+        $priceCacheName = $baseCacheName . '/prices';
+
+        if (isset(self::$priceCacheVersions[$this->getId()])) {
+            $priceCacheName .= '/' . self::$priceCacheVersions[$this->getId()];
+        }
+
+        $cacheName = $priceCacheName . '/max';
 
         if ($User instanceof QUI\Interfaces\Users\User && !QUI::getUsers()->isNobodyUser($User)) {
-            $cacheName = $baseCacheName . '/prices/' . $User->getUUID() . '/max';
+            $cacheName = $priceCacheName . '/' . $User->getUUID() . '/max';
         }
 
         try {
@@ -1544,6 +1568,7 @@ class Model extends QUI\QDOM
                 ['id' => $this->getId()]
             );
 
+            $this->invalidatePriceCache();
             $this->updateCache();
         }
 
@@ -1553,7 +1578,12 @@ class Model extends QUI\QDOM
 
         QUI\ERP\Products\Handler\Cache::clearProductFrontendCache($this->getId());
 
-        Products::cleanProductInstanceMemCache($this->getId());
+        $productId = $this->getId();
+
+        QUI\Cache\LongTermCache::clear(
+            QUI\ERP\Products\Handler\Cache::getProductCachePath($productId) . '/db-data'
+        );
+        Products::cleanProductInstanceMemCache($productId);
 
         if (Products::$fireEventsOnProductSave) {
             QUI::getEvents()->fireEvent('onQuiqqerProductsProductSave', [$this]);
@@ -1870,6 +1900,21 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * Invalidates persistent and request-local price cache entries.
+     */
+    protected function invalidatePriceCache(): void
+    {
+        $productId = $this->getId();
+
+        self::$priceCacheVersions[$productId]
+            = (self::$priceCacheVersions[$productId] ?? 0) + 1;
+
+        QUI\Cache\LongTermCache::clear(
+            QUI\ERP\Products\Handler\Cache::getProductCachePath($productId) . '/prices'
+        );
+    }
+
+    /**
      * Write cache entry for product for specific language
      *
      * @param string $lang
@@ -1945,10 +1990,12 @@ class Model extends QUI\QDOM
                 $Locale
             ),
             'title' => $title,
-            'description' => $this->getFieldValueByLocale(
-                Fields::FIELD_SHORT_DESC,
-                $Locale
-            ),
+            'description' => $this->hasField(Fields::FIELD_SHORT_DESC)
+                ? $this->getFieldValueByLocale(
+                    Fields::FIELD_SHORT_DESC,
+                    $Locale
+                )
+                : '',
             'active' => $this->isActive() ? 1 : 0,
             'minPrice' => $minPrice ?: 0,
             'maxPrice' => $maxPrice ?: 0,
@@ -2094,6 +2141,8 @@ class Model extends QUI\QDOM
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             ['id' => $this->getId()]
         );
+
+        Products::invalidateProductCache($this->getId());
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsProductDelete', [$this]);
     }
@@ -2749,6 +2798,10 @@ class Model extends QUI\QDOM
 
         if ($MainCategory instanceof Category) {
             $priceFactors = $MainCategory->getCustomDataEntry('priceFieldFactors');
+
+            if (!empty($priceFactors)) {
+                return $priceFactors;
+            }
         }
 
         // Check if any other category of this product has own price factor settings
