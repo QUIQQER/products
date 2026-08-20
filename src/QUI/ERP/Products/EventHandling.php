@@ -991,11 +991,6 @@ class EventHandling
                 $legacyTypes = $QueryBuilder
                     ->select('DISTINCT ' . QUI\Utils\Doctrine::quoteIdentifier('type'))
                     ->from(QUI\Utils\Doctrine::quoteIdentifier($tableName))
-                    ->where($QueryBuilder->expr()->like(
-                        QUI\Utils\Doctrine::quoteIdentifier('type'),
-                        ':legacyNamespace'
-                    ))
-                    ->setParameter('legacyNamespace', '\\QUI%')
                     ->executeQuery()
                     ->fetchFirstColumn();
 
