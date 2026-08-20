@@ -30,6 +30,7 @@ final class SqliteTestEnvironment
 {
     private static ?Connection $connection = null;
     private static ?Connection $originalConnection = null;
+    private static bool $ownsConnection = false;
     private static ?DB $originalLegacyDatabase = null;
     private static ?PermissionManager $originalPermissionManager = null;
     private static mixed $originalPermissionUser = null;
@@ -123,21 +124,29 @@ final class SqliteTestEnvironment
         $Session = new ReflectionProperty($Users, 'Session');
         self::$originalSessionUser = $Session->getValue($Users);
 
-        self::$connection = DriverManager::getConnection([
-            'driver' => 'pdo_sqlite',
-            'memory' => true
-        ]);
-        (new ReflectionProperty(Connection::class, 'platform'))->setValue(
-            self::$connection,
-            new SqlitePlatform()
-        );
+        if (DatabaseEnvironment::usesCiDatabase()) {
+            self::$connection = self::$originalConnection;
+        } else {
+            self::$connection = DriverManager::getConnection([
+                'driver' => 'pdo_sqlite',
+                'memory' => true
+            ]);
+            self::$ownsConnection = true;
+            (new ReflectionProperty(Connection::class, 'platform'))->setValue(
+                self::$connection,
+                new SqlitePlatform()
+            );
+        }
 
         try {
-            self::setConnection(self::$connection);
-            QUI::$DataBase2 = null;
-            $LegacyDatabase = QUI::getDataBase();
-            (new ReflectionProperty(DB::class, 'sqlite'))->setValue($LegacyDatabase, true);
-            QUI::$Rights = null;
+            if (self::$ownsConnection) {
+                self::setConnection(self::$connection);
+                QUI::$DataBase2 = null;
+                $LegacyDatabase = QUI::getDataBase();
+                (new ReflectionProperty(DB::class, 'sqlite'))->setValue($LegacyDatabase, true);
+                QUI::$Rights = null;
+            }
+
             $Session->setValue($Users, $Users->getSystemUser());
             Permission::setUser($Users->getSystemUser());
             self::setStaticState(CurrencyHandler::class, [
@@ -178,32 +187,34 @@ final class SqliteTestEnvironment
                 'currentDriver' => null
             ]);
             QUI::getSession()->set('country', 'DE');
-            self::activateProjectConfig();
             self::activateProductsConfig();
 
-            Update::importDatabase(OPT_DIR . 'quiqqer/core/database.xml');
-            Update::importDatabase(OPT_DIR . 'quiqqer/countries/database.xml');
-            Update::importDatabase(OPT_DIR . 'quiqqer/currency/database.xml');
-            Update::importDatabase(OPT_DIR . 'quiqqer/areas/database.xml');
-            Update::importDatabase(OPT_DIR . 'quiqqer/tax/database.xml');
-            Update::importDatabase(OPT_DIR . 'quiqqer/translator/database.xml');
-            Update::importDatabase(dirname(__DIR__) . '/database.xml');
+            if (self::$ownsConnection) {
+                self::activateProjectConfig();
+                Update::importDatabase(OPT_DIR . 'quiqqer/core/database.xml');
+                Update::importDatabase(OPT_DIR . 'quiqqer/countries/database.xml');
+                Update::importDatabase(OPT_DIR . 'quiqqer/currency/database.xml');
+                Update::importDatabase(OPT_DIR . 'quiqqer/areas/database.xml');
+                Update::importDatabase(OPT_DIR . 'quiqqer/tax/database.xml');
+                Update::importDatabase(OPT_DIR . 'quiqqer/translator/database.xml');
+                Update::importDatabase(dirname(__DIR__) . '/database.xml');
 
-            self::$connection->insert(CurrencyHandler::table(), [
-                'currency' => 'EUR',
-                'rate' => 1,
-                'autoupdate' => 0,
-                'precision' => 2,
-                'type' => CurrencyHandler::CURRENCY_TYPE_DEFAULT,
-                'customData' => null
-            ]);
-            self::$connection->insert(QUI::getDBTableName('areas'), [
-                'id' => 1,
-                'countries' => 'DE',
-                'data' => '{}'
-            ]);
+                self::$connection->insert(CurrencyHandler::table(), [
+                    'currency' => 'EUR',
+                    'rate' => 1,
+                    'autoupdate' => 0,
+                    'precision' => 2,
+                    'type' => CurrencyHandler::CURRENCY_TYPE_DEFAULT,
+                    'customData' => null
+                ]);
+                self::$connection->insert(QUI::getDBTableName('areas'), [
+                    'id' => 1,
+                    'countries' => 'DE',
+                    'data' => '{}'
+                ]);
 
-            PermissionManager::setup();
+                PermissionManager::setup();
+            }
         } catch (Throwable $Exception) {
             self::restore();
             throw $Exception;
@@ -254,10 +265,14 @@ final class SqliteTestEnvironment
             self::$originalSessionUser
         );
 
-        self::$connection->close();
+        if (self::$ownsConnection) {
+            self::$connection->close();
+        }
+
         self::$connection = null;
         self::$originalConnection = null;
         self::$originalLegacyDatabase = null;
+        self::$ownsConnection = false;
 
         if (self::$projectsConfigFile !== null && file_exists(self::$projectsConfigFile)) {
             unlink(self::$projectsConfigFile);
