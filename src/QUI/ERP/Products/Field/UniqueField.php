@@ -42,7 +42,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @var string
      */
-    protected string $name;
+    protected string $name = '';
 
     /**
      * Field title
@@ -186,6 +186,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
         $this->id = $fieldId;
 
         $attributes = [
+            'name',
             'title',
             'type',
             'prefix',
