@@ -143,6 +143,38 @@ class ProductDbLifecycleTest extends ProductIntegrationTestCase
         self::assertSame($productNo, $Found->getField(Fields::FIELD_PRODUCT_NO)->getValue());
     }
 
+    public function testDeletingProductInvalidatesLongTermDataCache(): void
+    {
+        $Product = ProductTestHelper::createProduct('delete-with-warm-cache');
+        $productId = $Product->getId();
+        $cachePath = QUI\ERP\Products\Handler\Cache::getProductCachePath($productId);
+        $productData = QUI::getDataBaseConnection()->fetchAssociative(
+            'SELECT * FROM ' . QUI\Utils\Doctrine::quoteIdentifier(Tables::getProductTableName())
+            . ' WHERE id = ?',
+            [$productId]
+        );
+
+        self::assertIsArray($productData);
+        QUI\Cache\LongTermCache::set($cachePath . '/db-data', $productData);
+
+        try {
+            ProductTestHelper::runAsSystemUser(static function () use ($productId): void {
+                Products::getNewProductInstance($productId)->delete();
+            });
+            Products::cleanProductInstanceMemCache($productId);
+
+            try {
+                Products::getProduct($productId);
+                self::fail('A deleted product must not be restored from the long-term cache.');
+            } catch (QUI\ERP\Products\Product\Exception $Exception) {
+                self::assertSame(404, $Exception->getCode());
+            }
+        } finally {
+            QUI\Cache\LongTermCache::clear($cachePath);
+            Products::cleanProductInstanceMemCache($productId);
+        }
+    }
+
     private function countCacheRows(int $productId): int
     {
         $QueryBuilder = QUI::getQueryBuilder();

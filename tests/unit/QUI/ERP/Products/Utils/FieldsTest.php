@@ -4,10 +4,39 @@ namespace QUITests\ERP\Products\Unit\Utils;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use QUI\ERP\Products\Field\Exception;
+use QUI\ERP\Products\Field\Types\Input;
+use QUI\ERP\Products\Field\Types\Textarea;
+use QUI\ERP\Products\Field\Types\UnitSelect;
+use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Utils\Fields;
 
 class FieldsTest extends TestCase
 {
+    public function testFieldSerializationValidatesValuesAndIgnoresInvalidEntries(): void
+    {
+        $Valid = new Input(991001, ['name' => 'valid', 'value' => 'steel']);
+        $Invalid = new Input(991002, ['name' => 'invalid', 'value' => ['not', 'scalar']]);
+
+        $serialized = Fields::parseFieldsToJson([$Valid, 'not-a-field', $Invalid]);
+
+        self::assertCount(1, $serialized);
+        self::assertSame(991001, $serialized[0]['id']);
+        self::assertSame('steel', $serialized[0]['value']);
+        self::assertTrue(Fields::isField($Valid));
+        self::assertFalse(Fields::isField('not-a-field'));
+    }
+
+    public function testValidateFieldPropagatesConcreteValidationFailure(): void
+    {
+        $this->expectException(Exception::class);
+
+        Fields::validateField(new Input(991003, [
+            'name' => 'invalid',
+            'value' => ['not', 'scalar']
+        ]));
+    }
+
     public function testFieldHashParserHandlesWrappedAndEmptyHashes(): void
     {
         self::assertSame([12 => 'red', 3 => 'large'], Fields::parseFieldHashToArray(';12:red;3:large;'));
@@ -21,6 +50,87 @@ class FieldsTest extends TestCase
             [';12:*;3:large;', ';12:red;3:*;'],
             Fields::getSearchHashesFromFieldHash(';12:red;3:large;')
         );
+    }
+
+    public function testSearchHashesNormalizeEmptyValueAndUnavailableField(): void
+    {
+        self::assertSame([';991099:*;'], Fields::getSearchHashesFromFieldHash(';991099:;'));
+    }
+
+    public function testFieldsCanBeSortedByPublicMetadataAndPriorityRules(): void
+    {
+        $First = new Input(991010, ['name' => 'item-10']);
+        $Second = new Input(991002, ['name' => 'item-2']);
+        $NoPriority = new Input(991003, ['name' => 'item-3']);
+        $First->setAttribute('priority', 2);
+        $Second->setAttribute('priority', 1);
+        $NoPriority->setAttribute('priority', 0);
+
+        self::assertSame(
+            [991002, 991010, 991003],
+            array_map(static fn ($Field): int => $Field->getId(), Fields::sortFields([
+                $First,
+                $NoPriority,
+                $Second
+            ]))
+        );
+        self::assertSame(
+            [991002, 991003, 991010],
+            array_map(static fn ($Field): int => $Field->getId(), Fields::sortFields([
+                $First,
+                $NoPriority,
+                $Second
+            ], 'id'))
+        );
+        self::assertSame(
+            ['item-2', 'item-3', 'item-10'],
+            array_map(static fn ($Field): string => $Field->getName(), Fields::sortFields([
+                $First,
+                $NoPriority,
+                $Second
+            ], 'name'))
+        );
+        self::assertSame(
+            [991002, 991010, 991003],
+            array_map(static fn ($Field): int => $Field->getId(), Fields::sortFields([
+                $First,
+                $NoPriority,
+                $Second
+            ], 'unsupported-sort'))
+        );
+    }
+
+    public function testDetailFieldRulesRejectReservedAndUnsupportedFields(): void
+    {
+        $Regular = new Input(991020, ['name' => 'detail', 'showInDetails' => true]);
+        $Hidden = new Input(991021, ['name' => 'hidden', 'showInDetails' => false]);
+        $Reserved = new Input(FieldHandler::FIELD_TITLE, ['name' => 'title', 'showInDetails' => true]);
+        $Textarea = new Textarea(991022, ['name' => 'textarea', 'showInDetails' => true]);
+
+        self::assertTrue(Fields::canUsedAsDetailField($Regular));
+        self::assertFalse(Fields::canUsedAsDetailField('not-a-field'));
+        self::assertFalse(Fields::canUsedAsDetailField($Reserved));
+        self::assertFalse(Fields::canUsedAsDetailField($Textarea));
+        self::assertTrue(Fields::showFieldInProductDetails($Regular));
+        self::assertFalse(Fields::showFieldInProductDetails($Hidden));
+        self::assertFalse(Fields::showFieldInProductDetails($Reserved));
+    }
+
+    public function testWeightFieldConversionRequiresWeightFieldAndQuantity(): void
+    {
+        $Weight = new UnitSelect(FieldHandler::FIELD_WEIGHT, [
+            'name' => 'weight',
+            'value' => ['quantity' => 2500, 'id' => 'g']
+        ]);
+        $Empty = new UnitSelect(FieldHandler::FIELD_WEIGHT, ['name' => 'weight']);
+        $Other = new UnitSelect(991023, [
+            'name' => 'other',
+            'value' => ['quantity' => 2500, 'id' => 'g']
+        ]);
+
+        self::assertSame(2.5, Fields::weightFieldToKilogram($Weight));
+        self::assertSame(0, Fields::weightFieldToKilogram($Empty));
+        self::assertSame(0, Fields::weightFieldToKilogram($Other));
     }
 
     #[DataProvider('weightConversions')]

@@ -5,6 +5,13 @@ namespace QUITests\ERP\Products\Integration\Product;
 use Doctrine\DBAL\Connection;
 use QUI;
 use QUI\ERP\Products\Category\Category;
+use QUI\ERP\Products\EventHandling;
+use QUI\ERP\Products\Field\Field;
+use QUI\ERP\Products\Field\Types\Folder;
+use QUI\ERP\Products\Field\Types\Input;
+use QUI\ERP\Products\Field\Types\InputMultiLang;
+use QUI\ERP\Products\Field\Types\IntType;
+use QUI\ERP\Products\Field\Types\Price;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
@@ -15,6 +22,8 @@ use QUI\Projects\Project;
 use QUI\Projects\Site\Edit;
 use QUITests\ERP\Products\Integration\IntegrationTestEnvironment;
 use QUITests\ERP\Products\Integration\ProjectTestHelper;
+use ReflectionMethod;
+use ReflectionProperty;
 use RuntimeException;
 use Throwable;
 
@@ -27,6 +36,15 @@ final class ProductTestHelper
     private static ?int $categoryId = null;
     private static ?int $siteId = null;
     private static bool $cleanupRegistered = false;
+    private static mixed $originalProductsFolder = null;
+    private static bool $productsFolderChanged = false;
+
+    /** @var array<int, Field> */
+    private static array $originalFieldList = [];
+    /** @var array<string, mixed> */
+    private static array $originalFieldCacheState = [];
+
+    private static bool $fieldFixturesInstalled = false;
 
     public static function assertDatabaseIsAvailable(): void
     {
@@ -66,6 +84,8 @@ final class ProductTestHelper
 
         try {
             $Project = ProjectTestHelper::getProject();
+            self::configureProductsFolder($Project);
+            self::installFieldFixtures();
             $Category = self::runAsSystemUser(static function (): Category {
                 $Category = Categories::createCategory(0, self::PREFIX . 'category');
 
@@ -80,7 +100,18 @@ final class ProductTestHelper
             });
             self::$categoryId = $Category->getId();
             self::$siteId = self::createCategorySite($Project, $Category);
+            $Category = Categories::getCategory(self::$categoryId);
+
+            if (!$Category instanceof Category) {
+                throw new RuntimeException('The reloaded PHPUnit product category has an unexpected type.');
+            }
+
             $Category->refreshSiteBinds();
+            (new ReflectionProperty(Category::class, 'defaultSites'))->setValue($Category, [
+                $Project->getName() => [
+                    $Project->getLang() => new Edit($Project, self::$siteId)
+                ]
+            ]);
         } catch (Throwable $Exception) {
             self::cleanupAll();
             throw $Exception;
@@ -122,8 +153,11 @@ final class ProductTestHelper
         return new Edit(ProjectTestHelper::getProject(), self::$siteId);
     }
 
-    public static function createProduct(?string $title = null, float $price = 42.5): AbstractType
-    {
+    public static function createProduct(
+        ?string $title = null,
+        float $price = 42.5,
+        string $productType = ''
+    ): AbstractType {
         self::initialize();
 
         $suffix = bin2hex(random_bytes(8));
@@ -155,7 +189,8 @@ final class ProductTestHelper
         try {
             $Product = self::runAsSystemUser(static fn (): AbstractType => Products::createProduct(
                 [self::getCategory()],
-                [$Title, $Price, $ProductNo, $Url]
+                [$Title, $Price, $ProductNo, $Url],
+                $productType
             ));
         } catch (Throwable $Exception) {
             self::cleanupProducts();
@@ -165,6 +200,12 @@ final class ProductTestHelper
         self::$createdProductIds[$Product->getId()] = true;
 
         return $Product;
+    }
+
+    public static function installCompleteFieldFixtures(): void
+    {
+        self::initialize();
+        (new ReflectionMethod(EventHandling::class, 'setDefaultProductFields'))->invoke(null);
     }
 
     public static function cleanupProducts(): void
@@ -203,9 +244,66 @@ final class ProductTestHelper
         }
     }
 
+    public static function cleanupCustomFields(): void
+    {
+        try {
+            $Connection = self::getConnection();
+            $fieldTable = QUI\Utils\Doctrine::quoteIdentifier(Tables::getFieldTableName());
+            $fieldIds = $Connection->fetchFirstColumn(
+                'SELECT id FROM ' . $fieldTable . ' WHERE id >= 1000 ORDER BY id DESC'
+            );
+
+            foreach ($fieldIds as $fieldId) {
+                $fieldId = (int)$fieldId;
+
+                try {
+                    self::runAsSystemUser(static function () use ($fieldId): void {
+                        Fields::getField($fieldId)->delete();
+                    });
+                } catch (Throwable) {
+                    $Connection->delete(Tables::getFieldTableName(), ['id' => $fieldId]);
+                    Fields::removeRuntimeField($fieldId);
+                }
+            }
+
+            $categoryTable = QUI\Utils\Doctrine::quoteIdentifier(Tables::getCategoryTableName());
+            $categories = $Connection->fetchAllAssociative(
+                'SELECT id, fields FROM ' . $categoryTable
+            );
+
+            foreach ($categories as $category) {
+                $fields = json_decode((string)$category['fields'], true);
+
+                if (!is_array($fields)) {
+                    continue;
+                }
+
+                $filteredFields = array_values(array_filter(
+                    $fields,
+                    static fn (array $field): bool => (int)($field['id'] ?? 0) < 1000
+                ));
+
+                if ($filteredFields === $fields) {
+                    continue;
+                }
+
+                $categoryId = (int)$category['id'];
+                $Connection->update(
+                    Tables::getCategoryTableName(),
+                    ['fields' => json_encode($filteredFields, JSON_THROW_ON_ERROR)],
+                    ['id' => $categoryId]
+                );
+                Categories::clearCache($categoryId);
+            }
+        } catch (Throwable) {
+            // Test teardown must not hide the original test result.
+        }
+    }
+
     public static function cleanupAll(): void
     {
         self::cleanupProducts();
+        self::cleanupCustomFields();
         $categoryIds = self::findFixtureCategoryIds();
 
         if (self::$categoryId !== null) {
@@ -232,7 +330,11 @@ final class ProductTestHelper
 
         self::$categoryId = null;
         self::$siteId = null;
+        (new ReflectionProperty(Categories::class, 'list'))->setValue(null, []);
+        Products::cleanProductInstanceMemCache();
         IntegrationTestEnvironment::cleanup();
+        self::restoreProductsFolder();
+        self::restoreFieldFixtures();
     }
 
     public static function runAsSystemUser(callable $Callback): mixed
@@ -245,7 +347,7 @@ final class ProductTestHelper
     private static function createCategorySite(Project $Project, Category $Category): int
     {
         $Root = $Project->firstChild()->getEdit();
-        $siteName = self::PREFIX . 'category';
+        $siteName = self::PREFIX . 'category-' . bin2hex(random_bytes(6));
         $siteId = self::runAsSystemUser(static fn (): int => $Root->createChild([
             'name' => $siteName,
             'title' => 'PHPUnit Products Category'
@@ -256,8 +358,17 @@ final class ProductTestHelper
             $Site->setAttribute('type', 'quiqqer/products:types/category');
             $Site->setAttribute('quiqqer.products.settings.categoryId', $Category->getId());
             $Site->save($SystemUser);
-            $Site->activate($SystemUser);
         });
+
+        self::getConnection()->update($Project->table(), ['active' => 1], ['id' => $siteId]);
+        QUI\Cache\LongTermCache::clear(
+            QUI\ERP\Products\Handler\Cache::getBasicCachePath()
+            . 'category/' . $Category->getId() . '/sites'
+        );
+        QUI\Cache\LongTermCache::clear(
+            'products/category/' . $Category->getId()
+            . '/site/' . $Project->getName() . '/' . $Project->getLang()
+        );
 
         return $siteId;
     }
@@ -318,5 +429,129 @@ final class ProductTestHelper
     private static function getConnection(): Connection
     {
         return QUI::getDataBaseConnection();
+    }
+
+    private static function configureProductsFolder(Project $Project): void
+    {
+        if (self::$productsFolderChanged) {
+            return;
+        }
+
+        $Config = QUI::getPackage('quiqqer/products')->getConfig();
+
+        if ($Config === null) {
+            throw new RuntimeException('The Products package config is unavailable.');
+        }
+
+        self::$originalProductsFolder = $Config->get('products', 'folder');
+        $Config->set('products', 'folder', $Project->getMedia()->firstChild()->getUrl());
+        self::$productsFolderChanged = true;
+    }
+
+    private static function restoreProductsFolder(): void
+    {
+        if (!self::$productsFolderChanged) {
+            return;
+        }
+
+        $Config = QUI::getPackage('quiqqer/products')->getConfig();
+
+        if ($Config !== null) {
+            if (self::$originalProductsFolder === false) {
+                $Config->del('products', 'folder');
+            } else {
+                $Config->set('products', 'folder', self::$originalProductsFolder);
+            }
+        }
+
+        self::$originalProductsFolder = null;
+        self::$productsFolderChanged = false;
+    }
+
+    private static function installFieldFixtures(): void
+    {
+        if (self::$fieldFixturesInstalled) {
+            return;
+        }
+
+        foreach (['fieldTypes', 'fieldTypeData', 'priceFactorSettings', 'deletedFieldIds'] as $property) {
+            $Property = new ReflectionProperty(Fields::class, $property);
+            self::$originalFieldCacheState[$property] = $Property->getValue();
+        }
+
+        $List = new ReflectionProperty(Fields::class, 'list');
+        self::$originalFieldList = $List->getValue();
+        $fieldDefinitions = [
+            Fields::FIELD_PRICE => [Price::class, Fields::TYPE_PRICE, 1, 1],
+            Fields::FIELD_PRODUCT_NO => [Input::class, Fields::TYPE_INPUT, 0, 1],
+            Fields::FIELD_TITLE => [InputMultiLang::class, Fields::TYPE_INPUT_MULTI_LANG, 1, 1],
+            Fields::FIELD_SHORT_DESC => [InputMultiLang::class, Fields::TYPE_INPUT_MULTI_LANG, 0, 1],
+            Fields::FIELD_FOLDER => [Folder::class, Fields::TYPE_FOLDER, 0, 1],
+            Fields::FIELD_PRIORITY => [IntType::class, Fields::TYPE_INT, 0, 0],
+            Fields::FIELD_URL => [InputMultiLang::class, Fields::TYPE_INPUT_MULTI_LANG, 0, 0]
+        ];
+        $fieldList = [];
+        $Connection = self::getConnection();
+        $Connection->executeStatement(
+            'DELETE FROM ' . QUI\Utils\Doctrine::quoteIdentifier(Tables::getFieldTableName())
+        );
+
+        foreach ($fieldDefinitions as $id => [$className, $type, $required, $public]) {
+            $data = [
+                'id' => $id,
+                'name' => 'phpunit-field-' . $id,
+                'type' => $type,
+                'search_type' => '',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => $id,
+                'systemField' => 1,
+                'standardField' => 1,
+                'requiredField' => $required,
+                'publicField' => $public,
+                'showInDetails' => 1,
+                'options' => null,
+                'defaultValue' => null,
+                'e_date' => '2026-01-01 00:00:00'
+            ];
+            $Connection->insert(Tables::getFieldTableName(), $data);
+
+            /** @var Field $Field */
+            $Field = new $className($id, [
+                'system' => 1,
+                'standard' => 1,
+                'required' => $required,
+                'public' => $public
+            ]);
+            $Field->setAttributes($data);
+            $fieldList[$id] = $Field;
+        }
+
+        $List->setValue(null, $fieldList);
+
+        foreach (array_keys($fieldList) as $fieldId) {
+            if ($fieldList[$fieldId]->isSearchable()) {
+                Fields::createFieldCacheColumn($fieldId);
+            }
+        }
+
+        self::$fieldFixturesInstalled = true;
+    }
+
+    private static function restoreFieldFixtures(): void
+    {
+        if (!self::$fieldFixturesInstalled) {
+            return;
+        }
+
+        (new ReflectionProperty(Fields::class, 'list'))->setValue(null, self::$originalFieldList);
+
+        foreach (self::$originalFieldCacheState as $property => $value) {
+            (new ReflectionProperty(Fields::class, $property))->setValue(null, $value);
+        }
+
+        self::$originalFieldList = [];
+        self::$originalFieldCacheState = [];
+        self::$fieldFixturesInstalled = false;
     }
 }
