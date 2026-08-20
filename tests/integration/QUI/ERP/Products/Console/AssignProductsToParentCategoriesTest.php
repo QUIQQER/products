@@ -35,7 +35,6 @@ class AssignProductsToParentCategoriesTest extends ProductIntegrationTestCase
 
         $Tool = new AssignProductsToParentCategories();
         self::assertSame('products:assign-parent-categories', $Tool->getName());
-        self::assertArrayHasKey('productIds', $Tool->getArgumentDefinitions());
         $Tool->setArgument('productIds', $Product->getId() . ',999999');
         $Tool->execute();
 

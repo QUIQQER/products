@@ -90,7 +90,13 @@ class FieldsTest extends ProductIntegrationTestCase
             Fields::getFieldByType('DefinitelyUnknownFieldType', 1911);
             self::fail('An unknown field class must be rejected.');
         } catch (FieldException $Exception) {
-            self::assertStringContainsString('exception.field.type_not_found', $Exception->getMessage());
+            self::assertSame(
+                QUI::getLocale()->get('quiqqer/products', 'exception.field.type_not_found', [
+                    'fieldType' => 'DefinitelyUnknownFieldType',
+                    'fieldId' => 1911
+                ]),
+                $Exception->getMessage()
+            );
         }
 
         self::assertSame([], Fields::getFieldTypeData('DefinitelyUnknownFieldType'));

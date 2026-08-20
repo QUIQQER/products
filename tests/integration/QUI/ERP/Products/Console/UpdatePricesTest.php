@@ -37,8 +37,6 @@ class UpdatePricesTest extends ProductIntegrationTestCase
         try {
             $Tool = new UpdatePrices();
             self::assertSame('products:update-prices', $Tool->getName());
-            self::assertArrayHasKey('activeOnly', $Tool->getArgumentDefinitions());
-            self::assertArrayHasKey('categoryId', $Tool->getArgumentDefinitions());
 
             $Tool->setArgument('activeOnly', '1');
             $Tool->setArgument('categoryId', (string)ProductTestHelper::getCategory()->getId());

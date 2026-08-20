@@ -62,8 +62,15 @@ class PriceByQuantityTest extends TestCase
         $Field->validate(['price' => 12.5, 'quantity' => 3]);
         self::assertInstanceOf(View::class, $Field->getBackendView());
         self::assertInstanceOf(View::class, $Field->getFrontendView());
+        $Price = new \QUI\ERP\Money\Price(
+            12.5,
+            \QUI\ERP\Defaults::getCurrency()
+        );
         self::assertSame(
-            '[quiqqer/products] fieldtype.PriceByQuantity.frontend.text',
+            \QUI::getLocale()->get('quiqqer/products', 'fieldtype.PriceByQuantity.frontend.text', [
+                'price' => $Price->getDisplayPrice(),
+                'quantity' => 3.0
+            ]),
             $Field->getFrontendView()->getValue()
         );
         self::assertSame(

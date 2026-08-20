@@ -19,8 +19,27 @@ function writePhpUnitMessage(string $str = ''): void
 }
 
 require_once __DIR__ . '/../../../../bootstrap.php';
+
+QUI::getLocale()->setCurrent('de');
+$ProductsLocale = new QUI\Locale();
+$ProductsLocale->setCurrent('de');
+QUI\ERP\Products\Handler\Products::setLocale($ProductsLocale);
+
 require_once __DIR__ . '/SqlitePlatform.php';
 require_once __DIR__ . '/SqliteTestEnvironment.php';
+
+if (!class_exists(QUI\ERP\Order\AbstractOrder::class)) {
+    if (!interface_exists(QUI\ERP\Order\OrderArticle::class)) {
+        require_once __DIR__ . '/stubs/OrderArticle.php';
+    }
+
+    if (!interface_exists(QUI\ERP\Order\OrderDeliveryAddress::class)) {
+        require_once __DIR__ . '/stubs/OrderDeliveryAddress.php';
+    }
+
+    require_once __DIR__ . '/stubs/AbstractOrder.php';
+}
+
 require_once __DIR__ . '/stubs/QUI/ERP/DemoData/DemoDataStubs.php';
 require_once __DIR__ . '/Fixtures/TestUser.php';
 require_once __DIR__ . '/Fixtures/RecordingCalc.php';

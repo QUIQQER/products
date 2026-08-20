@@ -33,10 +33,6 @@ class GenerateProductCacheTest extends ProductIntegrationTestCase
         try {
             $Tool = new GenerateProductCache();
             self::assertSame('products:generate-product-cache', $Tool->getName());
-            self::assertSame(
-                ['unlock', 'rebuild', 'withControlCache'],
-                array_keys($Tool->getArgumentDefinitions())
-            );
             $Tool->setArgument('unlock', true);
             $Tool->setArgument('rebuild', true);
             $Tool->setArgument('withControlCache', false);

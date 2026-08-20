@@ -31,7 +31,14 @@ class DateTest extends TestCase
                 $Date->validate($value);
                 self::fail("Invalid date '$value' must be rejected.");
             } catch (Exception $Exception) {
-                self::assertStringContainsString('exception.field.invalid', $Exception->getMessage());
+                self::assertSame(
+                    \QUI::getLocale()->get('quiqqer/products', 'exception.field.invalid', [
+                        'fieldId' => $Date->getId(),
+                        'fieldTitle' => $Date->getTitle(),
+                        'fieldType' => $Date->getType()
+                    ]),
+                    $Exception->getMessage()
+                );
             }
         }
     }

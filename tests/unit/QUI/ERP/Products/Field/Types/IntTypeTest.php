@@ -33,7 +33,14 @@ class IntTypeTest extends TestCase
             $Field->setValue('twelve');
             self::fail('Non-numeric integer values must be rejected.');
         } catch (Exception $Exception) {
-            self::assertStringContainsString('exception.field.invalid', $Exception->getMessage());
+                self::assertSame(
+                    \QUI::getLocale()->get('quiqqer/products', 'exception.field.invalid', [
+                        'fieldId' => $Field->getId(),
+                        'fieldTitle' => $Field->getTitle(),
+                        'fieldType' => $Field->getType()
+                    ]),
+                    $Exception->getMessage()
+                );
         }
 
         self::assertSame(-12, $Field->getValue());

@@ -30,7 +30,14 @@ class ProductsTest extends ProductIntegrationTestCase
                 $Field->validate($value);
                 self::fail('A non-array related-products value must be rejected.');
             } catch (Exception $Exception) {
-                self::assertStringContainsString('exception.field.invalid', $Exception->getMessage());
+                self::assertSame(
+                    \QUI::getLocale()->get('quiqqer/products', 'exception.field.invalid', [
+                        'fieldId' => $Field->getId(),
+                        'fieldTitle' => $Field->getTitle(),
+                        'fieldType' => $Field->getType()
+                    ]),
+                    $Exception->getMessage()
+                );
             }
         }
     }

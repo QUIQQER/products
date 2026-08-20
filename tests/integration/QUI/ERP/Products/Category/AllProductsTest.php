@@ -5,9 +5,12 @@ namespace QUITests\ERP\Products\Integration\Category;
 use QUI;
 use QUI\ERP\Products\Category\AllProducts;
 use QUI\ERP\Products\Field\Field;
+use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Search\Utils as SearchUtils;
 use QUI\ERP\Products\Utils\Tables;
 use QUITests\ERP\Products\Integration\Product\ProductIntegrationTestCase;
 use QUITests\ERP\Products\Integration\Product\ProductTestHelper;
+use ReflectionProperty;
 
 class AllProductsTest extends ProductIntegrationTestCase
 {
@@ -81,14 +84,31 @@ class AllProductsTest extends ProductIntegrationTestCase
 
     public function testFieldsExposeTheConfiguredFrontendSearchFields(): void
     {
-        $fields = (new AllProducts())->getFields();
+        $Config = QUI::getPackage('quiqqer/productsearch')->getConfig();
+        self::assertNotNull($Config);
+        $originalFrontendFields = $Config->get('search', 'frontend');
+        $DefaultFields = new ReflectionProperty(SearchUtils::class, 'defaultFrontendFields');
+        $originalCache = $DefaultFields->getValue();
 
-        self::assertNotEmpty($fields);
-        self::assertContainsOnlyInstancesOf(Field::class, $fields);
-        self::assertSame(
-            array_values(array_unique(array_map(static fn (Field $Field): int => $Field->getId(), $fields))),
-            array_map(static fn (Field $Field): int => $Field->getId(), $fields)
-        );
+        try {
+            $Config->set('search', 'frontend', (string)Fields::FIELD_TITLE);
+            $DefaultFields->setValue(null, null);
+            $fields = (new AllProducts())->getFields();
+
+            self::assertContainsOnlyInstancesOf(Field::class, $fields);
+            self::assertSame(
+                [Fields::FIELD_TITLE],
+                array_map(static fn (Field $Field): int => $Field->getId(), $fields)
+            );
+        } finally {
+            if ($originalFrontendFields === false) {
+                $Config->del('search', 'frontend');
+            } else {
+                $Config->set('search', 'frontend', $originalFrontendFields);
+            }
+
+            $DefaultFields->setValue(null, $originalCache);
+        }
     }
 
     private function countPersistedCategories(): int

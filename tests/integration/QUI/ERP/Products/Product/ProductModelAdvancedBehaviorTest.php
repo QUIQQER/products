@@ -99,7 +99,13 @@ class ProductModelAdvancedBehaviorTest extends ProductIntegrationTestCase
             } catch (ProductException $Exception) {
                 self::assertSame(400, $Exception->getCode());
                 self::assertSame($Second->getId(), $Exception->getContext()['updateProduct']);
-                self::assertStringContainsString('exception.duplicate_article_no', $Exception->getMessage());
+                self::assertSame(
+                    QUI::getLocale()->get('quiqqer/products', 'exception.duplicate_article_no', [
+                        'articleNo' => $articleNo,
+                        'otherProductId' => $First->getId()
+                    ]),
+                    $Exception->getMessage()
+                );
             }
 
             self::assertTrue($First->isActive());

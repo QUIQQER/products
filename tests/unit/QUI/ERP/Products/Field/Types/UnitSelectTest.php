@@ -86,7 +86,14 @@ class UnitSelectTest extends TestCase
                 $Field->validate($invalidValue);
                 self::fail('Malformed unit values must be rejected.');
             } catch (Exception $Exception) {
-                self::assertStringContainsString('exception.field.invalid', $Exception->getMessage());
+                self::assertSame(
+                    \QUI::getLocale()->get('quiqqer/products', 'exception.field.invalid', [
+                        'fieldId' => $Field->getId(),
+                        'fieldTitle' => $Field->getTitle(),
+                        'fieldType' => $Field->getType()
+                    ]),
+                    $Exception->getMessage()
+                );
             }
         }
     }
