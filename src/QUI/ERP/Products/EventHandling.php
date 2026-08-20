@@ -985,31 +985,31 @@ class EventHandling
     public static function patchProductTypes(): void
     {
         try {
-            $result = QUI\ERP\Products\Utils\Database::fetch([
-                'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
-                'where' => [
-                    'type' => [
-                        'type' => 'LIKE%',
-                        'value' => '\\QUI'
-                    ]
-                ],
-                'limit' => 1
-            ]);
-
-            if (empty($result)) {
-                return;
-            }
-
             foreach ([Tables::getProductTableName(), Tables::getProductCacheTableName()] as $tableName) {
-                $QueryBuilder = QUI::getQueryBuilder();
-                $typeColumn = QUI\Utils\Doctrine::quoteIdentifier('type');
+                $Connection = QUI::getDataBaseConnection();
+                $QueryBuilder = $Connection->createQueryBuilder();
+                $legacyTypes = $QueryBuilder
+                    ->select('DISTINCT ' . QUI\Utils\Doctrine::quoteIdentifier('type'))
+                    ->from(QUI\Utils\Doctrine::quoteIdentifier($tableName))
+                    ->where($QueryBuilder->expr()->like(
+                        QUI\Utils\Doctrine::quoteIdentifier('type'),
+                        ':legacyNamespace'
+                    ))
+                    ->setParameter('legacyNamespace', '\\QUI%')
+                    ->executeQuery()
+                    ->fetchFirstColumn();
 
-                $QueryBuilder
-                    ->update(QUI\Utils\Doctrine::quoteIdentifier($tableName))
-                    ->set($typeColumn, "REPLACE($typeColumn, :leadingNamespace, :namespace)")
-                    ->setParameter('leadingNamespace', '\\QUI')
-                    ->setParameter('namespace', 'QUI')
-                    ->executeStatement();
+                foreach ($legacyTypes as $legacyType) {
+                    if (!is_string($legacyType) || !str_starts_with($legacyType, '\\QUI')) {
+                        continue;
+                    }
+
+                    $Connection->update(
+                        QUI\Utils\Doctrine::quoteIdentifier($tableName),
+                        ['type' => substr($legacyType, 1)],
+                        ['type' => $legacyType]
+                    );
+                }
             }
         } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
