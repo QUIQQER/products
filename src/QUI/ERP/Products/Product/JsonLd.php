@@ -390,6 +390,7 @@ class JsonLd
             && isset($offerEntry['lowPrice'])
             && $offerEntry['highPrice'] === $offerEntry['lowPrice']
         ) {
+            $offerEntry['@type'] = 'Offer';
             $offerEntry['price'] = $offerEntry['highPrice'];
 
             unset($offerEntry['lowPrice']);
