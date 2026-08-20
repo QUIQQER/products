@@ -107,9 +107,11 @@ final class ProductTestHelper
             }
 
             $Category->refreshSiteBinds();
+            $CategorySite = new Edit($Project, self::$siteId);
+            (new ReflectionProperty(Category::class, 'sites'))->setValue($Category, [$CategorySite]);
             (new ReflectionProperty(Category::class, 'defaultSites'))->setValue($Category, [
                 $Project->getName() => [
-                    $Project->getLang() => new Edit($Project, self::$siteId)
+                    $Project->getLang() => $CategorySite
                 ]
             ]);
         } catch (Throwable $Exception) {
@@ -304,6 +306,7 @@ final class ProductTestHelper
     {
         self::cleanupProducts();
         self::cleanupCustomFields();
+        self::cleanupCategorySite();
         $categoryIds = self::findFixtureCategoryIds();
 
         if (self::$categoryId !== null) {
@@ -335,6 +338,34 @@ final class ProductTestHelper
         IntegrationTestEnvironment::cleanup();
         self::restoreProductsFolder();
         self::restoreFieldFixtures();
+    }
+
+    private static function cleanupCategorySite(): void
+    {
+        if (self::$siteId === null) {
+            return;
+        }
+
+        $siteId = self::$siteId;
+
+        try {
+            self::runAsSystemUser(static function () use ($siteId): void {
+                $Site = new Edit(ProjectTestHelper::getProject(), $siteId);
+                $Site->delete();
+                $Site->refresh();
+                $Site->destroy();
+            });
+        } catch (Throwable) {
+            try {
+                $Project = ProjectTestHelper::getProject();
+                self::getConnection()->delete($Project->table() . '_relations', ['child' => $siteId]);
+                self::getConnection()->delete($Project->table(), ['id' => $siteId]);
+            } catch (Throwable) {
+                // Cleanup must never hide the actual test result or shutdown reason.
+            }
+        } finally {
+            self::$siteId = null;
+        }
     }
 
     public static function runAsSystemUser(callable $Callback): mixed

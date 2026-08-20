@@ -8,6 +8,7 @@ use QUI\Permissions\Permission;
 use QUI\Projects\Manager;
 use QUI\Projects\Media;
 use QUI\Projects\Project;
+use QUITests\ERP\Products\DatabaseEnvironment;
 use ReflectionMethod;
 use ReflectionProperty;
 use RuntimeException;
@@ -22,6 +23,10 @@ final class ProjectTestHelper
 
     public static function getProject(): Project
     {
+        if (DatabaseEnvironment::usesCiDatabase()) {
+            return Manager::getStandard();
+        }
+
         if (self::$projectName === null) {
             self::createProject();
         }

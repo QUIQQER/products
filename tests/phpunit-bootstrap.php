@@ -18,6 +18,7 @@ function writePhpUnitMessage(string $str = ''): void
     echo PHP_EOL;
 }
 
+require_once __DIR__ . '/DatabaseEnvironment.php';
 require_once __DIR__ . '/../../../../bootstrap.php';
 
 QUI::getLocale()->setCurrent('de');
@@ -25,8 +26,10 @@ $ProductsLocale = new QUI\Locale();
 $ProductsLocale->setCurrent('de');
 QUI\ERP\Products\Handler\Products::setLocale($ProductsLocale);
 
-require_once __DIR__ . '/SqlitePlatform.php';
-require_once __DIR__ . '/SqliteTestEnvironment.php';
+if (!QUITests\ERP\Products\DatabaseEnvironment::usesCiDatabase()) {
+    require_once __DIR__ . '/SqlitePlatform.php';
+    require_once __DIR__ . '/SqliteTestEnvironment.php';
+}
 
 if (!class_exists(QUI\ERP\Order\AbstractOrder::class)) {
     if (!interface_exists(QUI\ERP\Order\OrderArticle::class)) {
@@ -50,5 +53,9 @@ require_once __DIR__ . '/integration/QUI/ERP/Products/Product/ProductIntegration
 require_once __DIR__ . '/integration/QUI/ERP/Products/Ajax/AjaxTestCase.php';
 
 QUI\System\TestCleanup::register();
-QUITests\ERP\Products\SqliteTestEnvironment::activate();
+
+if (!QUITests\ERP\Products\DatabaseEnvironment::usesCiDatabase()) {
+    QUITests\ERP\Products\SqliteTestEnvironment::activate();
+}
+
 QUITests\ERP\Products\Integration\Product\ProductTestHelper::registerCleanup();
