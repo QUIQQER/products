@@ -12,6 +12,7 @@ use QUI\ERP\Products\Handler\Search;
 use QUI\ERP\Products\Utils\Tables;
 use QUI\Package\Package;
 use QUI\Projects\Site\Edit;
+use QUI\Smarty\Collector;
 use QUI\System\Console\Tools\MigrationV2;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -1287,6 +1288,15 @@ class EventHandling
         $header .= '</script>';
 
         $TemplateManager->extendHeader($header);
+    }
+
+    public static function onTemplateEnd(
+        Collector $Collection,
+        QUI\Template $Template
+    ): void {
+        $Template->extendFooter(
+            '<script src="' . URL_OPT_DIR . 'quiqqer/products/bin/dataLayerTracking.js" defer></script>'
+        );
     }
 
     /**

@@ -5,6 +5,9 @@
  * @event onFilterChange [self]
  * @event onQuiqqerProductsOpenProduct [self, productId]
  * @event onQuiqqerProductsCloseProduct [self, productId]
+ * @event onQuiqqerProductsSelectProduct [self, productId]
+ * @event onQuiqqerProductsProductListView [self, listData]
+ * @event onQuiqqerProductsProductView [self, productId]
  */
 define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
@@ -50,6 +53,64 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         }
     });
 
+    /**
+     * Fires an event for a batch of products that became visible in a list.
+     *
+     * @param {Object} ProductList
+     * @param {Number[]} productIds
+     * @param {Number} startIndex
+     * @return {void}
+     */
+    function fireProductListView(ProductList, productIds, startIndex)
+    {
+        if (!Array.isArray(productIds)) {
+            return;
+        }
+
+        productIds = productIds.map(function(productId) {
+            return parseInt(productId);
+        }).filter(function(productId) {
+            return Number.isInteger(productId) && productId > 0;
+        });
+
+        if (!productIds.length) {
+            return;
+        }
+
+        QUI.fireEvent('quiqqerProductsProductListView', [
+            ProductList,
+            {
+                id: String(ProductList.getAttribute('itemListId')),
+                name: ProductList.getAttribute('itemListName') || document.title,
+                productIds: productIds,
+                startIndex: parseInt(startIndex) || 0
+            }
+        ]);
+    }
+
+    /**
+     * Opens a product selected by the user from the current list.
+     *
+     * @param {Object} ProductList
+     * @param {Number|String} productId
+     * @return {Promise}
+     */
+    function selectProduct(ProductList, productId)
+    {
+        productId = parseInt(productId);
+
+        if (!Number.isInteger(productId) || productId < 1) {
+            return Promise.resolve();
+        }
+
+        QUI.fireEvent('quiqqerProductsSelectProduct', [
+            ProductList,
+            productId
+        ]);
+
+        return ProductList.openProduct(productId);
+    }
+
     return new Class({
 
         Extends: QUIControl,
@@ -84,7 +145,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             autoloadAfter: 3, // After how many clicks are further products loaded automatically? (false | number)
             productLoadNumber: 9,
             openproductasync: false, // true / false
-            searchfields: {}
+            searchfields: {},
+            itemListId: false,
+            itemListName: ''
         },
 
         initialize: function (options) {
@@ -128,6 +191,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$categories = [];
             this.$tags = [];
             this.$productId = false;
+            this.$initialProductIds = [];
+            this.$initialProductIndex = 0;
 
             this.$sortingEnabled = true;
             this.$moreButtonIsVisible = false;
@@ -275,7 +340,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if (this.openProductAsync) {
                 Elm.getElements('article').addEvent('click', function (event) {
                     event.stop();
-                    self.openProduct(parseInt(this.get('data-pid')));
+                    selectProduct(self, this.get('data-pid'));
                 });
             }
 
@@ -389,6 +454,17 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.setAttribute('lang', this.getElm().get('data-lang'));
             this.setAttribute('siteId', this.getElm().get('data-siteid'));
             this.setAttribute('search', this.getElm().get('data-search'));
+            this.setAttribute('itemListId', this.getElm().get('data-item-list-id'));
+            this.setAttribute('itemListName', this.getElm().get('data-item-list-name'));
+
+            try {
+                this.$initialProductIds = JSON.parse(this.getElm().get('data-product-ids') || '[]');
+            } catch (error) {
+                console.error(error);
+                this.$initialProductIds = [];
+            }
+
+            this.$initialProductIndex = parseInt(this.getElm().get('data-product-index')) || 0;
 
             // events
             this.$ButtonDetails.addEvent('click', this.detailView);
@@ -514,6 +590,14 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.$readWindowLocation().then(function () {
                     this.$load = true;
                     this.$renderFilterFields();
+
+                    if (!this.$productId) {
+                        fireProductListView(
+                            this,
+                            this.$initialProductIds,
+                            this.$initialProductIndex
+                        );
+                    }
                 }.bind(this));
             }).delay(500, this);
         },
@@ -1020,6 +1104,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 ContainerReal = this.$ContainerReal,
                 articles = this.$ContainerReal.getElements('article').length + 1;
 
+            const startIndex = next ? articles - 1 : 0;
+
             if (sort) {
                 sort = sort.replace('Sc_date', 'c_date').replace('Se_date', 'e_date');
             }
@@ -1079,7 +1165,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                                 return;
                             }
 
-                            self.openProduct(parseInt(this.get('data-pid')));
+                            selectProduct(self, this.get('data-pid'));
                         });
 
                         articles.inject(ContainerReal);
@@ -1088,6 +1174,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                             return self.$showContainer();
                         });
                     }).then(function () {
+                        fireProductListView(self, result.productIds || [], startIndex);
                         resolve(result);
                     });
                 }, {
@@ -1123,7 +1210,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 events: {
                     click: function (event) { // open products in list
                         event.stop();
-                        self.openProduct(parseInt(this.get('data-pid')));
+                        selectProduct(self, this.get('data-pid'));
                     }
                 }
             });
@@ -1138,7 +1225,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                     Product.focus();
 
-                    self.openProduct(parseInt(Product.get('data-pid')));
+                    selectProduct(self, Product.get('data-pid'));
                 }
             });
 
@@ -1249,7 +1336,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     Article = Target.getParent('article'),
                     productId = Article.get('data-pid');
 
-                self.openProduct(productId);
+                selectProduct(self, productId);
             });
         },
 
@@ -2628,6 +2715,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                                         Loader.hide().then(function () {
                                             Loader.destroy();
+                                            QUI.fireEvent('quiqqerProductsProductView', [
+                                                self,
+                                                productId
+                                            ]);
                                             resolve();
                                         });
                                     },

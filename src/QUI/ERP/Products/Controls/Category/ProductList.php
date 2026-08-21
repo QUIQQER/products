@@ -165,6 +165,8 @@ class ProductList extends QUI\Control
         $this->setAttribute('data-openproductasync', $openProductMode);
 
         $products = '';
+        $productIds = [];
+        $productIndex = 0;
         $more = false;
         $count = 0;
 
@@ -184,16 +186,23 @@ class ProductList extends QUI\Control
 
             if ($Category) {
                 $this->setAttribute('data-cid', $Category->getId());
+                $this->setAttribute('data-item-list-id', $Category->getId());
+                $this->setAttribute('data-item-list-name', $Category->getTitle());
+            } else {
+                $this->setAttribute('data-item-list-id', $this->getSite()->getId());
+                $this->setAttribute('data-item-list-name', $this->getSite()->getAttribute('title'));
             }
 
             if (isset($_REQUEST['sheet'])) {
                 $begin = ((int)$_REQUEST['sheet'] - 1) * $this->getMax();
+                $productIndex = $begin;
                 $start = $this->getNext($begin, $count);
             } else {
                 $start = $this->getStart($count);
             }
 
             $products = $start['html'];
+            $productIds = $start['productIds'];
             $more = $start['more'];
         } catch (QUI\Permissions\Exception $Exception) {
             QUI\System\Log::addNotice(
@@ -206,6 +215,9 @@ class ProductList extends QUI\Control
                 QUI\System\Log::LEVEL_NOTICE
             );
         }
+
+        $this->setAttribute('data-product-ids', json_encode($productIds));
+        $this->setAttribute('data-product-index', $productIndex);
 
         // category view
         switch ($this->getAttribute('categoryView')) {
@@ -438,7 +450,7 @@ class ProductList extends QUI\Control
      * Return the first articles as html array
      *
      * @param boolean|integer $count - (optional) count of the children
-     * @return array<mixed> [html, count, more]
+     * @return array<mixed> [html, count, more, productIds]
      *
      * @throws QUI\Exception
      */
@@ -452,7 +464,7 @@ class ProductList extends QUI\Control
      *
      * @param boolean|integer $start - (optional) start position
      * @param boolean|integer $count - (optional) count of the children
-     * @return array<mixed> [html, count, more]
+     * @return array<mixed> [html, count, more, productIds]
      *
      * @throws QUI\Exception
      */
@@ -492,7 +504,7 @@ class ProductList extends QUI\Control
      * @param boolean|integer $start - (optional) start position
      * @param boolean|integer $max - (optional) max children
      * @param boolean|integer $count - (optional) count of the children
-     * @return array<mixed> [html, count, more]
+     * @return array<mixed> [html, count, more, productIds]
      *
      * @throws QUI\Exception
      */
@@ -571,10 +583,13 @@ class ProductList extends QUI\Control
         }
 
         $products = [];
+        $productIds = [];
 
         foreach ($result as $product) {
             try {
-                $products[] = Products::getProduct((int)$product);
+                $Product = Products::getProduct((int)$product);
+                $products[] = $Product;
+                $productIds[] = $Product->getId();
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
             }
@@ -592,7 +607,8 @@ class ProductList extends QUI\Control
         return [
             'html' => $Engine->fetch(dirname(__FILE__) . '/ProductListRow.html'),
             'count' => $count,
-            'more' => $more
+            'more' => $more,
+            'productIds' => $productIds
         ];
     }
 

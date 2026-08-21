@@ -51,6 +51,18 @@ class CategoryProductListControlTest extends ProductIntegrationTestCase
         self::assertStringContainsString('data-tags="4,8"', $html);
         self::assertStringContainsString('data-sort="title ASC"', $html);
         self::assertStringContainsString('data-openproductasync="1"', $html);
+        self::assertSame(
+            [$Product->getId()],
+            json_decode((string)$Control->getAttribute('data-product-ids'), true, 512, JSON_THROW_ON_ERROR)
+        );
+        self::assertSame(
+            ProductTestHelper::getCategory()->getId(),
+            $Control->getAttribute('data-item-list-id')
+        );
+        self::assertSame(
+            ProductTestHelper::getCategory()->getTitle(),
+            $Control->getAttribute('data-item-list-name')
+        );
         self::assertSame(ProductTestHelper::getCategory()->getId(), $Control->getCategory()?->getId());
         self::assertSame(1, $Control->count());
     }
@@ -72,6 +84,7 @@ class CategoryProductListControlTest extends ProductIntegrationTestCase
 
         self::assertSame(1, $listResult['count']);
         self::assertFalse($listResult['more']);
+        self::assertSame([$Product->getId()], $listResult['productIds']);
         self::assertStringContainsString('category-control-views', $listResult['html']);
         self::assertStringContainsString('quiqqer-productList-product-list', $listResult['html']);
 
@@ -84,6 +97,7 @@ class CategoryProductListControlTest extends ProductIntegrationTestCase
 
         self::assertSame(8, $continuedResult['count']);
         self::assertTrue($continuedResult['more']);
+        self::assertSame([$Product->getId()], $continuedResult['productIds']);
         self::assertStringContainsString('category-control-views', $continuedResult['html']);
         self::assertStringContainsString('quiqqer-productList-product-list', $continuedResult['html']);
     }
