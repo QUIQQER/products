@@ -144,10 +144,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      */
     public function getPrice(): QUI\ERP\Money\Price
     {
-        return new QUI\ERP\Money\Price(
-            $this->getAttribute('price'),
-            QUI\ERP\Defaults::getCurrency()
-        );
+        return $this->Product->getPrice();
     }
 
     /**

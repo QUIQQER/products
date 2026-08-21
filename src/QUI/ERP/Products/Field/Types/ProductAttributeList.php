@@ -400,15 +400,8 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
         if (is_string($value) && !is_numeric($value)) {
             $check = json_decode($value, true);
 
-            // if no json, check if value exist
             if ($check === null) {
-                $options = $this->getOptions();
-                $entries = $options['entries'];
-                $wanted = (int)$value;
-
-                if (isset($entries[$wanted])) {
-                    return $wanted;
-                }
+                return null;
             }
 
             if (!isset($check[0]) || !isset($check[1])) {

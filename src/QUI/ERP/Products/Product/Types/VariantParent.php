@@ -845,7 +845,9 @@ class VariantParent extends AbstractType
                 return count($this->children);
             }
 
-            return $this->children;
+            if (!isset($params['limit']) && !isset($params['order'])) {
+                return $this->children;
+            }
         }
 
         try {
@@ -927,7 +929,7 @@ class VariantParent extends AbstractType
             }
         }
 
-        if (!isset($params['limit'])) {
+        if (!isset($params['limit']) && !isset($params['order'])) {
             $this->children = $variants;
         }
 
@@ -1002,6 +1004,37 @@ class VariantParent extends AbstractType
         if (empty($fields)) {
             return;
         }
+
+        $generationFields = [];
+
+        foreach ($fields as $entry) {
+            if (
+                empty($entry['fieldId'])
+                || empty($entry['values'])
+                || !is_array($entry['values'])
+            ) {
+                continue;
+            }
+
+            try {
+                $Field = FieldHandler::getField((int)$entry['fieldId']);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addDebug($Exception->getMessage());
+                continue;
+            }
+
+            if ($Field->getOption('exclude_from_variant_generation')) {
+                continue;
+            }
+
+            $generationFields[] = $entry;
+        }
+
+        if ($generationFields === []) {
+            return;
+        }
+
+        $fields = $generationFields;
 
         // delete all children and generate new ones
         if ($generationType === self::GENERATION_TYPE_RESET) {
@@ -1164,7 +1197,7 @@ class VariantParent extends AbstractType
     public function createVariant(): VariantChild
     {
         // set empty url, otherwise we'll have problems.
-        $UrlField = $this->getField(FieldHandler::FIELD_URL);
+        $UrlField = clone $this->getField(FieldHandler::FIELD_URL);
         $UrlField->setValue([]);
 
         $fields = [];
@@ -1691,14 +1724,13 @@ class VariantParent extends AbstractType
     public function isFieldAvailable(int | string $fieldId, int | string $fieldValue): bool
     {
         $available = $this->availableChildFields();
+        $fields = $available['fields'] ?? [];
 
-        if (!isset($available[$fieldId])) {
+        if (!isset($fields[$fieldId])) {
             return false;
         }
 
-        $fields = $available[$fieldId];
-
-        foreach ($fields as $value) {
+        foreach ($fields[$fieldId] as $value) {
             if ($value == $fieldValue) {
                 return true;
             }

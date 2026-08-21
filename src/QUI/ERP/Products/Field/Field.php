@@ -83,7 +83,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Field-Name
      */
-    protected string $name;
+    protected string $name = '';
 
     /**
      * Field value
@@ -126,6 +126,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     public function __construct(int $fieldId, array $params = [])
     {
         $this->id = $fieldId;
+
+        if (isset($params['name'])) {
+            $this->setAttribute('name', $params['name']);
+        }
 
         if (QUI::isBackend()) {
             $this->setAttribute('viewType', 'backend');
@@ -385,6 +389,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             QUI\ERP\Products\Handler\Fields::getFieldCacheName($this->getId())
         );
 
+        Fields::clearCache();
+        Fields::setRuntimeField($this);
+
         QUI::getEvents()->fireEvent('onQuiqqerProductsFieldSave', [$this]);
     }
 
@@ -469,6 +476,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             Fields::getFieldCacheName($this->getId())
         );
 
+        Fields::clearCache();
+        Fields::removeRuntimeField($fieldId);
+
 
         // delete permission
         // delete view permission
@@ -541,6 +551,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         QUI\Cache\LongTermCache::clear(
             Fields::getFieldCacheName($this->getId())
         );
+
+        Fields::clearCache();
+        Fields::removeRuntimeField($fieldId);
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsFieldDeleteSystemfield', [$this]);
     }
@@ -737,6 +750,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     {
         switch ($name) {
             case 'name':
+                $value = QUI\Utils\Security\Orthos::clear($value);
+                $this->name = (string)$value;
+                break;
+
             case 'type':
             case 'search_type':
             case 'priority':
@@ -1005,7 +1022,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $var = $typeData['help'][1];
 
         if ($Locale->exists($group, $var)) {
-            return $Locale->get($group, $var);
+            $help = $Locale->get($group, $var);
+
+            return is_string($help) ? $help : '';
         }
 
         return '';
@@ -1309,7 +1328,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                 $value = floor($value / $add) * $add;
             }
 
-            $value += $add;
+            $value = round($value + $add, 10);
             $range[] = $value;
         }
 

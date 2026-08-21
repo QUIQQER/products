@@ -135,8 +135,14 @@ final class IntegrationTestEnvironment
 
         try {
             ProjectTestHelper::runAsSystemUser(static function () use ($Taxes, $Config, $Area): void {
-                $TaxType = $Taxes->createTaxType();
-                self::$createdTaxTypeId = $TaxType->getId();
+                $types = self::$originalTaxTypes;
+
+                if (!is_array($types) || $types === []) {
+                    $types = [0 => 'taxType.0.title'];
+                    $Config->setSection('taxtypes', $types);
+                }
+
+                $taxTypeId = (int)array_key_first($types);
                 $groups = self::$originalTaxGroups;
 
                 if (!is_array($groups)) {
@@ -144,10 +150,10 @@ final class IntegrationTestEnvironment
                 }
 
                 $groupTypes = array_filter(explode(',', (string)($groups[0] ?? '')), 'strlen');
-                $groupTypes[] = (string)$TaxType->getId();
+                $groupTypes[] = (string)$taxTypeId;
                 $groups[0] = implode(',', array_unique($groupTypes));
                 $Config->setSection('taxgroups', $groups);
-                $Config->save();
+                $TaxType = $Taxes->getTaxType($taxTypeId);
 
                 $TaxEntry = $Taxes->createChild([
                     'areaId' => $Area->getId(),
@@ -216,8 +222,6 @@ final class IntegrationTestEnvironment
             } elseif (is_array(self::$originalTaxTypes)) {
                 $Config->setSection('taxtypes', self::$originalTaxTypes);
             }
-
-            $Config->save();
         });
 
         self::$createdTaxEntryId = null;

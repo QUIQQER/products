@@ -132,6 +132,9 @@ class Fields
      */
     protected static array $list = [];
 
+    /** @var array<int, true> */
+    protected static array $deletedFieldIds = [];
+
     /**
      * @var array<mixed>|null
      */
@@ -207,6 +210,8 @@ class Fields
      */
     public static function clearCache(): void
     {
+        self::$list = [];
+
         foreach (self::$cacheNames as $cache) {
             QUI\Cache\LongTermCache::clear($cache);
         }
@@ -216,6 +221,19 @@ class Fields
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
         }
+    }
+
+    public static function setRuntimeField(QUI\ERP\Products\Field\Field $Field): void
+    {
+        $fieldId = $Field->getId();
+        self::$list[$fieldId] = clone $Field;
+        unset(self::$deletedFieldIds[$fieldId]);
+    }
+
+    public static function removeRuntimeField(int $fieldId): void
+    {
+        unset(self::$list[$fieldId]);
+        self::$deletedFieldIds[$fieldId] = true;
     }
 
     /**
@@ -365,6 +383,7 @@ class Fields
         );
 
         $newId = (int)($data['id'] ?? QUI::getDataBaseConnection()->lastInsertId());
+        unset(self::$deletedFieldIds[$newId]);
 
         if (class_exists('\QUI\Watcher')) {
             QUI\Watcher::addString(
@@ -381,7 +400,7 @@ class Fields
 
         // clear the field cache
         QUI\Cache\LongTermCache::clear(Cache::getBasicCachePath() . 'fields');
-        self::$fieldTypes = [];
+        self::$fieldTypes = null;
         self::$fieldTypeData = [];
         self::$list = [];
 
@@ -873,6 +892,21 @@ class Fields
      */
     public static function getField(int $fieldId): QUI\ERP\Products\Field\Field
     {
+        if (isset(self::$deletedFieldIds[$fieldId])) {
+            throw new QUI\ERP\Products\Field\Exception(
+                [
+                    'quiqqer/products',
+                    'exception.field.id_not_found',
+                    [
+                        'fieldId' => $fieldId,
+                        'type' => ''
+                    ]
+                ],
+                404,
+                ['fieldId' => $fieldId]
+            );
+        }
+
         if (isset(self::$list[$fieldId])) {
             return clone self::$list[$fieldId];
         }
@@ -1202,58 +1236,62 @@ class Fields
             }
         }
 
+        $fireEventsOnProductSave = Products::$fireEventsOnProductSave;
+        $updateProductSearchCache = Products::$updateProductSearchCache;
+
         // Disable certain product operations for better performance
         Products::disableGlobalFireEventsOnProductSave();
         Products::disableGlobalProductSearchCacheUpdate();
 
-        $productIds = Products::getProductIds();
+        try {
+            $productIds = Products::getProductIds();
 
-        foreach ($productIds as $productId) {
-            try {
-                $Product = Products::getNewProductInstance($productId);
+            foreach ($productIds as $productId) {
+                try {
+                    $Product = Products::getNewProductInstance($productId);
 
-                foreach ($fieldAttributes as $fieldId => $attributes) {
-                    if (!$Product->hasField($fieldId)) {
-                        continue;
-                    }
-
-                    try {
-                        $ProductField = $Product->getField($fieldId);
-                        $ProductField->setPublicStatus($attributes['isPublic']);
-                        $ProductField->setShowInDetailsStatus($attributes['showInDetails']);
-
-                        foreach ($customAttributes as $k => $v) {
-                            switch ($k) {
-                                case 'ownField':
-                                    $ProductField->setOwnFieldStatus($v);
-                                    break;
-
-                                case 'unassigned':
-                                    $ProductField->setUnassignedStatus($v);
-                                    break;
-
-                                default:
-                                    $ProductField->setAttribute($k, $v);
-                            }
+                    foreach ($fieldAttributes as $fieldId => $attributes) {
+                        if (!$Product->hasField($fieldId)) {
+                            continue;
                         }
 
-                        $Product->save();
-                    } catch (Exception $Exception) {
-                        QUI\System\Log::writeException($Exception);
-                        continue;
+                        try {
+                            $ProductField = $Product->getField($fieldId);
+                            $ProductField->setPublicStatus($attributes['isPublic']);
+                            $ProductField->setShowInDetailsStatus($attributes['showInDetails']);
+
+                            foreach ($customAttributes as $k => $v) {
+                                switch ($k) {
+                                    case 'ownField':
+                                        $ProductField->setOwnFieldStatus($v);
+                                        break;
+
+                                    case 'unassigned':
+                                        $ProductField->setUnassignedStatus($v);
+                                        break;
+
+                                    default:
+                                        $ProductField->setAttribute($k, $v);
+                                }
+                            }
+
+                            $Product->save();
+                        } catch (Exception $Exception) {
+                            QUI\System\Log::writeException($Exception);
+                            continue;
+                        }
+
+                        Products::cleanProductInstanceMemCache();
                     }
-
-                    Products::cleanProductInstanceMemCache();
+                } catch (Exception $Exception) {
+                    QUI\System\Log::writeException($Exception);
+                    continue;
                 }
-            } catch (Exception $Exception) {
-                QUI\System\Log::writeException($Exception);
-                continue;
             }
+        } finally {
+            Products::$fireEventsOnProductSave = $fireEventsOnProductSave;
+            Products::$updateProductSearchCache = $updateProductSearchCache;
         }
-
-        // Re-enable disabled product operations
-        Products::enableGlobalFireEventsOnProductSave();
-        Products::enableGlobalProductSearchCacheUpdate();
     }
 
     // region Price factors

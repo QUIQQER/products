@@ -246,7 +246,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
             }
 
             foreach ($userGroups as $userGroup) {
-                if (!in_array($userGroup, $groupIds)) {
+                if (in_array($userGroup, $groupIds, true)) {
                     return true;
                 }
             }
@@ -336,7 +336,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
             }
 
             foreach ($userGroups as $userGroup) {
-                if (!in_array($userGroup, $groupIds)) {
+                if (in_array($userGroup, $groupIds, true)) {
                     return true;
                 }
             }

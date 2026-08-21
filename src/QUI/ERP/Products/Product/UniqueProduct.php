@@ -647,7 +647,25 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
                     QUI\System\Log::writeDebugException($Exception);
                 }
             }
+
+            $PriceFactor->setCurrency($Currency->getCode());
         }
+
+        try {
+            if ($this->minimumPrice !== null) {
+                $minimumPrice = $this->Currency->convert($this->minimumPrice, $Currency);
+                $this->minimumPrice = $Currency->amount($Calc->round($minimumPrice));
+            }
+
+            if ($this->maximumPrice !== null) {
+                $maximumPrice = $this->Currency->convert($this->maximumPrice, $Currency);
+                $this->maximumPrice = $Currency->amount($Calc->round($maximumPrice));
+            }
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+
+        $this->Currency = $Currency;
 
         try {
             $this->recalculation();
@@ -895,7 +913,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         $Price = new QUI\ERP\Money\Price(
             $this->sum,
-            QUI\ERP\Defaults::getCurrency(),
+            $this->Currency,
             $this->getUser()
         );
 
@@ -1022,7 +1040,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         if ($this->minimumPrice !== null) {
             return new QUI\ERP\Money\Price(
                 $this->minimumPrice,
-                QUI\ERP\Defaults::getCurrency()
+                $this->Currency
             );
         }
 
@@ -1040,7 +1058,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         if ($this->maximumPrice !== null) {
             return new QUI\ERP\Money\Price(
                 $this->maximumPrice,
-                QUI\ERP\Defaults::getCurrency()
+                $this->Currency
             );
         }
 
@@ -1069,7 +1087,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         return new QUI\ERP\Money\Price(
             $this->nettoPrice,
-            QUI\ERP\Defaults::getCurrency()
+            $this->Currency
         );
     }
 

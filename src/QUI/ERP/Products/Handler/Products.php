@@ -17,6 +17,8 @@ use QUI\Locale;
 use QUI\Projects\Media\Utils;
 use QUI\Projects\Media\Utils as FolderUtils;
 
+use function array_fill_keys;
+use function array_map;
 use function class_exists;
 use function count;
 use function date;
@@ -101,6 +103,11 @@ class Products
     private static array $list = [];
 
     /**
+     * @var array<int, int>
+     */
+    private static array $productCacheVersions = [];
+
+    /**
      * Global Product Locale
      *
      * @var Locale|null
@@ -174,7 +181,7 @@ class Products
         }
 
         // check if serialize product exists
-        $cachePath = Cache::getProductCachePath($pid) . '/db-data';
+        $cachePath = self::getProductDbDataCachePath($pid);
 
         //if (QUI::isFrontend()) { // -> mor wollte dies raus haben
         try {
@@ -327,7 +334,7 @@ class Products
         $productData = $result[0];
 
         if (QUI::isFrontend() || self::$createFrontendCache) {
-            $cachePath = Cache::getProductCachePath($pid) . '/db-data';
+            $cachePath = self::getProductDbDataCachePath($pid);
 
             try {
                 QUI\Cache\LongTermCache::get($cachePath);
@@ -841,6 +848,7 @@ class Products
         Categories::clearCache();
 
         $ids = self::getProductIds();
+        $productIds = array_fill_keys(array_map('intval', $ids), true);
         $SystemUser = QUI::getUsers()->getSystemUser();
 
         foreach ($ids as $id) {
@@ -888,18 +896,30 @@ class Products
             $Folder = null;
 
             try {
-                // wenn product id nicht existiert, kann der ordner gelöscht werden
                 $Folder = $Media->get($folderId);
+                $productId = (int)$Folder->getAttribute('name');
 
-                Products::getProduct($Folder->getAttribute('name'));
-            } catch (QUI\ERP\Products\Product\Exception $Exception) {
-                if ($Exception->getCode() == 404 && Utils::isFolder($Folder)) {
-                    $Folder?->delete();
+                if (!isset($productIds[$productId]) && Utils::isFolder($Folder)) {
+                    self::invalidateProductCache($productId);
+                    $Folder->delete();
                 }
-
-                QUI\System\Log::writeException($Exception);
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
+            }
+        }
+
+        $cacheProductIds = QUI::getDataBaseConnection()->fetchFirstColumn(
+            'SELECT DISTINCT ' . QUI\Utils\Doctrine::quoteIdentifier('id')
+            . ' FROM ' . QUI\Utils\Doctrine::quoteIdentifier(
+                QUI\ERP\Products\Utils\Tables::getProductCacheTableName()
+            )
+        );
+
+        foreach ($cacheProductIds as $productId) {
+            $productId = (int)$productId;
+
+            if (!isset($productIds[$productId])) {
+                self::invalidateProductCache($productId);
             }
         }
 
@@ -935,6 +955,28 @@ class Products
         } catch (QUi\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
         }
+    }
+
+    private static function getProductDbDataCachePath(int $productId): string
+    {
+        $cachePath = Cache::getProductCachePath($productId);
+
+        if (isset(self::$productCacheVersions[$productId])) {
+            $cachePath .= '/runtime-' . self::$productCacheVersions[$productId];
+        }
+
+        return $cachePath . '/db-data';
+    }
+
+    public static function invalidateProductCache(int $productId): void
+    {
+        $cachePath = self::getProductDbDataCachePath($productId);
+
+        self::$productCacheVersions[$productId]
+            = (self::$productCacheVersions[$productId] ?? 0) + 1;
+
+        QUI\Cache\LongTermCache::clear($cachePath);
+        self::cleanProductInstanceMemCache($productId);
     }
 
     /**

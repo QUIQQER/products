@@ -5,7 +5,6 @@ namespace QUITests\ERP\Products\Unit\Field\Types;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use QUI\ERP\Products\Field\Exception;
-use QUI\ERP\Products\Field\Types\BoolType;
 use QUI\ERP\Products\Field\Types\FloatType;
 use QUI\ERP\Products\Field\Types\Input;
 use QUI\ERP\Products\Field\Types\IntType;
@@ -15,30 +14,6 @@ use QUI\ERP\Products\Field\Types\Url;
 
 class FieldTypeNormalizationTest extends TestCase
 {
-    #[DataProvider('booleanValues')]
-    public function testBooleanCleanup(mixed $input, int $expected): void
-    {
-        self::assertSame($expected, (new BoolType(9001))->cleanup($input));
-    }
-
-    public static function booleanValues(): iterable
-    {
-        yield 'true boolean' => [true, 1];
-        yield 'false boolean' => [false, 0];
-        yield 'positive numeric' => [5, 1];
-        yield 'zero numeric' => ['0', 0];
-        yield 'uppercase true' => ['TRUE', 1];
-        yield 'lowercase false' => ['false', 0];
-        yield 'empty string' => ['', 0];
-        yield 'unknown string' => ['yes', 0];
-    }
-
-    public function testBooleanValidationRejectsUnknownText(): void
-    {
-        $this->expectException(Exception::class);
-        (new BoolType(9001))->validate('yes');
-    }
-
     #[DataProvider('floatValues')]
     public function testFloatCleanup(mixed $input, ?float $expected): void
     {

@@ -59,7 +59,7 @@ class Vat extends QUI\ERP\Products\Field\Field
         if (str_contains($value, ':')) {
             $value = explode(':', $value);
 
-            if (isset($value[1])) {
+            if (isset($value[1]) && $value[1] !== '' && is_numeric($value[1])) {
                 $value = (int)$value[1];
             } else {
                 $value = false;
@@ -85,7 +85,6 @@ class Vat extends QUI\ERP\Products\Field\Field
         }
 
         // exists tax?
-        $value = self::cleanup($value);
         $Taxes = new QUI\ERP\Tax\Handler();
 
         try {
@@ -117,7 +116,9 @@ class Vat extends QUI\ERP\Products\Field\Field
 
         if (str_contains($value, ':')) {
             $value = explode(':', $value);
-            $value = $value[1] ?? -1;
+            $value = isset($value[1]) && $value[1] !== '' && is_numeric($value[1])
+                ? $value[1]
+                : -1;
         }
 
         return (int)$value;

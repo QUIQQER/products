@@ -33,6 +33,7 @@
     "phpunit/phpunit-mock-objects": "^6"
   },
   "suggest": {
+    "quiqqer/erp-demo-data": "Create demo products",
     "quiqqer/tax": "VAT management",
     "quiqqer/watcher": "QUIQQER Watcher module (kind of logger)"
   },

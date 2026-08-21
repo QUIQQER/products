@@ -42,9 +42,7 @@ class AssignProductsToParentCategories extends QUI\System\Console\Tool
         if (!empty($productIds)) {
             $productIds = explode(',', $productIds);
 
-            array_map(function ($v) {
-                return (int)$v;
-            }, $productIds);
+            $productIds = array_map('intval', $productIds);
         } else {
             $productIds = Products::getProductIds(); // All product IDs
         }

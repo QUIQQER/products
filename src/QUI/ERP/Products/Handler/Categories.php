@@ -34,8 +34,10 @@ class Categories
     public static function clearCache(false | int | string $categoryId = false): void
     {
         if ($categoryId === false) {
+            self::$list = [];
             QUI\Cache\LongTermCache::clear('quiqqer/products/categories/');
         } else {
+            unset(self::$list[(int)$categoryId]);
             QUI\Cache\LongTermCache::clear(self::getCacheName($categoryId));
         }
 

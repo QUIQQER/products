@@ -757,27 +757,29 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         $productIds = $this->getProductIds();
         $fields = $this->getFields();
         $ExceptionStack = new QUI\ExceptionStack();
+        $originalMaxExecutionTime = (int)ini_get('max_execution_time');
 
-        foreach ($productIds as $productId) {
-            if (!DEVELOPMENT) { // @phpstan-ignore-line
-                set_time_limit(3);
-            }
-
-            try {
-                $Product = Products::getProduct($productId);
-
-                foreach ($fields as $Field) {
-                    $Product->addField($Field);
+        try {
+            foreach ($productIds as $productId) {
+                if (!DEVELOPMENT) { // @phpstan-ignore-line
+                    set_time_limit(3);
                 }
 
-                $Product->save();
-            } catch (QUI\Exception $Exception) {
-                $ExceptionStack->addException($Exception);
-            }
-        }
+                try {
+                    $Product = Products::getProduct($productId);
 
-        // reset time limit
-        set_time_limit((int)ini_get('max_execution_time'));
+                    foreach ($fields as $Field) {
+                        $Product->addField($Field);
+                    }
+
+                    $Product->save();
+                } catch (QUI\Exception $Exception) {
+                    $ExceptionStack->addException($Exception);
+                }
+            }
+        } finally {
+            set_time_limit($originalMaxExecutionTime);
+        }
 
         QUI::getEvents()->fireEvent(
             'onQuiqqerProductsCategorySetFieldsToAllProducts',
