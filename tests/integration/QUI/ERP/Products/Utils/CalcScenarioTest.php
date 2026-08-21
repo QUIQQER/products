@@ -2,6 +2,7 @@
 
 namespace QUITests\ERP\Products\Integration\Utils;
 
+use QUI;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -186,6 +187,33 @@ class CalcScenarioTest extends TestCase
         self::assertSame(0.0, $data['nettoPrice']);
         self::assertSame(0.0, $data['sum']);
         self::assertSame(-100.0, $data['factors'][0]['sum']);
+    }
+
+    public function testCalculatorStateAndDirectUserPricingCanBeChangedExplicitly(): void
+    {
+        $SessionCalc = new Calc();
+        self::assertSame(QUI::getUserBySession(), $SessionCalc->getUser());
+
+        $User = new TestUser(TestUser::TYPE_NETTO);
+        $Calc = Calc::getInstance($User);
+        self::assertSame($User, $Calc->getUser());
+        $Replacement = new TestUser(TestUser::TYPE_BRUTTO);
+        $Calc->setUser($Replacement);
+        self::assertSame($Replacement, $Calc->getUser());
+
+        $Locale = new QUI\Locale();
+        $Locale->setCurrent('de');
+        $Calc->setLocale($Locale);
+        self::assertSame($Locale, $Calc->getLocale());
+        $Calc->resetLocale();
+        self::assertSame(QUI::getLocale(), $Calc->getLocale());
+
+        $Currency = QUI\ERP\Defaults::getCurrency();
+        $Calc->setCurrency($Currency);
+        self::assertSame($Currency, $Calc->getCurrency());
+        self::assertSame(0, $Calc->getPrice(0));
+        self::assertSame(Calc::calcBruttoPrice(100), $Calc->getPrice(100));
+        self::assertSame('', $Calc->getVatTextByUser());
     }
 
     #[DataProvider('roundTripPrices')]

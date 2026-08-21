@@ -22,6 +22,10 @@
             The products are very flexibly configurable due to freely usable product characteristics and are suitable for almost all product types.
             ]]></en>
         </locale>
+        <locale name="demo_data.provider.title">
+            <de><![CDATA[Produkte]]></de>
+            <en><![CDATA[Products]]></en>
+        </locale>
         <locale name="admin.types.category">
             <de><![CDATA[Produktkategorie]]></de>
             <en><![CDATA[Product category]]></en>

@@ -109,7 +109,7 @@ class BoolType extends QUI\ERP\Products\Field\Field
         }
 
         if (is_numeric($value)) {
-            return (int)$value ? 1 : 0;
+            return (float)$value != 0.0 ? 1 : 0;
         }
 
         switch ($value) {

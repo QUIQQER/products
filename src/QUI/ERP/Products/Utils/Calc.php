@@ -497,7 +497,7 @@ class Calc
             if (!isset($vatArray[(string)$vatValue])) {
                 $vatArray[(string)$vatValue] = [
                     'vat' => $vatValue,
-                    'text' => ErpCalc::getVatText($Vat->getValue(), $this->getUser(), $this->Locale),
+                    'text' => ErpCalc::getVatText($vatValue, $this->getUser(), $this->Locale),
                     'visible' => $Vat->isVisible()
                 ];
 
@@ -1014,11 +1014,17 @@ class Calc
         if (!empty($productId)) {
             $Product = Products::getProduct((int)$productId);
             $Vat = $Product->getField(FieldHandler::FIELD_VAT);
+            $taxTypeId = $Vat->getValue();
 
-            try {
-                $TaxType = new QUI\ERP\Tax\TaxType($Vat->getValue());
-                $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
-            } catch (QUI\Exception) {
+            if (
+                is_int($taxTypeId)
+                || (is_string($taxTypeId) && $taxTypeId !== '')
+            ) {
+                try {
+                    $TaxType = new QUI\ERP\Tax\TaxType($taxTypeId);
+                    $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
+                } catch (QUI\Exception) {
+                }
             }
         }
 
@@ -1073,11 +1079,17 @@ class Calc
         if (!empty($productId)) {
             $Product = Products::getProduct((int)$productId);
             $Vat = $Product->getField(FieldHandler::FIELD_VAT);
+            $taxTypeId = $Vat->getValue();
 
-            try {
-                $TaxType = new QUI\ERP\Tax\TaxType($Vat->getValue());
-                $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
-            } catch (QUI\Exception) {
+            if (
+                is_int($taxTypeId)
+                || (is_string($taxTypeId) && $taxTypeId !== '')
+            ) {
+                try {
+                    $TaxType = new QUI\ERP\Tax\TaxType($taxTypeId);
+                    $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
+                } catch (QUI\Exception) {
+                }
             }
         }
 

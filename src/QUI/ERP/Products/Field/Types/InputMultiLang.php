@@ -173,7 +173,7 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
         if (is_string($value)) {
             $value = json_decode($value, true);
 
-            if (json_last_error() !== JSON_ERROR_NONE) {
+            if (json_last_error() !== JSON_ERROR_NONE || !is_array($value)) {
                 throw new Exception([
                     'quiqqer/products',
                     'exception.field.invalid',

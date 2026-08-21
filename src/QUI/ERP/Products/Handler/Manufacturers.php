@@ -287,7 +287,7 @@ class Manufacturers
         foreach ($projects as $project) {
             foreach ($languages as $lang) {
                 try {
-                    $Project = $Projects->getProject($project, $lang);
+                    $Project = $Projects->getProject((string)$project, $lang);
                     $manufacturerListSites = $Project->getSites([
                         'where' => [
                             'active' => 1,

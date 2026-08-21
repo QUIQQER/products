@@ -329,7 +329,11 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
         $entries = $options['entries'];
         $lang = $Locale->getCurrent();
 
-        if (empty($value['id']) || empty($entries[$value['id']])) {
+        if (
+            !is_array($value)
+            || !array_key_exists('id', $value)
+            || !isset($entries[$value['id']])
+        ) {
             return '-';
         }
 

@@ -80,6 +80,10 @@ class VariantChild extends AbstractType
         foreach ($fields as $ParentField) {
             $fieldId = $ParentField->getId();
 
+            if ($fieldId === Fields::FIELD_URL) {
+                continue;
+            }
+
             if ($this->OwnMediaFolderField && $fieldId === $this->OwnMediaFolderField->getId()) {
                 continue;
             }
