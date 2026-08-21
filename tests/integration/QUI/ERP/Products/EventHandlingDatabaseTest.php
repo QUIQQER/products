@@ -272,6 +272,23 @@ class EventHandlingDatabaseTest extends TestCase
         self::assertStringStartsWith('<script type="text/javascript">', $header);
     }
 
+    public function testTemplateFooterLoadsProductDataLayerTracking(): void
+    {
+        $footer = null;
+        $Collector = $this->createMock(QUI\Smarty\Collector::class);
+        $Template = $this->createMock(QUI\Template::class);
+        $Template->expects(self::once())->method('extendFooter')->willReturnCallback(
+            static function (string $value) use (&$footer): void {
+                $footer = $value;
+            }
+        );
+
+        EventHandling::onTemplateEnd($Collector, $Template);
+
+        self::assertStringContainsString('quiqqer/products/bin/dataLayerTracking.js', $footer);
+        self::assertStringContainsString(' defer', $footer);
+    }
+
     public function testSuccessfulOrderAddsArticleQuantitiesToPersistedOrderCount(): void
     {
         QUI::getDataBaseConnection()->insert(Tables::getProductTableName(), [

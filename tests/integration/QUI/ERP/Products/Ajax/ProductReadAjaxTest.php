@@ -90,6 +90,26 @@ class ProductReadAjaxTest extends AjaxTestCase
         self::assertSame($productNo, $tracking['productNo']);
         self::assertSame(19.5, $tracking['price']);
         self::assertNotEmpty($tracking['categories']);
+
+        $dataLayerEvent = $this->invokeEndpoint(
+            'products/frontend/dataLayer/getProductData.php',
+            'package_quiqqer_products_ajax_products_frontend_dataLayer_getProductData',
+            $Product->getId()
+        );
+        self::assertSame('EUR', $dataLayerEvent['currency']);
+        self::assertSame(19.5, $dataLayerEvent['value']);
+        self::assertSame($productNo, $dataLayerEvent['items'][0]['item_id']);
+        self::assertSame('ajax-frontend-product', $dataLayerEvent['items'][0]['item_name']);
+        self::assertSame(1, $dataLayerEvent['items'][0]['quantity']);
+
+        $dataLayerList = $this->invokeEndpoint(
+            'products/frontend/dataLayer/getProductListData.php',
+            'package_quiqqer_products_ajax_products_frontend_dataLayer_getProductListData',
+            json_encode([$Product->getId()], JSON_THROW_ON_ERROR),
+            4
+        );
+        self::assertSame($productNo, $dataLayerList['items'][0]['item_id']);
+        self::assertSame(4, $dataLayerList['items'][0]['index']);
     }
 
     public function testProductMetadataEndpointsExposeInstalledTypesAndFolder(): void
