@@ -41,6 +41,7 @@ class ControlAjaxTest extends AjaxTestCase
 
         self::assertSame(1, $start['count']);
         self::assertFalse($start['more']);
+        self::assertSame([$Product->getId()], $start['productIds']);
         self::assertStringContainsString('ajax-category-product-list', $start['html']);
         self::assertStringContainsString('data-pid="' . $Product->getId() . '"', $start['html']);
 
@@ -59,6 +60,7 @@ class ControlAjaxTest extends AjaxTestCase
 
         self::assertSame(1, $next['count']);
         self::assertFalse($next['more']);
+        self::assertSame([], $next['productIds']);
         self::assertStringNotContainsString('ajax-category-product-list', $next['html']);
     }
 }
