@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <events>
     <event on="onTemplateGetHeader" fire="\QUI\ERP\Products\EventHandling::onTemplateGetHeader"/>
+    <event on="onQuiqqer::template::header::end" fire="\QUI\ERP\Products\EventHandling::onTemplateEnd"/>
     <event on="onPermissionsSet" fire="\QUI\ERP\Products\EventHandling::onPermissionsSet"/>
     <event on="onRequest" fire="\QUI\ERP\Products\EventHandling::onRequest"/>
     <event on="onQuiqqerTranslatorEdit" fire="\QUI\ERP\Products\EventHandling::onQuiqqerTranslatorEdit"/>
