@@ -9,6 +9,57 @@
             <locale group="quiqqer/products" var="package.description"/>
         </description>
 
+        <capabilities schemaVersion="1">
+            <capability id="commerce.product-catalog">
+                <title>Product catalog management</title>
+                <description>
+                    Creates and manages localized product records, media, permissions, activation, storefront detail pages and structured product data.
+                </description>
+            </capability>
+
+            <capability id="commerce.product-categories">
+                <title>Product categories</title>
+                <description>
+                    Organizes products in hierarchical categories with category-specific fields, storefront pages, lists and filters.
+                </description>
+            </capability>
+
+            <capability id="commerce.product-attributes">
+                <title>Product attributes</title>
+                <description>
+                    Defines reusable and product-specific fields for localized content, specifications, selectable attributes and customer input.
+                </description>
+            </capability>
+
+            <capability id="commerce.product-variants">
+                <title>Product variants</title>
+                <description>
+                    Generates and manages parent-child product variants with selectable attributes, inherited fields and default variants.
+                </description>
+            </capability>
+
+            <capability id="commerce.digital-products">
+                <title>Digital products</title>
+                <description>
+                    Provides a non-physical product type for download- or access-based items that do not require shipping.
+                </description>
+            </capability>
+
+            <capability id="commerce.product-pricing">
+                <title>Product pricing</title>
+                <description>
+                    Models base, retail and offer prices together with quantity tiers, time-period pricing, VAT and configurable price factors.
+                </description>
+            </capability>
+
+            <capability id="analytics.ecommerce-tracking">
+                <title>E-commerce tracking</title>
+                <description>
+                    Emits product list views, product detail views and product selections to the configured e-commerce data layer.
+                </description>
+            </capability>
+        </capabilities>
+
         <image src="URL_OPT_DIR/quiqqer/products/bin/images/Logo.png"/>
 
         <support>
