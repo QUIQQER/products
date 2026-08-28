@@ -152,7 +152,7 @@ class VariantParent extends AbstractType
      */
     protected function productSave(array $fieldData, null | User $EditUser = null): void
     {
-        QUI\Permissions\Permission::checkPermission('product.edit', $EditUser);
+        $this->checkSavePermission($EditUser);
 
         $editableAttribute = $this->getAttribute('editableVariantFields');
         $inheritedAttribute = $this->getAttribute('inheritedVariantFields');

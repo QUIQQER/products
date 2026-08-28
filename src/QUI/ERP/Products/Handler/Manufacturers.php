@@ -179,11 +179,7 @@ class Manufacturers
         }
 
         $Project = QUI::getProjectManager()->getStandard();
-        $Image = null;
-
-        if ($Project) {
-            $Image = $Project->getMedia()->getPlaceholderImage();
-        }
+        $Image = $Project->getMedia()->getPlaceholderImage();
 
         if (!empty($Image)) {
             return $Image;
