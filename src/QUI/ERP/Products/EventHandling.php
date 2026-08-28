@@ -79,16 +79,16 @@ class EventHandling
         } catch (QUI\Exception) {
             // no produkt folder, we create one
             $Project = QUI::getProjectManager()->getStandard();
-            $Media = $Project?->getMedia();
+            $Media = $Project->getMedia();
 
-            $Folder = $Media?->firstChild();
+            $Folder = $Media->firstChild();
 
             try {
-                $Products = $Folder?->createFolder('Products');
-                $Products?->activate();
+                $Products = $Folder->createFolder('Products');
+                $Products->activate();
 
                 $Config = QUI::getPackage('quiqqer/products')->getConfig();
-                $Config?->set('products', 'folder', $Products?->getUrl());
+                $Config?->set('products', 'folder', $Products->getUrl());
                 $Config?->save();
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addWarning($Exception->getMessage());

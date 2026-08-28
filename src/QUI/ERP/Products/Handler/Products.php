@@ -914,11 +914,6 @@ class Products
             $childIds = $MainFolder->getChildrenIds();
         } catch (QUI\Exception) {
             $Project = QUI::getProjectManager()->getStandard();
-
-            if ($Project === null) {
-                throw new QUI\Exception('Standard project is unavailable.');
-            }
-
             $Media = $Project->getMedia();
             $childIds = $Media->getChildrenIds();
         }
