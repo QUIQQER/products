@@ -13,6 +13,7 @@ use QUI\ERP\Products\Field\Field;
 use QUI\ERP\Products\Interfaces\ProductTypeInterface;
 use QUI\ERP\Products\Product\Types\VariantChild;
 use QUI\ERP\Products\Utils\Tables as TablesUtils;
+use QUI\Interfaces\Users\User;
 use QUI\Locale;
 use QUI\Projects\Media\Utils;
 use QUI\Projects\Media\Utils as FolderUtils;
@@ -106,6 +107,13 @@ class Products
      * @var array<int, int>
      */
     private static array $productCacheVersions = [];
+
+    /**
+     * Product IDs currently being initialized by createProduct() or copyProduct().
+     *
+     * @var array<int, int|string>
+     */
+    private static array $productsBeingCreated = [];
 
     /**
      * Global Product Locale
@@ -214,6 +222,19 @@ class Products
         }
 
         self::$list = [];
+    }
+
+    /**
+     * Returns whether a product is currently initialized by the given user.
+     */
+    public static function isProductBeingCreated(int $productId, null | User $User = null): bool
+    {
+        if ($User === null) {
+            $User = QUI::getUserBySession();
+        }
+
+        return isset(self::$productsBeingCreated[$productId])
+            && self::$productsBeingCreated[$productId] === $User->getUUID();
     }
 
     /**
@@ -588,30 +609,37 @@ class Products
             );
         }
 
-        $Product = self::getNewProductInstance($newId);
+        $CreateUser = QUI::getUserBySession();
+        self::$productsBeingCreated[$newId] = $CreateUser->getUUID();
 
-        if (!($Product instanceof VariantChild)) {
-//            $Product->getField(QUI\ERP\Products\Handler\Fields::FIELD_FOLDER)->setValue('');
-            $Product->createMediaFolder(); // the product is also saved in this method
+        try {
+            $Product = self::getNewProductInstance($newId);
+
+            if (!($Product instanceof VariantChild)) {
+//                $Product->getField(QUI\ERP\Products\Handler\Fields::FIELD_FOLDER)->setValue('');
+                $Product->createMediaFolder(); // the product is also saved in this method
+            }
+
+            // Auto-generate article no.
+            $isAutoGenerateArticleNo = self::isAutoGenerateArticleNo();
+            $ArticleNoField = $Product->getField(Fields::FIELD_PRODUCT_NO);
+
+            if (
+                $isAutoGenerateArticleNo &&
+                empty($ArticleNoField->getValue())
+            ) {
+                $ArticleNoField->setValue(self::generateArticleNo($Product));
+            }
+
+            QUI::getEvents()->fireEvent('onQuiqqerProductsProductCreate', [$Product]);
+
+            $Product->save($CreateUser);
+            self::$list[$newId] = $Product;
+
+            return $Product;
+        } finally {
+            unset(self::$productsBeingCreated[$newId]);
         }
-
-        // Auto-generate article no.
-        $isAutoGenerateArticleNo = self::isAutoGenerateArticleNo();
-        $ArticleNoField = $Product->getField(Fields::FIELD_PRODUCT_NO);
-
-        if (
-            $isAutoGenerateArticleNo &&
-            empty($ArticleNoField->getValue())
-        ) {
-            $ArticleNoField->setValue(self::generateArticleNo($Product));
-        }
-
-        QUI::getEvents()->fireEvent('onQuiqqerProductsProductCreate', [$Product]);
-
-        $Product->save();
-        self::$list[$newId] = $Product;
-
-        return $Product;
     }
 
     /**
@@ -645,34 +673,41 @@ class Products
             $parent,
             false
         );
+        $CreateUser = QUI::getUserBySession();
+        $newId = $New->getId();
+        self::$productsBeingCreated[$newId] = $CreateUser->getUUID();
 
-        $New->setPermissions($Product->getPermissions());
-        $MainCategory = $Product->getCategory();
+        try {
+            $New->setPermissions($Product->getPermissions(), $CreateUser);
+            $MainCategory = $Product->getCategory();
 
-        if ($MainCategory !== null) {
-            $New->setMainCategory($MainCategory);
+            if ($MainCategory !== null) {
+                $New->setMainCategory($MainCategory);
+            }
+
+            $folders = $New->getFieldsByType(Fields::TYPE_FOLDER);
+
+            // @todo sub media folder kopieren wäre sinnvoller.
+            // vorerst leer machen, so wird dann ein neuer ordner erstellt
+
+            foreach ($folders as $Field) {
+                $Field->setValue('');
+            }
+
+            // neuer media ordner erstellen
+            $New->createMediaFolder(Fields::FIELD_FOLDER);
+
+
+            // @todo titel setzen -> Kopie von
+
+            $New->save($CreateUser);
+
+            QUI::getEvents()->fireEvent('onQuiqqerProductsProductCopy', [$New, $Product]);
+
+            return $New;
+        } finally {
+            unset(self::$productsBeingCreated[$newId]);
         }
-
-        $folders = $New->getFieldsByType(Fields::TYPE_FOLDER);
-
-        // @todo sub media folder kopieren wäre sinnvoller.
-        // vorerst leer machen, so wird dann ein neuer ordner erstellt
-
-        foreach ($folders as $Field) {
-            $Field->setValue('');
-        }
-
-        // neuer media ordner erstellen
-        $New->createMediaFolder(Fields::FIELD_FOLDER);
-
-
-        // @todo titel setzen -> Kopie von
-
-        $New->save();
-
-        QUI::getEvents()->fireEvent('onQuiqqerProductsProductCopy', [$New, $Product]);
-
-        return $New;
     }
 
     /**

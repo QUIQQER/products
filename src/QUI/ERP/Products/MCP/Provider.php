@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * This file contains \QUI\ERP\Products\MCP\Provider
+ */
+
+namespace QUI\ERP\Products\MCP;
+
+use Mcp\Server\Builder;
+use QUI\AI\MCP\ProviderInterface;
+use QUI\AI\MCP\Server;
+use QUI\ERP\Products\MCP\Product\ActivateProduct;
+use QUI\ERP\Products\MCP\Product\CopyProduct;
+use QUI\ERP\Products\MCP\Product\CreateProduct;
+use QUI\ERP\Products\MCP\Product\DeactivateProduct;
+use QUI\ERP\Products\MCP\Product\DeleteProduct;
+use QUI\ERP\Products\MCP\Product\GetProduct;
+use QUI\ERP\Products\MCP\Product\GetProductPermissions;
+use QUI\ERP\Products\MCP\Product\SearchProducts;
+use QUI\ERP\Products\MCP\Product\UpdateProduct;
+use QUI\ERP\Products\MCP\Product\UpdateProductPermissions;
+use QUI\MCP\ToolInterface;
+use QUI\Permissions\Permission;
+use Throwable;
+
+/**
+ * Products MCP provider
+ */
+class Provider implements ProviderInterface
+{
+    /**
+     * @var array<ToolInterface>
+     */
+    protected array $tools;
+
+    public function __construct()
+    {
+        $this->tools = [
+            new SearchProducts(),
+            new GetProduct(),
+            new CreateProduct(),
+            new CopyProduct(),
+            new UpdateProduct(),
+            new ActivateProduct(),
+            new DeactivateProduct(),
+            new DeleteProduct(),
+            new GetProductPermissions(),
+            new UpdateProductPermissions()
+        ];
+    }
+
+    public function register(Builder $serverBuilder): void
+    {
+        if (!$this->canUseMcp()) {
+            return;
+        }
+
+        foreach ($this->tools as $Tool) {
+            $Tool->register($serverBuilder);
+        }
+    }
+
+    protected function canUseMcp(): bool
+    {
+        try {
+            Permission::checkPermission(
+                AbstractTool::PRODUCTS_MCP_PERMISSION,
+                Server::getRequestUser()
+            );
+
+            return true;
+        } catch (Throwable) {
+            return false;
+        }
+    }
+}
