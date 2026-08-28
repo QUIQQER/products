@@ -9,6 +9,11 @@ namespace QUI\ERP\Products\MCP;
 use Mcp\Server\Builder;
 use QUI\AI\MCP\ProviderInterface;
 use QUI\AI\MCP\Server;
+use QUI\ERP\Products\MCP\Category\CreateCategory;
+use QUI\ERP\Products\MCP\Category\DeleteCategory;
+use QUI\ERP\Products\MCP\Category\GetCategory;
+use QUI\ERP\Products\MCP\Category\SearchCategories;
+use QUI\ERP\Products\MCP\Category\UpdateCategory;
 use QUI\ERP\Products\MCP\Product\ActivateProduct;
 use QUI\ERP\Products\MCP\Product\CopyProduct;
 use QUI\ERP\Products\MCP\Product\CreateProduct;
@@ -45,7 +50,12 @@ class Provider implements ProviderInterface
             new DeactivateProduct(),
             new DeleteProduct(),
             new GetProductPermissions(),
-            new UpdateProductPermissions()
+            new UpdateProductPermissions(),
+            new SearchCategories(),
+            new GetCategory(),
+            new CreateCategory(),
+            new UpdateCategory(),
+            new DeleteCategory()
         ];
     }
 
