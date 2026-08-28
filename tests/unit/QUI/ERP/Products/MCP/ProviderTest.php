@@ -39,7 +39,13 @@ class ProviderTest extends TestCase
             'quiqqer_products_categories_get',
             'quiqqer_products_categories_create',
             'quiqqer_products_categories_update',
-            'quiqqer_products_categories_delete'
+            'quiqqer_products_categories_delete',
+            'quiqqer_products_field_types_list',
+            'quiqqer_products_fields_search',
+            'quiqqer_products_fields_get',
+            'quiqqer_products_fields_create',
+            'quiqqer_products_fields_update',
+            'quiqqer_products_fields_delete'
         ], array_keys($tools));
 
         foreach ($tools as $tool) {

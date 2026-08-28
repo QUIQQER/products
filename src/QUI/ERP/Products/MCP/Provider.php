@@ -14,6 +14,12 @@ use QUI\ERP\Products\MCP\Category\DeleteCategory;
 use QUI\ERP\Products\MCP\Category\GetCategory;
 use QUI\ERP\Products\MCP\Category\SearchCategories;
 use QUI\ERP\Products\MCP\Category\UpdateCategory;
+use QUI\ERP\Products\MCP\Field\CreateField;
+use QUI\ERP\Products\MCP\Field\DeleteField;
+use QUI\ERP\Products\MCP\Field\GetField;
+use QUI\ERP\Products\MCP\Field\ListFieldTypes;
+use QUI\ERP\Products\MCP\Field\SearchFields;
+use QUI\ERP\Products\MCP\Field\UpdateField;
 use QUI\ERP\Products\MCP\Product\ActivateProduct;
 use QUI\ERP\Products\MCP\Product\CopyProduct;
 use QUI\ERP\Products\MCP\Product\CreateProduct;
@@ -55,7 +61,13 @@ class Provider implements ProviderInterface
             new GetCategory(),
             new CreateCategory(),
             new UpdateCategory(),
-            new DeleteCategory()
+            new DeleteCategory(),
+            new ListFieldTypes(),
+            new SearchFields(),
+            new GetField(),
+            new CreateField(),
+            new UpdateField(),
+            new DeleteField()
         ];
     }
 

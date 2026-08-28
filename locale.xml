@@ -1231,6 +1231,18 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Produkt-Felder]]></de>
             <en><![CDATA[Product fields]]></en>
         </locale>
+        <locale name="permission.field.create">
+            <de><![CDATA[Darf Produkt-Felder erstellen]]></de>
+            <en><![CDATA[Is allowed to create product fields]]></en>
+        </locale>
+        <locale name="permission.field.edit">
+            <de><![CDATA[Darf Produkt-Felder bearbeiten]]></de>
+            <en><![CDATA[Is allowed to edit product fields]]></en>
+        </locale>
+        <locale name="permission.field.delete">
+            <de><![CDATA[Darf Produkt-Felder löschen]]></de>
+            <en><![CDATA[Is allowed to delete product fields]]></en>
+        </locale>
         <locale name="permission.field.delete._header">
             <de><![CDATA[Produkt-Systemfelder]]></de>
             <en><![CDATA[Product system fields]]></en>
