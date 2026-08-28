@@ -3,6 +3,7 @@
 namespace QUITests\ERP\Products\Integration;
 
 use Mcp\Server\Builder;
+use Mcp\Schema\Result\CallToolResult;
 use PHPUnit\Framework\TestCase;
 use QUI;
 use QUI\AI\MCP\Server;
@@ -35,7 +36,7 @@ class McpFieldToolsTest extends TestCase
                 self::assertGreaterThan(0, $types['count']);
                 self::assertContains(Fields::TYPE_INPUT, array_column($types['fieldTypes'], 'name'));
 
-                $created = $tools['quiqqer_products_fields_create']['callback'](
+                $created = self::requireSuccessfulResult($tools['quiqqer_products_fields_create']['callback'](
                     Fields::TYPE_INPUT,
                     ['de' => ['title' => 'MCP Feld ' . $suffix, 'description' => 'Beschreibung']],
                     $fieldId,
@@ -48,7 +49,7 @@ class McpFieldToolsTest extends TestCase
                     ['de' => 'vor'],
                     ['de' => 'nach'],
                     'de'
-                );
+                ));
                 self::assertSame($fieldId, $created['id']);
                 self::assertSame(Fields::TYPE_INPUT, $created['type']);
                 self::assertSame($name, $created['name']);
@@ -122,6 +123,32 @@ class McpFieldToolsTest extends TestCase
         }
 
         self::fail('No free custom product-field ID is available for the MCP test.');
+    }
+
+    /**
+     * @param array<string, mixed>|CallToolResult $result
+     * @return array<string, mixed>
+     */
+    private static function requireSuccessfulResult(array | CallToolResult $result): array
+    {
+        if (is_array($result)) {
+            return $result;
+        }
+
+        $messages = [];
+
+        foreach ($result->content as $content) {
+            if (is_string($content)) {
+                $messages[] = $content;
+                continue;
+            }
+
+            if (is_object($content) && property_exists($content, 'text')) {
+                $messages[] = (string)$content->text;
+            }
+        }
+
+        self::fail('Field MCP call failed: ' . implode('; ', $messages));
     }
 
     private static function fieldExistsInDatabase(int $fieldId): bool

@@ -9,7 +9,11 @@ if (!class_exists(ToolHelper::class)) {
     {
         public static function parseExceptionToResult(mixed $Exception): CallToolResult
         {
-            return new CallToolResult();
+            $message = $Exception instanceof \Throwable
+                ? $Exception::class . ': ' . $Exception->getMessage()
+                : 'Unknown MCP tool error';
+
+            return new CallToolResult([$message], true);
         }
     }
 }
