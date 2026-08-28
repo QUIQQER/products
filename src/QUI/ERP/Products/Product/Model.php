@@ -1399,7 +1399,7 @@ class Model extends QUI\QDOM
             $EditUser = QUI::getUserBySession();
         }
 
-        QUI\Permissions\Permission::checkPermission('product.edit', $EditUser);
+        $this->checkSavePermission($EditUser);
 
         if (Products::$fireEventsOnProductSave) {
             QUI::getEvents()->fireEvent('onQuiqqerProductsProductSaveBefore', [&$fieldData, $this]);
@@ -1590,6 +1590,24 @@ class Model extends QUI\QDOM
         }
 
         $this->buildCache();
+    }
+
+    /**
+     * Checks the permission required for saving a product.
+     *
+     * Initial saves performed by the product creation and copy workflows are
+     * covered by product.create. All other saves require product.edit.
+     *
+     * @throws QUI\Permissions\Exception
+     */
+    protected function checkSavePermission(null | User $EditUser = null): void
+    {
+        if (Products::isProductBeingCreated($this->getId(), $EditUser)) {
+            QUI\Permissions\Permission::checkPermission('product.create', $EditUser);
+            return;
+        }
+
+        QUI\Permissions\Permission::checkPermission('product.edit', $EditUser);
     }
 
     /**
@@ -2438,33 +2456,23 @@ class Model extends QUI\QDOM
         }
 
         try {
-            $Project = QUI::getRewrite()->getProject();
+            $Project = QUI::getRewrite()->getProject() ?? QUI::getProjectManager()->getStandard();
+            $Media = $Project->getMedia();
+            $Placeholder = $Media->getPlaceholderImage();
 
-            if (!$Project) {
-                $Project = QUI::getProjectManager()->getStandard();
-            }
-
-            if ($Project) {
-                $Media = $Project->getMedia();
-                $Placeholder = $Media->getPlaceholderImage();
-
-                if ($Placeholder instanceof QUI\Projects\Media\Image) {
-                    return $Placeholder;
-                }
+            if ($Placeholder instanceof QUI\Projects\Media\Image) {
+                return $Placeholder;
             }
         } catch (QUI\Exception) {
         }
 
         try {
             $Project = QUI::getProjectManager()->getStandard();
+            $Media = $Project->getMedia();
+            $Placeholder = $Media->getPlaceholderImage();
 
-            if ($Project) {
-                $Media = $Project->getMedia();
-                $Placeholder = $Media->getPlaceholderImage();
-
-                if ($Placeholder instanceof QUI\Projects\Media\Image) {
-                    return $Placeholder;
-                }
+            if ($Placeholder instanceof QUI\Projects\Media\Image) {
+                return $Placeholder;
             }
         } catch (QUI\Exception) {
         }
@@ -2720,6 +2728,48 @@ class Model extends QUI\QDOM
     public function getPermissions(): mixed
     {
         return $this->permissions;
+    }
+
+    /**
+     * Persists only the product-specific permissions.
+     *
+     * This deliberately does not require product.edit: changing product permissions
+     * is governed by product.setPermissions.
+     *
+     * @param User|null $EditUser
+     * @throws QUI\Exception
+     * @throws QUI\Permissions\Exception
+     */
+    public function savePermissions(null | QUI\Interfaces\Users\User $EditUser = null): void
+    {
+        if (empty($EditUser)) {
+            $EditUser = QUI::getUserBySession();
+        }
+
+        QUI\Permissions\Permission::checkPermission('product.setPermissions', $EditUser);
+        $this->setAttribute('e_date', date('Y-m-d H:i:s'));
+
+        QUI::getDataBaseConnection()->update(
+            QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            [
+                'permissions' => json_encode($this->permissions),
+                'e_user' => $EditUser->getUUID(),
+                'e_date' => $this->getAttribute('e_date')
+            ],
+            ['id' => $this->getId()]
+        );
+
+        $this->updateCache();
+
+        $productId = $this->getId();
+        $cachePath = QUI\ERP\Products\Handler\Cache::getProductCachePath($productId);
+
+        QUI\Cache\LongTermCache::clear($cachePath);
+        QUI\ERP\Products\Handler\Cache::clearProductFrontendCache($productId);
+        Products::cleanProductInstanceMemCache($productId);
+        $this->buildCache();
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductPermissionsUpdate', [$this, $EditUser]);
     }
 
     /**

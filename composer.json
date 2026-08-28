@@ -10,7 +10,7 @@
   },
   "require": {
     "php": "^8.2",
-    "quiqqer/core": "^2.25",
+    "quiqqer/core": "^2.31",
     "quiqqer/erp": "^3.15 || ^4.0.1",
     "quiqqer/areas": "^2.2.0",
     "quiqqer/bricks": "^2",

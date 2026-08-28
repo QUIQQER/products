@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Product;
 
 use QUI;
 use QUI\ERP\Products\Handler\Categories;
+use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Interfaces\FieldInterface as Field;
 use QUI\ERP\Products\Interfaces\CategoryInterface;
 
@@ -148,7 +149,11 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
             return;
         }
 
-        QUI\Permissions\Permission::checkPermission('product.setPermissions', $User);
+        if (Products::isProductBeingCreated($this->getId(), $User)) {
+            QUI\Permissions\Permission::checkPermission('product.create', $User);
+        } else {
+            QUI\Permissions\Permission::checkPermission('product.setPermissions', $User);
+        }
 
         switch ($permission) {
             case 'permission.viewable':
