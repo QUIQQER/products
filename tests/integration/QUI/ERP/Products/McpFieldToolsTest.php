@@ -55,6 +55,7 @@ class McpFieldToolsTest extends TestCase
                 self::assertSame($name, $created['name']);
                 self::assertSame(42, $created['priority']);
                 self::assertTrue($created['public']);
+                self::assertFalse($created['required']);
                 self::assertTrue($created['showInDetails']);
                 self::assertTrue($created['options']['mcpFixture']);
 
@@ -80,7 +81,9 @@ class McpFieldToolsTest extends TestCase
                     [
                         'name' => $updatedName,
                         'priority' => 84,
+                        'public' => false,
                         'required' => true,
+                        'showInDetails' => false,
                         'defaultValue' => 'Default MCP value',
                         'options' => ['updated' => true],
                         'prefixes' => ['de' => 'neu-vor'],
@@ -91,7 +94,9 @@ class McpFieldToolsTest extends TestCase
                 );
                 self::assertSame($updatedName, $updated['name']);
                 self::assertSame(84, $updated['priority']);
+                self::assertFalse($updated['public']);
                 self::assertTrue($updated['required']);
+                self::assertFalse($updated['showInDetails']);
                 self::assertSame('Default MCP value', $updated['defaultValue']);
                 self::assertTrue($updated['options']['updated']);
                 self::assertSame('neu-vor', $updated['prefixes']['de']);

@@ -203,7 +203,13 @@ abstract class AbstractFieldTool extends AbstractTool
 
         foreach ($attributeMap as $inputAttribute => $fieldAttribute) {
             if (array_key_exists($inputAttribute, $changes)) {
-                $Field->setAttribute($fieldAttribute, $changes[$inputAttribute]);
+                $value = $changes[$inputAttribute];
+
+                if (in_array($inputAttribute, ['public', 'required', 'showInDetails'], true)) {
+                    $value = (int)$value;
+                }
+
+                $Field->setAttribute($fieldAttribute, $value);
             }
         }
 

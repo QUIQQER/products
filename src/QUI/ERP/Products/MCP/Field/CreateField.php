@@ -57,9 +57,9 @@ class CreateField extends AbstractFieldTool
                     $attributes = [
                         'type' => $type,
                         'name' => $name ?? '',
-                        'publicField' => $public ?? true,
-                        'requiredField' => $required ?? false,
-                        'showInDetails' => $showInDetails ?? false,
+                        'publicField' => (int)($public ?? true),
+                        'requiredField' => (int)($required ?? false),
+                        'showInDetails' => (int)($showInDetails ?? false),
                         'priority' => $priority ?? 0,
                         ...$translationAttributes
                     ];
