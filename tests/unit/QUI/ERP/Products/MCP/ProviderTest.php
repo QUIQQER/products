@@ -45,7 +45,15 @@ class ProviderTest extends TestCase
             'quiqqer_products_fields_get',
             'quiqqer_products_fields_create',
             'quiqqer_products_fields_update',
-            'quiqqer_products_fields_delete'
+            'quiqqer_products_fields_delete',
+            'quiqqer_products_product_types_list',
+            'quiqqer_products_variants_list',
+            'quiqqer_products_variants_create',
+            'quiqqer_products_variants_generate',
+            'quiqqer_products_variants_default_set',
+            'quiqqer_products_variants_inheritance_get',
+            'quiqqer_products_variants_inheritance_update',
+            'quiqqer_products_variants_bulk_action'
         ], array_keys($tools));
 
         foreach ($tools as $tool) {

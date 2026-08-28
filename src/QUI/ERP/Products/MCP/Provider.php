@@ -30,6 +30,14 @@ use QUI\ERP\Products\MCP\Product\GetProductPermissions;
 use QUI\ERP\Products\MCP\Product\SearchProducts;
 use QUI\ERP\Products\MCP\Product\UpdateProduct;
 use QUI\ERP\Products\MCP\Product\UpdateProductPermissions;
+use QUI\ERP\Products\MCP\Variant\BulkVariantAction;
+use QUI\ERP\Products\MCP\Variant\CreateVariant;
+use QUI\ERP\Products\MCP\Variant\GenerateVariants;
+use QUI\ERP\Products\MCP\Variant\GetVariantInheritance;
+use QUI\ERP\Products\MCP\Variant\ListProductTypes;
+use QUI\ERP\Products\MCP\Variant\ListVariants;
+use QUI\ERP\Products\MCP\Variant\SetDefaultVariant;
+use QUI\ERP\Products\MCP\Variant\UpdateVariantInheritance;
 use QUI\MCP\ToolInterface;
 use QUI\Permissions\Permission;
 use Throwable;
@@ -67,7 +75,15 @@ class Provider implements ProviderInterface
             new GetField(),
             new CreateField(),
             new UpdateField(),
-            new DeleteField()
+            new DeleteField(),
+            new ListProductTypes(),
+            new ListVariants(),
+            new CreateVariant(),
+            new GenerateVariants(),
+            new SetDefaultVariant(),
+            new GetVariantInheritance(),
+            new UpdateVariantInheritance(),
+            new BulkVariantAction()
         ];
     }
 
