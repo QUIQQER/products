@@ -7,6 +7,7 @@ use QUI\Ajax;
 use QUI\Messages\Handler as MessageHandler;
 use QUI\Messages\Message;
 use QUI\Permissions\Permission;
+use QUI\Security\CsrfToken;
 use QUI\Users\User;
 use QUITests\ERP\Products\Integration\Product\ProductIntegrationTestCase;
 use ReflectionProperty;
@@ -65,9 +66,18 @@ abstract class AjaxTestCase extends ProductIntegrationTestCase
         $Admin->method('isSU')->willReturn(true);
         $PermissionUser->setValue(null, $Admin);
 
+        $originalRequest = $_REQUEST;
+        $OriginalAjax = QUI::getAjax();
+
         try {
+            // Nested AJAX calls must validate a token without leaking their validation state.
+            QUI::$Ajax = clone $OriginalAjax;
+            $_REQUEST['_csrf'] = CsrfToken::get();
+
             return $this->invokeEndpoint($file, $name, ...$arguments);
         } finally {
+            $_REQUEST = $originalRequest;
+            QUI::$Ajax = $OriginalAjax;
             $PermissionUser->setValue(null, $originalUser);
         }
     }
