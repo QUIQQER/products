@@ -1,0 +1,2414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locales>
+
+    <groups name="quiqqer/products" datatype="php,js">
+        <locale name="package.title">
+<en><![CDATA[QUIQQER - Shop - Products]]></en>
+        </locale>
+        <locale name="package.description" html="true">
+<en><![CDATA[
+            QUIQQER Products <br />
+            The product package provides the basis for product management for e.g.
+            an online shop or the presentation of products on a manufacturer's website.
+            It brings together all the functionalities needed to manage a wide range of products.
+            The products are very flexibly configurable due to freely usable product characteristics and are suitable for almost all product types.
+            ]]></en>
+        </locale>
+        <locale name="permission.quiqqer.products.mcp">
+<en><![CDATA[Use product management via MCP]]></en>
+        </locale>
+        <locale name="demo_data.provider.title">
+<en><![CDATA[Products]]></en>
+        </locale>
+        <locale name="admin.types.category">
+<en><![CDATA[Product category]]></en>
+        </locale>
+        <locale name="admin.types.search">
+<en><![CDATA[Product search]]></en>
+        </locale>
+        <locale name="admin.types.productList">
+<en><![CDATA[Product list]]></en>
+        </locale>
+        <locale name="admin.types.productList.desc">
+<en><![CDATA[Select individual products and display them in a list.]]></en>
+        </locale>
+        <locale name="admin.types.manufacturerList">
+<en><![CDATA[Manufacturer list]]></en>
+        </locale>
+        <locale name="admin.types.manufacturerList.desc">
+<en>
+                <![CDATA[Lists all manufacturers of products with the possibility to list the products of individual manufacturers.]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.productIds">
+<en><![CDATA[Products]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.tags">
+<en><![CDATA[Filter tags]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.tags.description">
+<en><![CDATA[Only products with one of the following tags are displayed.]]></en>
+        </locale>
+
+        <locale name="menu.erp.title">
+<en><![CDATA[Shop]]></en>
+        </locale>
+        <locale name="menu.erp.products.products.title">
+<en><![CDATA[Products]]></en>
+        </locale>
+        <locale name="menu.erp.products.fieldsearch.title">
+<en><![CDATA[Search]]></en>
+        </locale>
+
+        <locale name="menu.erp.products.categories.title">
+<en><![CDATA[Categories]]></en>
+        </locale>
+        <locale name="menu.erp.products.category.title">
+<en><![CDATA[Categories]]></en>
+        </locale>
+        <locale name="menu.erp.products.fields.title">
+<en><![CDATA[Product fields]]></en>
+        </locale>
+        <locale name="menu.erp.products.variants.title">
+<en><![CDATA[Variants]]></en>
+        </locale>
+
+        <locale name="erp.panel.products.text">
+<en><![CDATA[Product administration]]></en>
+        </locale>
+
+        <locale name="quiqqer/products:types/category.title">
+<en><![CDATA[Product category]]></en>
+        </locale>
+        <locale name="quiqqer/products:types/category.description" html="true">
+<en><![CDATA[
+            This page type lists all the products of the product categories assigned to it.
+            It offers extensive settings for the display and the filtering of the products. In addition, this page type also takes over the representation of a product page including product details.
+            ]]></en>
+        </locale>
+        <locale name="quiqqer/products:types/search.title">
+<en><![CDATA[Product search]]></en>
+        </locale>
+        <locale name="quiqqer/products:types/search.description" html="true">
+<en><![CDATA[
+            The product search offers a comprehensive representation of products for the user.
+            It is similar to the structure of the product category, but lists search results across categories and can be accessed from anywhere.
+            ]]></en>
+        </locale>
+
+        <locale name="window.erp.title">
+<en><![CDATA[Shop]]></en>
+        </locale>
+
+        <locale name="settings.window.products.folder">
+<en><![CDATA[Product images]]></en>
+        </locale>
+        <locale name="settings.window.products.hidePrices">
+<en><![CDATA[Hide prices]]></en>
+        </locale>
+        <locale name="settings.window.products.hidePrices.description">
+<en><![CDATA[
+            Note that this setting determines whether prices should not be displayed at all.
+            With the permission 'product.view.prices' this setting can be bypassed for users and users can still see the prices.
+            (Note: Super-Users always have the permission to see prices)
+            ]]></en>
+        </locale>
+        <locale name="settings.window.products.hideDiscounts">
+<en><![CDATA[Hide discounts]]></en>
+        </locale>
+        <locale name="settings.window.products.frontendAnimationDuration">
+<en><![CDATA[Animation duration in the frontend]]></en>
+        </locale>
+        <locale name="settings.window.products.frontendAnimationDuration.description">
+<en><![CDATA[
+            Determine the duration of the animations in the frontend. The animation duration is specified in ms (milliseconds).
+            The default animation duration is 300ms.
+            If you want a fast short animation, we recommend an animation duration of less than 300ms.
+            ]]></en>
+        </locale>
+        <locale name="settings.window.products.usePermissions">
+<en><![CDATA[Activate product permissions]]></en>
+        </locale>
+        <locale name="settings.window.products.usePermissions.description">
+<en><![CDATA[
+            Attention! Activating the individual product permissions can lead to reduced performance.
+            ]]></en>
+        </locale>
+        <locale name="settings.window.products.mainCategory">
+<en><![CDATA[Main category for products]]></en>
+        </locale>
+        <locale name="settings.window.products.mainCategory.description">
+<en><![CDATA[New products are created automatically in this category.]]></en>
+        </locale>
+
+        <locale name="settings.window.products.folder.desc">
+<en><![CDATA[
+            Specify the main folder for product images.
+            Under this folder, a folder for product images is created for each product
+            ]]></en>
+        </locale>
+        <locale name="settings.window.products.grid.searchstatus">
+<en><![CDATA[Searchable]]></en>
+        </locale>
+        <locale name="settings.window.products.grid.sortFields">
+<en><![CDATA[Sortable]]></en>
+        </locale>
+        <locale name="settings.window.products.clearcache">
+<en><![CDATA[Product cache]]></en>
+        </locale>
+        <locale name="settings.window.products.clearcache.button">
+<en><![CDATA[Clear product cache]]></en>
+        </locale>
+        <locale name="settings.window.products.showFilterLeft.description" html="true">
+<en><![CDATA[Sets the default setting for a new category.]]></en>
+        </locale>
+        <locale name="settings.window.products.categoryAsFilter.description" html="true">
+<en><![CDATA[Sets the default setting for a new category.]]></en>
+        </locale>
+        <locale name="settings.window.products.parentHasChildImages">
+<en><![CDATA[Variants Child Images]]></en>
+        </locale>
+        <locale name="settings.window.products.parentHasChildImages.description">
+<en><![CDATA[Load images from child variants into the parent product.]]></en>
+        </locale>
+        <locale name="settings.window.products.useAttributesForVariantUrl">
+<en><![CDATA[Use Attributes for Variants URL]]></en>
+        </locale>
+        <locale name="settings.window.products.useAttributesForVariantUrl.description">
+<en><![CDATA[
+            When you create new variants, variant attributes are used for each variant URL.
+            This means that each variant has a unique URL.
+            ]]></en>
+        </locale>
+        <locale name="settings.window.products.editableFields">
+<en><![CDATA[Determine which fields are inherited and editable in the child variants.]]></en>
+        </locale>
+        <locale name="settings.window.products.findChildrenInSearch">
+<en><![CDATA[Variants: Consider child articles in search]]></en>
+        </locale>
+        <locale name="settings.window.products.findChildrenInSearch.description">
+<en><![CDATA[Child articles are considered and displayed in the frontend search.]]></en>
+        </locale>
+        <locale name="settings.window.products.findVariantParentByChildValues">
+<en><![CDATA[Variants: Find parent article by child article values]]></en>
+        </locale>
+        <locale name="settings.window.products.findVariantParentByChildValues.description">
+<en>
+                <![CDATA[Parent articles shall be shown in the search results if the search value contains values of child articles (e.g. title, description).]]></en>
+        </locale>
+        <locale name="settings.window.products.hideAttributeGroupsWithNoOptions">
+<en><![CDATA[Hide attribute lists without available options]]></en>
+        </locale>
+        <locale name="settings.window.products.hideAttributeGroupsWithNoOptions.description">
+<en>
+                <![CDATA[Attribute list selects that have no available options shall not be displayed in the respective product (frontend)]]></en>
+        </locale>
+
+        <locale name="settings.window.products.useAttributeListsForMinMaxPriceCalculation.text">
+<en><![CDATA[Consider price modification by select lists in search cache]]></en>
+        </locale>
+        <locale name="settings.window.products.useAttributeListsForMinMaxPriceCalculation.description">
+<en>
+                <![CDATA[When calculating the lowest and highest price for the product search, changes in the price by select lists (discounts / surcharges) should be taken into account.]]></en>
+        </locale>
+
+        <locale name="settings.window.products.extendShortDesc">
+<en><![CDATA[Extend short description]]></en>
+        </locale>
+        <locale name="settings.window.products.extendShortDesc.description">
+<en>
+                <![CDATA[The short description of variants is extended by a list of attribute list values that define this variant.]]></en>
+        </locale>
+
+
+        <locale name="settings.window.products.onlyProductImageAtJsonLd.text">
+<en><![CDATA[Single product image in the structured data]]></en>
+        </locale>
+        <locale name="settings.window.products.onlyProductImageAtJsonLd.description">
+<en><![CDATA[
+            This setting allows only the main product image to be displayed in the JSON-LD data of your online store.
+            Activating this feature ensures that search engines only capture and display the main product image.
+            This is particularly useful to optimize the visibility of the selected main image in the search results
+            while preventing the transmission of additional product images to search engines.
+            This improves the efficiency of product display in search engine results,
+            without compromising the variety of product images available on your website.
+            ]]></en>
+        </locale>
+
+        <locale name="settings.window.sortFields.description">
+<en><![CDATA[Default available sortings]]></en>
+        </locale>
+        <locale name="settings.window.defaultSortField.description">
+<en><![CDATA[Default sorting]]></en>
+        </locale>
+
+        <locale name="settings.window.fieldsearch.freetext.sort.title">
+<en><![CDATA[Product sorting]]></en>
+        </locale>
+        <locale name="settings.priceFieldFactors.title">
+<en><![CDATA[Price field factors]]></en>
+        </locale>
+        <locale name="settings.window.products.priceFieldFactors.description" html="true">
+<en>
+                <![CDATA[Here you can set a multiplier for each price field in the system based on another price field.<br/><br/>
+<b>Example:</b><br/>
+Price field: <b>Recommended retail price</b><br/>
+Multiplier: <b>1.5</b><br/>
+Based on price field: <b>Price</b> (Value: <b>50,00 €</b>)<br/><br/>
+Recommended retail price after applying the multiplier: <b>75,00 €</b>
+]]></en>
+        </locale>
+
+        <locale name="menu.erp.products.autoArticleNos.title">
+<en><![CDATA[Auto-generated article nos.]]></en>
+        </locale>
+        <locale name="settings.window.autoArticleNos.generate">
+<en><![CDATA[Auto-generate article nos.]]></en>
+        </locale>
+        <locale name="settings.window.autoArticleNos.generate.description">
+<en><![CDATA[For a newly created product the article number should be generated automatically]]></en>
+        </locale>
+        <locale name="settings.window.autoArticleNos.prefix">
+<en><![CDATA[Prefix for auto-generated article nos.]]></en>
+        </locale>
+        <locale name="settings.window.autoArticleNos.prefix.description">
+<en><![CDATA[
+This prefix will be prepended to all automatically generated article numbers. Optionally, the following placeholders can be used:<br/>
+<ul>
+<li><b>#YEAR</b> - Current year (four-digit number)</li>
+<li><b>#MONTH</b> - Current month (two-digit number)</li>
+<li><b>#DAY</b> - Current day (two-digit number)</li>
+<li><b>#CAT_ID</b> - ID of the product’s main category (except for the "All products" category)</li>
+</ul>
+]]></en>
+        </locale>
+        <locale name="settings.window.autoArticleNos.suffix">
+<en><![CDATA[Suffix for auto-generated article nos.]]></en>
+        </locale>
+        <locale name="settings.window.autoArticleNos.suffix.description">
+<en><![CDATA[
+This suffix is appended to all automatically generated article numbers. Optionally, the following placeholders can be used:<br/>
+<ul>
+<li><b>#YEAR</b> - Current year (four-digit number)</li>
+<li><b>#MONTH</b> - Current month (two-digit number)</li>
+<li><b>#DAY</b> - Current day (two-digit number)</li>
+<li><b>#CAT_ID</b> - ID of the product’s main category (except for the "All products" category)</li>
+</ul>
+]]></en>
+        </locale>
+
+        <locale name="fieldtype">
+<en><![CDATA[Field type]]></en>
+        </locale>
+
+        <locale name="workingTitle">
+<en><![CDATA[Working title]]></en>
+        </locale>
+        <locale name="inherited">
+<en><![CDATA[is inherited]]></en>
+        </locale>
+        <locale name="editable">
+<en><![CDATA[editable]]></en>
+        </locale>
+        <locale name="fieldoptions">
+<en><![CDATA[Field options]]></en>
+        </locale>
+        <locale name="fieldDefaultValue">
+<en><![CDATA[Default value]]></en>
+        </locale>
+        <locale name="fieldEditable">
+<en><![CDATA[Editable in variants]]></en>
+        </locale>
+        <locale name="fieldEditableDesc">
+<en><![CDATA[Variant products can each define their own value for this field.]]></en>
+        </locale>
+        <locale name="fieldInherited">
+<en><![CDATA[Inherited in variants from parent product]]></en>
+        </locale>
+        <locale name="fieldInheritedDesc">
+<en>
+                <![CDATA[
+                Variant products take the value from the parent product for this field unless its own value is set.]]></en>
+        </locale>
+        <locale name="priority">
+<en><![CDATA[Sorting]]></en>
+        </locale>
+        <locale name="prefix">
+<en><![CDATA[Prefix]]></en>
+        </locale>
+        <locale name="suffix">
+<en><![CDATA[Suffix]]></en>
+        </locale>
+        <locale name="source">
+<en><![CDATA[Source / Inherited from]]></en>
+        </locale>
+        <locale name="searchtype">
+<en><![CDATA[Search type]]></en>
+        </locale>
+        <locale name="fieldSearchtypeInfo">
+<en><![CDATA[The search type can be set in the field options after creating the field.]]></en>
+        </locale>
+
+        <locale name="productNo">
+<en><![CDATA[Article-No]]></en>
+        </locale>
+        <locale name="productCategories">
+<en><![CDATA[Categories]]></en>
+        </locale>
+        <locale name="productCategory">
+<en><![CDATA[Main category]]></en>
+        </locale>
+        <locale name="productType">
+<en><![CDATA[Product type]]></en>
+        </locale>
+        <locale name="productPriority">
+<en><![CDATA[priority]]></en>
+        </locale>
+        <locale name="productImage">
+<en><![CDATA[Product image]]></en>
+        </locale>
+
+        <locale name="requiredField">
+<en><![CDATA[Required field]]></en>
+        </locale>
+        <locale name="requiredFieldDesc">
+<en><![CDATA[
+            If this field is a standard field, it must be filled in when creating a product.
+            If this field is a custom field, it must be filled in in the frontend (shop). (See documentation)
+            ]]></en>
+        </locale>
+        <locale name="publicField">
+<en><![CDATA[Public field]]></en>
+        </locale>
+        <locale name="publicFieldDesc">
+<en><![CDATA[Public fields are displayed publicly. Visitors of your page can see this field.]]></en>
+        </locale>
+        <locale name="systemField">
+<en><![CDATA[System field]]></en>
+        </locale>
+        <locale name="systemFieldDesc">
+<en><![CDATA[A field provided by the system. These fields can not be deleted.]]></en>
+        </locale>
+
+        <locale name="showInDetails">
+<en><![CDATA[Show in details]]></en>
+        </locale>
+        <locale name="showInDetailsDesc">
+<en><![CDATA[Specifies whether this field should be displayed in the product details or not.]]></en>
+        </locale>
+        <locale name="fieldConsiderPriceCalculation">
+<en><![CDATA[Do not take this into account when calculating prices]]></en>
+        </locale>
+        <locale name="fieldConsiderPriceCalculationDesc">
+<en><![CDATA[
+            Price fields are used to determine the lowest price for a product.
+            If this option is checked, this price will be ignored. For example,
+            the manufacturer’s recommended retail price should not be included in the price calculation.
+            ]]></en>
+        </locale>
+        <locale name="fieldConsiderPriceCalculationGroup">
+<en><![CDATA[Group assignment]]></en>
+        </locale>
+
+        <locale name="standardField">
+<en><![CDATA[Standard field]]></en>
+        </locale>
+        <locale name="standardFieldDesc">
+<en><![CDATA[Standard fields are automatically assigned to each product.]]></en>
+        </locale>
+        <locale name="standardProduct">
+<en><![CDATA[Regular product]]></en>
+        </locale>
+
+        <locale name="productMasterData">
+<en><![CDATA[Master data]]></en>
+        </locale>
+        <locale name="productDefaultFields">
+<en><![CDATA[Default fields]]></en>
+        </locale>
+        <locale name="productAttributes">
+<en><![CDATA[Attributes]]></en>
+        </locale>
+
+        <locale name="products.product.panel.category.images">
+<en><![CDATA[Product images]]></en>
+        </locale>
+        <locale name="products.product.panel.category.prices">
+<en><![CDATA[Prices]]></en>
+        </locale>
+
+        <locale name="products.product.panel.category.files">
+<en><![CDATA[Product files]]></en>
+        </locale>
+        <locale name="products.product.panel.category.attributelist">
+<en><![CDATA[Select lists]]></en>
+        </locale>
+
+        <locale name="products.product.panel.folder.missing" html="true">
+<en><![CDATA[<p>The product does not have a Media folder. Would you like to create a new folder?</p>]]></en>
+        </locale>
+        <locale name="products.product.panel.folder.missing.button">
+<en><![CDATA[Create new Media folder]]></en>
+        </locale>
+        <locale name="products.product.panel.folder.missing.for.field" html="true">
+<en><![CDATA[<p>The field was still not assigned a media folder.</p>]]></en>
+        </locale>
+
+        <locale name="category.control.productlist.button.more">
+<en><![CDATA[More]]></en>
+        </locale>
+        <locale name="category.control.productlist.sortby">
+<en><![CDATA[Sort by...]]></en>
+        </locale>
+        <locale name="category.control.productlist.view.gallery">
+<en><![CDATA[Gallery]]></en>
+        </locale>
+        <locale name="category.control.productlist.view.details">
+<en><![CDATA[Details]]></en>
+        </locale>
+        <locale name="category.control.productlist.view.list">
+<en><![CDATA[List]]></en>
+        </locale>
+        <locale name="category.control.productlist.filter">
+<en><![CDATA[Filter]]></en>
+        </locale>
+        <locale name="category.control.productlist.javascript">
+<en><![CDATA[Please activate JavaScript.]]></en>
+        </locale>
+        <locale name="category.control.productlist.clearFilter">
+<en><![CDATA[Clear all filters]]></en>
+        </locale>
+        <locale name="category.control.productlist.selectionTitle">
+<en><![CDATA[Your selection:]]></en>
+        </locale>
+
+        <locale name="category.control.manufacturerList.button.more">
+<en><![CDATA[More]]></en>
+        </locale>
+        <locale name="message.manufacturerList.search.empty">
+<en><![CDATA[Unfortunately, no manufacturers were found.]]></en>
+        </locale>
+        <locale name="manufacturerList.result_count">
+<en><![CDATA[[count] manufacturers found]]></en>
+        </locale>
+
+
+<!-- Feldtypen -->
+        <locale name="fieldtype.IntType">
+<en><![CDATA[Number]]></en>
+        </locale>
+        <locale name="fieldtype.ProductAttributeList">
+<en><![CDATA[Select list]]></en>
+        </locale>
+        <locale name="fieldtype.FloatType">
+<en><![CDATA[Floating-point number]]></en>
+        </locale>
+        <locale name="fieldtype.InputMultiLang">
+<en><![CDATA[Text (multilingual)]]></en>
+        </locale>
+        <locale name="fieldtype.TextareaMultiLang">
+<en><![CDATA[Long text (multilingual)]]></en>
+        </locale>
+        <locale name="fieldtype.Standard">
+<en><![CDATA[Text]]></en>
+        </locale>
+        <locale name="fieldtype.Price">
+<en><![CDATA[Price]]></en>
+        </locale>
+        <locale name="fieldtype.PriceByQuantity">
+<en><![CDATA[Price depending on quantity]]></en>
+        </locale>
+        <locale name="fieldtype.PriceByQuantity.frontend.text">
+<en><![CDATA[[price] from [quantity] units]]></en>
+        </locale>
+        <locale name="fieldtype.PriceByTimePeriod">
+<en><![CDATA[Price (time period)]]></en>
+        </locale>
+        <locale name="fieldtype.UnitSelect">
+<en><![CDATA[Unit select]]></en>
+        </locale>
+        <locale name="fieldtype.TimePeriod">
+<en><![CDATA[Time period]]></en>
+        </locale>
+
+        <locale name="fieldtype.Textarea">
+<en><![CDATA[Long text]]></en>
+        </locale>
+        <locale name="fieldtype.Input">
+<en><![CDATA[Text]]></en>
+        </locale>
+        <locale name="fieldtype.Products">
+<en><![CDATA[Products]]></en>
+        </locale>
+        <locale name="fieldtype.Date">
+<en><![CDATA[Date]]></en>
+        </locale>
+        <locale name="fieldtype.BoolType">
+<en><![CDATA[Yes / No]]></en>
+        </locale>
+        <locale name="fieldtype.Vat">
+<en><![CDATA[Vat]]></en>
+        </locale>
+        <locale name="fieldtype.Tax">
+<en><![CDATA[Tax]]></en>
+        </locale>
+        <locale name="fieldtype.Tax.frontend.text">
+<en><![CDATA[[title] [tax]%]]></en>
+        </locale>
+        <locale name="fieldtype.Image">
+<en><![CDATA[Media Image]]></en>
+        </locale>
+        <locale name="fieldtype.Folder">
+<en><![CDATA[Media Folder]]></en>
+        </locale>
+        <locale name="fieldtype.Url">
+<en><![CDATA[Webaddress]]></en>
+        </locale>
+        <locale name="fieldtype.GroupList">
+<en><![CDATA[Group assignment]]></en>
+        </locale>
+        <locale name="fieldtype.AttributeGroup">
+<en><![CDATA[Attribute list]]></en>
+        </locale>
+        <locale name="fieldtype.CheckboxInput">
+<en><![CDATA[Input with checkbox]]></en>
+        </locale>
+        <locale name="fieldtype.UserInput">
+<en><![CDATA[User input (text)]]></en>
+        </locale>
+        <locale name="fieldtype.BasketConditions">
+<en><![CDATA[Basket Conditions]]></en>
+        </locale>
+        <locale name="controls.basket.conditions.option.type_1">
+<en><![CDATA[Can be added to the shopping cart without restriction]]></en>
+        </locale>
+        <locale name="controls.basket.conditions.option.type_2">
+<en><![CDATA[Can only be added to the cart once and without other products]]></en>
+        </locale>
+        <locale name="controls.basket.conditions.option.type_3">
+<en><![CDATA[Can be added to cart once with other products]]></en>
+        </locale>
+        <locale name="controls.basket.conditions.option.type_4">
+<en><![CDATA[Can not be added to the cart with other products of this type]]></en>
+        </locale>
+        <locale name="controls.basket.conditions.option.type_5">
+<en><![CDATA[Can be added to cart once with other products of this type]]></en>
+        </locale>
+        <locale name="controls.basket.conditions.option.type_6">
+<en><![CDATA[Can only be alone and several times in the shopping cart]]></en>
+        </locale>
+
+        <locale name="fieldtype.ProductAttributeList.calcBasis.netto">
+<en><![CDATA[Net]]></en>
+        </locale>
+        <locale name="fieldtype.ProductAttributeList.calcBasis.calculated_price">
+<en><![CDATA[Current price]]></en>
+        </locale>
+
+        <locale name="fieldtype.ProductAttributeList.select.emptyvalue">
+<en><![CDATA[Please select]]></en>
+        </locale>
+
+<!-- exceptions -->
+        <locale name="exception.field.is.invalid">
+<en><![CDATA[Please fill in the "[fieldtitle]" field correctly.]]></en>
+        </locale>
+        <locale name="exception.field.type_not_found" html="1">
+<en><![CDATA[Field "[fieldType]" #[fieldId] not found.]]></en>
+        </locale>
+        <locale name="exception.field.id_not_found" html="1">
+<en><![CDATA[Field #[fieldId] not found.]]></en>
+        </locale>
+        <locale name="exception.field.id_in_product_not_found" html="1">
+<en><![CDATA[Field #[fieldId] not found in product #[productId].]]></en>
+        </locale>
+        <locale name="exception.field.invalid" html="1">
+<en><![CDATA[
+                Illegal content for the field: #[fieldId] <b>[fieldTitle]</b>. Please correct the entry.
+            ]]></en>
+        </locale>
+        <locale name="exception.field.required.but.empty">
+<en><![CDATA[
+                Illegal content for the field: #[fieldId] [fieldTitle]. The field is required and must not be empty.
+            ]]></en>
+        </locale>
+        <locale name="exception.product.not.found">
+<en><![CDATA[The product #[productId] was not found.]]></en>
+        </locale>
+        <locale name="exception.product.not.found.unknown">
+<en><![CDATA[The product was not found.]]></en>
+        </locale>
+        <locale name="exception.product.url.missing">
+<en><![CDATA[A URL could not be generated for the product #[productId] [title].]]></en>
+        </locale>
+        <locale name="exception.product.no.image">
+<en><![CDATA[The product #[productId] has no image.]]></en>
+        </locale>
+        <locale name="exception.product.activasion.no.category" html="true">
+<en><![CDATA[
+            The product #[productId] can't be activated.<br />Please assign a category to the product.
+            ]]></en>
+        </locale>
+        <locale name="exception.product.field.is.no.media.folder">
+<en><![CDATA[
+            The field can not be assigned a media folder. The field is not a media folder field.
+            ]]></en>
+        </locale>
+
+        <locale name="exception.field.grouplist.user.limit.reached">
+<en><![CDATA[
+                Illegal content for the field: #[fieldId] [fieldTitle]. Only one user can be assigned to this field. Please correct the entry.
+            ]]></en>
+        </locale>
+        <locale name="exception.field.grouplist.user.not.in.group">
+<en><![CDATA[User <b>[username] ([userId])</b> is not in any of the groups <i>[groups]</i> and therefore cannot be assigned as a field value.]]></en>
+        </locale>
+        <locale name="exception.field.grouplist.invalid.userId">
+<en><![CDATA[
+                The user id contains a non-numeric value.
+            ]]></en>
+        </locale>
+        <locale name="exception.field.unexptected.error">
+<en><![CDATA[
+                An error occurred while assigning a value to this field: #[fieldId] [fieldTitle]: [errorMsg]. Please correct the entry.
+            ]]></en>
+        </locale>
+        <locale name="exception.product.no.not.found">
+<en><![CDATA[
+                The product with product no. #[productNo] was not found.
+            ]]></en>
+        </locale>
+        <locale name="exception.field.cache.column.not.allowed">
+<en><![CDATA[
+                A cache table column for field #[fieldId] [fieldTitle] cannot be created because the field type of this field is marked as not searchable.
+            ]]></en>
+        </locale>
+        <locale name="exception.category.has.no.site">
+<en><![CDATA[The category #[id] has not been assigned to any project page.]]></en>
+        </locale>
+        <locale name="exception.category.not.found">
+<en><![CDATA[The category #[categoryId] wasn't found.]]></en>
+        </locale>
+        <locale name="exception.field.class.not.found">
+<en><![CDATA[Field [id] [type] not found.]]></en>
+        </locale>
+
+<!-- produkte -->
+        <locale name="message.product.create.missing.category">
+<en><![CDATA[Please assign a product category to the product.]]></en>
+        </locale>
+        <locale name="product.successfully.saved">
+<en><![CDATA[Product has been saved.]]></en>
+        </locale>
+        <locale name="message.product.error.saving">
+<en><![CDATA[
+                Some error occurred during saving. [error] You can find further information in the log files.
+            ]]></en>
+        </locale>
+        <locale name="exception.url.is.too.long">
+<en><![CDATA[
+                The URL of the product is longer than 2000 characters.
+                This should be avoided, please change the length of the product URL.
+            ]]></en>
+        </locale>
+        <locale name="message.set.maincategory.error">
+<en><![CDATA[Failed to set the main category. There was no main category specified.]]></en>
+        </locale>
+        <locale name="message.success.products.delete">
+<en><![CDATA[The products have been deleted successfully.]]></en>
+        </locale>
+
+        <locale name="message.product.search.empty">
+<en><![CDATA[Sorry, no products were found.]]></en>
+        </locale>
+
+        <locale name="message.field.successfully.saved">
+<en><![CDATA[The field #[fieldId] has been successfully saved.]]></en>
+        </locale>
+        <locale name="message.field.successfully.created">
+<en><![CDATA[The field has been successfully created.]]></en>
+        </locale>
+        <locale name="message.category.successfully.created">
+<en><![CDATA[The category has been successfully created.]]></en>
+        </locale>
+
+<!-- crons -->
+        <locale name="cron.updateProductCache.title">
+<en><![CDATA[Update Product Cache]]></en>
+        </locale>
+        <locale name="cron.updateProductCache.description">
+<en><![CDATA[Updates the cache table for all products in the system]]></en>
+        </locale>
+        <locale name="cron.generateCacheImagesOfProducts.title">
+<en><![CDATA[Update Product Image Cache]]></en>
+        </locale>
+        <locale name="cron.generateCacheImagesOfProducts.description">
+<en><![CDATA[Go through all images and build the image cache, so the first call is faster]]></en>
+        </locale>
+
+<!-- searchtypes -->
+        <locale name="searchtype.text.title">
+<en><![CDATA[Text input field]]></en>
+        </locale>
+        <locale name="searchtype.selectRange.title">
+<en><![CDATA[Two dropdown lists - from/to]]></en>
+        </locale>
+        <locale name="searchtype.selectSingle.title">
+<en><![CDATA[Dropdown list - single choice]]></en>
+        </locale>
+        <locale name="searchtype.selectMulti.title">
+<en><![CDATA[Multiple choice]]></en>
+        </locale>
+        <locale name="searchtype.bool.title">
+<en><![CDATA[Yes/No choice]]></en>
+        </locale>
+        <locale name="searchtype.hasValue.title">
+<en><![CDATA[Value/No value choice]]></en>
+        </locale>
+        <locale name="searchtype.date.title">
+<en><![CDATA[Date picker]]></en>
+        </locale>
+        <locale name="searchtype.dateRange.title">
+<en><![CDATA[Date range picker]]></en>
+        </locale>
+        <locale name="searchtype.inputSelectRange.title">
+<en><![CDATA[Two dropdown lists - from/to + Individual input]]></en>
+        </locale>
+        <locale name="searchtype.inputSelectSingle.title">
+<en><![CDATA[Dropdown list - single choice + Individual input]]></en>
+        </locale>
+        <locale name="searchtype.freeTextSearch.title">
+<en><![CDATA[Search]]></en>
+        </locale>
+        <locale name="searchtype.checkbox.title">
+<en><![CDATA[Checkbox]]></en>
+        </locale>
+        <locale name="searchtype.checkboxList.title">
+<en><![CDATA[Multiple selection with checkboxes]]></en>
+        </locale>
+        <locale name="searchtypes.empty">
+<en><![CDATA[No search fields found]]></en>
+        </locale>
+        <locale name="searchtypes.considerVariantChild">
+<en><![CDATA[Also show variants]]></en>
+        </locale>
+        <locale name="searchtypes.empty.frontend">
+<en><![CDATA[No search fields found]]></en>
+        </locale>
+
+        <locale name="permission.product._header">
+<en><![CDATA[Products]]></en>
+        </locale>
+        <locale name="permission.product.create">
+<en><![CDATA[Is allowed to create products.]]></en>
+        </locale>
+        <locale name="permission.product.activate">
+<en><![CDATA[Is allowed to activate and deactivate products.]]></en>
+        </locale>
+
+        <locale name="permission.product.delete">
+<en><![CDATA[Is allowed to delete products.]]></en>
+        </locale>
+        <locale name="permission.product.edit">
+<en><![CDATA[Is allowed to edit products.]]></en>
+        </locale>
+        <locale name="permission.product.view.prices">
+<en><![CDATA[Is allowed to view prices.]]></en>
+        </locale>
+        <locale name="permission.product.view._header">
+<en><![CDATA[Product view]]></en>
+        </locale>
+
+        <locale name="product.list.products.title">
+<en><![CDATA[Products]]></en>
+        </locale>
+        <locale name="product.list.products.header.pos">
+<en><![CDATA[POS]]></en>
+        </locale>
+        <locale name="product.list.products.header.description">
+<en><![CDATA[Description]]></en>
+        </locale>
+        <locale name="product.list.products.header.quantity">
+<en><![CDATA[Quantity]]></en>
+        </locale>
+        <locale name="product.list.products.header.unitprice">
+<en><![CDATA[Unit Price]]></en>
+        </locale>
+        <locale name="product.list.products.header.price">
+<en><![CDATA[Price]]></en>
+        </locale>
+        <locale name="product.list.products.subtotal">
+<en><![CDATA[Subtotal:]]></en>
+        </locale>
+        <locale name="product.list.products.sumtotal">
+<en><![CDATA[Sum total:]]></en>
+        </locale>
+
+        <locale name="product.list.result.count">
+<en><![CDATA[[count] products found]]></en>
+        </locale>
+        <locale name="product.list.sort.placeholder">
+<en><![CDATA[Sort by...]]></en>
+        </locale>
+
+<!-- Permissions -->
+        <locale name="permission.search._header">
+<en><![CDATA[Product search]]></en>
+        </locale>
+        <locale name="permission.search.backend._header">
+<en><![CDATA[Backend]]></en>
+        </locale>
+        <locale name="permission.search.frontend._header">
+<en><![CDATA[Frontend]]></en>
+        </locale>
+        <locale name="permission.search.frontend.execute">
+<en><![CDATA[Can execute frontend search]]></en>
+        </locale>
+        <locale name="permission.search.frontend.configure">
+<en><![CDATA[Can configure search fields for the frontend search]]></en>
+        </locale>
+        <locale name="permission.search.backend.execute">
+<en><![CDATA[Can execute backend search]]></en>
+        </locale>
+        <locale name="permission.search.backend.configure">
+<en><![CDATA[Can configure search fields for the backend search]]></en>
+        </locale>
+        <locale name="permission.category._header">
+<en><![CDATA[Product categories]]></en>
+        </locale>
+        <locale name="permission.category.edit">
+<en><![CDATA[Is allowed to edit product categories]]></en>
+        </locale>
+        <locale name="permission.category.delete">
+<en><![CDATA[Is allowed to delete product categories]]></en>
+        </locale>
+        <locale name="permission.category.create">
+<en><![CDATA[Is allowed to create product categories]]></en>
+        </locale>
+        <locale name="permission.field._header">
+<en><![CDATA[Product fields]]></en>
+        </locale>
+        <locale name="permission.field.create">
+<en><![CDATA[Is allowed to create product fields]]></en>
+        </locale>
+        <locale name="permission.field.edit">
+<en><![CDATA[Is allowed to edit product fields]]></en>
+        </locale>
+        <locale name="permission.field.delete">
+<en><![CDATA[Is allowed to delete product fields]]></en>
+        </locale>
+        <locale name="permission.field.delete._header">
+<en><![CDATA[Product system fields]]></en>
+        </locale>
+        <locale name="permission.field.delete.systemfield">
+<en><![CDATA[Is allowed to delete product system fields]]></en>
+        </locale>
+
+        <locale name="control.search.suggest.placeholder">
+<en><![CDATA[Enter search...]]></en>
+        </locale>
+
+        <locale name="products.category.0.title">
+<en><![CDATA[All products]]></en>
+        </locale>
+
+        <locale name="brick.control.VisitedProducts.title">
+<en><![CDATA[Visited products]]></en>
+        </locale>
+        <locale name="brick.control.VisitedProducts.empty">
+<en><![CDATA[You have not visited any products.]]></en>
+        </locale>
+
+        <locale name="brick.productPicker.title">
+<en><![CDATA[Price table (product picker)]]></en>
+        </locale>
+        <locale name="brick.productPicker.description">
+<en><![CDATA[
+            The module displays a dynamic price table in which various packages
+            with their respective features are clearly displayed side by side.
+            ]]></en>
+        </locale>
+        <locale name="brick.productPicker.sheetOptionsStyle">
+<en><![CDATA[Sheet option style]]></en>
+        </locale>
+        <locale name="brick.productPicker.sheetOptionsStyle.select">
+<en><![CDATA[As select field]]></en>
+        </locale>
+        <locale name="brick.productPicker.sheetOptionsStyle.radio">
+<en><![CDATA[As radio fields]]></en>
+        </locale>
+        <locale name="brick.productPicker.sheetOptions">
+<en><![CDATA[Sheet options (interval)]]></en>
+        </locale>
+        <locale name="brick.productPicker.sheets">
+<en><![CDATA[Sheets / cards setting]]></en>
+        </locale>
+        <locale name="brick.productPicker.sheetOptions.button.addButton">
+<en><![CDATA[Add sheet options]]></en>
+        </locale>
+
+        <locale name="frontend.productPicker.sheetOptionsStyle.select.text">
+<en><![CDATA[Select interval:]]></en>
+        </locale>
+        <locale name="frontend.productPicker.article.btn.text">
+<en><![CDATA[Select]]></en>
+        </locale>
+
+
+        <locale name="user.profile.title">
+<en><![CDATA[Personal product settings]]></en>
+        </locale>
+        <locale name="user.profile.productPanel.open.category">
+<en><![CDATA[Standard tab in the product panel]]></en>
+        </locale>
+
+        <locale name="exceptions.system.fields.cant.be.deleted">
+<en><![CDATA[The field #[id] [title] could not be deleted]]></en>
+        </locale>
+        <locale name="message.control.product.fields.no.data">
+<en><![CDATA[No data included.]]></en>
+        </locale>
+
+        <locale name="control.product.fields.details">
+<en><![CDATA[Details]]></en>
+        </locale>
+        <locale name="control.product.fields.files">
+<en><![CDATA[Files]]></en>
+        </locale>
+
+        <locale name="control.select.search.placeholder">
+<en><![CDATA[Search for a product...]]></en>
+        </locale>
+        <locale name="control.search.placeholder">
+<en><![CDATA[Enter a search term...]]></en>
+        </locale>
+        <locale name="control.select.category.create">
+<en><![CDATA[Create category]]></en>
+        </locale>
+        <locale name="control.select.no.results">
+<en><![CDATA[No results found.]]></en>
+        </locale>
+        <locale name="control.select.window.select.parent">
+<en><![CDATA[Please select the parent category:]]></en>
+        </locale>
+
+<!-- Desktop Search -->
+        <locale name="search.group.products.label">
+<en><![CDATA[Products]]></en>
+        </locale>
+
+        <locale name="brick.VisitedProducts.title">
+<en><![CDATA[Recently viewed products]]></en>
+        </locale>
+        <locale name="brick.VisitedProducts.description">
+<en><![CDATA[Shows products that the visitor has recently visited.]]></en>
+        </locale>
+
+        <locale name="brick.menu.title">
+<en><![CDATA[Product Categories Menu]]></en>
+        </locale>
+        <locale name="quiqqer.products.control.search.title">
+<en><![CDATA[Filter]]></en>
+        </locale>
+
+        <locale name="product.type.standard.title">
+<en><![CDATA[Product]]></en>
+        </locale>
+        <locale name="product.type.standard.description">
+<en><![CDATA[This is a default Product.]]></en>
+        </locale>
+
+        <locale name="product.type.product.title">
+<en><![CDATA[Product]]></en>
+        </locale>
+
+        <locale name="product.type.variant.child.title">
+<en><![CDATA[Single variant]]></en>
+        </locale>
+        <locale name="product.type.variant.child.description">
+<en><![CDATA[This is a single variant from a Variant Product.]]></en>
+        </locale>
+
+        <locale name="product.type.variant.parent.title">
+<en><![CDATA[Product with variants]]></en>
+        </locale>
+        <locale name="product.type.variant.parent.description">
+<en><![CDATA[
+            This is a variant product. This product can contain several variants.
+            ]]></en>
+        </locale>
+
+        <locale name="control.watchlist.buttonOffer.text">
+<en><![CDATA[Request an offer]]></en>
+        </locale>
+
+
+        <locale name="sortDESC">
+<en><![CDATA[descending]]></en>
+        </locale>
+        <locale name="sortASC">
+<en><![CDATA[ascending]]></en>
+        </locale>
+
+        <locale name="types.manufacturerList.header" html="true">
+<en><![CDATA[All products of manufacturer "[manufacturer]"]]></en>
+        </locale>
+        <locale name="types.manufacturerList.back_to_list">
+<en><![CDATA[back to manufacturer overview]]></en>
+        </locale>
+
+        <locale name="UserInputFrontendView.input_placeholder">
+<en><![CDATA[Your personal text...]]></en>
+        </locale>
+        <locale name="UserInputFrontendView.input_limit">
+<en><![CDATA[(max. [limit] characters)]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.categoryProductSearchType.must.have.one">
+<en><![CDATA[Show products from categories additionally (default)]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.categoryProductSearchType.must.have.all">
+<en><![CDATA[Show products only if all categories are assigned.]]></en>
+        </locale>
+    </groups>
+
+    <groups name="quiqqer/products" datatype="js">
+        <locale name="controls.productList.filter.select.placeholder">
+<en><![CDATA[Please select]]></en>
+        </locale>
+        <locale name="controls.UserInput.getText.title">
+<en><![CDATA[Input for field "[fieldTitle]"]]></en>
+        </locale>
+        <locale name="controls.UserInput.getText.tpl.infoText">
+<en><![CDATA[You can set an individual text for this article.]]></en>
+        </locale>
+        <locale name="controls.UserInput.getText.tpl.labelInput">
+<en><![CDATA[Your text for "[fieldTitle]" (maximum number of [maxCharacters] characters):]]></en>
+        </locale>
+        <locale name="controls.UserInput.getText.btn.submit">
+<en><![CDATA[Confirm]]></en>
+        </locale>
+        <locale name="controls.UserInput.getText.btn.cancel">
+<en><![CDATA[Continue without input]]></en>
+        </locale>
+
+        <locale name="controls.UserInputSettings.tpl.labelInputType">
+<en><![CDATA[Input type]]></en>
+        </locale>
+        <locale name="controls.UserInputSettings.tpl.labelInputTypeOptionInput">
+<en><![CDATA[Single line (input in popup)]]></en>
+        </locale>
+        <locale name="controls.UserInputSettings.tpl.labelInputTypeOptionInputInline">
+<en><![CDATA[Single line]]></en>
+        </locale>
+        <locale name="controls.UserInputSettings.tpl.labelInputTypeOptionTextarea">
+<en><![CDATA[Multiline (input in popup)]]></en>
+        </locale>
+        <locale name="controls.UserInputSettings.tpl.labelInputType">
+<en><![CDATA[Input type]]></en>
+        </locale>
+        <locale name="controls.UserInputSettings.tpl.labelMaxCharacters">
+<en><![CDATA[Max. number of characters]]></en>
+        </locale>
+
+        <locale name="controls.products.Create.auto_generated_artciel_no_desc">
+<en>
+                <![CDATA[If this field is left empty, a new article no. will be created automatically for this product. The article no. can be changed at any time.]]></en>
+        </locale>
+        <locale name="controls.FolderSettings.autoActivateItems">
+<en><![CDATA[Auto-activate uploaded files]]></en>
+        </locale>
+        <locale name="controls.FolderSettings.mediaFolder">
+<en><![CDATA[Linked central media folder]]></en>
+        </locale>
+        <locale name="controls.FolderSettings.mediaFolder.desc">
+<en>
+                <![CDATA[Optional central media folder. A folder selected here is used preferentially when files and images are loaded via this product field. Media folders from individual products to which this field is assigned are ignored in this case.]]></en>
+        </locale>
+        <locale name="controls.FolderSettings.showFrontendTabIfEmpty">
+<en><![CDATA[Show field in frontend even if no (active) files are in the folder]]></en>
+        </locale>
+
+        <locale name="products.panel.title">
+<en><![CDATA[Products]]></en>
+        </locale>
+
+        <locale name="products.product.panel.title">
+<en><![CDATA[Product: [product]]]></en>
+        </locale>
+        <locale name="products.product.panel.grid.defaultStatus">
+<en><![CDATA[Default]]></en>
+        </locale>
+        <locale name="products.product.panel.grid.nettoprice">
+<en><![CDATA[Net price]]></en>
+        </locale>
+        <locale name="products.product.panel.grid.offerprice">
+<en><![CDATA[Offer price]]></en>
+        </locale>
+        <locale name="products.product.panel.grid.currency">
+<en><![CDATA[Currency]]></en>
+        </locale>
+        <locale name="products.product.panel.grid.url">
+<en><![CDATA[Product URL]]></en>
+        </locale>
+
+        <locale name="products.fields.panel.locked">
+<en><![CDATA[This product is currently being edited by [username]]]></en>
+        </locale>
+        <locale name="products.fields.panel.locked.btn.equal">
+<en><![CDATA[Edit anyway]]></en>
+        </locale>
+        <locale name="products.fields.panel.title">
+<en><![CDATA[Product fields]]></en>
+        </locale>
+
+        <locale name="categories.panel.title">
+<en><![CDATA[Categories]]></en>
+        </locale>
+
+        <locale name="products.categories.grid.assigned.sites">
+<en><![CDATA[Assigned sites]]></en>
+        </locale>
+        <locale name="products.create.title">
+<en><![CDATA[Create product]]></en>
+        </locale>
+
+        <locale name="product.fields.administration">
+<en><![CDATA[Field administration]]></en>
+        </locale>
+        <locale name="product.fields.add.field">
+<en><![CDATA[Add field]]></en>
+        </locale>
+
+        <locale name="products.window.delete.title">
+<en><![CDATA[Delete products]]></en>
+        </locale>
+        <locale name="products.window.delete.text">
+<en><![CDATA[Delete following products:]]></en>
+        </locale>
+        <locale name="products.window.delete.information" html="true">
+<en><![CDATA[
+            [products]The products will be permanently deleted and can not be recovered.
+            ]]></en>
+        </locale>
+
+        <locale name="category.panel.title">
+<en><![CDATA[Category: [title]]]></en>
+        </locale>
+        <locale name="category.panel.button.data">
+<en><![CDATA[Information]]></en>
+        </locale>
+        <locale name="category.panel.button.sites">
+<en><![CDATA[Related sites]]></en>
+        </locale>
+        <locale name="category.panel.button.products">
+<en><![CDATA[Assigned products]]></en>
+        </locale>
+        <locale name="category.panel.button.fields">
+<en><![CDATA[Assigned fields]]></en>
+        </locale>
+        <locale name="category.panel.button.products.add">
+<en><![CDATA[Add product]]></en>
+        </locale>
+        <locale name="category.panel.button.products.remove">
+<en><![CDATA[Remove product]]></en>
+        </locale>
+        <locale name="category.panel.button.products.remove.title">
+<en><![CDATA[Remove product from category]]></en>
+        </locale>
+        <locale name="category.panel.button.priceFieldFactors">
+<en><![CDATA[Price field factors]]></en>
+        </locale>
+
+        <locale name="category.panel.window.recursiveFields.title">
+<en><![CDATA[Apply field settings to all products]]></en>
+        </locale>
+        <locale name="category.panel.window.recursiveFields.text">
+<en><![CDATA[
+                Would you like to apply the category [category] fields on all products in the category?
+            ]]></en>
+        </locale>
+        <locale name="category.panel.window.recursiveFields.information" html="true">
+<en><![CDATA[All field settings are applied to all products in this category.<br />Only fields belonging to the category will be overwritten in the products.<br />Existing settings for these fields in the products will be replaced.]]></en>
+        </locale>
+
+        <locale name="category.panel.window.remove.title">
+<en><![CDATA[Remove product from category]]></en>
+        </locale>
+        <locale name="category.panel.window.remove.text" html="true">
+<en><![CDATA[The following products would be removed from the category: [products]]]></en>
+        </locale>
+        <locale name="category.panel.window.remove.information" html="true">
+<en><![CDATA[
+            The products wouldn't be deleted. The products are only removed from the category.
+            ]]></en>
+        </locale>
+
+        <locale name="categories.window.delete.title">
+<en><![CDATA[Delete category]]></en>
+        </locale>
+        <locale name="categories.window.delete.text">
+<en><![CDATA[Do you really want to delete the category #[categoryId]?]]></en>
+        </locale>
+        <locale name="categories.window.delete.information">
+<en><![CDATA[The category and all subcategories will be deleted irrevocably.]]></en>
+        </locale>
+
+        <locale name="control.field.create.content" html="true">
+<en>
+                <![CDATA[You can add properties to products using a new product field. These can be set when editing a product. Select the appropriate field type to determine the type of property.]]></en>
+        </locale>
+        <locale name="control.field.create.header">
+<en><![CDATA[Field settings]]></en>
+        </locale>
+        <locale name="control.field.create.tpl.fieldDescription">
+<en><![CDATA[Description]]></en>
+        </locale>
+        <locale name="control.field.create.tpl.fieldDescriptionDesc">
+<en><![CDATA[Internal description / help text for this field. Only visible for administrators.]]></en>
+        </locale>
+
+        <locale name="categories.grid.priceFieldFactorFields">
+<en><![CDATA[Fields with price field factors]]></en>
+        </locale>
+        <locale name="categories.create.title">
+<en><![CDATA[Create a new category]]></en>
+        </locale>
+        <locale name="categories.window.create.information">
+<en><![CDATA[After creating the category, you can assign fields to it.]]></en>
+        </locale>
+        <locale name="categories.window.fieldtype.filter">
+<en><![CDATA[Fieldtype filter]]></en>
+        </locale>
+        <locale name="categories.window.fieldtype.filter.showAll">
+<en><![CDATA[Show all]]></en>
+        </locale>
+
+        <locale name="control.select.search.categories.placeholder">
+<en><![CDATA[Search for a product category...]]></en>
+        </locale>
+
+        <locale name="control.category.update.title.fields">
+<en><![CDATA[Field assignments]]></en>
+        </locale>
+        <locale name="control.category.update.title.sites">
+<en><![CDATA[Site assignments]]></en>
+        </locale>
+        <locale name="control.category.update.title.information">
+<en><![CDATA[Category information]]></en>
+        </locale>
+        <locale name="control.category.update.title.countProducts">
+<en><![CDATA[Number of products]]></en>
+        </locale>
+        <locale name="control.category.update.title.countFields">
+<en><![CDATA[Number of fields]]></en>
+        </locale>
+        <locale name="control.category.update.title.countCategories">
+<en><![CDATA[Number of categories]]></en>
+        </locale>
+        <locale name="control.category.update.title.parent">
+<en><![CDATA[Parent category]]></en>
+        </locale>
+        <locale name="control.category.update.textCategoriesCount">
+<en>
+                <![CDATA[Set the price field factors specific to this category. For each product, factors configured in its main category take precedence. Otherwise, the factors of the assigned category with configured factors and the highest priority are used; ties are resolved by the lowest category ID. Category-specific factors take precedence over global price field factors.]]></en>
+        </locale>
+
+        <locale name="category.update.field.grid.button.add">
+<en><![CDATA[Add a field]]></en>
+        </locale>
+        <locale name="category.update.field.grid.button.delete">
+<en><![CDATA[Remove the field]]></en>
+        </locale>
+        <locale name="category.update.field.window.delete.title">
+<en><![CDATA[Remove the field?]]></en>
+        </locale>
+        <locale name="category.update.field.window.delete.text">
+<en><![CDATA[Do you really want to remove the field?]]></en>
+        </locale>
+        <locale name="category.update.field.window.delete.information">
+<en><![CDATA[The field will be removed from the category]]></en>
+        </locale>
+
+        <locale name="control.select.search.field.placeholder">
+<en><![CDATA[Search for a product field...]]></en>
+        </locale>
+
+        <locale name="fields.create.title">
+<en><![CDATA[Create a new product field]]></en>
+        </locale>
+
+        <locale name="fields.update.text">
+<en><![CDATA[Edit product field]]></en>
+        </locale>
+        <locale name="fields.update.title">
+<en><![CDATA[Update product field #[fieldId]]]></en>
+        </locale>
+
+        <locale name="fields.window.confirm.title">
+<en><![CDATA[Add field]]></en>
+        </locale>
+
+        <locale name="fields.window.search.title">
+<en><![CDATA[Field selection]]></en>
+        </locale>
+
+        <locale name="fields.window.delete.title">
+<en><![CDATA[Delete the fields]]></en>
+        </locale>
+        <locale name="fields.window.delete.text">
+<en><![CDATA[Do you really want to delete the fields?]]></en>
+        </locale>
+        <locale name="fields.window.delete.description" html="html">
+<en><![CDATA[
+                The fields <b>[fields]</b> will be permanently deleted and all relations
+                with products and categories will be lost.<br />
+                <br />
+                This can lead to the fact that some variants of articles can no longer be found.
+            ]]></en>
+        </locale>
+
+        <locale name="fields.window.productarray.changed.title">
+<en><![CDATA[
+                Field properties have changed which directly affect products.
+            ]]></en>
+        </locale>
+        <locale name="fields.window.productarray.changed.text" html="true">
+<en><![CDATA[
+                Do you want to apply the field properties to all products that contain the field?
+            ]]></en>
+        </locale>
+        <locale name="fields.window.productarray.changed.information" html="true">
+<en><![CDATA[
+                Field properties have changed which directly affect products.<br />
+                Do you want to customize all products which contain the field <strong>[fieldId] [fieldName]</strong>?<br />
+                For each product the properties of the field <strong>[fieldId] [fieldName]</strong> are set.
+            ]]></en>
+        </locale>
+        <locale name="fields.window.productarray.changed.information.console_tool" html="true">
+<en><![CDATA[
+                Field properties have changed which directly affect products<br />
+                Do you want to customize all products which contain the field <strong>[fieldId] [fieldName]</strong>?<br />
+                For each product the properties of the field <strong>[fieldId] [fieldName]</strong> are set.
+                <br/><br/>
+                <p>A <b>large number of products</b> exist. To set the field properties to all products, please execute this command in your system terminal:</p>
+                <p>
+                    <pre class="console">[cmd]</pre>
+                </p>
+            ]]></en>
+        </locale>
+
+
+        <locale name="category.update.field.grid.publicStatus">
+<en><![CDATA[Public]]></en>
+        </locale>
+        <locale name="category.update.field.grid.searchStatus">
+<en><![CDATA[Search]]></en>
+        </locale>
+        <locale name="category.update.window.addField.title">
+<en><![CDATA[Add to the category]]></en>
+        </locale>
+
+        <locale name="fields.control.productAttributeListSettings.grid.type">
+<en><![CDATA[Discount/surcharge]]></en>
+        </locale>
+        <locale name="fields.control.productAttributeListSettings.grid.currencyPercentType">
+<en><![CDATA[]]></en>
+        </locale>
+        <locale name="fields.control.productAttributeListSettings.grid.sum">
+<en><![CDATA[Price]]></en>
+        </locale>
+        <locale name="fields.control.productAttributeListSettings.grid.selected">
+<en><![CDATA[Default]]></en>
+        </locale>
+        <locale name="fields.control.productAttributeListSettings.grid.userinput">
+<en><![CDATA[User input]]></en>
+        </locale>
+        <locale name="fields.control.productAttributeListSettings.grid.valueId">
+<en><![CDATA[ID of the value]]></en>
+        </locale>
+        <locale name="fields.control.productAttributeListSettings.grid.valueId.description">
+<en><![CDATA[Determine the ID of the value. This allows a simpler assignment.]]></en>
+        </locale>
+        <locale name="fields.control.productAttributeListSettings.grid.image">
+<en><![CDATA[Image]]></en>
+        </locale>
+
+        <locale name="fields.control.productAttributeList.remove.window.title">
+<en><![CDATA[Remove item from the list?]]></en>
+        </locale>
+        <locale name="fields.control.productAttributeList.remove.window.text">
+<en><![CDATA[Do you really want to delete the following entries?]]></en>
+        </locale>
+
+        <locale name="fields.control.productAttributeList.edit.window.title">
+<en><![CDATA[Edit entry from the list]]></en>
+        </locale>
+        <locale name="fields.control.productAttributeList.add.window.title">
+<en><![CDATA[Add entry to the list]]></en>
+        </locale>
+
+        <locale name="fields.control.attributeGroup.edit.window.title">
+<en><![CDATA[Edit entry from the attribute list]]></en>
+        </locale>
+        <locale name="fields.control.attributeGroup.create.add.window.title">
+<en><![CDATA[Add entry to the attribute list]]></en>
+        </locale>
+        <locale name="fields.control.attributeGroup.create.already.exist">
+<en><![CDATA[The value already exists. Please enter another ID for the value.]]></en>
+        </locale>
+        <locale name="fields.control.attributeGroup.remove.window.title">
+<en><![CDATA[Remove item from the attribute list?]]></en>
+        </locale>
+        <locale name="fields.control.attributeGroup.remove.window.text">
+<en><![CDATA[Do you really want to delete the following entries?]]></en>
+        </locale>
+
+        <locale name="fields.control.productAttributeList.create.priceTitle">
+<en><![CDATA[Price surcharge / discount]]></en>
+        </locale>
+        <locale name="fields.control.productAttributeList.create.deduction">
+<en><![CDATA[Deduction]]></en>
+        </locale>
+        <locale name="fields.control.productAttributeList.create.selected">
+<en><![CDATA[Default]]></en>
+        </locale>
+        <locale name="fields.control.productAttributeList.create.userinput">
+<en><![CDATA[User input]]></en>
+        </locale>
+        <locale name="fieldtype.not.searchable">
+<en><![CDATA[Fields of this field type are not searchable.]]></en>
+        </locale>
+        <locale name="fields.control.attributeGroup.create.valueId">
+<en><![CDATA[Id of the value]]></en>
+        </locale>
+        <locale name="fields.control.attributeGroup.create.selected">
+<en><![CDATA[Default]]></en>
+        </locale>
+        <locale name="fields.control.attributeGroup.create.labelImage">
+<en><![CDATA[Image]]></en>
+        </locale>
+        <locale name="fields.control.price.brutto">
+<en><![CDATA[Gross entry of a price]]></en>
+        </locale>
+        <locale name="fields.control.price.quantity">
+<en><![CDATA[Quantity]]></en>
+        </locale>
+        <locale name="fields.control.price.quantity.short">
+<en><![CDATA[Qty]]></en>
+        </locale>
+        <locale name="fields.control.price.quantity.title">
+<en><![CDATA[Gross price: [price]]]></en>
+        </locale>
+
+        <locale name="product.fields.grid.visible">
+<en><![CDATA[visible]]></en>
+        </locale>
+        <locale name="product.fields.grid.calcPriority">
+<en><![CDATA[Calculation priority]]></en>
+        </locale>
+        <locale name="product.fields.grid.calcPriority.desc">
+<en><![CDATA[Calculation priority]]></en>
+        </locale>
+        <locale name="product.fields.grid.calcBasis">
+<en><![CDATA[Basis]]></en>
+        </locale>
+        <locale name="product.fields.grid.calcBasis.desc">
+<en><![CDATA[Calculation basis]]></en>
+        </locale>
+        <locale name="product.fields.grid.button.addSelectList">
+<en><![CDATA[Add Select list]]></en>
+        </locale>
+        <locale name="product.fields.grid.button.removeSelectList">
+<en><![CDATA[Remove Select list]]></en>
+        </locale>
+
+
+        <locale name="product.fields.attributeList.title">
+<en><![CDATA[For price calculation]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.entry.title">
+<en><![CDATA[List entries]]></en>
+        </locale>
+        <locale name="product.fields.attribute.group.attributeList.title">
+<en><![CDATA[General]]></en>
+        </locale>
+
+        <locale name="product.fields.attributeList.calcBasis">
+<en><![CDATA[Calculation basis]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.calcBasis.netto">
+<en><![CDATA[Net]]></en>
+        </locale>
+        <locale name="product.fields.grid.calcBasis.calculationBasisCalcPrice">
+<en><![CDATA[Calculated price]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.priority">
+<en><![CDATA[Calculation priority]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.discounts">
+<en><![CDATA[Show surcharges / discounts]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.userInput">
+<en><![CDATA[User input]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.generateTags">
+<en><![CDATA[Generate tags]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.labelType">
+<en><![CDATA[Type]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.labelTypeOptionDefault">
+<en><![CDATA[Default]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.labelTypeOptionSize">
+<en><![CDATA[Size]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.labelTypeOptionColor">
+<en><![CDATA[Color]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.labelTypeOptionMaterial">
+<en><![CDATA[Material]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.labelIsImageAttribute">
+<en><![CDATA[Attribute is relevant for product image]]></en>
+        </locale>
+
+        <locale name="product.fields.attributeList.isUsedForVariantGeneration">
+<en><![CDATA[Should not be used for variant generation]]></en>
+        </locale>
+        <locale name="product.fields.remove.field">
+<en><![CDATA[Remove field]]></en>
+        </locale>
+        <locale name="product.fields.remove.window.title">
+<en><![CDATA[Remove field]]></en>
+        </locale>
+        <locale name="product.fields.remove.window.text">
+<en><![CDATA[Remove the field from the product?]]></en>
+        </locale>
+        <locale name="product.fields.remove.window.information" html="true">
+<en><![CDATA[
+                The field #[fieldId] would be removed from the product. <br />
+                Possibly, this can also be inherited from a category.<br />
+                <br />
+                This can lead to the fact that some variants of articles can no longer be found.
+                ]]></en>
+        </locale>
+
+        <locale name="products.window.copy.title">
+<en><![CDATA[Copy the product]]></en>
+        </locale>
+        <locale name="products.window.copy.information">
+<en><![CDATA[Do you really want to copy the product [id] [title]?]]></en>
+        </locale>
+        <locale name="products.window.copy.text">
+<en><![CDATA[Copy the product: [id] [title]]]></en>
+        </locale>
+
+        <locale name="products.category.no.parent">
+<en><![CDATA[The category has no parent category]]></en>
+        </locale>
+
+        <locale name="products.category.no.parent">
+<en><![CDATA[The category has no parent category]]></en>
+        </locale>
+
+        <locale name="control.search.suggest.mobile.title">
+<en><![CDATA[Product search]]></en>
+        </locale>
+
+        <locale name="field.vat.type.default">
+<en><![CDATA[Use default]]></en>
+        </locale>
+
+        <locale name="variants.EditableFieldList.window.title">
+<en><![CDATA[Editable product fields]]></en>
+        </locale>
+        <locale name="variants.EditableFieldList.window.description" html="true">
+<en><![CDATA[
+            <b>Specify which fields can be edited by variants.</b><br/>
+            All fields that cannot be edited in variants are taken from the parent product.
+            <br/><br/>
+            <span style="font-size: 80%;">
+                Exceptions to this are fields of type attribute list, as these are used for variant generation.
+                In this case, the situation is as follows: If a field of type attribute list is editable,
+                it can be edited in the parent product. An attribute list cannot be edited in a variant,
+                unless this attribute list is not used for variant generation.
+            </span>
+            ]]></en>
+        </locale>
+        <locale name="variants.EditableFieldList.window.reset.to.global">
+<en><![CDATA[Cancel inheritance and reuse global fields.]]></en>
+        </locale>
+
+        <locale name="panel.product.window.create.button">
+<en><![CDATA[Create product]]></en>
+        </locale>
+
+        <locale name="variants.generating.window.description">
+<en><![CDATA[
+            Determines from which fields new variants are to be generated.
+            Variants can be generated from attribute lists and select lists.
+            ]]></en>
+        </locale>
+        <locale name="variants.generating.window.title">
+<en><![CDATA[Generate Variants]]></en>
+        </locale>
+        <locale name="variants.generating.window.calc">
+<en><![CDATA[[count] variants will be generated.]]></en>
+        </locale>
+        <locale name="variants.generating.window.message.no.values">
+<en><![CDATA[This field has no entries.]]></en>
+        </locale>
+        <locale name="variants.generating.window.button.generate">
+<en><![CDATA[Generate Variants]]></en>
+        </locale>
+        <locale name="variants.generating.window.button.next">
+<en><![CDATA[Next]]></en>
+        </locale>
+        <locale name="variants.generating.window.generating">
+<en><![CDATA[Variants are generated ...]]></en>
+        </locale>
+        <locale name="variants.generating.window.priceCalculation">
+<en><![CDATA[Calculate price]]></en>
+        </locale>
+        <locale name="variants.generating.window.priceCalculation.desc">
+<en><![CDATA[
+            If the selection list has price markups / markdowns, these are included in the price of the new variant.
+            ]]></en>
+        </locale>
+        <locale name="variants.generating.selectFields.description">
+<en><![CDATA[
+            Please select the fields you would like to use for the variant generation.
+            Unassigned attribute lists are automatically assigned to the variant.
+            ]]></en>
+        </locale>
+        <locale name="variants.generating.selectFields.productAttributes.description">
+<en><![CDATA[
+            Note that select lists are used for price calculation and are not automatically assigned.
+            If you select some 'select lists', the prices of the variants to be generated will be adjusted accordingly.
+            ]]></en>
+        </locale>
+        <locale name="variants.generating.attributeGroupList">
+<en><![CDATA[Attribute lists]]></en>
+        </locale>
+        <locale name="variants.generating.additionalAttributeGroupList">
+<en><![CDATA[Unassigned attribute lists]]></en>
+        </locale>
+        <locale name="variants.generating.productAttributeButton">
+<en><![CDATA[Use select lists]]></en>
+        </locale>
+        <locale name="variants.generating.type.description">
+<en><![CDATA[
+            Please select the way you want the variants to be generated.
+            ]]></en>
+        </locale>
+        <locale name="variants.generating.type.createOnlyNewOne">
+<en><![CDATA[Generate only new variants.]]></en>
+        </locale>
+        <locale name="variants.generating.type.deleteCurrent">
+<en><![CDATA[Delete existing variants and regenerate all variants.]]></en>
+        </locale>
+
+
+        <locale name="variants.generating.productAttributeList">
+<en><![CDATA[Select lists]]></en>
+        </locale>
+
+        <locale name="panel.variants.category.title">
+<en><![CDATA[Variants]]></en>
+        </locale>
+        <locale name="panel.variants.editable.button.title">
+<en><![CDATA[Define editable Fields for Variants. These fields can be edited by the variant.]]></en>
+        </locale>
+
+        <locale name="variants.addVariant.window.title">
+<en><![CDATA[Add Variant]]></en>
+        </locale>
+        <locale name="variants.addVariant.window.text">
+<en><![CDATA[Add single Variant]]></en>
+        </locale>
+        <locale name="variants.addVariant.window.information">
+<en><![CDATA[
+                Would you like to add a single variant for this product?
+                The new variant is inactive and can be edited after it has been created.
+            ]]></en>
+        </locale>
+        <locale name="variants.addVariant.window.button">
+<en><![CDATA[Create Variant]]></en>
+        </locale>
+        <locale name="panel.variants.backToList.button.title">
+<en><![CDATA[Back to the variant list]]></en>
+        </locale>
+        <locale name="panel.variants.switch">
+<en><![CDATA[Switch variant]]></en>
+        </locale>
+        <locale name="panel.variants.switchTo">
+<en><![CDATA[Switch to variant: ]]></en>
+        </locale>
+        <locale name="panel.variants.save">
+<en><![CDATA[Save Variant]]></en>
+        </locale>
+        <locale name="panel.variants.activated">
+<en><![CDATA[Variant is activated]]></en>
+        </locale>
+        <locale name="panel.variants.deactivated">
+<en><![CDATA[Variant is deactivated]]></en>
+        </locale>
+        <locale name="panel.variants.deactivate.variants">
+<en><![CDATA[Deactivate all selected variants]]></en>
+        </locale>
+        <locale name="panel.variants.activate.variants">
+<en><![CDATA[Activate all selected variants]]></en>
+        </locale>
+        <locale name="panel.variants.delete.variants">
+<en><![CDATA[Delete all selected variants]]></en>
+        </locale>
+        <locale name="panel.variants.massProcessing">
+<en><![CDATA[Mass processing]]></en>
+        </locale>
+        <locale name="window.products.variant.mass.processing.title">
+<en><![CDATA[Variant mass processing]]></en>
+        </locale>
+        <locale name="window.products.variant.mass.processing.content">
+<en><![CDATA[
+                You edit [productCount] variants.
+                Please select a field which you want to set for each variant.
+            ]]></en>
+        </locale>
+        <locale name="panel.variants.button.create">
+<en><![CDATA[Create variant]]></en>
+        </locale>
+        <locale name="panel.variants.button.generate">
+<en><![CDATA[Generate Variants]]></en>
+        </locale>
+        <locale name="panel.variants.set.default.variant">
+<en><![CDATA[Set variant as default variant]]></en>
+        </locale>
+        <locale name="panel.variants.unset.default.variant">
+<en><![CDATA[Unset variant as default variant]]></en>
+        </locale>
+
+        <locale name="window.variant.delete">
+<en><![CDATA[Delete variants]]></en>
+        </locale>
+        <locale name="window.variant.text">
+<en><![CDATA[Really delete variants ?]]></en>
+        </locale>
+        <locale name="window.variant.information">
+<en><![CDATA[
+            The variants will be irrevocably deleted and cannot be restored. The following variants will be deleted: [variants]
+            ]]></en>
+        </locale>
+
+<!-- control: package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings -->
+        <locale name="product.fields.unitSelect.entry.title">
+<en><![CDATA[Selectable values]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.grid.id">
+<en><![CDATA[ID]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.grid.default">
+<en><![CDATA[Default]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.grid.quantityInput">
+<en><![CDATA[Quantity input]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.grid.defaultQuantity">
+<en><![CDATA[Def. quant.]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.add.title">
+<en><![CDATA[New selectable value]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.add.idLabel">
+<en><![CDATA[Internal identifier]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.add.titleLabel">
+<en><![CDATA[Title]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.add.defaultLabel">
+<en><![CDATA[Is default value]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.add.quantityInputLabel">
+<en><![CDATA[Quantity input possible]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.add.defaultQuantityLabel">
+<en><![CDATA[Default quantity]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.edit.title">
+<en><![CDATA[Edit selectable value]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.remove.title">
+<en><![CDATA[Delete selectable value]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.remove.text">
+<en><![CDATA[Shall the following values be deleted?]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.add.error_duplicate_id">
+<en><![CDATA[The internal identifier already exists. Please choose a unique identifier.]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.add.empty_id">
+<en><![CDATA[The internal identifier must not be empty. Please choose a unique identifier.]]></en>
+        </locale>
+
+<!-- Field type: TimePeriod -->
+        <locale name="controls.fields.types.TimePeriod.template.labelFrom">
+<en><![CDATA[from]]></en>
+        </locale>
+        <locale name="controls.fields.types.TimePeriod.template.labelTo">
+<en><![CDATA[to]]></en>
+        </locale>
+        <locale name="controls.fields.types.TimePeriod.template.labelUnit">
+<en><![CDATA[Time period]]></en>
+        </locale>
+        <locale name="controls.fields.types.TimePeriod.template.labelUnitSecond">
+<en><![CDATA[second(s)]]></en>
+        </locale>
+        <locale name="controls.fields.types.TimePeriod.template.labelUnitMinute">
+<en><![CDATA[minute(s)]]></en>
+        </locale>
+        <locale name="controls.fields.types.TimePeriod.template.labelUnitHour">
+<en><![CDATA[hour(s)]]></en>
+        </locale>
+        <locale name="controls.fields.types.TimePeriod.template.labelUnitDay">
+<en><![CDATA[day(s)]]></en>
+        </locale>
+        <locale name="controls.fields.types.TimePeriod.template.labelUnitWeek">
+<en><![CDATA[week(s)]]></en>
+        </locale>
+        <locale name="controls.fields.types.TimePeriod.template.labelUnitMonth">
+<en><![CDATA[month(s)]]></en>
+        </locale>
+        <locale name="controls.fields.types.TimePeriod.template.labelUnitYear">
+<en><![CDATA[year(s)]]></en>
+        </locale>
+
+        <locale name="control.window.price.brutto.title">
+<en><![CDATA[Gross price input]]></en>
+        </locale>
+        <locale name="control.window.price.brutto.label">
+<en><![CDATA[Gross price]]></en>
+        </locale>
+        <locale name="control.window.price.brutto.description" html="true">
+<en><![CDATA[
+            <p>Please enter your gross price, this price will automatically be converted to a net price and inserted.</p>
+            ]]></en>
+        </locale>
+
+        <locale name="controls.fields.types.PriceByTimePeriod.template.labelFrom">
+<en><![CDATA[valid from (date)]]></en>
+        </locale>
+        <locale name="controls.fields.types.PriceByTimePeriod.template.labelTo">
+<en><![CDATA[valid to (date)]]></en>
+        </locale>
+        <locale name="controls.fields.types.PriceByTimePeriod.template.labelToTime">
+<en><![CDATA[valid to (time)]]></en>
+        </locale>
+        <locale name="controls.fields.types.PriceByTimePeriod.template.labelFromTime">
+<en><![CDATA[valid from (time)]]></en>
+        </locale>
+
+        <locale name="control.variant.reset.fields">
+<en><![CDATA[Reset selected fields]]></en>
+        </locale>
+
+        <locale name="controls.PriceSwitch.title.show_prices">
+<en><![CDATA[Show prices]]></en>
+        </locale>
+        <locale name="controls.PriceSwitch.title.hide_prices">
+<en><![CDATA[Hide prices]]></en>
+        </locale>
+        <locale name="controls.product.variants.own.folder">
+<en><![CDATA[Use own media folder]]></en>
+        </locale>
+
+        <locale name="product.variant.change.folder.status.title">
+<en><![CDATA[Use own media folder]]></en>
+        </locale>
+        <locale name="product.variant.change.folder.status.text">
+<en><![CDATA[Would you like to use your own media folder for the variant?]]></en>
+        </locale>
+        <locale name="product.variant.change.folder.status.information">
+<en><![CDATA[
+            Notice, please: The images of the parent article will no longer be used and a
+            separate media folder will be created for the variant.
+            ]]></en>
+        </locale>
+
+        <locale name="controls.settings.PriceFieldFactors.updatePrices.information">
+<en>
+                <![CDATA[This operation will <b>recalculate</b> the prices of all configured price fields with the specified multiplier. All products containing the corresponding fields will be saved once.]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.updatePrices.title">
+<en><![CDATA[Update product prices]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.updatePrices.text">
+<en><![CDATA[Update product prices]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.btn.confirm_all">
+<en><![CDATA[Update all products]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.btn.confirm_active">
+<en><![CDATA[Update active products only]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.btn.update">
+<en><![CDATA[Update product prices]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelMultiplier">
+<en><![CDATA[x value of]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelUpdateOnSave">
+<en><![CDATA[apply on product save]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelCategoryPriority">
+<en><![CDATA[Price field factors priority]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.descCategoryPriority" html="true">
+<en>
+                <![CDATA[
+                The price field factors of the category with the highest priority are applied to products that are assigned to several categories that have configured price field factors. The main category of a product <b>always</b> takes precedence, provided that price field factors are configured there.]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.info_cli">
+<en><![CDATA[<p>There are a lot of products in your store. The execution time of your web server and PHP will probably not be enough to update the prices of all products.</p><br/>
+<p>You can also update the product prices by console command. Please run one of the following commands to perform the update (all products or active products only):</p>]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingVat">
+<en><![CDATA[Base VAT]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingVatOptionNone">
+<en><![CDATA[none]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingType">
+<en><![CDATA[Rounding type]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionNone">
+<en><![CDATA[do not round]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionDecimalTenths">
+<en><![CDATA[next highest decimal tenth]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionDecimalHundreths">
+<en><![CDATA[next highest decimal hundredth]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionDecimalCustom">
+<en><![CDATA[custom]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeDecimalCustomValue">
+<en><![CDATA[Decimal points (custom)]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.headerRounding">
+<en><![CDATA[Settings for automatic rounding]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.descRoundingVat" html="true">
+<en>
+                <![CDATA[VAT added to the net price of a product to determine the gross price to be rounded. The net price is subsequently changed so that when the VAT is added, the <b>rounded</b> gross price comes out.]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionUp">
+<en><![CDATA[round up (complete) -> e.g.: "22.XX" => "30.XX"]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionUp9">
+<en><![CDATA[round up (next 9 digit) -> e.g.: "22.XX" => "29.XX"]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionDown">
+<en><![CDATA[round down (complete) -> e.g.: "22.XX" => "20.XX"]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionDown9">
+<en><![CDATA[round down (next 9 digit) -> e.g.: "22.XX" => "19.XX"]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercial">
+<en><![CDATA[commercial rounding -> e.g.: "22,XX" => "20,XX"; "25,XX" => "30,XX"]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercial9">
+<en><![CDATA[commercial rounding (next 9 digit) -> e.g.: "22,XX" => "19,XX"; "25,XX" => "29,XX"]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercialDecimals">
+<en><![CDATA[round to the nearest integer -> e.g.: "22.34" => "22.00"; "22.65" => "23.00"]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercialDecimalsSingle">
+<en><![CDATA[round to one decimal place -> e.g.: "22.34" => "22.30"; "22.65" => "22.70"]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelType">
+<en><![CDATA[Surcharge type]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelTypeOptionMultiplier">
+<en><![CDATA[multiplier]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelTypeOptionFixed">
+<en><![CDATA[fixed surcharge]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelFixedSurchargeAmount">
+<en><![CDATA[(optional) additional absolute surcharge amount (net; VAT excl.)]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelFixedSurchargePriorityBeforeRounding">
+<en><![CDATA[apply before rounding]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelFixedSurchargePriorityAfterRounding">
+<en><![CDATA[apply after rounding]]></en>
+        </locale>
+
+        <locale name="controls.products.search">
+<en><![CDATA[Search products...]]></en>
+        </locale>
+
+        <locale name="btn.actions">
+<en><![CDATA[Actions]]></en>
+        </locale>
+
+        <locale name="product.search.result.status.active">
+<en><![CDATA[Product is available for customers]]></en>
+        </locale>
+        <locale name="product.search.result.status.deactive">
+<en><![CDATA[Product is not available for customers]]></en>
+        </locale>
+        <locale name="product.panel.status.activate">
+<en><![CDATA[Product is activated for customers]]></en>
+        </locale>
+        <locale name="product.panel.status.deactivate">
+<en><![CDATA[Product is deactivated for customers]]></en>
+        </locale>
+    </groups>
+
+    <groups name="quiqqer/products" datatype="php">
+
+        <locale name="categories.list.priceFieldFactorFields">
+<en><![CDATA[Priority: [priority] | Fields: [fields]]]></en>
+        </locale>
+        <locale name="exception.duplicate_article_no">
+<en><![CDATA[
+            The article no. "[articleNo]" is already taken (by product #[otherProductId]). Please choose a unique article no. for this product.
+            ]]></en>
+        </locale>
+
+        <locale name="button.product.goToProduct">
+<en><![CDATA[To product]]></en>
+        </locale>
+
+        <locale name="UserInputFrontendView.info">
+<en><![CDATA[
+            You have the option to specify an individual text (maximum of [maxCharacters] characters) for this when you add this product to the shopping cart.
+            ]]></en>
+        </locale>
+
+        <locale name="NumberRange.title">
+<en><![CDATA[Products (article nos.)]]></en>
+        </locale>
+
+        <locale name="product_type.DigitalProduct.title">
+<en><![CDATA[Digital product]]></en>
+        </locale>
+        <locale name="product_type.DigitalProduct.description">
+<en>
+                <![CDATA[Non-physical product that does not require shipping but is made available via download or access (e.g. digital ticket).]]></en>
+        </locale>
+
+<!-- Ajax -->
+        <locale name="message.ajax.settings.updatePrices.success">
+<en><![CDATA[The prices of [count] products have been successfully updated.]]></en>
+        </locale>
+        <locale name="ajax.general_error">
+<en><![CDATA[An unexpected error occurred. Please repeat the process or contact an administrator.]]></en>
+        </locale>
+
+        <locale name="exception.sitesearch.not.found">
+<en><![CDATA[No search site found. Please create a search site.]]></en>
+        </locale>
+
+        <locale name="exception.Product.Types.VariantChild.parent_not_found">
+<en><![CDATA[Parent product (#[parentId]) of child product (#[childId]) was not found.]]></en>
+        </locale>
+
+        <locale name="quiqqer.products.category.settings.title">
+<en><![CDATA[Shop settings]]></en>
+        </locale>
+        <locale name="quiqqer.products.search.settings.title">
+<en><![CDATA[Shop settings]]></en>
+        </locale>
+
+        <locale name="quiqqer.products.settings.categoryId">
+<en><![CDATA[Product main category]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.extraProductCategories">
+<en><![CDATA[Additional product categories]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.extraProductCategories.description">
+<en><![CDATA[Specify here which product categories the listed products must have.]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.searchFieldIds">
+<en><![CDATA[Search fields]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.showFilterLeft">
+<en><![CDATA[Show filter at the left side]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.showFreeTextSearch">
+<en><![CDATA[Show freetext search]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.productLoadNumber">
+<en><![CDATA[Number of loaded products]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.autoloadAfter">
+<en><![CDATA[Product autoload]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.autoloadAfter.description">
+<en>
+                <![CDATA[
+                How often must the user manually load the next products (click on "More" button) so that they are loaded automatically?]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.autoloadAfter.disabled">
+<en><![CDATA[Disable - products are not loaded automatically]]></en>
+        </locale>
+
+        <locale name="site.settings.openProductMode">
+<en><![CDATA[Behavior when opening product]]></en>
+        </locale>
+        <locale name="site.settings.openProductMode.desc">
+<en>
+                <![CDATA[Defines what happens when a product is clicked. "Asynchronous loading" means that the product is opened without the entire page having to be reloaded.]]></en>
+        </locale>
+        <locale name="site.settings.openProductMode.default">
+<en><![CDATA[Use default setting]]></en>
+        </locale>
+        <locale name="site.settings.openProductMode.normal">
+<en><![CDATA[Normal - the page will be reloaded]]></en>
+        </locale>
+        <locale name="site.settings.openProductMode.async">
+<en><![CDATA[Asynchronous - only the product will be loaded]]></en>
+        </locale>
+
+        <locale name="quiqqer.products.settings.openProductAsync">
+<en><![CDATA[Open product asynchronously]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.openProductAsync.desc">
+<en>
+                <![CDATA[If the option is enabled, the clicked product will be opened without needing to reload the entire page.]]></en>
+        </locale>
+
+        <locale name="quiqqer.products.settings.categoryStartNumber">
+<en><![CDATA[Limit of displayed categories]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.categoryAsFilter">
+<en><![CDATA[Show category as filter]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.categoryPos">
+<en><![CDATA[Category position]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.categoryPos.top">
+<en><![CDATA[Above the product list]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.categoryPos.bottom">
+<en><![CDATA[Under the product list]]></en>
+        </locale>
+
+        <locale name="quiqqer.products.settings.showCategories">
+<en><![CDATA[Activate categories]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.categoryDisplay">
+<en><![CDATA[Category display]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.productDisplay">
+<en><![CDATA[Product display]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.categoryDisplay.gallery">
+<en><![CDATA[Gallery]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.categoryDisplay.list">
+<en><![CDATA[List]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.defaultSorting">
+<en><![CDATA[Default sorting]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.useOwnSorting">
+<en><![CDATA[Use own sorting]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.availableSorting">
+<en><![CDATA[Sorting settings]]></en>
+        </locale>
+
+        <locale name="quiqqer.products.settings.categoryProductSearchType">
+<en><![CDATA[Category Consideration]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.categoryProductSearchType.description">
+<en><![CDATA[Depending on the selection, products from at least one of the selected categories are displayed (OR), or only products assigned to all selected categories (AND).]]></en>
+        </locale>
+
+        <locale name="quiqqer.products.field.header.placeholder">
+<en><![CDATA[Permissions for the field #[fielId] - [fieldname].]]></en>
+        </locale>
+        <locale name="quiqqer.products.field.view.placeholder">
+<en><![CDATA[Is allowed to see the field #[fielId] - [fieldname].]]></en>
+        </locale>
+        <locale name="quiqqer.products.field.edit.placeholder">
+<en><![CDATA[Is allowed to edit the field #[fielId] - [fieldname].]]></en>
+        </locale>
+        <locale name="quiqqer.products.site.category.settings.title">
+<en><![CDATA[Products]]></en>
+        </locale>
+        <locale name="sortable.c_date">
+<en><![CDATA[Creation date]]></en>
+        </locale>
+        <locale name="sortable.e_date">
+<en><![CDATA[Editing date]]></en>
+        </locale>
+
+<!-- FrontendSearch -->
+        <locale name="exception.frontendsearch.site.type.not.eligible">
+<en><![CDATA[
+            The site #[siteId] is not compatible with the frontend product search because the site type is not eligible.
+            ]]></en>
+        </locale>
+        <locale name="attention.frontendsearch.category.site.no.category">
+<en><![CDATA[
+                The product category site #[siteId] is not assigned to a product category yet.
+                Thus only standard fields are searchable.
+            ]]></en>
+        </locale>
+        <locale name="exception.search.value.invalid">
+<en>
+                <![CDATA[The search value that was given for field [fieldTitle] #[fieldId] is invalid and cannot be used for searching.]]></en>
+        </locale>
+        <locale name="exception.search.field.unknown.searchtype">
+<en>
+                <![CDATA[The search type that was given for field [fieldTitle] #[fieldId] is invalid. The field cannot be used for searching.]]></en>
+        </locale>
+
+
+        <locale name="exception.only.ownFields.deletable">
+<en><![CDATA[Only own fields can be removed from a product.]]></en>
+        </locale>
+        <locale name="exception.url.already.exists">
+<en><![CDATA[This URL already exists in another product and cannot be used.]]></en>
+        </locale>
+
+        <locale name="watcher.message.product.save">
+<en><![CDATA[Saved product [id].]]></en>
+        </locale>
+        <locale name="watcher.message.product.activate">
+<en><![CDATA[Activated product [id].]]></en>
+        </locale>
+        <locale name="watcher.message.product.deactivate">
+<en><![CDATA[Deactivated product [id].]]></en>
+        </locale>
+        <locale name="watcher.message.product.delete">
+<en><![CDATA[Deleted product [productId] "[title]".]]></en>
+        </locale>
+        <locale name="watcher.message.product.create">
+<en><![CDATA[Created product "[id]".]]></en>
+        </locale>
+
+        <locale name="watcher.message.category.create">
+<en><![CDATA[Created category "[title]".]]></en>
+        </locale>
+        <locale name="watcher.message.category.delete">
+<en><![CDATA[Deleted category [id] "[title]".]]></en>
+        </locale>
+        <locale name="watcher.message.category.save">
+<en><![CDATA[Saved category [id].]]></en>
+        </locale>
+
+        <locale name="watcher.message.field.create">
+<en><![CDATA[Created field "[id]".]]></en>
+        </locale>
+        <locale name="watcher.message.field.delete">
+<en><![CDATA[Deleted field [id] "[title]".]]></en>
+        </locale>
+        <locale name="watcher.message.field.save">
+<en><![CDATA[Saved field [id].]]></en>
+        </locale>
+
+        <locale name="user.settings.title">
+<en><![CDATA[Billing Details]]></en>
+        </locale>
+        <locale name="user.settings.euVatId">
+<en><![CDATA[EU VAT ID]]></en>
+        </locale>
+        <locale name="user.settings.taxId">
+<en><![CDATA[Tax number]]></en>
+        </locale>
+        <locale name="user.settings.address">
+<en><![CDATA[Billing address]]></en>
+        </locale>
+
+        <locale name="user.profile.title">
+<en><![CDATA[Product settings]]></en>
+        </locale>
+
+
+        <locale name="type.category.categoryTitle">
+<en><![CDATA[Categories]]></en>
+        </locale>
+        <locale name="type.category.filterTitle">
+<en><![CDATA[Filter]]></en>
+        </locale>
+        <locale name="type.category.freetextTitle">
+<en><![CDATA[Search]]></en>
+        </locale>
+        <locale name="type.category.freetextButtonText">
+<en><![CDATA[Search]]></en>
+        </locale>
+
+        <locale name="type.search.searchTitle">
+<en><![CDATA[Search]]></en>
+        </locale>
+        <locale name="type.search.filterTitle">
+<en><![CDATA[Filter]]></en>
+        </locale>
+        <locale name="type.search.searchPlaceholder">
+<en><![CDATA[Enter a search term...]]></en>
+        </locale>
+
+        <locale name="sort.title.DESC">
+<en><![CDATA[Title descending]]></en>
+        </locale>
+        <locale name="sort.title.ASC">
+<en><![CDATA[Title ascending]]></en>
+        </locale>
+        <locale name="sort.productNo.DESC">
+<en><![CDATA[Article number descending]]></en>
+        </locale>
+        <locale name="sort.productNo.ASC">
+<en><![CDATA[Article number ascending]]></en>
+        </locale>
+        <locale name="sort.sorting">
+<en><![CDATA[By sorting]]></en>
+        </locale>
+        <locale name="sort.cdate.ASC">
+<en><![CDATA[Oldest products first]]></en>
+        </locale>
+        <locale name="sort.cdate.DESC">
+<en><![CDATA[Newest products first]]></en>
+        </locale>
+
+        <locale name="product.list.products.basicPrice">
+<en><![CDATA[Basic price]]></en>
+        </locale>
+
+        <locale name="empty.select">
+<en><![CDATA[- Please select one -]]></en>
+        </locale>
+
+        <locale name="settings.window.products.resetFieldsAction.option.0">
+<en><![CDATA[Use default values when resetting]]></en>
+        </locale>
+        <locale name="settings.window.products.resetFieldsAction.option.1">
+<en><![CDATA[Reset fields completely]]></en>
+        </locale>
+        <locale name="settings.window.products.resetFieldsAction.title">
+<en><![CDATA[Field Behavior during Reset]]></en>
+        </locale>
+        <locale name="settings.window.products.resetFieldsAction.description">
+<en><![CDATA[
+            This setting determines the behavior in the frontend of a product when the selection is reset.
+            ]]></en>
+        </locale>
+        <locale name="settings.window.products.linkVariantChildrenWithImages">
+<en><![CDATA[Link child article attribute lists with images]]></en>
+        </locale>
+        <locale name="settings.window.products.linkVariantChildrenWithImages.description">
+<en>
+                <![CDATA[When clicking on the image of a child article, the corresponding attribute lists should be set to the appropriate values; when selecting attribute list values, the matching product image should be selected.]]></en>
+        </locale>
+
+        <locale name="exception.mass.processing.successful.saved">
+<en><![CDATA[The variants have been saved successfully.]]></en>
+        </locale>
+
+    </groups>
+
+</locales>
