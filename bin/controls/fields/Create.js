@@ -61,7 +61,7 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                         QUILocale.get(lg, 'control.field.create.content') +
                         '</div>',
                     tableHeader: QUILocale.get(lg, 'control.field.create.header'),
-                    fieldTitle: QUILocale.get('quiqqer/system', 'title'),
+                    fieldTitle: QUILocale.get('quiqqer/core', 'title'),
                     fieldWorkingTitle: QUILocale.get(lg, 'workingTitle'),
                     fieldType: QUILocale.get(lg, 'fieldtype'),
                     fieldPriority: QUILocale.get(lg, 'priority'),

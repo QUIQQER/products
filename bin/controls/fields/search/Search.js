@@ -88,13 +88,13 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
                 ],
                 columnModel      : [
                     {
-                        header   : QUILocale.get('quiqqer/system', 'id'),
+                        header   : QUILocale.get('quiqqer/core', 'id'),
                         dataIndex: 'id',
                         dataType : 'number',
                         width    : 60
                     },
                     {
-                        header   : QUILocale.get('quiqqer/system', 'title'),
+                        header   : QUILocale.get('quiqqer/core', 'title'),
                         dataIndex: 'title',
                         dataType : 'text',
                         width    : 200

@@ -156,7 +156,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             this.addButton({
                 name: 'update',
                 textimage: 'fa fa-save',
-                text: QUILocale.get('quiqqer/system', 'save'),
+                text: QUILocale.get('quiqqer/core', 'save'),
                 events: {
                     onClick: function () {
                         this.update().catch(function (err) {
@@ -185,7 +185,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             this.addButton({
                 name: 'copy',
                 icon: 'fa fa-copy',
-                title: QUILocale.get('quiqqer/system', 'copy'),
+                title: QUILocale.get('quiqqer/core', 'copy'),
                 events: {
                     onClick: this.copy
                 },
@@ -264,7 +264,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }).inject(LockContainer);
 
                 new QUIButton({
-                    text: QUILocale.get('quiqqer/system', 'cancel'),
+                    text: QUILocale.get('quiqqer/core', 'cancel'),
                     styles: {
                         'float': 'none',
                         display: 'inline-block',
@@ -599,7 +599,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             this.addCategory({
                 name: 'information',
-                text: QUILocale.get('quiqqer/system', 'information'),
+                text: QUILocale.get('quiqqer/core', 'information'),
                 icon: 'fa fa-info',
                 events: {
                     onClick: function () {
@@ -613,7 +613,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             this.addCategory({
                 name: 'data',
-                text: QUILocale.get('quiqqer/system', 'data'),
+                text: QUILocale.get('quiqqer/core', 'data'),
                 icon: 'fa fa-shopping-bag',
                 events: {
                     onClick: function () {
@@ -924,10 +924,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         e_user: data[4].e_user,
                         productCategories: QUILocale.get(lg, 'productCategories'),
                         productImage: QUILocale.get(lg, 'productImage'),
-                        productEDate: QUILocale.get('quiqqer/system', 'editdate'),
-                        productEUser: QUILocale.get('quiqqer/system', 'edituser'),
-                        productCDate: QUILocale.get('quiqqer/system', 'createdate'),
-                        productCUser: QUILocale.get('quiqqer/system', 'createuser'),
+                        productEDate: QUILocale.get('quiqqer/core', 'editdate'),
+                        productEUser: QUILocale.get('quiqqer/core', 'edituser'),
+                        productCDate: QUILocale.get('quiqqer/core', 'createdate'),
+                        productCUser: QUILocale.get('quiqqer/core', 'createuser'),
                         productType: QUILocale.get(lg, 'productType'),
                         productTypeTitle: data[4].typeTitle,
                         productTypeClass: data[4].type
@@ -1618,13 +1618,13 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             width: 30
                         },
                         {
-                            header: QUILocale.get('quiqqer/system', 'id'),
+                            header: QUILocale.get('quiqqer/core', 'id'),
                             dataIndex: 'id',
                             dataType: 'number',
                             width: 60
                         },
                         {
-                            header: QUILocale.get('quiqqer/system', 'title'),
+                            header: QUILocale.get('quiqqer/core', 'title'),
                             dataIndex: 'title',
                             dataType: 'text',
                             width: 200
@@ -1796,7 +1796,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             width: 30
                         },
                         {
-                            header: QUILocale.get('quiqqer/system', 'id'),
+                            header: QUILocale.get('quiqqer/core', 'id'),
                             dataIndex: 'id',
                             dataType: 'number',
                             width: 60
@@ -1829,7 +1829,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             width: 100
                         },
                         {
-                            header: QUILocale.get('quiqqer/system', 'title'),
+                            header: QUILocale.get('quiqqer/core', 'title'),
                             dataIndex: 'title',
                             dataType: 'text',
                             width: 200
@@ -1982,7 +1982,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         }).inject(Sheet.getContent());
 
                         Sheet.addButton({
-                            text: QUILocale.get('quiqqer/system', 'save'),
+                            text: QUILocale.get('quiqqer/core', 'save'),
                             textimage: 'fa fa-save',
                             events: {
                                 onClick: function () {
@@ -2167,7 +2167,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         maxWidth: 450,
 
                         ok_button: {
-                            text: QUILocale.get('quiqqer/system', 'copy'),
+                            text: QUILocale.get('quiqqer/core', 'copy'),
                             textimage: 'fa fa-copy'
                         },
 

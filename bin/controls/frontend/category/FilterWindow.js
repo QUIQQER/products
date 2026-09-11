@@ -48,11 +48,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/FilterWindow', [
                 maxHeight: height,
                 maxWidth: width,
                 ok_button: {
-                    text: QUILocale.get('quiqqer/system', 'accept'),
+                    text: QUILocale.get('quiqqer/core', 'accept'),
                     textimage: 'fa fa-check'
                 },
                 cancel_button: {
-                    text: QUILocale.get('quiqqer/system', 'cancel'),
+                    text: QUILocale.get('quiqqer/core', 'cancel'),
                     textimage: 'fa fa-remove'
                 }
             });

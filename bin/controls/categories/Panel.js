@@ -119,12 +119,12 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
                 Delete.setAttribute(
                     'text',
-                    QUILocale.get('quiqqer/system', 'delete')
+                    QUILocale.get('quiqqer/core', 'delete')
                 );
 
                 Edit.setAttribute(
                     'text',
-                    QUILocale.get('quiqqer/system', 'edit')
+                    QUILocale.get('quiqqer/core', 'edit')
                 );
 
                 self.Loader.hide();
@@ -157,7 +157,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
             this.addButton({
                 name     : 'add',
-                text     : QUILocale.get('quiqqer/system', 'add'),
+                text     : QUILocale.get('quiqqer/core', 'add'),
                 textimage: 'fa fa-plus',
                 events   : {
                     onClick: this.createChild
@@ -166,7 +166,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
             this.addButton({
                 name     : 'edit',
-                text     : QUILocale.get('quiqqer/system', 'edit'),
+                text     : QUILocale.get('quiqqer/core', 'edit'),
                 textimage: 'fa fa-edit',
                 disabled : true,
                 events   : {
@@ -184,7 +184,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
             this.addButton({
                 name     : 'delete',
-                text     : QUILocale.get('quiqqer/system', 'delete'),
+                text     : QUILocale.get('quiqqer/core', 'delete'),
                 textimage: 'fa fa-trash',
                 disabled : true,
                 events   : {
@@ -250,25 +250,25 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                 serverSort : true,
                 columnModel: [
                     {
-                        header   : QUILocale.get('quiqqer/system', 'id'),
+                        header   : QUILocale.get('quiqqer/core', 'id'),
                         dataIndex: 'id',
                         dataType : 'number',
                         width    : 60
                     },
                     {
-                        header   : QUILocale.get('quiqqer/system', 'title'),
+                        header   : QUILocale.get('quiqqer/core', 'title'),
                         dataIndex: 'title',
                         dataType : 'text',
                         width    : 200
                     },
                     {
-                        header   : QUILocale.get('quiqqer/system', 'description'),
+                        header   : QUILocale.get('quiqqer/core', 'description'),
                         dataIndex: 'description',
                         dataType : 'text',
                         width    : 200
                     },
                     {
-                        header   : QUILocale.get('quiqqer/system', 'path'),
+                        header   : QUILocale.get('quiqqer/core', 'path'),
                         dataIndex: 'path',
                         dataType : 'text',
                         width    : 300
@@ -298,12 +298,12 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
                     Delete.setAttribute(
                         'text',
-                        QUILocale.get('quiqqer/system', 'delete') + ' (#' + selected.id + ')'
+                        QUILocale.get('quiqqer/core', 'delete') + ' (#' + selected.id + ')'
                     );
 
                     Edit.setAttribute(
                         'text',
-                        QUILocale.get('quiqqer/system', 'edit') + ' (#' + selected.id + ')'
+                        QUILocale.get('quiqqer/core', 'edit') + ' (#' + selected.id + ')'
                     );
                 },
                 onRefresh : this.refresh
@@ -345,7 +345,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             ).appendChild(
                 new QUIContextItem({
                     name  : 'edit',
-                    text  : QUILocale.get('quiqqer/system', 'edit'),
+                    text  : QUILocale.get('quiqqer/core', 'edit'),
                     icon  : 'fa fa-edit',
                     events: {
                         onClick: function () {
@@ -361,7 +361,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             ).appendChild(
                 new QUIContextItem({
                     name  : 'delete',
-                    text  : QUILocale.get('quiqqer/system', 'delete'),
+                    text  : QUILocale.get('quiqqer/core', 'delete'),
                     icon  : 'fa fa-trash',
                     events: {
                         onClick: function () {

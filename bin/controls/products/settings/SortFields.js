@@ -108,7 +108,7 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
                     dataType: 'QUI',
                     width: 60
                 }, {
-                    header: QUILocale.get('quiqqer/system', 'id'),
+                    header: QUILocale.get('quiqqer/core', 'id'),
                     dataIndex: 'idDisplay',
                     dataType: 'number',
                     width: 60
@@ -116,7 +116,7 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
                     dataIndex: 'id',
                     hidden: true
                 }, {
-                    header: QUILocale.get('quiqqer/system', 'title'),
+                    header: QUILocale.get('quiqqer/core', 'title'),
                     dataIndex: 'title',
                     dataType: 'text',
                     width: 200

@@ -140,14 +140,14 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 }, {
                     name: 'add',
                     textimage: 'fa fa-plus',
-                    text: QUILocale.get('quiqqer/system', 'add'),
+                    text: QUILocale.get('quiqqer/core', 'add'),
                     events: {
                         onClick: this.openAddDialog
                     }
                 }, {
                     name: 'edit',
                     textimage: 'fa fa-edit',
-                    text: QUILocale.get('quiqqer/system', 'edit'),
+                    text: QUILocale.get('quiqqer/core', 'edit'),
                     disabled: true,
                     events: {
                         onClick: function () {
@@ -163,7 +163,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 }, {
                     name: 'delete',
                     textimage: 'fa fa-trash',
-                    text: QUILocale.get('quiqqer/system', 'delete'),
+                    text: QUILocale.get('quiqqer/core', 'delete'),
                     disabled: true,
                     events: {
                         onClick: this.openRemoveDialog
@@ -176,7 +176,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                     dataType: 'node',
                     width: 60
                 }, {
-                    header: QUILocale.get('quiqqer/system', 'title'),
+                    header: QUILocale.get('quiqqer/core', 'title'),
                     dataIndex: 'title',
                     dataType: 'string',
                     width: 180
@@ -463,7 +463,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 events: {
                     onOpen: function (Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
-                            title: QUILocale.get('quiqqer/system', 'title'),
+                            title: QUILocale.get('quiqqer/core', 'title'),
                             priceTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.priceTitle'),
                             deduction: QUILocale.get(lg, 'fields.control.productAttributeList.create.deduction'),
                             selectedTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.selected'),
@@ -517,7 +517,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 events: {
                     onOpen: function (Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
-                            title: QUILocale.get('quiqqer/system', 'title'),
+                            title: QUILocale.get('quiqqer/core', 'title'),
                             priceTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.priceTitle'),
                             deduction: QUILocale.get(lg, 'fields.control.productAttributeList.create.deduction'),
                             selectedTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.selected'),

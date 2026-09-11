@@ -132,14 +132,14 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                 }, {
                     name: 'add',
                     textimage: 'fa fa-plus',
-                    text: QUILocale.get('quiqqer/system', 'add'),
+                    text: QUILocale.get('quiqqer/core', 'add'),
                     events: {
                         onClick: this.openAddDialog
                     }
                 }, {
                     name: 'edit',
                     textimage: 'fa fa-edit',
-                    text: QUILocale.get('quiqqer/system', 'edit'),
+                    text: QUILocale.get('quiqqer/core', 'edit'),
                     disabled: true,
                     events: {
                         onClick: function () {
@@ -155,7 +155,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                 }, {
                     name: 'delete',
                     textimage: 'fa fa-trash',
-                    text: QUILocale.get('quiqqer/system', 'delete'),
+                    text: QUILocale.get('quiqqer/core', 'delete'),
                     disabled: true,
                     events: {
                         onClick: this.openRemoveDialog
@@ -174,7 +174,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                     dataType: 'node',
                     width: 60
                 }, {
-                    header: QUILocale.get('quiqqer/system', 'title'),
+                    header: QUILocale.get('quiqqer/core', 'title'),
                     dataIndex: 'title',
                     dataType: 'string',
                     width: 75
