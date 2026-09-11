@@ -81,13 +81,13 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
                     width: 80,
                     sortable: false
                 }, {
-                    header: QUILocale.get('quiqqer/system', 'id'),
+                    header: QUILocale.get('quiqqer/core', 'id'),
                     dataIndex: 'id',
                     dataType: 'number',
                     width: 60,
                     sortable: true
                 }, {
-                    header: QUILocale.get('quiqqer/system', 'title'),
+                    header: QUILocale.get('quiqqer/core', 'title'),
                     dataIndex: 'title',
                     dataType: 'text',
                     width: 200,

@@ -95,7 +95,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             this.addButton({
                 name: 'save',
                 textimage: 'fa fa-save',
-                text: QUILocale.get('quiqqer/system', 'save'),
+                text: QUILocale.get('quiqqer/core', 'save'),
                 events: {
                     onClick: this.save
                 }
@@ -150,10 +150,10 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             // html
             Content.set({
                 html: Mustache.render(template, {
-                    textData: QUILocale.get('quiqqer/system', 'data'),
-                    textId: QUILocale.get('quiqqer/system', 'id'),
-                    textTitle: QUILocale.get('quiqqer/system', 'title'),
-                    textDescription: QUILocale.get('quiqqer/system', 'description'),
+                    textData: QUILocale.get('quiqqer/core', 'data'),
+                    textId: QUILocale.get('quiqqer/core', 'id'),
+                    textTitle: QUILocale.get('quiqqer/core', 'title'),
+                    textDescription: QUILocale.get('quiqqer/core', 'description'),
                     textParent: QUILocale.get(lg, 'control.category.update.title.parent'),
                     textFields: QUILocale.get(lg, 'control.category.update.title.fields'),
                     textSites: QUILocale.get(lg, 'control.category.update.title.sites'),
@@ -217,12 +217,12 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     }
                 }],
                 columnModel: [{
-                    header: QUILocale.get('quiqqer/system', 'id'),
+                    header: QUILocale.get('quiqqer/core', 'id'),
                     dataIndex: 'id',
                     dataType: 'number',
                     width: 60
                 }, {
-                    header: QUILocale.get('quiqqer/system', 'title'),
+                    header: QUILocale.get('quiqqer/core', 'title'),
                     dataIndex: 'title',
                     dataType: 'text',
                     width: 200
@@ -372,17 +372,17 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                         }
                     }],
                     columnModel: [{
-                        header: QUILocale.get('quiqqer/system', 'id'),
+                        header: QUILocale.get('quiqqer/core', 'id'),
                         dataIndex: 'id',
                         dataType: 'number',
                         width: 60
                     }, {
-                        header: QUILocale.get('quiqqer/system', 'title'),
+                        header: QUILocale.get('quiqqer/core', 'title'),
                         dataIndex: 'title',
                         dataType: 'text',
                         width: 200
                     }, {
-                        header: QUILocale.get('quiqqer/system', 'description'),
+                        header: QUILocale.get('quiqqer/core', 'description'),
                         dataIndex: 'description',
                         dataType: 'text',
                         width: 200
@@ -447,17 +447,17 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 this.$grids.Sites = new Grid(SitesContainer, {
                     perPage: 150,
                     columnModel: [{
-                        header: QUILocale.get('quiqqer/system', 'id'),
+                        header: QUILocale.get('quiqqer/core', 'id'),
                         dataIndex: 'id',
                         dataType: 'number',
                         width: 60
                     }, {
-                        header: QUILocale.get('quiqqer/system', 'project'),
+                        header: QUILocale.get('quiqqer/core', 'project'),
                         dataIndex: 'project',
                         dataType: 'text',
                         width: 200
                     }, {
-                        header: QUILocale.get('quiqqer/system', 'language'),
+                        header: QUILocale.get('quiqqer/core', 'language'),
                         dataIndex: 'lang',
                         dataType: 'text',
                         width: 100
@@ -1020,7 +1020,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     autoclose: false,
                     ok_button: {
                         textimage: 'fa fa-chain-broken',
-                        text: QUILocale.get('quiqqer/system', 'remove')
+                        text: QUILocale.get('quiqqer/core', 'remove')
                     },
                     events: {
                         onSubmit: function (Win) {

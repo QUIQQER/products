@@ -70,7 +70,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 html: Mustache.render(template, {
                     contentText: '',
                     tableHeader: QUILocale.get(lg, 'control.field.create.header'),
-                    fieldTitle: QUILocale.get('quiqqer/system', 'title'),
+                    fieldTitle: QUILocale.get('quiqqer/core', 'title'),
                     fieldWorkingTitle: QUILocale.get(lg, 'workingTitle'),
                     fieldType: QUILocale.get(lg, 'fieldtype'),
                     fieldOptions: QUILocale.get(lg, 'fieldoptions'),

@@ -2710,7 +2710,7 @@ class Model extends QUI\QDOM
         if (!$this->hasPermission($permission, $User)) {
             throw new QUI\Permissions\Exception(
                 QUI::getLocale()->get(
-                    'quiqqer/system',
+                    'quiqqer/core',
                     'exception.no.permission'
                 ),
                 403,

@@ -73,7 +73,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         if ($isAllowed === false) {
             throw new QUI\Permissions\Exception(
                 QUI::getLocale()->get(
-                    'quiqqer/system',
+                    'quiqqer/core',
                     'exception.no.permission'
                 ),
                 Response::HTTP_FORBIDDEN
