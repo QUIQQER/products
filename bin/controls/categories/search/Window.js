@@ -31,11 +31,11 @@ define('package/quiqqer/products/bin/controls/categories/search/Window', [
             message: false,
 
             cancel_button: {
-                text: QUILocale.get('quiqqer/system', 'cancel'),
+                text: QUILocale.get('quiqqer/core', 'cancel'),
                 textimage: 'fa fa-remove'
             },
             ok_button: {
-                text: QUILocale.get('quiqqer/system', 'accept'),
+                text: QUILocale.get('quiqqer/core', 'accept'),
                 textimage: 'fa fa-search'
             }
         },

@@ -86,7 +86,7 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
             // buttons
             this.addButton({
                 name: 'add',
-                text: QUILocale.get('quiqqer/system', 'add'),
+                text: QUILocale.get('quiqqer/core', 'add'),
                 textimage: 'fa fa-plus',
                 events: {
                     onClick: this.createChild
@@ -95,7 +95,7 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
 
             this.addButton({
                 name: 'edit',
-                text: QUILocale.get('quiqqer/system', 'edit'),
+                text: QUILocale.get('quiqqer/core', 'edit'),
                 textimage: 'fa fa-edit',
                 disabled: true,
                 events: {
@@ -113,7 +113,7 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
 
             this.addButton({
                 name: 'delete',
-                text: QUILocale.get('quiqqer/system', 'delete'),
+                text: QUILocale.get('quiqqer/core', 'delete'),
                 textimage: 'fa fa-trash',
                 disabled: true,
                 events: {
@@ -186,7 +186,7 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
 
                         Sheet.addButton(
                             new QUIButton({
-                                text: QUILocale.get('quiqqer/system', 'save'),
+                                text: QUILocale.get('quiqqer/core', 'save'),
                                 textimage: 'fa fa-save',
                                 events: {
                                     onClick: function () {

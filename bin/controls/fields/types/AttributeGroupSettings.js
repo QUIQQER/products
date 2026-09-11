@@ -138,7 +138,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                     {
                         name: 'add',
                         textimage: 'fa fa-plus',
-                        text: QUILocale.get('quiqqer/system', 'add'),
+                        text: QUILocale.get('quiqqer/core', 'add'),
                         events: {
                             onClick: this.openAddDialog
                         }
@@ -146,7 +146,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                     {
                         name: 'edit',
                         textimage: 'fa fa-edit',
-                        text: QUILocale.get('quiqqer/system', 'edit'),
+                        text: QUILocale.get('quiqqer/core', 'edit'),
                         disabled: true,
                         events: {
                             onClick: function() {
@@ -164,7 +164,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                     {
                         name: 'delete',
                         textimage: 'fa fa-trash',
-                        text: QUILocale.get('quiqqer/system', 'delete'),
+                        text: QUILocale.get('quiqqer/core', 'delete'),
                         disabled: true,
                         events: {
                             onClick: this.openRemoveDialog
@@ -180,7 +180,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                         width: 30
                     },
                     {
-                        header: QUILocale.get('quiqqer/system', 'title'),
+                        header: QUILocale.get('quiqqer/core', 'title'),
                         dataIndex: 'title',
                         dataType: 'string',
                         width: 200
@@ -443,7 +443,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                 events: {
                     onOpen: function(Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
-                            title: QUILocale.get('quiqqer/system', 'title'),
+                            title: QUILocale.get('quiqqer/core', 'title'),
                             valueId: QUILocale.get(lg, 'fields.control.attributeGroup.create.valueId'),
                             selectedTitle: QUILocale.get(lg, 'fields.control.attributeGroup.create.selected'),
                             labelImage: QUILocale.get(lg, 'fields.control.attributeGroup.create.labelImage')
@@ -512,7 +512,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                 events: {
                     onOpen: function(Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
-                            title: QUILocale.get('quiqqer/system', 'title'),
+                            title: QUILocale.get('quiqqer/core', 'title'),
                             valueId: QUILocale.get(lg, 'fields.control.attributeGroup.create.valueId'),
                             selectedTitle: QUILocale.get(lg, 'fields.control.attributeGroup.create.selected'),
                             labelImage: QUILocale.get(lg, 'fields.control.attributeGroup.create.labelImage')

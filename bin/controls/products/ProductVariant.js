@@ -442,13 +442,13 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         width: 60
                     },
                     {
-                        header: QUILocale.get('quiqqer/system', 'status'),
+                        header: QUILocale.get('quiqqer/core', 'status'),
                         dataIndex: 'status',
                         dataType: 'node',
                         width: 60
                     },
                     {
-                        header: QUILocale.get('quiqqer/system', 'id'),
+                        header: QUILocale.get('quiqqer/core', 'id'),
                         dataIndex: 'id',
                         dataType: 'number',
                         width: 50
@@ -461,7 +461,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         sortable: false
                     },
                     {
-                        header: QUILocale.get('quiqqer/system', 'title'),
+                        header: QUILocale.get('quiqqer/core', 'title'),
                         dataIndex: 'title',
                         dataType: 'text',
                         width: 200,
@@ -493,13 +493,13 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 // end colums
                 columns = columns.concat([
                     {
-                        header: QUILocale.get('quiqqer/system', 'editdate'),
+                        header: QUILocale.get('quiqqer/core', 'editdate'),
                         dataIndex: 'e_date',
                         dataType: 'text',
                         width: 160
                     },
                     {
-                        header: QUILocale.get('quiqqer/system', 'createdate'),
+                        header: QUILocale.get('quiqqer/core', 'createdate'),
                         dataIndex: 'c_date',
                         dataType: 'text',
                         width: 160
@@ -1327,7 +1327,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         onSubmit: self.$deleteVariants
                     },
                     ok_button: {
-                        text: QUILocale.get('quiqqer/system', 'delete'),
+                        text: QUILocale.get('quiqqer/core', 'delete'),
                         textimage: 'fa fa-trash'
                     }
                 }).open();
