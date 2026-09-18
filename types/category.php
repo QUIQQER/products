@@ -352,11 +352,12 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         $ProductList->setAttribute('forceMobileFilter', true);
     }
 
-    $hasFilter = (QUI::getRequest()->get('search')
-        || QUI::getRequest()->get('f')
-        || QUI::getRequest()->get('t')
-        || QUI::getRequest()->get('sortBy')
-        || QUI::getRequest()->get('sortOn')
+    $queryParameters = QUI::getRequest()->query->all();
+    $hasFilter = (!empty($queryParameters['search'])
+        || !empty($queryParameters['f'])
+        || !empty($queryParameters['t'])
+        || !empty($queryParameters['sortBy'])
+        || !empty($queryParameters['sortOn'])
     );
 
     if ($hasFilter) {
