@@ -1504,11 +1504,28 @@ class EventHandling
      */
     public static function onQuiqqerTranslatorEditById($id, $data): void
     {
-        $group = $data['groups'];
-        $var = $data['var'];
-        $package = $data['package'];
+        $entry = $data;
 
-        self::onQuiqqerTranslatorEdit($group, $var, $package, $data);
+        // editById also accepts partial updates containing only translation values.
+        if (!isset($entry['groups'], $entry['var'], $entry['package'])) {
+            $entry = QUI::getDataBaseConnection()->fetchAssociative(
+                'SELECT ' . QUI\Utils\Doctrine::quoteIdentifier('groups') . ', '
+                . QUI\Utils\Doctrine::quoteIdentifier('var') . ', package FROM '
+                . QUI\Utils\Doctrine::quoteIdentifier(QUI\Translator::table()) . ' WHERE id = ?',
+                [(int)$id]
+            );
+
+            if ($entry === false) {
+                return;
+            }
+        }
+
+        self::onQuiqqerTranslatorEdit(
+            $entry['groups'],
+            $entry['var'],
+            (string)($entry['package'] ?? ''),
+            $data
+        );
     }
 
     /**
