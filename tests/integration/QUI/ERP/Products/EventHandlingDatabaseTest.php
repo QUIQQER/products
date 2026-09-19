@@ -436,6 +436,35 @@ class EventHandlingDatabaseTest extends TestCase
             json_decode($cached['description_cache'], true, 512, JSON_THROW_ON_ERROR)['var']
         );
 
+        // The translator's ID-based API sends changed fields without metadata.
+        foreach (['title', 'description'] as $field) {
+            $translationId = (int)$Connection->fetchOne(
+                'SELECT id FROM ' . QUI\Translator::table()
+                . ' WHERE ' . $groupsColumn . ' = ? AND ' . $varColumn . ' = ?',
+                ['quiqqer/products', 'products.category.7701.' . $field]
+            );
+            $Connection->update(Tables::getCategoryTableName(), [
+                'title_cache' => '',
+                'description_cache' => ''
+            ], ['id' => 7701]);
+            // Translation entries may legitimately have no package.
+            $Connection->update(QUI\Translator::table(), ['package' => null], ['id' => $translationId]);
+
+            EventHandling::onQuiqqerTranslatorEditById($translationId, ['de' => 'Updated translation']);
+
+            $cached = $Connection->fetchAssociative(
+                'SELECT title_cache, description_cache FROM ' . Tables::getCategoryTableName() . ' WHERE id = 7701'
+            );
+            self::assertIsArray($cached);
+
+            foreach (['title', 'description'] as $cachedField) {
+                self::assertSame(
+                    'products.category.7701.' . $cachedField,
+                    json_decode($cached[$cachedField . '_cache'], true, 512, JSON_THROW_ON_ERROR)['var']
+                );
+            }
+        }
+
         EventHandling::onQuiqqerTranslatorEditById(1, [
             'groups' => 'quiqqer/products',
             'var' => 'products.category.7701.description',
@@ -455,6 +484,37 @@ class EventHandlingDatabaseTest extends TestCase
                 512,
                 JSON_THROW_ON_ERROR
             )['var']
+        );
+    }
+
+    public function testTranslatorEditByIdIgnoresOtherGroupsAndMissingEntries(): void
+    {
+        $Connection = QUI::getDataBaseConnection();
+        $Connection->insert(Tables::getCategoryTableName(), [
+            'id' => 7701,
+            'title_cache' => 'unchanged title',
+            'description_cache' => 'unchanged description'
+        ]);
+        $Connection->insert(QUI\Translator::table(), [
+            QUI\Utils\Doctrine::quoteIdentifier('groups') => 'vendor/other',
+            QUI\Utils\Doctrine::quoteIdentifier('var') => 'products.category.7701.title',
+            'package' => null
+        ]);
+        $translationId = (int)$Connection->lastInsertId();
+
+        try {
+            EventHandling::onQuiqqerTranslatorEditById($translationId, ['de' => 'Unrelated translation']);
+        } finally {
+            $Connection->delete(QUI\Translator::table(), ['id' => $translationId]);
+        }
+
+        EventHandling::onQuiqqerTranslatorEditById($translationId, ['de' => 'Missing translation']);
+
+        self::assertSame(
+            ['title_cache' => 'unchanged title', 'description_cache' => 'unchanged description'],
+            $Connection->fetchAssociative(
+                'SELECT title_cache, description_cache FROM ' . Tables::getCategoryTableName() . ' WHERE id = 7701'
+            )
         );
     }
 }
