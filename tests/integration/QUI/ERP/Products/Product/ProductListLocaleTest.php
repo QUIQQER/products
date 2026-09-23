@@ -9,12 +9,23 @@ use QUI\ERP\Products\Product\ProductList;
 use QUI\ERP\Products\Product\UniqueProduct;
 use QUI\Locale;
 use QUITests\ERP\Products\Fixtures\TestUser;
+use QUITests\ERP\Products\Integration\IntegrationTestEnvironment;
 use RuntimeException;
 
 class ProductListLocaleTest extends TestCase
 {
     private Locale $OriginalLocale;
     private Locale $English;
+
+    public static function setUpBeforeClass(): void
+    {
+        IntegrationTestEnvironment::ensureDefaults();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        IntegrationTestEnvironment::cleanup();
+    }
 
     protected function setUp(): void
     {
