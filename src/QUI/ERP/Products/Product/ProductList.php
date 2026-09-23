@@ -430,64 +430,70 @@ class ProductList
             $Locale = $this->User->getLocale();
         }
 
-        QUI\ERP\Products\Handler\Products::setLocale($Locale);
+        $PreviousLocale = QUI\ERP\Products\Handler\Products::getLocale();
 
-        $this->calc();
-        $products = [];
+        try {
+            QUI\ERP\Products\Handler\Products::setLocale($Locale);
 
-        foreach ($this->products as $Product) {
-            $attributes = $Product->getAttributes();
-            $attributes['uuid'] = $Product->getUuid();
+            $this->calc();
+            $products = [];
 
-            $fields = $Product->getFields();
+            foreach ($this->products as $Product) {
+                $attributes = $Product->getAttributes();
+                $attributes['uuid'] = $Product->getUuid();
 
-            $attributes['fields'] = [];
+                $fields = $Product->getFields();
 
-            foreach ($fields as $Field) {
-                $attributes['fields'][] = $Field->getAttributes();
+                $attributes['fields'] = [];
+
+                foreach ($fields as $Field) {
+                    $attributes['fields'][] = $Field->getAttributes();
+                }
+
+                $products[] = $attributes;
             }
 
-            $products[] = $attributes;
+            // display data
+            $Currency = $this->getCurrency();
+
+            $calculations = [
+                'sum' => $this->sum,
+                'subSum' => $this->subSum,
+                'grandSubSum' => $this->grandSubSum,
+                'nettoSum' => $this->nettoSum,
+                'nettoSubSum' => $this->nettoSubSum,
+                'vatArray' => $this->vatArray,
+                'vatText' => $this->vatText,
+                'isEuVat' => $this->isEuVat,
+                'isNetto' => $this->isNetto,
+                'currencyData' => $this->currencyData
+            ];
+
+            $calculations['vatSum'] = QUI\ERP\Accounting\Calc::calculateTotalVatOfInvoice(
+                $calculations['vatArray']
+            );
+
+            $calculations['display_subSum'] = $Currency->format($calculations['subSum']);
+            $calculations['display_sum'] = $Currency->format($calculations['sum']);
+            $calculations['display_vatSum'] = $Currency->format($calculations['vatSum']);
+
+            return [
+                'products' => $products,
+                'sum' => $this->sum,
+                'subSum' => $this->subSum,
+                'grandSubSum' => $this->grandSubSum,
+                'nettoSum' => $this->nettoSum,
+                'nettoSubSum' => $this->nettoSubSum,
+                'vatArray' => $this->vatArray,
+                'vatText' => $this->vatText,
+                'isEuVat' => $this->isEuVat,
+                'isNetto' => $this->isNetto,
+                'currencyData' => $this->currencyData,
+                'calculations' => $calculations
+            ];
+        } finally {
+            QUI\ERP\Products\Handler\Products::setLocale($PreviousLocale);
         }
-
-        // display data
-        $Currency = $this->getCurrency();
-
-        $calculations = [
-            'sum' => $this->sum,
-            'subSum' => $this->subSum,
-            'grandSubSum' => $this->grandSubSum,
-            'nettoSum' => $this->nettoSum,
-            'nettoSubSum' => $this->nettoSubSum,
-            'vatArray' => $this->vatArray,
-            'vatText' => $this->vatText,
-            'isEuVat' => $this->isEuVat,
-            'isNetto' => $this->isNetto,
-            'currencyData' => $this->currencyData
-        ];
-
-        $calculations['vatSum'] = QUI\ERP\Accounting\Calc::calculateTotalVatOfInvoice(
-            $calculations['vatArray']
-        );
-
-        $calculations['display_subSum'] = $Currency->format($calculations['subSum']);
-        $calculations['display_sum'] = $Currency->format($calculations['sum']);
-        $calculations['display_vatSum'] = $Currency->format($calculations['vatSum']);
-
-        return [
-            'products' => $products,
-            'sum' => $this->sum,
-            'subSum' => $this->subSum,
-            'grandSubSum' => $this->grandSubSum,
-            'nettoSum' => $this->nettoSum,
-            'nettoSubSum' => $this->nettoSubSum,
-            'vatArray' => $this->vatArray,
-            'vatText' => $this->vatText,
-            'isEuVat' => $this->isEuVat,
-            'isNetto' => $this->isNetto,
-            'currencyData' => $this->currencyData,
-            'calculations' => $calculations
-        ];
     }
 
     /**
