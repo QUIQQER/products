@@ -75,6 +75,54 @@ class CalcProductListIntegrationTest extends ProductIntegrationTestCase
         );
     }
 
+    public function testExportLanguageDoesNotChangePricesOrTaxForTheSameCustomer(): void
+    {
+        $PreviousLocale = \QUI\ERP\Products\Handler\Products::getLocale();
+        $English = new \QUI\Locale();
+        $English->setCurrent('en');
+        $User = new TestUser(TestUser::TYPE_BRUTTO);
+        $Area = \QUI\ERP\Utils\User::getUserArea($User);
+        $results = [];
+
+        try {
+            \QUI\ERP\Products\Handler\Products::setLocale($English);
+
+            foreach (['en', 'de'] as $language) {
+                $Locale = new \QUI\Locale();
+                $Locale->setCurrent($language);
+                $Product = ProductTestHelper::createProduct('export-language-' . $language, 100)
+                    ->createUniqueProduct($User);
+                $List = new ProductList([], $User);
+                $List->addProduct($Product);
+                $Fee = new PriceFactor([
+                    'title' => 'handling fee',
+                    'calculation' => ErpCalc::CALCULATION_COMPLEMENT,
+                    'value' => 10
+                ]);
+                $Fee->setVat(19);
+                $List->getPriceFactors()->add($Fee);
+                $results[$language] = $List->toArray($Locale);
+
+                self::assertSame($English, \QUI\ERP\Products\Handler\Products::getLocale());
+                self::assertSame($User, $List->getUser());
+                self::assertEquals($Area, \QUI\ERP\Utils\User::getUserArea($User));
+            }
+
+            foreach (['sum', 'subSum', 'grandSubSum', 'nettoSum', 'nettoSubSum', 'isEuVat', 'isNetto'] as $key) {
+                self::assertSame($results['en'][$key], $results['de'][$key]);
+            }
+
+            self::assertSame(19, $results['en']['vatArray'][19]['vat']);
+            self::assertSame($results['en']['vatArray'][19]['vat'], $results['de']['vatArray'][19]['vat']);
+            self::assertSame($results['en']['vatArray'][19]['sum'], $results['de']['vatArray'][19]['sum']);
+            self::assertGreaterThan(0, $results['en']['vatArray'][19]['sum']);
+            self::assertNotSame($results['en']['vatArray'][19]['text'], $results['de']['vatArray'][19]['text']);
+        } finally {
+            \QUI\ERP\Products\Handler\Products::setLocale($PreviousLocale);
+        }
+    }
+
+
     public function testIgnoringVatTreatsBruttoCustomerAsNetto(): void
     {
         $User = new TestUser(TestUser::TYPE_BRUTTO);
