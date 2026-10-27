@@ -908,8 +908,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 const image = data[2] ? URL_DIR + data[2] : false;
 
-                console.log(data);
-
                 Container.set({
                     html: Mustache.render(informationTemplate, {
                         id: productId,
