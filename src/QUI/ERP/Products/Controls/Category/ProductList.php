@@ -717,19 +717,7 @@ class ProductList extends QUI\Control
      */
     protected function getSearchParams(int $start = 0, bool | int $max = false): mixed
     {
-        $searchParams = $this->getAttribute('searchParams');
-
-        if (!is_array($searchParams)) {
-            $searchParams = [];
-        }
-
-        if ($this->getCategory()) {
-            $searchParams['category'] = $this->getCategory()->getId();
-        }
-
-        if (!isset($searchParams['freetext'])) {
-            $searchParams['freetext'] = '';
-        }
+        $searchParams = $this->getCountParams();
 
         if (!$max) {
             $max = $this->getMax();
@@ -737,10 +725,6 @@ class ProductList extends QUI\Control
 
         $searchParams['sheet'] = round($start / $max) + 1;
         $searchParams['limit'] = $max;
-
-        $searchParams['categoryProductSearchType'] = $this->getAttribute('categoryProductSearchType');
-
-//        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
 
         return $searchParams;
     }
@@ -766,7 +750,7 @@ class ProductList extends QUI\Control
             $searchParams['freetext'] = '';
         }
 
-//        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
+        $searchParams['categoryProductSearchType'] = $this->getAttribute('categoryProductSearchType');
 
         return $searchParams;
     }
