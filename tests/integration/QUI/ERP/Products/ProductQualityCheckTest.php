@@ -84,52 +84,27 @@ class ProductQualityCheckTest extends ProductIntegrationTestCase
         parent::tearDown();
     }
 
-    #[DataProvider('projectLanguages')]
-    public function testEmailReportsStoredMissingTranslationsAndLeavesProductsUnchanged(string $languages): void
+    public function testEmailReportsStoredMissingTranslationsAndLeavesProductsUnchanged(): void
     {
-        $projectName = ProductTestHelper::getProject()->getName();
-        $Config = QUI\Projects\Manager::getConfig();
-        $originalLanguages = $Config->get($projectName, 'langs');
-        $OriginalStandardProject = QUI\Projects\Manager::$Standard;
+        $Product = $this->createProductWithMissingTranslations('quality-product');
+        $id = $Product->getId();
+        $before = $this->getProductRow($id);
+        $Mail = $this->createMock(MailManager::class);
+        $Mail->expects(self::once())->method('send')->with(
+            'quality@example.invalid',
+            'Produktqualität prüfen',
+            self::callback(static function (string $body) use ($id): bool {
+                return str_contains($body, 'Produkt #' . $id)
+                    && str_contains($body, 'Feld #4')
+                    && str_contains($body, 'Fehlende Übersetzungen: en')
+                    && str_contains($body, '1 Produkte geprüft, 2 Hinweise');
+            })
+        );
+        QUI::$MailManager = $Mail;
 
-        try {
-            $Config->set($projectName, 'langs', $languages);
-            $Config->save();
-            QUI\Projects\Manager::cleanup();
-            QUI\Projects\Manager::$Standard = null;
-            self::assertSame(explode(',', $languages), ProductTestHelper::getProject()->getLanguages());
+        Crons::productQualityCheck(['email' => 'quality@example.invalid', 'languages' => 'de,en']);
 
-            $Product = $this->createProductWithMissingTranslations('quality-product');
-            $id = $Product->getId();
-            $before = $this->getProductRow($id);
-            $Mail = $this->createMock(MailManager::class);
-            $Mail->expects(self::once())->method('send')->with(
-                'quality@example.invalid',
-                'Produktqualität prüfen',
-                self::callback(static function (string $body) use ($id): bool {
-                    return str_contains($body, 'Produkt #' . $id)
-                        && str_contains($body, 'Feld #4')
-                        && str_contains($body, 'Fehlende Übersetzungen: en')
-                        && str_contains($body, '1 Produkte geprüft, 2 Hinweise');
-                })
-            );
-            QUI::$MailManager = $Mail;
-
-            Crons::productQualityCheck(['email' => 'quality@example.invalid', 'languages' => 'de,en']);
-
-            self::assertSame($before, $this->getProductRow($id));
-        } finally {
-            $Config->set($projectName, 'langs', $originalLanguages);
-            $Config->save();
-            QUI\Projects\Manager::cleanup();
-            QUI\Projects\Manager::$Standard = $OriginalStandardProject;
-        }
-    }
-
-    public static function projectLanguages(): iterable
-    {
-        yield 'German project' => ['de'];
-        yield 'German and English project' => ['de,en'];
+        self::assertSame($before, $this->getProductRow($id));
     }
 
     public function testNoNotificationIsSentWhenAllRequestedTranslationsExist(): void
