@@ -144,3 +144,24 @@ test('failed readiness clears the loader without executing the initial search', 
     assert.ok(!actions.includes('refresh'));
     assert.ok(!actions.includes('quiqqerProductsPanelSearchReady'));
 });
+
+test('superseded grid resize animations do not keep the initial loader visible', async () => {
+    const {panel, actions, resolveReady} = loadPanel();
+    panel.$initialLoad = true;
+    panel.$onInject();
+    panel.getSearch().show = () => {
+        actions.push('showSearch');
+        // Core grid animations can be replaced by a resize without settling their original promise.
+        return new Promise(() => {});
+    };
+
+    resolveReady();
+    await new Promise(resolve => setImmediate(resolve));
+
+    assert.ok(actions.includes('refresh'));
+    assert.ok(actions.includes('showSearch'));
+    assert.ok(actions.includes('hideLoader'));
+    assert.equal(panel.$initialLoad, false);
+    assert.equal(panel.getContent().style.visibility, '');
+    assert.equal(panel.getButtonBar().getElm().style.visibility, '');
+});

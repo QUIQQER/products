@@ -342,8 +342,11 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 this.$CategoriesButton.getElm().setAttribute('aria-controls', this.$Search.getCategoriesId());
                 QUI.fireEvent('quiqqerProductsPanelSearchReady', [this, this.$Search]);
                 return this.refresh();
-            }).then(() => this.$Search.show()).then(() => {
+            }).then(() => {
+                const showing = this.$Search.show();
+                // A later grid resize can replace its animation without settling this promise.
                 this.$finishInitialLoad();
+                return showing;
             }).catch(error => {
                 this.$finishInitialLoad();
                 console.error(error);
