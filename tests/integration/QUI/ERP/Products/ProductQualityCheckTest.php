@@ -5,6 +5,9 @@ namespace QUITests\ERP\Products\Integration;
 use PHPUnit\Framework\Attributes\DataProvider;
 use QUI;
 use QUI\ERP\Products\Crons;
+use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Product\Types\AbstractType;
 use QUI\ERP\Products\Utils\Tables;
 use QUI\Mail\Manager as MailManager;
 use QUI\Messages\Handler as MessagesHandler;
@@ -81,27 +84,52 @@ class ProductQualityCheckTest extends ProductIntegrationTestCase
         parent::tearDown();
     }
 
-    public function testEmailReportsStoredMissingTranslationsAndLeavesProductsUnchanged(): void
+    #[DataProvider('projectLanguages')]
+    public function testEmailReportsStoredMissingTranslationsAndLeavesProductsUnchanged(string $languages): void
     {
-        $Product = ProductTestHelper::createProduct('quality-product');
-        $id = $Product->getId();
-        $before = $this->getProductRow($id);
-        $Mail = $this->createMock(MailManager::class);
-        $Mail->expects(self::once())->method('send')->with(
-            'quality@example.invalid',
-            'Produktqualität prüfen',
-            self::callback(static function (string $body) use ($id): bool {
-                return str_contains($body, 'Produkt #' . $id)
-                    && str_contains($body, 'Feld #4')
-                    && str_contains($body, 'Fehlende Übersetzungen: en')
-                    && str_contains($body, '1 Produkte geprüft, 2 Hinweise');
-            })
-        );
-        QUI::$MailManager = $Mail;
+        $projectName = ProductTestHelper::getProject()->getName();
+        $Config = QUI\Projects\Manager::getConfig();
+        $originalLanguages = $Config->get($projectName, 'langs');
+        $OriginalStandardProject = QUI\Projects\Manager::$Standard;
 
-        Crons::productQualityCheck(['email' => 'quality@example.invalid', 'languages' => 'de,en']);
+        try {
+            $Config->set($projectName, 'langs', $languages);
+            $Config->save();
+            QUI\Projects\Manager::cleanup();
+            QUI\Projects\Manager::$Standard = null;
+            self::assertSame(explode(',', $languages), ProductTestHelper::getProject()->getLanguages());
 
-        self::assertSame($before, $this->getProductRow($id));
+            $Product = $this->createProductWithMissingTranslations('quality-product');
+            $id = $Product->getId();
+            $before = $this->getProductRow($id);
+            $Mail = $this->createMock(MailManager::class);
+            $Mail->expects(self::once())->method('send')->with(
+                'quality@example.invalid',
+                'Produktqualität prüfen',
+                self::callback(static function (string $body) use ($id): bool {
+                    return str_contains($body, 'Produkt #' . $id)
+                        && str_contains($body, 'Feld #4')
+                        && str_contains($body, 'Fehlende Übersetzungen: en')
+                        && str_contains($body, '1 Produkte geprüft, 2 Hinweise');
+                })
+            );
+            QUI::$MailManager = $Mail;
+
+            Crons::productQualityCheck(['email' => 'quality@example.invalid', 'languages' => 'de,en']);
+
+            self::assertSame($before, $this->getProductRow($id));
+        } finally {
+            $Config->set($projectName, 'langs', $originalLanguages);
+            $Config->save();
+            QUI\Projects\Manager::cleanup();
+            QUI\Projects\Manager::$Standard = $OriginalStandardProject;
+        }
+    }
+
+    public static function projectLanguages(): iterable
+    {
+        yield 'German project' => ['de'];
+        yield 'German and English project' => ['de,en'];
     }
 
     public function testNoNotificationIsSentWhenAllRequestedTranslationsExist(): void
@@ -113,7 +141,7 @@ class ProductQualityCheckTest extends ProductIntegrationTestCase
 
     public function testEmptyEmailRecipientUsesTheConfiguredAdministratorAddress(): void
     {
-        ProductTestHelper::createProduct('quality-admin');
+        $this->createProductWithMissingTranslations('quality-admin');
         $Mail = $this->createMock(MailManager::class);
         $Mail->expects(self::once())->method('send')->with(
             'admin@example.invalid',
@@ -127,7 +155,7 @@ class ProductQualityCheckTest extends ProductIntegrationTestCase
 
     public function testBackendRecipientsCanBeSelectedWithoutAnEmailAddress(): void
     {
-        ProductTestHelper::createProduct('quality-backend');
+        $this->createProductWithMissingTranslations('quality-backend');
         QUI::$Conf->set('mail', 'admin_mail', '');
         $User = $this->configureBackendUsers(false);
         $Messages = $this->createMock(MessagesHandler::class);
@@ -146,7 +174,7 @@ class ProductQualityCheckTest extends ProductIntegrationTestCase
 
     public function testBothChannelsUseAdministratorDefaultsWhenRecipientsAreEmpty(): void
     {
-        ProductTestHelper::createProduct('quality-both');
+        $this->createProductWithMissingTranslations('quality-both');
         $User = $this->configureBackendUsers(true);
         $Messages = $this->createMock(MessagesHandler::class);
         $Messages->expects(self::once())->method('sendAttention')->with($User, self::anything());
@@ -164,7 +192,7 @@ class ProductQualityCheckTest extends ProductIntegrationTestCase
 
     public function testBackendReportIsPersistedUntilTheRecipientReadsIt(): void
     {
-        ProductTestHelper::createProduct('quality-persisted-message');
+        $this->createProductWithMissingTranslations('quality-persisted-message');
         $User = $this->configureBackendUsers(true);
         MessagesHandler::setup();
         QUI::$MessageHandler = new MessagesHandler();
@@ -200,7 +228,7 @@ class ProductQualityCheckTest extends ProductIntegrationTestCase
 
     public function testReportEscapesDynamicFieldTitles(): void
     {
-        ProductTestHelper::createProduct('quality-escaping');
+        $this->createProductWithMissingTranslations('quality-escaping');
         $attack = '"><script>alert(1)</script>';
         QUI::getLocale()->set('de', 'quiqqer/products', 'products.field.4.title', $attack);
         $Mail = $this->createMock(MailManager::class);
@@ -219,7 +247,7 @@ class ProductQualityCheckTest extends ProductIntegrationTestCase
 
     public function testPaginationChecksAllProductsAndLimitsReportDetails(): void
     {
-        $Product = ProductTestHelper::createProduct('quality-pagination');
+        $Product = $this->createProductWithMissingTranslations('quality-pagination');
         $row = $this->getProductRow($Product->getId());
         unset($row['id']);
 
@@ -245,7 +273,7 @@ class ProductQualityCheckTest extends ProductIntegrationTestCase
     public function testUnreadableProductsAreReportedAndDoNotStopOtherChecks(): void
     {
         $Broken = ProductTestHelper::createProduct('quality-broken');
-        $Valid = ProductTestHelper::createProduct('quality-readable');
+        $Valid = $this->createProductWithMissingTranslations('quality-readable');
         QUI::getDataBaseConnection()->update(
             Tables::getProductTableName(),
             ['type' => 'QUITests\\MissingQualityProductType'],
@@ -313,6 +341,34 @@ class ProductQualityCheckTest extends ProductIntegrationTestCase
         QUI::$Users = $Users;
 
         return $User;
+    }
+
+    private function createProductWithMissingTranslations(string $title): AbstractType
+    {
+        $Product = ProductTestHelper::createProduct($title);
+
+        // The shared helper translates every project language, including English in CI.
+        foreach ([Fields::FIELD_TITLE, Fields::FIELD_URL] as $fieldId) {
+            $Field = $Product->getField($fieldId);
+            $values = $Field->getValue();
+            self::assertIsArray($values);
+            $values['en'] = '';
+            $Field->setValue($values);
+        }
+
+        ProductTestHelper::runAsSystemUser(static function () use ($Product): void {
+            $Product->save();
+        });
+
+        $Reloaded = Products::getNewProductInstance($Product->getId());
+
+        foreach ([Fields::FIELD_TITLE, Fields::FIELD_URL] as $fieldId) {
+            $values = $Reloaded->getField($fieldId)->getValue();
+            self::assertIsArray($values);
+            self::assertSame('', $values['en']);
+        }
+
+        return $Reloaded;
     }
 
     /** @return array<string, mixed> */
