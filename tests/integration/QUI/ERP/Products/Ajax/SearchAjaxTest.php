@@ -5,6 +5,8 @@ namespace QUITests\ERP\Products\Integration\Ajax;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
+use QUI\ERP\Products\Search\BackendSearch;
+use QUI\ERP\Products\Search\SearchQueryCollector;
 use QUI\ERP\Products\Utils\Tables;
 use QUI\Interfaces\Template\EngineInterface;
 use QUITests\ERP\Products\Integration\Product\ProductTestHelper;
@@ -107,6 +109,123 @@ class SearchAjaxTest extends AjaxTestCase
             'total' => 0,
             'page' => 1
         ], $result);
+    }
+
+    public function testBackendGridIncludesConfiguredFieldsAfterStandardColumns(): void
+    {
+        require dirname(__DIR__, 6) . '/ajax/search/backend/execute.php';
+
+        $Product = ProductTestHelper::createProduct('ajax-extra-column', 15.0);
+        $Search = SearchHandler::getBackendSearch();
+        $Config = QUI\ERP\Products\Search\Utils::getConfig();
+        $originalFields = $Config->get('search', 'productSearchFields');
+
+        try {
+            $Search->setProductSearchFields([
+                Fields::FIELD_PRICE => true,
+                Fields::FIELD_SUPPLIER => true
+            ]);
+            QUI::getDataBaseConnection()->update(
+                Tables::getProductCacheTableName(),
+                ['F7' => 'extension-supplier'],
+                ['id' => $Product->getId()]
+            );
+
+            $result = $this->invokeEndpointAsAdmin(
+                'search/backend/executeForGrid.php',
+                'package_quiqqer_products_ajax_search_backend_executeForGrid',
+                json_encode([
+                    'freetext' => '#' . $Product->getId(),
+                    'ignoreFindVariantParentsByChildValues' => true
+                ], JSON_THROW_ON_ERROR)
+            );
+            self::assertCount(1, $result['data']);
+            self::assertSame('extension-supplier', $result['data'][0]['F7']);
+        } finally {
+            if ($originalFields === false) {
+                $Config->del('search', 'productSearchFields');
+            } else {
+                $Config->set('search', 'productSearchFields', $originalFields);
+            }
+
+            $Config->save();
+        }
+    }
+
+    public function testBackendGridExtensionEnrichesRowsAndPreservesTotalOnEmptyPages(): void
+    {
+        require dirname(__DIR__, 6) . '/ajax/search/backend/execute.php';
+
+        $Product = ProductTestHelper::createProduct('ajax-extension-product', 15.0);
+        $Filter = static function (SearchQueryCollector $Collector): void {
+            $params = $Collector->getSearchParams();
+
+            if (($params['context'] ?? '') !== 'phpunit.extensions') {
+                return;
+            }
+
+            $Collector->addWhere('id = :extensionProductId', [
+                'extensionProductId' => [
+                    'value' => $params['extensions']['productId'],
+                    'type' => \Doctrine\DBAL\ParameterType::INTEGER
+                ]
+            ]);
+        };
+        $calls = [];
+        $Enrich = static function (
+            array &$rows,
+            array $productIds,
+            array $params,
+            BackendSearch $Search
+        ) use (&$calls): void {
+            self::assertSame('phpunit.extensions', $params['context']);
+            self::assertInstanceOf(BackendSearch::class, $Search);
+            self::assertSame(array_map('intval', $productIds), array_map('intval', array_column($rows, 'id')));
+
+            foreach ($rows as &$row) {
+                $row['extensionValue'] = 42;
+            }
+
+            $calls[] = count($rows);
+        };
+        $Events = QUI::getEvents();
+        $Events->addEvent('onQuiqqerProductsBackendSearchExecute', $Filter);
+        $Events->addEvent('onQuiqqerProductsBackendSearchGridData', $Enrich);
+
+        try {
+            $params = [
+                'fields' => [],
+                'context' => 'phpunit.extensions',
+                'extensions' => ['productId' => $Product->getId()],
+                'ignoreFindVariantParentsByChildValues' => true,
+                'limit' => 1,
+                'sheet' => 1
+            ];
+            $result = $this->invokeEndpointAsAdmin(
+                'search/backend/executeForGrid.php',
+                'package_quiqqer_products_ajax_search_backend_executeForGrid',
+                json_encode($params, JSON_THROW_ON_ERROR)
+            );
+            self::assertSame(1, $result['total']);
+            self::assertCount(1, $result['data']);
+            self::assertSame(42, $result['data'][0]['extensionValue']);
+
+            $params['sheet'] = 2;
+            $emptyPage = $this->invokeEndpointAsAdmin(
+                'search/backend/executeForGrid.php',
+                'package_quiqqer_products_ajax_search_backend_executeForGrid',
+                json_encode($params, JSON_THROW_ON_ERROR)
+            );
+            self::assertSame([
+                'data' => [],
+                'total' => 1,
+                'page' => 2
+            ], $emptyPage);
+            self::assertSame([1, 0], $calls);
+        } finally {
+            $Events->removeEvent('onQuiqqerProductsBackendSearchExecute', $Filter);
+            $Events->removeEvent('onQuiqqerProductsBackendSearchGridData', $Enrich);
+        }
     }
 
     public function testFrontendSuggestionsReturnActiveCategoryProducts(): void
