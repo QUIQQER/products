@@ -6,7 +6,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
     'qui/QUI',
     'qui/controls/desktop/Panel',
     'qui/controls/buttons/Button',
-    'qui/controls/windows/Confirm',
+    'package/quiqqer/products/bin/controls/products/DeleteProductWindow',
     'qui/controls/contextmenu/Separator',
     'Locale',
     'package/quiqqer/products/bin/Products',
@@ -14,7 +14,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
     'css!package/quiqqer/products/bin/controls/products/Panel.css'
 
-], function (QUI, QUIPanel, QUIButton, QUIConfirm, QUIMenuSeparator, QUILocale, Products, Search) {
+], function (QUI, QUIPanel, QUIButton, DeleteProductWindow, QUIMenuSeparator, QUILocale, Products, Search) {
     "use strict";
 
     const lg = 'quiqqer/products';
@@ -165,7 +165,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                         Btn.setAttribute('textimage', 'fa fa-spinner fa-spin');
 
                         this.deleteChild(this.$Search.getSelected()).catch(function (Exception) {
-                            if (Exception.getType() === 'qui/controls/messages/Error') {
+                            if (Exception?.getType?.() === 'qui/controls/messages/Error') {
                                 return;
                             }
 
@@ -481,66 +481,23 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          * @return {Promise}
          */
         deleteChild: function (productIds) {
-            return new Promise((resolve, reject) => {
-                if (typeOf(productIds) === 'number') {
-                    productIds = [productIds];
+            const ids = typeof productIds === 'number' ? [productIds] : productIds;
+
+            if (!Array.isArray(ids) || !ids.length) {
+                return Promise.reject(new Error('No products selected'));
+            }
+
+            return Products.getChildren(ids).then(products => {
+                if (!products.length) {
+                    throw new Error('No products found');
                 }
 
-                if (typeOf(productIds) !== 'array') {
-                    return reject();
-                }
-
-                if (!productIds.length) {
-                    return reject();
-                }
-
-                Products.getChildren(productIds).then((data) => {
-                    if (!data.length) {
-                        return reject();
+                new DeleteProductWindow({
+                    products: products,
+                    events: {
+                        onDeleted: () => this.refresh()
                     }
-
-                    let products = '<ul>';
-
-                    for (let i = 0, len = data.length; i < len; i++) {
-                        products = products + '<li>' + data[i].id + ': ' +
-                                   data[i].title + '</li>';
-                    }
-
-                    products = products + '</ul>';
-
-                    new QUIConfirm({
-                        title      : QUILocale.get(lg, 'products.window.delete.title'),
-                        text       : QUILocale.get(lg, 'products.window.delete.text', {
-                            products: products
-                        }),
-                        information: QUILocale.get(lg, 'products.window.delete.information', {
-                            products: products
-                        }),
-                        autoclose  : false,
-                        maxHeight  : 400,
-                        maxWidth   : 600,
-                        icon       : 'fa fa-trashcan',
-                        texticon   : 'fa fa-trashcan',
-                        events     : {
-                            onSubmit: (Win) => {
-                                Win.Loader.show();
-
-                                Products.deleteChildren(productIds).then(() => {
-                                    Win.close();
-                                    this.refresh();
-
-                                    QUI.getMessageHandler().then((MH) => {
-                                        MH.addSuccess(
-                                            QUILocale.get(lg, 'message.success.products.delete')
-                                        );
-                                    });
-                                });
-                            }
-                        }
-                    }).open();
-
-                    resolve();
-                }, reject);
+                }).open();
             });
         }
     });

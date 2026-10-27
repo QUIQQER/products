@@ -27,6 +27,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'package/quiqqer/products/bin/controls/categories/Select',
     'package/quiqqer/products/bin/controls/fields/FieldTypeSelect',
     'package/quiqqer/products/bin/utils/Products',
+    'package/quiqqer/products/bin/controls/products/DeleteProductWindow',
 
     'text!package/quiqqer/products/bin/controls/products/ProductInformation.html',
     'text!package/quiqqer/products/bin/controls/products/ProductData.html',
@@ -37,7 +38,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 ], function (QUI, QUIPanel, QUIButton, QUISwitch, QUIButtonSwitch, QUIConfirm, QUIFormUtils,
              QUIAjax, QUILocale, Users, Grid, FolderViewer, Mustache, Packages, Locker,
              Products, Product, Categories, Fields, FieldUtils, FieldWindow,
-             CategorySelect, FieldTypeSelect, ProductUtils, informationTemplate, templateProductData,
+             CategorySelect, FieldTypeSelect, ProductUtils, DeleteProductWindow, informationTemplate, templateProductData,
              templateProductPrices, templateField
 ) {
     'use strict';
@@ -181,6 +182,25 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }
                 })
             );
+
+            // Right-floated actions are placed in reverse visual order.
+            this.addButton({
+                name: 'delete',
+                icon: 'fa fa-trash',
+                title: QUILocale.get('quiqqer/core', 'delete'),
+                'class': 'product-delete-button',
+                events: {
+                    onClick: () => this.deleteProduct().catch(error => console.error(error))
+                },
+                styles: {
+                    'float': 'right'
+                }
+            });
+            const Delete = this.getButtons('delete').getElm();
+            Delete.type = 'button';
+            Delete.setAttribute('aria-label', QUILocale.get('quiqqer/core', 'delete'));
+            Delete.removeAttribute('tabindex');
+            Delete.style.outline = '';
 
             this.addButton({
                 name: 'copy',
@@ -2132,6 +2152,32 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             }).catch(function (err) {
                 console.error(err);
                 self.$loaderHide();
+            });
+        },
+
+        /**
+         * Delete the panel's product, including when a variant is currently being edited.
+         *
+         * @returns {Promise}
+         */
+        deleteProduct: function () {
+            const productId = this.$Product.getId();
+
+            return Products.getChildren([productId]).then(products => {
+                if (!products.length) {
+                    return;
+                }
+
+                new DeleteProductWindow({
+                    products: products,
+                    events: {
+                        onDeleted: () => {
+                            this.destroy();
+                            QUI.Controls.getByType('package/quiqqer/products/bin/controls/products/Panel')
+                                .forEach(Panel => Panel.refresh().catch(error => console.error(error)));
+                        }
+                    }
+                }).open();
             });
         },
 
