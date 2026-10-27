@@ -153,6 +153,9 @@
         <locale name="settings.window.products.editableFields">
 <fr><![CDATA[Définit les champs hérités et ceux qui peuvent être modifiés dans les variantes.]]></fr>
         </locale>
+        <locale name="settings.window.products.editableFields.description">
+<fr><![CDATA[Ces paramètres s’appliquent par défaut à toutes les variantes. Vous pouvez également définir séparément l’héritage et la possibilité de modification pour chaque produit parent.]]></fr>
+        </locale>
         <locale name="settings.window.products.findChildrenInSearch">
 <fr><![CDATA[Variantes : les inclure dans la recherche]]></fr>
         </locale>
@@ -276,13 +279,13 @@ Prix de vente conseillé après application du multiplicateur : <b>75,00 €</b>
 <fr><![CDATA[Modifiable dans les variantes]]></fr>
         </locale>
         <locale name="fieldEditableDesc">
-<fr><![CDATA[Chaque variante peut définir sa propre valeur pour ce champ.]]></fr>
+<fr><![CDATA[Chaque variante peut définir sa propre valeur pour ce champ. Ce paramètre peut également être défini séparément pour chaque produit parent.]]></fr>
         </locale>
         <locale name="fieldInherited">
 <fr><![CDATA[Hérité du produit parent dans les variantes]]></fr>
         </locale>
         <locale name="fieldInheritedDesc">
-<fr><![CDATA[Les variantes héritent de la valeur de ce champ du produit parent, sauf si elles possèdent leur propre valeur.]]></fr>
+<fr><![CDATA[Les variantes héritent de la valeur de ce champ du produit parent, sauf si elles possèdent leur propre valeur. Ce paramètre peut également être défini séparément pour chaque produit parent.]]></fr>
         </locale>
         <locale name="priority">
 <fr><![CDATA[Tri]]></fr>

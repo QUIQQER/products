@@ -153,6 +153,9 @@
         <locale name="settings.window.products.editableFields">
 <pl><![CDATA[Określa, które pola są dziedziczone, a które można edytować w wariantach.]]></pl>
         </locale>
+        <locale name="settings.window.products.editableFields.description">
+<pl><![CDATA[Te ustawienia domyślnie dotyczą wszystkich wariantów. Dziedziczenie i możliwość edycji można również skonfigurować oddzielnie dla każdego produktu nadrzędnego.]]></pl>
+        </locale>
         <locale name="settings.window.products.findChildrenInSearch">
 <pl><![CDATA[Warianty: uwzględniaj w wyszukiwaniu]]></pl>
         </locale>
@@ -276,13 +279,13 @@ Sugerowana cena detaliczna po zastosowaniu mnożnika: <b>75,00 €</b>
 <pl><![CDATA[Edytowalne w wariantach]]></pl>
         </locale>
         <locale name="fieldEditableDesc">
-<pl><![CDATA[Każdy wariant może mieć własną wartość tego pola.]]></pl>
+<pl><![CDATA[Każdy wariant może mieć własną wartość tego pola. To ustawienie można również skonfigurować oddzielnie dla każdego produktu nadrzędnego.]]></pl>
         </locale>
         <locale name="fieldInherited">
 <pl><![CDATA[Dziedziczone z produktu nadrzędnego w wariantach]]></pl>
         </locale>
         <locale name="fieldInheritedDesc">
-<pl><![CDATA[Warianty dziedziczą wartość tego pola z produktu nadrzędnego, chyba że mają ustawioną własną wartość.]]></pl>
+<pl><![CDATA[Warianty dziedziczą wartość tego pola z produktu nadrzędnego, chyba że mają ustawioną własną wartość. To ustawienie można również skonfigurować oddzielnie dla każdego produktu nadrzędnego.]]></pl>
         </locale>
         <locale name="priority">
 <pl><![CDATA[Sortowanie]]></pl>

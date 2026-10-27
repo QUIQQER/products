@@ -182,6 +182,9 @@
         <locale name="settings.window.products.editableFields">
 <en><![CDATA[Determine which fields are inherited and editable in the child variants.]]></en>
         </locale>
+        <locale name="settings.window.products.editableFields.description">
+<en><![CDATA[These settings apply to all variants by default. You can also configure inheritance and editability separately for each parent product.]]></en>
+        </locale>
         <locale name="settings.window.products.findChildrenInSearch">
 <en><![CDATA[Variants: Consider child articles in search]]></en>
         </locale>
@@ -319,7 +322,7 @@ This suffix is appended to all automatically generated article numbers. Optional
 <en><![CDATA[Editable in variants]]></en>
         </locale>
         <locale name="fieldEditableDesc">
-<en><![CDATA[Variant products can each define their own value for this field.]]></en>
+<en><![CDATA[Variant products can each define their own value for this field. This setting can also be configured separately for each parent product.]]></en>
         </locale>
         <locale name="fieldInherited">
 <en><![CDATA[Inherited in variants from parent product]]></en>
@@ -327,7 +330,7 @@ This suffix is appended to all automatically generated article numbers. Optional
         <locale name="fieldInheritedDesc">
 <en>
                 <![CDATA[
-                Variant products take the value from the parent product for this field unless its own value is set.]]></en>
+                Variant products take the value from the parent product for this field unless its own value is set. This setting can also be configured separately for each parent product.]]></en>
         </locale>
         <locale name="priority">
 <en><![CDATA[Sorting]]></en>

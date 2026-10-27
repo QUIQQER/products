@@ -182,6 +182,9 @@
         <locale name="settings.window.products.editableFields">
 <de><![CDATA[Bestimme, welche Felder vererbt werden und editierbar in den Varianten sind.]]></de>
         </locale>
+        <locale name="settings.window.products.editableFields.description">
+<de><![CDATA[Diese Einstellungen gelten standardmäßig für alle Varianten. Du kannst Vererbung und Editierbarkeit auch für jedes Eltern-Produkt separat festlegen.]]></de>
+        </locale>
         <locale name="settings.window.products.findChildrenInSearch">
 <de><![CDATA[Varianten: Kindartikel in Suche beachten]]></de>
         </locale>
@@ -316,14 +319,14 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
 <de><![CDATA[In Varianten editierbar]]></de>
         </locale>
         <locale name="fieldEditableDesc">
-<de><![CDATA[Varianten-Produkte können für dieses Feld jeweils einen eigenen Wert festlegen.]]></de>
+<de><![CDATA[Varianten-Produkte können für dieses Feld jeweils einen eigenen Wert festlegen. Diese Einstellung kann auch für jedes Eltern-Produkt separat festgelegt werden.]]></de>
         </locale>
         <locale name="fieldInherited">
 <de><![CDATA[In Varianten von Eltern-Produkt übernommen]]></de>
         </locale>
         <locale name="fieldInheritedDesc">
 <de>
-                <![CDATA[Varianten-Produkte übernehmen für dieses Feld den Wert des Eltern-Produkts, sofern kein eigener Wert festgelegt ist.]]></de>
+                <![CDATA[Varianten-Produkte übernehmen für dieses Feld den Wert des Eltern-Produkts, sofern kein eigener Wert festgelegt ist. Diese Einstellung kann auch für jedes Eltern-Produkt separat festgelegt werden.]]></de>
         </locale>
         <locale name="priority">
 <de><![CDATA[Sortierung]]></de>

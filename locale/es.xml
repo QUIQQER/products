@@ -153,6 +153,9 @@
         <locale name="settings.window.products.editableFields">
 <es><![CDATA[Define qué campos se heredan y cuáles se pueden editar en las variantes.]]></es>
         </locale>
+        <locale name="settings.window.products.editableFields.description">
+<es><![CDATA[Estas opciones se aplican a todas las variantes de forma predeterminada. También puedes configurar la herencia y la posibilidad de edición por separado para cada producto principal.]]></es>
+        </locale>
         <locale name="settings.window.products.findChildrenInSearch">
 <es><![CDATA[Variantes: incluirlas en la búsqueda]]></es>
         </locale>
@@ -276,13 +279,13 @@ Precio de venta recomendado tras aplicar el multiplicador: <b>75,00 €</b>
 <es><![CDATA[Editable en las variantes]]></es>
         </locale>
         <locale name="fieldEditableDesc">
-<es><![CDATA[Cada variante puede tener un valor propio para este campo.]]></es>
+<es><![CDATA[Cada variante puede tener un valor propio para este campo. Esta opción también se puede configurar por separado para cada producto principal.]]></es>
         </locale>
         <locale name="fieldInherited">
 <es><![CDATA[Heredado del producto principal en las variantes]]></es>
         </locale>
         <locale name="fieldInheritedDesc">
-<es><![CDATA[Las variantes heredan el valor de este campo del producto principal, salvo que tengan un valor propio.]]></es>
+<es><![CDATA[Las variantes heredan el valor de este campo del producto principal, salvo que tengan un valor propio. Esta opción también se puede configurar por separado para cada producto principal.]]></es>
         </locale>
         <locale name="priority">
 <es><![CDATA[Ordenación]]></es>
