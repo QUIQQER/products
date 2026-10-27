@@ -105,13 +105,16 @@ function loadList({count = 9, navigation = 'navigate', state = {otherControl: 'p
             list.$ContainerReal.children = Array.from({length: args[1] || 9}, () => ({dataset: {pid: '1'}}));
             list.$listStartIndex = args[2] || 0;
             list.$renderedListView = attributes.view;
+            list.$renderedListUrl = window.location.href;
         },
         openProduct: async id => {list.$productId = id; list.$setWindowLocation();},
         $getSearchParams: () => ({})
     });
     const snapshot = (productCount, scrollY = 1400, url = window.location.href, startIndex = 0) => ({
         otherControl: 'preserved',
-        quiqqerProductLists: {[list.$historyKey]: {url, productCount, startIndex, scrollY, scrollX: 0, moreButtonClicked: 4}}
+        quiqqerProductLists: {[list.$historyKey]: {
+            url, productCount, startIndex, view: 'gallery', scrollY, scrollX: 0, moreButtonClicked: 4
+        }}
     });
     return {list, definition, window, listeners, writes, renders, events, fields, attributes, requests, snapshot};
 }
@@ -164,7 +167,7 @@ test('back and forward between a list and a product preserve the list entry and 
     await fixture.list.$restoreHistory(null);
     fixture.window.location = new URL('https://shop.example/category');
     await fixture.list.$restoreHistory(listState);
-    assert.deepEqual(fixture.renders, [[undefined, 27, 0], [undefined, 27, 0]]);
+    assert.deepEqual(fixture.renders, [[undefined, 27, 0]]);
     assert.equal(fixture.window.scrollY, 1400);
     assert.ok(fixture.writes.every(([kind]) => kind === 'replace'));
 });
@@ -313,4 +316,41 @@ test('switching view preserves the outgoing rendered view until the new view has
     fixture.list.$saveHistoryState();
     const saved = fixture.window.history.state.quiqqerProductLists[fixture.list.$historyKey];
     assert.equal(saved.view, 'gallery');
+});
+
+test('returning from a product reuses all loaded rows and controls without any search requests', async () => {
+    const fixture = loadList({count: 54});
+    await fixture.list.$installHistory();
+    const state = fixture.window.history.state;
+    const children = fixture.list.$ContainerReal.children;
+    let counts = 0;
+    fixture.list.$refreshSearchCount = async () => counts++;
+    fixture.window.location = new URL('https://shop.example/category?p=55');
+    await fixture.list.$restoreHistory(null);
+    fixture.window.location = new URL('https://shop.example/category');
+    await fixture.list.$restoreHistory(state);
+    assert.equal(fixture.list.$ContainerReal.children, children);
+    assert.deepEqual(fixture.renders, []);
+    assert.equal(counts, 0);
+    assert.equal(fixture.window.scrollY, 450);
+});
+
+test('equally sized lists with different filters or views are fetched instead of reused', async () => {
+    for (const change of ['url', 'view', 'offset']) {
+        const fixture = loadList({count: 27});
+        await fixture.list.$installHistory();
+        const saved = fixture.snapshot(27);
+        if (change === 'url') {
+            fixture.list.$renderedListUrl = 'https://shop.example/category?search=other';
+        } else if (change === 'view') {
+            fixture.list.$renderedListView = 'list';
+        } else {
+            fixture.list.$listStartIndex = 27;
+        }
+        let counts = 0;
+        fixture.list.$refreshSearchCount = async () => counts++;
+        await fixture.list.$restoreHistory(saved);
+        assert.deepEqual(fixture.renders, [[undefined, 27, 0]], change);
+        assert.equal(counts, 1, change);
+    }
 });

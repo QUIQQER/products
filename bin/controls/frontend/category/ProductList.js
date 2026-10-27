@@ -611,6 +611,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          */
         $installHistory: function () {
             this.$renderedListView = this.getAttribute('view');
+            this.$renderedListUrl = window.location.href;
             this.$historyKey = JSON.stringify([
                 this.getAttribute('project'), this.getAttribute('lang'),
                 this.getAttribute('siteId'), this.getAttribute('categoryId')
@@ -699,17 +700,28 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     return;
                 }
 
-                await this.$refreshSearchCount();
-
-                if (version !== this.$historyVersion) {
-                    return;
-                }
-
                 const count = Number.isSafeInteger(saved?.productCount) && saved.productCount > 0
                     ? saved.productCount : undefined;
                 const startIndex = Number.isSafeInteger(saved?.startIndex) && saved.startIndex >= 0
                     ? saved.startIndex : 0;
-                await this.$renderSearch(undefined, count, startIndex);
+                const productCount = Array.from(this.$ContainerReal.children)
+                    .filter(Element => Element.dataset.pid).length;
+                const reuseList = saved
+                    && this.$renderedListUrl === saved.url
+                    && this.$renderedListView === saved.view
+                    && (this.$listStartIndex || 0) === startIndex
+                    && productCount === saved.productCount;
+
+                // Opening a product only hides the list; keep its parsed controls and images.
+                if (!reuseList) {
+                    await this.$refreshSearchCount();
+
+                    if (version !== this.$historyVersion) {
+                        return;
+                    }
+
+                    await this.$renderSearch(undefined, count, startIndex);
+                }
 
                 if (version !== this.$historyVersion) {
                     return;
@@ -1276,6 +1288,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 articles = this.$ContainerReal.getElements('article').length + 1;
 
             const historyVersion = this.$historyVersion;
+            const listUrl = window.location.href;
             const startIndex = next ? (this.$listStartIndex || 0) + articles - 1 : (historyStartIndex || 0);
             const searchParams = this.$getSearchParams();
 
@@ -1370,6 +1383,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         }
 
                         self.$renderedListView = view;
+                        self.$renderedListUrl = listUrl;
                         fireProductListView(self, result.productIds || [], startIndex);
                         self.$saveHistoryState();
                         resolve(result);
