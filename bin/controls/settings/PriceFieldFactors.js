@@ -192,9 +192,9 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
                         UpdateOnSaveCheckbox.disabled = false;
                         UpdateOnSaveCheckbox.checked  = FieldSettings.updateOnSave;
 
-                        RoundingTypeSelect.value       = FieldSettings.rounding.type;
-                        RoundingVatSelect.value        = FieldSettings.rounding.vat;
-                        RoundingCustomValueInput.value = FieldSettings.rounding.custom;
+                        RoundingTypeSelect.value       = FieldSettings.rounding?.type ?? 'none';
+                        RoundingVatSelect.value        = FieldSettings.rounding?.vat ?? 0;
+                        RoundingCustomValueInput.value = FieldSettings.rounding?.custom ?? '';
 
                         ConfigContainer.removeClass(cssClassHidden);
                     }
