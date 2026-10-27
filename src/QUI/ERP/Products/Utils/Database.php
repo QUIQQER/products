@@ -78,8 +78,12 @@ final class Database
         ));
     }
 
-    public static function addColumn(string $tableName, string $columnName, string $columnType): void
-    {
+    public static function addColumn(
+        string $tableName,
+        string $columnName,
+        string $columnType,
+        bool $caseSensitiveText = false
+    ): void {
         $SchemaManager = QUI::getSchemaManager();
         $Table = $SchemaManager->introspectTable($tableName);
 
@@ -87,9 +91,15 @@ final class Database
             return;
         }
 
+        $Column = self::createColumn($columnName, $columnType);
+
+        if ($caseSensitiveText) {
+            SearchTextCollation::configureColumn(QUI::getDataBaseConnection(), $Column);
+        }
+
         $SchemaManager->alterTable(new TableDiff(
             $Table,
-            addedColumns: [self::createColumn($columnName, $columnType)]
+            addedColumns: [$Column]
         ));
     }
 
