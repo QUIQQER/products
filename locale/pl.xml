@@ -211,13 +211,7 @@
 <pl><![CDATA[Współczynniki pól cenowych]]></pl>
         </locale>
         <locale name="settings.window.products.priceFieldFactors.description" html="true">
-<pl><![CDATA[Pozwala ustawić mnożnik dla każdego pola cenowego w systemie na podstawie innego pola cenowego.<br/><br/>
-<b>Przykład:</b><br/>
-Pole cenowe: <b>Sugerowana cena detaliczna</b><br/>
-Mnożnik: <b>1.5</b><br/>
-Na podstawie pola cenowego: <b>Cena</b> (Wartość: <b>50,00 €</b>)<br/><br/>
-Sugerowana cena detaliczna po zastosowaniu mnożnika: <b>75,00 €</b>
-]]></pl>
+<pl><![CDATA[Obliczaj pola cenowe automatycznie na podstawie ceny bazowej, mnożnika i opcjonalnej dopłaty. Włącz pola, które chcesz obliczać.<br/><b>Przykład:</b> Cena zakupu 50 € × mnożnik 1,5 = cena sprzedaży 75 €.]]></pl>
         </locale>
 
         <locale name="menu.erp.products.autoArticleNos.title">
@@ -1806,11 +1800,35 @@ Sugerowana cena detaliczna po zastosowaniu mnożnika: <b>75,00 €</b>
         <locale name="controls.settings.PriceFieldFactors.btn.update">
 <pl><![CDATA[Zaktualizuj ceny produktów]]></pl>
         </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSourceField">
+<pl><![CDATA[Cena bazowa]]></pl>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelFactor">
+<pl><![CDATA[Mnożnik]]></pl>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.descFactor">
+<pl><![CDATA[1,5 = +50 %]]></pl>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSurcharge">
+<pl><![CDATA[Dopłata (netto)]]></pl>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSurchargePriority">
+<pl><![CDATA[Zastosuj dopłatę]]></pl>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRounding">
+<pl><![CDATA[Zaokrąglanie]]></pl>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelCalculation">
+<pl><![CDATA[Automatyczne obliczanie ceny]]></pl>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelManual">
+<pl><![CDATA[Bez automatycznego obliczania]]></pl>
+        </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelMultiplier">
 <pl><![CDATA[x wartość pola]]></pl>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelUpdateOnSave">
-<pl><![CDATA[stosuj przy zapisywaniu produktów]]></pl>
+<pl><![CDATA[Przelicz przy zapisywaniu produktu]]></pl>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelCategoryPriority">
 <pl><![CDATA[Priorytet współczynników pól cenowych]]></pl>

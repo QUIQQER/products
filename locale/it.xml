@@ -211,13 +211,7 @@
 <it><![CDATA[Fattori dei campi prezzo]]></it>
         </locale>
         <locale name="settings.window.products.priceFieldFactors.description" html="true">
-<it><![CDATA[Consente di definire un moltiplicatore per ogni campo prezzo del sistema basandosi su un altro campo prezzo.<br/><br/>
-<b>Esempio:</b><br/>
-Campo prezzo: <b>Prezzo di vendita consigliato</b><br/>
-Moltiplicatore: <b>1.5</b><br/>
-Basato sul campo prezzo: <b>Prezzo</b> (Valore: <b>50,00 €</b>)<br/><br/>
-Prezzo di vendita consigliato dopo l’applicazione del moltiplicatore: <b>75,00 €</b>
-]]></it>
+<it><![CDATA[Calcola automaticamente i campi prezzo a partire da un prezzo di partenza, un fattore e un supplemento facoltativo. Attiva i campi da calcolare.<br/><b>Esempio:</b> Prezzo di acquisto 50 € × fattore 1,5 = prezzo di vendita 75 €.]]></it>
         </locale>
 
         <locale name="menu.erp.products.autoArticleNos.title">
@@ -1806,11 +1800,35 @@ Prezzo di vendita consigliato dopo l’applicazione del moltiplicatore: <b>75,00
         <locale name="controls.settings.PriceFieldFactors.btn.update">
 <it><![CDATA[Aggiorna prezzi dei prodotti]]></it>
         </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSourceField">
+<it><![CDATA[Prezzo di partenza]]></it>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelFactor">
+<it><![CDATA[Fattore]]></it>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.descFactor">
+<it><![CDATA[1,5 = +50 %]]></it>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSurcharge">
+<it><![CDATA[Supplemento (netto)]]></it>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSurchargePriority">
+<it><![CDATA[Applicare il supplemento]]></it>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRounding">
+<it><![CDATA[Arrotondamento]]></it>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelCalculation">
+<it><![CDATA[Calcolo automatico del prezzo]]></it>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelManual">
+<it><![CDATA[Nessun calcolo automatico]]></it>
+        </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelMultiplier">
 <it><![CDATA[x valore di]]></it>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelUpdateOnSave">
-<it><![CDATA[applica al salvataggio dei prodotti]]></it>
+<it><![CDATA[Ricalcola al salvataggio del prodotto]]></it>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelCategoryPriority">
 <it><![CDATA[Priorità dei fattori dei campi prezzo]]></it>

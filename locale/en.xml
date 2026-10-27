@@ -252,13 +252,7 @@
         </locale>
         <locale name="settings.window.products.priceFieldFactors.description" html="true">
 <en>
-                <![CDATA[Here you can set a multiplier for each price field in the system based on another price field.<br/><br/>
-<b>Example:</b><br/>
-Price field: <b>Recommended retail price</b><br/>
-Multiplier: <b>1.5</b><br/>
-Based on price field: <b>Price</b> (Value: <b>50,00 €</b>)<br/><br/>
-Recommended retail price after applying the multiplier: <b>75,00 €</b>
-]]></en>
+                <![CDATA[Calculate price fields automatically from a source price, a factor and an optional surcharge. Activate the price fields you want to calculate.<br/><b>Example:</b> Purchase price €50 × factor 1.5 = selling price €75.]]></en>
         </locale>
 
         <locale name="menu.erp.products.autoArticleNos.title">
@@ -1955,11 +1949,35 @@ This suffix is appended to all automatically generated article numbers. Optional
         <locale name="controls.settings.PriceFieldFactors.btn.update">
 <en><![CDATA[Update product prices]]></en>
         </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSourceField">
+<en><![CDATA[Source price]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelFactor">
+<en><![CDATA[Factor]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.descFactor">
+<en><![CDATA[1.5 = +50%]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSurcharge">
+<en><![CDATA[Surcharge (net)]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSurchargePriority">
+<en><![CDATA[Apply surcharge]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRounding">
+<en><![CDATA[Rounding]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelCalculation">
+<en><![CDATA[Automatic price calculation]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelManual">
+<en><![CDATA[No automatic calculation]]></en>
+        </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelMultiplier">
 <en><![CDATA[x value of]]></en>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelUpdateOnSave">
-<en><![CDATA[apply on product save]]></en>
+<en><![CDATA[Recalculate when saving the product]]></en>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelCategoryPriority">
 <en><![CDATA[Price field factors priority]]></en>

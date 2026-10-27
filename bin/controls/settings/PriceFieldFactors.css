@@ -1,109 +1,295 @@
 .quiqqer-products-settings-pricefieldfactors {
+    --_gap: var(--quiqqer-products-price-factors-gap, 16px);
+    --_padding: var(--quiqqer-products-price-factors-padding, 20px);
+    --_radius: var(--quiqqer-products-price-factors-radius, 10px);
+    --_max-width: var(--quiqqer-products-price-factors-max-width, 900px);
+    --_border: var(--quiqqer-products-price-factors-border, var(--qui-colors-gray-100));
+    --_input-border: var(--quiqqer-products-price-factors-input-border, var(--qui-colors-gray-200));
+    --_surface: var(--quiqqer-products-price-factors-surface, var(--qui-colors-white));
+    --_subtle: var(--quiqqer-products-price-factors-subtle, var(--qui-colors-gray-25));
+    --_muted: var(--quiqqer-products-price-factors-muted, var(--qui-colors-gray-600));
+    --_accent: var(--quiqqer-products-price-factors-accent, var(--qui-colors-primary));
+    --_active-border: var(--quiqqer-products-price-factors-active-border, var(--qui-colors-primary-200));
+    --_focus: var(--quiqqer-products-price-factors-focus, var(--qui-colors-primary));
+    --_workspace: var(--quiqqer-products-price-factors-workspace, var(--qui-colors-gray-50));
+    --_active-surface: var(--quiqqer-products-price-factors-active-surface, var(--qui-colors-primary-25));
+    container-type: inline-size;
     width: 100%;
+    max-width: var(--_max-width);
+    min-width: 0;
+    line-height: 1.5;
 }
 
-.quiqqer-products-settings-pricefieldfactors__hidden {
+.quiqqer-products-settings-pricefieldfactors [hidden] {
     display: none !important;
 }
 
+.quiqqer-products-settings-pricefieldfactors-list {
+    display: grid;
+    gap: 8px;
+    padding: 10px;
+    border-radius: var(--_radius);
+    background: var(--_workspace);
+}
+
 .quiqqer-products-settings-pricefieldfactors-entry {
-    margin-bottom: 10px;
-    padding: 5px 10px;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--_border);
+    border-radius: var(--_radius);
+    background: var(--_surface);
+}
+
+.quiqqer-products-settings-pricefieldfactors-entry.is-active {
+    border-color: var(--_active-border);
 }
 
 .quiqqer-products-settings-pricefieldfactors-entry-header {
-    border-bottom: 1px dotted #dedede;
+    padding: 12px var(--_gap);
+}
+
+.quiqqer-products-settings-pricefieldfactors-entry.is-active > header {
+    background: var(--_active-surface);
+}
+
+.quiqqer-products-settings-pricefieldfactors .quiqqer-products-settings-pricefieldfactors-toggle {
     display: flex;
+    align-items: center;
+    gap: 12px;
+    float: none;
+    width: 100%;
+    margin: 0;
+    cursor: pointer;
+}
+
+.quiqqer-products-settings-pricefieldfactors-toggle > span {
+    display: flex;
+    align-items: baseline;
+    flex: 1;
+    flex-wrap: wrap;
     justify-content: space-between;
-    margin-bottom: 15px;
-    padding-bottom: 15px;
+    gap: 4px var(--_gap);
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
-.quiqqer-products-settings-pricefieldfactors-entry:nth-child(2n+1) {
-    background-color: #f7f7f7;
+.quiqqer-products-settings-pricefieldfactors-toggle strong {
+    font-size: 1.05em;
+    font-weight: 600;
 }
 
-.quiqqer-products-settings-pricefieldfactors-entry-field {
+.quiqqer-products-settings-pricefieldfactors-summary {
+    color: var(--_muted);
+    font-size: 0.92em;
+}
+
+.quiqqer-products-settings-pricefieldfactors .quiqqer-products-settings-pricefieldfactors-configuration {
+    min-width: 0;
+    margin: 0;
+    padding: var(--_gap);
+    border: 0;
+    border-top: 1px solid var(--_border);
+    background: var(--_subtle);
+}
+
+.quiqqer-products-settings-pricefieldfactors-configuration > legend {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+}
+
+.quiqqer-products-settings-pricefieldfactors-formula {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto 140px auto 160px;
+    align-items: center;
+    gap: 0;
+    padding: 10px 0;
+    border: 1px solid var(--_border);
+    border-radius: 6px;
+    background: var(--_surface);
+}
+
+.quiqqer-products-settings-pricefieldfactors-formula > label {
+    padding-inline: 12px;
+}
+
+.quiqqer-products-settings-pricefieldfactors-formula .quiqqer-products-settings-pricefieldfactors-field > span {
+    color: var(--_muted);
+    font-size: 0.88em;
+}
+
+.quiqqer-products-settings-pricefieldfactors-formula small {
     display: inline-block;
-    font-size: 12pt;
-    font-weight: bold;
-    width: 165px;
+    margin-inline-start: 8px;
+    font-size: 0.95em;
+    font-weight: normal;
 }
 
-.quiqqer-products-settings-pricefieldfactors-entry input[name="multiplier"] {
-    width: 75px;
+.quiqqer-products-settings-pricefieldfactors .quiqqer-products-settings-pricefieldfactors-formula :is(input, select) {
+    border-color: var(--_input-border);
+    background: var(--_surface);
+}
+
+.quiqqer-products-settings-pricefieldfactors-formula:focus-within {
+    border-color: var(--_active-border);
+}
+
+.quiqqer-products-settings-pricefieldfactors .quiqqer-products-settings-pricefieldfactors-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    float: none;
+    width: auto;
+    min-width: 0;
+    margin: 0;
+    text-align: start;
+}
+
+.quiqqer-products-settings-pricefieldfactors-field > span {
+    font-weight: 600;
+}
+
+.quiqqer-products-settings-pricefieldfactors-field :is(input, select) {
+    float: none;
+    width: 100%;
+    min-width: 0;
+    min-height: 38px;
+    margin: 0;
+    padding: 7px 10px;
+    border: 1px solid var(--_border);
+    border-radius: 6px;
+    background: var(--_surface);
+    color: inherit;
+    font: inherit;
+}
+
+.quiqqer-products-settings-pricefieldfactors-operator {
+    align-self: end;
+    display: grid;
+    place-items: center;
+    min-height: 42px;
+    color: var(--_muted);
+    font-size: 1.3em;
+}
+
+.quiqqer-products-settings-pricefieldfactors-help {
+    margin: 8px 0 0;
+    color: var(--_muted);
+    font-size: 0.92em;
+    line-height: 1.6;
+}
+
+.quiqqer-products-settings-pricefieldfactors-rounding {
+    margin-top: 12px;
+    padding: 12px var(--_gap);
+    border: 1px solid var(--_border);
+    border-radius: 6px;
+    background: var(--_surface);
+}
+
+.quiqqer-products-settings-pricefieldfactors-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px var(--_gap);
+    margin-top: 12px;
+}
+
+.quiqqer-products-settings-pricefieldfactors-toolbar .btn {
+    --padding-block: 0.45em;
+    --padding-inline: 0.75em;
+    float: none;
+    margin: 0;
+    font-size: 0.92em;
+}
+
+.quiqqer-products-settings-pricefieldfactors-toolbar [aria-expanded="true"] {
+    --qui-btn-bgColor: var(--_active-surface);
+    --qui-btn-borderColor: var(--_active-border);
+}
+
+.quiqqer-products-settings-pricefieldfactors-rounding-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--_gap);
+    margin-block: var(--_gap);
+}
+
+.quiqqer-products-settings-pricefieldfactors-wide {
+    grid-column: 1 / -1;
+}
+
+.quiqqer-products-settings-pricefieldfactors .quiqqer-products-settings-pricefieldfactors-updateonsave {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    float: none;
+    width: auto;
+    margin: 0;
+    cursor: pointer;
+}
+
+.quiqqer-products-settings-pricefieldfactors :is(.quiqqer-products-settings-pricefieldfactors-toggle, .quiqqer-products-settings-pricefieldfactors-updateonsave) input {
+    flex: 0 0 auto;
+    float: none;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--_accent);
+}
+
+.quiqqer-products-settings-pricefieldfactors :is(input, select, summary, button):focus-visible {
+    outline: 2px solid var(--_focus);
+    outline-offset: 3px;
+}
+
+.quiqqer-products-settings-pricefieldfactors-options {
+    margin-bottom: var(--_padding);
+}
+
+.quiqqer-products-settings-pricefieldfactors-options input {
+    max-width: 140px;
 }
 
 .quiqqer-products-settings-pricefieldfactors-buttons {
-    margin: 20px 0;
-    text-align: right;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin-block: var(--_padding);
+    padding-block: 8px;
 }
 
 .quiqqer-products-settings-pricefieldfactors-buttons button {
     float: none !important;
 }
 
-.quiqqer-products-settings-pricefieldfactors-entry-updateonsave {
-    float: none !important;
-    display: block;
-    /* float: right; */
-    width: initial !important;
-    text-align: right;
-    padding: 5px 0;
-}
-
 .quiqqer-products-settings-pricefieldfactors-cli {
-    background-color: black;
-    color: #efefef;
-    float: left;
-    margin-top: 20px;
-    padding: 10px;
-    width: 100%;
+    margin-top: 12px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
 }
 
 .quiqqer-products-settings-pricefieldfactors-warning {
-    display: block;
-    float: left;
-    margin-top: 20px;
-    padding: 15px;
+    margin-top: var(--_gap);
 }
 
-.quiqqer-products-settings-pricefieldfactors-entry-rounding {
-    /*display: none;*/
-    border-top: 1px dotted #dedede;
-    padding-top: 10px;
-    margin-top: 10px;
-}
+@container (max-width: 560px) {
+    .quiqqer-products-settings-pricefieldfactors-formula,
+    .quiqqer-products-settings-pricefieldfactors-rounding-fields {
+        grid-template-columns: minmax(0, 1fr);
+    }
 
-.quiqqer-products-settings-pricefieldfactors-entry-rounding table {
-    float: none !important;
-}
+    .quiqqer-products-settings-pricefieldfactors-operator {
+        display: none;
+    }
 
-.quiqqer-products-settings-pricefieldfactors-entry-rounding table label {
-    display: flex;
-    text-align: left !important;
-    width: 100% !important;
-}
+    .quiqqer-products-settings-pricefieldfactors-formula {
+        gap: 12px;
+    }
 
-.quiqqer-products-settings-pricefieldfactors-entry-fixedSurcharge {
-    display: block;
-    margin-top: 15px;
-}
-
-.quiqqer-products-settings-pricefieldfactors-entry-fixedSurcharge > span {
-    display: block;
-}
-
-.quiqqer-products-settings-pricefieldfactors-options {
-    border-bottom: 1px dotted #dedede;
-    margin-bottom: 45px;
-    padding: 10px;
-}
-
-.quiqqer-products-settings-pricefieldfactors-options input {
-    display: block;
-}
-
-.quiqqer-products-settings-pricefieldfactors-options .field-container-item-desc {
-    float: none !important;
+    .quiqqer-products-settings-pricefieldfactors-formula small {
+        margin-inline-start: 4px;
+    }
 }
