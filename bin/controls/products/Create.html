@@ -1,4 +1,5 @@
-<form>
+<p class="product-create-validation-error" data-name="validation-message" role="alert" tabindex="-1" hidden></p>
+<form data-name="create-form">
     <table class="data-table data-table-flexbox product-data">
         <thead>
         <tr>
@@ -10,32 +11,32 @@
 
         <tbody>
         <tr>
-            <td>
+            <td data-name="validation-field">
                 <label class="field-container">
                     <span class="field-container-item">
                         {{productCategories}}
                     </span>
-                    <span class="field-container-field field-container-field-no-padding product-categories"></span>
+                    <span class="field-container-field field-container-field-no-padding product-categories" data-name="categories"></span>
                 </label>
             </td>
         </tr>
         <tr style="display: none">
-            <td>
+            <td data-name="validation-field">
                 <label class="field-container">
                     <span class="field-container-item">
                         {{productCategory}}
                     </span>
-                    <select class="field-container-field" name="product-category"></select>
+                    <select class="field-container-field" name="product-category" data-name="main-category"></select>
                 </label>
             </td>
         </tr>
         <tr>
-            <td>
+            <td data-name="validation-field">
                 <label class="field-container">
                     <span class="field-container-item">
                         {{productType}}
                     </span>
-                    <select name="product-types" class="field-container-field"></select>
+                    <select name="product-types" data-name="product-types" class="field-container-field"></select>
                 </label>
             </td>
         </tr>

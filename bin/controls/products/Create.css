@@ -1,9 +1,23 @@
 
 .product-create {
+    --_validation-background: var(--quiqqer-products-create-validation-background, var(--qui-colors-warning-100));
+    --_validation-border: var(--quiqqer-products-create-validation-border, var(--qui-colors-warning-600));
     float: left;
     height: 100%;
     position: relative;
     width: 100%;
+}
+
+.product-create-validation-error:not([hidden]) {
+    background: var(--_validation-background);
+    border-inline-start: 3px solid var(--_validation-border);
+    margin: 8px 0;
+    padding: 12px;
+}
+
+.product-create-validation-error:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
 }
 
 .product-create .field-container-item {
