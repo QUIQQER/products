@@ -118,42 +118,44 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             this.Loader.show();
             this.setAttribute('noImportLoaderHide', true);
 
-            this.parent().then(() => {
+            // The parent restores the selected category, which may immediately open the variants.
+            this.addButton({
+                name: 'variantFields',
+                title: QUILocale.get(lg, 'panel.variants.editable.button.title'),
+                icon: 'fa fa-exchange',
+                events: {
+                    click: this.openVariantAttributeSettings
+                },
+                styles: {
+                    'float': 'right'
+                }
+            });
+
+            this.$VariantFields = this.getButtons('variantFields');
+            this.$VariantFields.hide();
+
+            this.$BackToVariantList = new QUIButton({
+                name: 'BackToVariantFields',
+                title: QUILocale.get(lg, 'panel.variants.backToList.button.title'),
+                icon: 'fa fa-list',
+                events: {
+                    click: () => {
+                        this.getCategory('variants').setNormal();
+                        this.openVariants();
+                    }
+                },
+                styles: {
+                    'float': 'right'
+                }
+            }).inject(this.getHeader());
+
+            this.$BackToVariantList.hide();
+
+            return this.parent().then(() => {
                 this.$loaded = false;
                 return this.$checkProductParent();
             }).then(() => {
                 this.Loader.show();
-                this.addButton({
-                    name: 'variantFields',
-                    title: QUILocale.get(lg, 'panel.variants.editable.button.title'),
-                    icon: 'fa fa-exchange',
-                    events: {
-                        click: this.openVariantAttributeSettings
-                    },
-                    styles: {
-                        'float': 'right'
-                    }
-                });
-
-                this.$VariantFields = this.getButtons('variantFields');
-                this.$VariantFields.hide();
-
-                this.$BackToVariantList = new QUIButton({
-                    name: 'BackToVariantFields',
-                    title: QUILocale.get(lg, 'panel.variants.backToList.button.title'),
-                    icon: 'fa fa-list',
-                    events: {
-                        click: () => {
-                            this.getCategory('variants').setNormal();
-                            this.openVariants();
-                        }
-                    },
-                    styles: {
-                        'float': 'right'
-                    }
-                }).inject(this.getHeader());
-
-                this.$BackToVariantList.hide();
 
                 if (this.$CurrentVariant) {
                     return this.openVariants().then(() => {
