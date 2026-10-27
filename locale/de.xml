@@ -748,6 +748,58 @@
             ]]></de>
         </locale>
 
+        <locale name="cron.productQualityCheck.title">
+            <de><![CDATA[Produktqualität prüfen]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.description">
+            <de><![CDATA[Prüft Produktübersetzungen und meldet fehlende Texte per E-Mail oder Backend-Nachricht. Leere optionale Felder werden übersprungen.]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.notification">
+            <de><![CDATA[Benachrichtigung (Standard: E-Mail)]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.notification.email">
+            <de><![CDATA[E-Mail]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.notification.backend">
+            <de><![CDATA[Backend-Nachricht]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.notification.both">
+            <de><![CDATA[E-Mail und Backend-Nachricht]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.email">
+            <de><![CDATA[E-Mail-Empfänger (leer: konfigurierte Administrator-Adresse)]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.users">
+            <de><![CDATA[Backend-Empfänger (leer: alle Superuser)]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.languages">
+            <de><![CDATA[Prüfsprachen, z. B. de,en (leer: Sprachen aller Projekte)]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidEmail">
+            <de><![CDATA[Bitte eine gültige E-Mail-Adresse als Empfänger oder als Administrator-Adresse konfigurieren.]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidUsers">
+            <de><![CDATA[Bitte gültige Backend-Empfänger auswählen oder mindestens einen Superuser konfigurieren.]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidNotification">
+            <de><![CDATA[Bitte E-Mail, Backend oder beide Benachrichtigungswege auswählen.]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidLanguages">
+            <de><![CDATA[Bitte zweistellige Sprachcodes wie de,en oder Projektsprachen konfigurieren.]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.missing">
+            <de><![CDATA[Produkt #[productId], Feld #[fieldId] ([fieldTitle]): Fehlende Übersetzungen: [languages]]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.failed">
+            <de><![CDATA[Produkt #[productId] konnte nicht geprüft werden. Details stehen im Systemprotokoll.]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.summary">
+            <de><![CDATA[Produktqualität: [checked] Produkte geprüft, [issues] Hinweise. Prüfsprachen: [languages].]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.truncated">
+            <de><![CDATA[Der Bericht zeigt die ersten [limit] Hinweise. Weitere Hinweise sind vorhanden.]]></de>
+        </locale>
+
 <!-- searchtypes -->
         <locale name="searchtype.text.title">
 <de><![CDATA[Text-Eingabefeld]]></de>

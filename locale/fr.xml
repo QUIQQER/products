@@ -670,6 +670,58 @@
 <fr><![CDATA[Parcourt toutes les images et génère leur cache pour accélérer le premier affichage d’un produit.]]></fr>
         </locale>
 
+        <locale name="cron.productQualityCheck.title">
+            <fr><![CDATA[Vérifier la qualité des produits]]></fr>
+        </locale>
+        <locale name="cron.productQualityCheck.description">
+            <fr><![CDATA[Vérifie les traductions des produits et signale les textes manquants par e-mail ou message dans l’administration. Ignore les champs facultatifs vides.]]></fr>
+        </locale>
+        <locale name="cron.productQualityCheck.notification">
+            <fr><![CDATA[Canal de notification (par défaut : e-mail)]]></fr>
+        </locale>
+        <locale name="cron.productQualityCheck.notification.email">
+            <fr><![CDATA[E-mail]]></fr>
+        </locale>
+        <locale name="cron.productQualityCheck.notification.backend">
+            <fr><![CDATA[Message dans l’administration]]></fr>
+        </locale>
+        <locale name="cron.productQualityCheck.notification.both">
+            <fr><![CDATA[E-mail et message dans l’administration]]></fr>
+        </locale>
+        <locale name="cron.productQualityCheck.email">
+            <fr><![CDATA[Destinataire de l’e-mail (vide : adresse de l’administrateur)]]></fr>
+        </locale>
+        <locale name="cron.productQualityCheck.users">
+            <fr><![CDATA[Destinataires dans l’administration (vide : tous les superutilisateurs)]]></fr>
+        </locale>
+        <locale name="cron.productQualityCheck.languages">
+            <fr><![CDATA[Langues à vérifier, p. ex. de,en (vide : langues de tous les projets)]]></fr>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidEmail">
+            <fr><![CDATA[Configurez une adresse e-mail valide pour le destinataire ou l’administrateur.]]></fr>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidUsers">
+            <fr><![CDATA[Sélectionnez des destinataires valides ou configurez au moins un superutilisateur.]]></fr>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidNotification">
+            <fr><![CDATA[Sélectionnez l’e-mail, l’administration ou les deux canaux de notification.]]></fr>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidLanguages">
+            <fr><![CDATA[Configurez des codes de langue à deux lettres, tels que de,en, ou les langues des projets.]]></fr>
+        </locale>
+        <locale name="cron.productQualityCheck.missing">
+            <fr><![CDATA[Produit #[productId], champ #[fieldId] ([fieldTitle]) : Traductions manquantes : [languages]]]></fr>
+        </locale>
+        <locale name="cron.productQualityCheck.failed">
+            <fr><![CDATA[Le produit #[productId] n’a pas pu être vérifié. Consultez le journal système.]]></fr>
+        </locale>
+        <locale name="cron.productQualityCheck.summary">
+            <fr><![CDATA[Qualité des produits : [checked] produits vérifiés, [issues] problèmes. Langues : [languages].]]></fr>
+        </locale>
+        <locale name="cron.productQualityCheck.truncated">
+            <fr><![CDATA[Le rapport affiche les [limit] premiers problèmes. D’autres problèmes ont été détectés.]]></fr>
+        </locale>
+
 <!-- searchtypes -->
         <locale name="searchtype.text.title">
 <fr><![CDATA[Champ de texte]]></fr>
