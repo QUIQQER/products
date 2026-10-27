@@ -23,6 +23,9 @@ class SuggestTest extends ProductIntegrationTestCase
 
         self::assertStringContainsString('quiqqer-products-search-suggest-form', $html);
         self::assertStringContainsString('type="search"', $html);
+        self::assertStringContainsString('data-name="suggestForm"', $html);
+        self::assertStringContainsString('data-name="suggestInput"', $html);
+        self::assertStringContainsString('data-name="suggestButton"', $html);
         self::assertStringContainsString('action="' . $Site->getUrlRewritten() . '"', $html);
         self::assertSame(1, $Control->getAttribute('data-qui-options-globalsearch'));
         self::assertSame(7, $Control->getAttribute('data-qui-options-limit'));
