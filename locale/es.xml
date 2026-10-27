@@ -398,6 +398,9 @@
 <es><![CDATA[<p>Aún no se ha asignado una carpeta multimedia a este campo.</p>]]></es>
         </locale>
 
+        <locale name="category.control.productlist.restoring">
+<es><![CDATA[Cargando más productos …]]></es>
+        </locale>
         <locale name="category.control.productlist.button.more">
 <es><![CDATA[Cargar más]]></es>
         </locale>

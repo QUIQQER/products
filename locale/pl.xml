@@ -398,6 +398,9 @@
 <pl><![CDATA[<p>Do pola nie przypisano jeszcze folderu mediów.</p>]]></pl>
         </locale>
 
+        <locale name="category.control.productlist.restoring">
+<pl><![CDATA[Wczytywanie kolejnych produktów …]]></pl>
+        </locale>
         <locale name="category.control.productlist.button.more">
 <pl><![CDATA[Wczytaj więcej]]></pl>
         </locale>

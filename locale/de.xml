@@ -451,6 +451,9 @@
 <de><![CDATA[<p>Dem Feld wurde noch kein Media Ordner zugewiesen.</p>]]></de>
         </locale>
 
+        <locale name="category.control.productlist.restoring">
+<de><![CDATA[Weitere Produkte werden geladen …]]></de>
+        </locale>
         <locale name="category.control.productlist.button.more">
 <de><![CDATA[Mehr laden]]></de>
         </locale>

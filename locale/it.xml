@@ -398,6 +398,9 @@
 <it><![CDATA[<p>A questo campo non è ancora stata assegnata una cartella media.</p>]]></it>
         </locale>
 
+        <locale name="category.control.productlist.restoring">
+<it><![CDATA[Caricamento di altri prodotti …]]></it>
+        </locale>
         <locale name="category.control.productlist.button.more">
 <it><![CDATA[Carica altri]]></it>
         </locale>

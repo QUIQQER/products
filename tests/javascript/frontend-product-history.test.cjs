@@ -4,6 +4,21 @@ const {resolve} = require('node:path');
 const {test} = require('node:test');
 const vm = require('node:vm');
 
+function createElement() {
+    const attributes = new Map();
+    const classes = new Set();
+    return {
+        inert: false,
+        children: [],
+        classList: {add: name => classes.add(name), remove: name => classes.delete(name)},
+        getAttribute: name => attributes.get(name) ?? null,
+        setAttribute: (name, value) => attributes.set(name, value),
+        removeAttribute: name => attributes.delete(name),
+        append(...children) {this.children.push(...children);},
+        after() {}
+    };
+}
+
 function loadList({count = 9, navigation = 'navigate', state = {otherControl: 'preserved'}} = {}) {
     let definition;
     const listeners = new Map();
@@ -44,12 +59,13 @@ function loadList({count = 9, navigation = 'navigate', state = {otherControl: 'p
         setTimeout,
         clearTimeout,
         Element: {NativeEvents: {}},
+        document: {createElement},
         typeOf: value => Array.isArray(value) ? 'array' : typeof value,
         Class: function (value) { return value; },
         define(name, dependencies, factory) {
             definition = factory(...dependencies.map(dependency => ({
                 'qui/QUI': {Controls: {getById: () => fields[0], getControlsInElement: () => []}},
-                Locale: {get: (group, key, params) => params.count},
+                Locale: {get: (group, key, params) => params?.count ?? key},
                 URI: url => ({
                     search: () => Object.fromEntries(new URL(url).searchParams),
                     query: () => Object.fromEntries(new URL(url).searchParams)
@@ -100,10 +116,16 @@ function loadList({count = 9, navigation = 'navigate', state = {otherControl: 'p
         showList: () => Promise.resolve(),
         $refreshSearchCount: () => Promise.resolve(),
         $renderFilterFields() {},
+        $setHistoryLoading(loading) {this.$historyLoading = loading;},
         $renderSearch: async (...args) => {
             renders.push(args);
-            list.$ContainerReal.children = Array.from({length: args[1] || 9}, () => ({dataset: {pid: '1'}}));
-            list.$listStartIndex = args[2] || 0;
+            const rows = Array.from({length: args[1] || 9}, () => ({dataset: {pid: '1'}}));
+            if (args[0]) {
+                list.$ContainerReal.children.push(...rows);
+            } else {
+                list.$ContainerReal.children = rows;
+                list.$listStartIndex = args[2] || 0;
+            }
             list.$renderedListView = attributes.view;
             list.$renderedListUrl = window.location.href;
         },
@@ -137,7 +159,8 @@ test('history restores all loaded products, scrolling and autoload progress with
     await fixture.list.$installHistory();
     fixture.window.history.state = fixture.snapshot(27);
     await fixture.list.$restoreHistory(fixture.window.history.state);
-    assert.deepEqual(fixture.renders, [[undefined, 27, 0]]);
+    assert.deepEqual(fixture.renders, [[true, 18]]);
+    assert.equal(fixture.list.$ContainerReal.children.length, 27);
     assert.equal(fixture.window.scrollY, 1400);
     assert.equal(fixture.list.$moreButtonClicked, 4);
     assert.equal(fixture.attributes.productLoadNumber, 9);
@@ -167,7 +190,7 @@ test('back and forward between a list and a product preserve the list entry and 
     await fixture.list.$restoreHistory(null);
     fixture.window.location = new URL('https://shop.example/category');
     await fixture.list.$restoreHistory(listState);
-    assert.deepEqual(fixture.renders, [[undefined, 27, 0]]);
+    assert.deepEqual(fixture.renders, [[true, 18]]);
     assert.equal(fixture.window.scrollY, 1400);
     assert.ok(fixture.writes.every(([kind]) => kind === 'replace'));
 });
@@ -185,7 +208,7 @@ test('rapid history changes serialize restoration and discard an obsolete transi
     await new Promise(resolve => setImmediate(resolve));
     finishRead();
     await second;
-    assert.deepEqual(fixture.renders, [[undefined, 36, 0]]);
+    assert.deepEqual(fixture.renders, [[true, 27]]);
     assert.equal(fixture.window.scrollY, 2200);
 });
 
@@ -353,4 +376,93 @@ test('equally sized lists with different filters or views are fetched instead of
         assert.deepEqual(fixture.renders, [[undefined, 27, 0]], change);
         assert.equal(counts, 1, change);
     }
+});
+
+test('restoration appends only missing rows and keeps visible products and their controls intact', async () => {
+    const fixture = loadList({count: 12});
+    await fixture.list.$installHistory();
+    const originalRows = Array.from(fixture.list.$ContainerReal.children);
+    let countRequests = 0;
+    fixture.list.$refreshSearchCount = async () => countRequests++;
+    await fixture.list.$restoreHistory(fixture.snapshot(72));
+    assert.deepEqual(fixture.renders, [[true, 60]]);
+    assert.deepEqual(fixture.list.$ContainerReal.children.slice(0, 12), originalRows);
+    assert.equal(fixture.list.$ContainerReal.children.length, 72);
+    assert.equal(countRequests, 0);
+});
+
+test('pending history disables list actions for mouse and keyboard but leaves product cards interactive', () => {
+    const fixture = loadList();
+    const Sort = createElement();
+    const More = createElement();
+    const Product = createElement();
+    More.inert = true;
+    More.setAttribute('aria-disabled', 'true');
+    Object.assign(fixture.list, {
+        $Container: createElement(),
+        $ContainerReal: createElement(),
+        $FilterContainer: createElement(),
+        $BarSort: Sort,
+        $More: More
+    });
+    fixture.list.$ContainerReal.children.push(Product);
+    fixture.definition.$setHistoryLoading.call(fixture.list, true);
+    fixture.definition.$setHistoryLoading.call(fixture.list, true);
+    assert.equal(Sort.inert, true);
+    assert.equal(Sort.getAttribute('aria-disabled'), 'true');
+    assert.equal(Product.inert, false);
+    assert.equal(fixture.list.$ContainerReal.inert, false);
+    assert.equal(fixture.list.$ContainerReal.getAttribute('aria-busy'), 'true');
+    assert.equal(fixture.list.$HistoryLoadingStatus.hidden, false);
+    assert.equal(fixture.list.$HistoryLoadingStatus.getAttribute('role'), 'status');
+    fixture.definition.$setHistoryLoading.call(fixture.list, false);
+    assert.equal(Sort.inert, false);
+    assert.equal(Sort.getAttribute('aria-disabled'), null);
+    assert.equal(More.inert, true);
+    assert.equal(More.getAttribute('aria-disabled'), 'true');
+    assert.equal(fixture.list.$HistoryLoadingStatus.hidden, true);
+});
+
+test('list methods ignore interaction while restoration is pending', async () => {
+    const fixture = loadList();
+    fixture.list.$historyLoading = true;
+    fixture.list.$sortingEnabled = true;
+    for (const method of ['next', 'galleryView', 'detailView', 'listView']) {
+        await fixture.list[method]();
+    }
+    assert.deepEqual(fixture.renders, []);
+    assert.equal(fixture.attributes.view, 'gallery');
+});
+
+test('a user-selected product cancels pending restoration without replacing its saved list size', () => {
+    const fixture = loadList();
+    fixture.list.$historyLoading = true;
+    fixture.list.$restoringHistory = true;
+    fixture.list.getElm = () => {throw new Error('product opening begins');};
+    let writes = 0;
+    fixture.list.$saveHistoryState = () => writes++;
+    assert.throws(() => fixture.definition.openProduct.call(fixture.list, 55), /product opening begins/);
+    assert.equal(fixture.list.$historyVersion, 1);
+    assert.equal(fixture.list.$restoringHistory, false);
+    assert.equal(fixture.list.$historyLoading, false);
+    assert.equal(writes, 0);
+});
+
+test('failed restoration releases disabled controls and hides the loading status', async () => {
+    const fixture = loadList();
+    await fixture.list.$installHistory();
+    Object.assign(fixture.list, {
+        $Container: createElement(),
+        $ContainerReal: createElement(),
+        $FilterContainer: createElement(),
+        $BarSort: createElement(),
+        $More: createElement(),
+        $setHistoryLoading: fixture.definition.$setHistoryLoading,
+        $renderSearch: () => Promise.reject(new Error('offline'))
+    });
+    await assert.rejects(fixture.list.$restoreHistory(fixture.snapshot(27)), /offline/);
+    assert.equal(fixture.list.$BarSort.inert, false);
+    assert.equal(fixture.list.$More.inert, false);
+    assert.equal(fixture.list.$ContainerReal.getAttribute('aria-busy'), 'false');
+    assert.equal(fixture.list.$HistoryLoadingStatus.hidden, true);
 });

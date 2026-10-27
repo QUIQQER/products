@@ -2,6 +2,20 @@
     display: inline-block;
 }
 
+.quiqqer-products-productList-history-pending {
+    cursor: wait;
+    opacity: 0.5;
+}
+
+.quiqqer-products-productList-history-loading:not([hidden]) {
+    align-items: center;
+    clear: both;
+    display: flex;
+    gap: 0.5em;
+    justify-content: center;
+    padding: 1em;
+}
+
 .quiqqer-products-productList-categories__top {
     margin-bottom: 40px;
 }

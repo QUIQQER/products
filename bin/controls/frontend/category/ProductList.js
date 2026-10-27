@@ -149,6 +149,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$load = false;
             this.$readLocationRunning = false;
             this.$restoringHistory = false;
+            this.$historyLoading = false;
             this.$historyVersion = 0;
             this.$historyTransition = Promise.resolve();
 
@@ -583,7 +584,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     this.$onFilterChange();
                 }.bind(this));
             }.bind(this));
-
+            const navigation = window.performance?.getEntriesByType('navigation')[0];
+            if (navigation?.type === 'back_forward' && window.history.state?.quiqqerProductLists) {
+                this.$setHistoryLoading(true);
+            }
 
             (function () {
                 if ("p" in search) {
@@ -632,6 +636,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.addEvents({
                 onDestroy: () => {
                     this.$load = false;
+                    this.$setHistoryLoading(false);
                     clearTimeout(scrollTimer);
                     window.removeEventListener('popstate', onPopstate);
                     window.removeEventListener('pagehide', onPageHide);
@@ -647,6 +652,72 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             this.$saveHistoryState();
             return Promise.resolve();
+        },
+
+        /**
+         * Lock list actions during restoration, leaving product cards interactive.
+         */
+        $setHistoryLoading: function (loading) {
+            this.$historyLoading = loading;
+            this.$historyDisabledControls ??= new Map();
+
+            if (loading) {
+                const controls = [
+                    this.$BarSort,
+                    this.$BarDisplays,
+                    this.$BarFilter,
+                    this.$FilterFL,
+                    this.$FilterMobile,
+                    this.$FilterContainer,
+                    this.$FreeTextContainer,
+                    this.$More,
+                    this.$CategoryMore
+                ];
+
+                for (const Control of controls) {
+                    if (!Control || this.$historyDisabledControls.has(Control)) {
+                        continue;
+                    }
+
+                    this.$historyDisabledControls.set(Control, {
+                        inert: Control.inert,
+                        ariaDisabled: Control.getAttribute('aria-disabled')
+                    });
+                    Control.inert = true;
+                    Control.setAttribute('aria-disabled', 'true');
+                    Control.classList.add('quiqqer-products-productList-history-pending');
+                }
+
+                if (!this.$HistoryLoadingStatus) {
+                    const Status = document.createElement('div');
+                    Status.className = 'quiqqer-products-productList-history-loading';
+                    Status.setAttribute('role', 'status');
+                    const Icon = document.createElement('span');
+                    Icon.className = 'fa fa-spinner fa-spin';
+                    Icon.setAttribute('aria-hidden', 'true');
+                    const Text = document.createElement('span');
+                    Text.textContent = QUILocale.get(lg, 'category.control.productlist.restoring');
+                    Status.append(Icon, Text);
+                    this.$Container.after(Status);
+                    this.$HistoryLoadingStatus = Status;
+                }
+            } else {
+                for (const [Control, state] of this.$historyDisabledControls) {
+                    Control.inert = state.inert;
+                    if (state.ariaDisabled === null) {
+                        Control.removeAttribute('aria-disabled');
+                    } else {
+                        Control.setAttribute('aria-disabled', state.ariaDisabled);
+                    }
+                    Control.classList.remove('quiqqer-products-productList-history-pending');
+                }
+                this.$historyDisabledControls.clear();
+            }
+
+            this.$ContainerReal.setAttribute('aria-busy', String(loading));
+            if (this.$HistoryLoadingStatus) {
+                this.$HistoryLoadingStatus.hidden = !loading;
+            }
         },
 
         $saveHistoryState: function () {
@@ -681,6 +752,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             const version = ++this.$historyVersion;
             let restored = false;
             this.$restoringHistory = true;
+            this.$setHistoryLoading(true);
             clearTimeout(this.$refreshTimer);
             this.$historyTransition = this.$historyTransition.catch(console.error).then(async () => {
                 if (version !== this.$historyVersion || !this.$load) {
@@ -706,14 +778,15 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     ? saved.startIndex : 0;
                 const productCount = Array.from(this.$ContainerReal.children)
                     .filter(Element => Element.dataset.pid).length;
-                const reuseList = saved
+                const sameList = saved
                     && this.$renderedListUrl === saved.url
                     && this.$renderedListView === saved.view
-                    && (this.$listStartIndex || 0) === startIndex
-                    && productCount === saved.productCount;
+                    && (this.$listStartIndex || 0) === startIndex;
 
                 // Opening a product only hides the list; keep its parsed controls and images.
-                if (!reuseList) {
+                if (sameList && productCount > 0 && productCount < saved.productCount) {
+                    await this.$renderSearch(true, saved.productCount - productCount);
+                } else if (!sameList || productCount !== saved.productCount) {
                     await this.$refreshSearchCount();
 
                     if (version !== this.$historyVersion) {
@@ -738,6 +811,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }).finally(() => {
                 if (version === this.$historyVersion) {
                     this.$restoringHistory = false;
+                    this.$setHistoryLoading(false);
                     if (restored) {
                         this.$saveHistoryState();
                     }
@@ -883,7 +957,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                             console.log('$readWindowLocation', 8);
                         }
 
-                        this.openProduct(productId).then(function () {
+                        this.openProduct(productId, true).then(function () {
                             self.$readLocationRunning = false;
                             resolve();
                         });
@@ -1047,7 +1121,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @param {Boolean} [userExecute] - flag for user execution
          */
         $setWindowLocation: function (userExecute) {
-            if (!this.$load || this.$restoringHistory) {
+            if (!this.$load || this.$restoringHistory || this.$historyLoading) {
                 return;
             }
 
@@ -1154,6 +1228,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         next: function () {
+            if (this.$historyLoading || this.$restoringHistory) {
+                return Promise.resolve();
+            }
+
             let self = this,
                 size = this.$More.getSize();
 
@@ -1207,7 +1285,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         galleryView: function () {
-            if (!this.$sortingEnabled || !this.$load) {
+            if (this.$historyLoading || !this.$sortingEnabled || !this.$load) {
                 return Promise.resolve();
             }
 
@@ -1226,7 +1304,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         detailView: function () {
-            if (!this.$sortingEnabled || !this.$load) {
+            if (this.$historyLoading || !this.$sortingEnabled || !this.$load) {
                 return Promise.resolve();
             }
 
@@ -1245,7 +1323,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         listView: function () {
-            if (!this.$sortingEnabled || !this.$load) {
+            if (this.$historyLoading || !this.$sortingEnabled || !this.$load) {
                 return Promise.resolve();
             }
 
@@ -2808,13 +2886,20 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * Open a product in the list
          *
          * @param {Number} productId
+         * @param {Boolean} [fromHistory] - product selection was read from the current URL
          */
-        openProduct: function (productId) {
+        openProduct: function (productId, fromHistory = false) {
             if (this.$productId === productId) {
                 return Promise.resolve();
             }
 
-            this.$saveHistoryState();
+            if (this.$historyLoading && !fromHistory) {
+                this.$historyVersion++;
+                this.$restoringHistory = false;
+                this.$setHistoryLoading(false);
+            } else {
+                this.$saveHistoryState();
+            }
 
             let ListContainer = this.getElm().getElement('.quiqqer-products-productList-products');
 

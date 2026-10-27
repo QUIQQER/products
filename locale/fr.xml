@@ -398,6 +398,9 @@
 <fr><![CDATA[<p>Aucun dossier de médias n’a encore été attribué à ce champ.</p>]]></fr>
         </locale>
 
+        <locale name="category.control.productlist.restoring">
+<fr><![CDATA[Chargement des produits supplémentaires …]]></fr>
+        </locale>
         <locale name="category.control.productlist.button.more">
 <fr><![CDATA[Charger plus]]></fr>
         </locale>

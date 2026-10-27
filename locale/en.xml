@@ -450,6 +450,9 @@ This suffix is appended to all automatically generated article numbers. Optional
 <en><![CDATA[<p>The field was still not assigned a media folder.</p>]]></en>
         </locale>
 
+        <locale name="category.control.productlist.restoring">
+<en><![CDATA[Loading more products …]]></en>
+        </locale>
         <locale name="category.control.productlist.button.more">
 <en><![CDATA[More]]></en>
         </locale>
