@@ -62,6 +62,14 @@
 
         <image src="URL_OPT_DIR/quiqqer/products/bin/images/Logo.png"/>
 
+        <preview>
+            <image src="URL_OPT_DIR/quiqqer/products/bin/images/preview/quiqqer-products-screenshot-1.png"/>
+            <image src="URL_OPT_DIR/quiqqer/products/bin/images/preview/quiqqer-products-screenshot-2.png"/>
+            <image src="URL_OPT_DIR/quiqqer/products/bin/images/preview/quiqqer-products-screenshot-3.png"/>
+            <image src="URL_OPT_DIR/quiqqer/products/bin/images/preview/quiqqer-products-screenshot-4.png"/>
+            <image src="URL_OPT_DIR/quiqqer/products/bin/images/preview/quiqqer-products-screenshot-5.png"/>
+        </preview>
+
         <support>
             <email><![CDATA[support@pcsg.de]]></email>
             <forum><![CDATA[https://community.quiqqer.com]]></forum>
