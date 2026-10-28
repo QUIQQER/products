@@ -38,7 +38,8 @@ class SuggestResultPriceTest extends TestCase
         $Product = $this->createMock(Product::class);
         $Product->method('getUrl')->willReturn('/phpunit-product');
         $Product->method('getImage')->willReturn($Image);
-        $Product->method('getTitle')->willReturn('PHPUnit product');
+        $title = 'PHPUnit <img src=x onerror=alert(1)> product';
+        $Product->method('getTitle')->willReturn($title);
         $Product->method('getDescription')->willReturn('PHPUnit description');
         $Product->method('getFieldValueByLocale')->willReturn('PHPUNIT-389');
         $Product->expects($showPrice && !$hidden ? self::once() : self::never())
@@ -66,7 +67,9 @@ class SuggestResultPriceTest extends TestCase
                 'showPrice' => $showPrice,
                 'hidePrice' => Package::hidePrice()
             ]);
-            $html = $Engine->fetch(OPT_DIR . 'quiqqer/products/template/search/frontend/SuggestRendered.html');
+            $template = file_get_contents(OPT_DIR . 'quiqqer/products/template/search/frontend/SuggestRendered.html');
+            self::assertIsString($template);
+            $html = $Engine->fetch('string:' . $template);
         } finally {
             $Products->setValue(null, $previousProducts);
             $Visibility->setValue(null, $previousVisibility);
@@ -76,8 +79,18 @@ class SuggestResultPriceTest extends TestCase
         $Document = new DOMDocument();
         self::assertTrue($Document->loadHTML('<?xml encoding="UTF-8">' . $html));
         $XPath = new DOMXPath($Document);
+        self::assertSame(1.0, $XPath->evaluate('count(//a[@data-name="suggestLink"][@href="/phpunit-product"])'));
+        self::assertSame($title, trim((string)$XPath->evaluate(
+            'string(//a[@data-name="suggestLink"]//span[@class="quiqqer-products-search-suggest-dropdown-title"])'
+        )));
+        self::assertSame(1.0, $XPath->evaluate('count(//img)'));
+        self::assertSame(1.0, $XPath->evaluate('count(//img[@alt=""][@loading="lazy"])'));
         $visible = $showPrice && !$hidden;
         self::assertSame($visible ? 1.0 : 0.0, $XPath->evaluate('count(//*[@data-name="suggestPrice"])'));
+        self::assertSame(
+            $visible ? 1.0 : 0.0,
+            $XPath->evaluate('count(//a[@data-name="suggestLink"]/*[@data-name="suggestPrice"])')
+        );
         self::assertSame(
             $visible && $starting ? 1.0 : 0.0,
             $XPath->evaluate('count(//span[@class="qui-products-price-display-prefix"])')

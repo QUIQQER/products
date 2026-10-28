@@ -3,58 +3,58 @@
         {foreach $result as $productId}
         {assign var=Product value=QUI\ERP\Products\Handler\Products::getProduct($productId)}
 
-        <li data-url="{$Product->getUrl()}">
-            <div class="quiqqer-products-search-suggest-dropdown-icon">
-                <img src="{$Product->getImage()->getSizeCacheUrl(100, 100)}"
-                     alt="{$Product->getTitle()|escape:'html'}"
-                />
-            </div>
+        <li class="quiqqer-products-search-suggest-dropdown-entry" data-name="suggestResult"
+            data-url="{$Product->getUrl()|escape:'html'}">
+            <a class="quiqqer-products-search-suggest-dropdown-link" data-name="suggestLink"
+               href="{$Product->getUrl()|escape:'html'}">
+                <span class="quiqqer-products-search-suggest-dropdown-icon" aria-hidden="true">
+                    <img src="{$Product->getImage()->getSizeCacheUrl(120, 120)|escape:'html'}"
+                         alt="" loading="lazy" width="60" height="60"/>
+                </span>
 
-            <div class="quiqqer-products-search-suggest-dropdown-text">
-                <div class="quiqqer-products-search-suggest-dropdown-title">
-                    {$Product->getTitle($Locale)}
-                </div>
-                {if $showDesc}
-                <div class="quiqqer-products-search-suggest-dropdown-description">
-                    {$Product->getDescription($Locale)}
-                </div>
-                {/if}
+                <span class="quiqqer-products-search-suggest-dropdown-text">
+                    <span class="quiqqer-products-search-suggest-dropdown-title">
+                        {$Product->getTitle($Locale)|escape:'html'}
+                    </span>
+                    {if $showDesc}
+                    <span class="quiqqer-products-search-suggest-dropdown-description">
+                        {$Product->getDescription($Locale)|strip_tags|escape:'html'}
+                    </span>
+                    {/if}
+
+                    {assign var=articleNo
+                        value=$Product->getFieldValueByLocale(QUI\ERP\Products\Handler\Fields::FIELD_PRODUCT_NO, $Locale)
+                    }
+                    {if !empty($articleNo)}
+                    <span class="quiqqer-products-search-suggest-dropdown-description-articlNo">
+                        {locale group="quiqqer/products" var="productNo"}: {$articleNo|escape:'html'}
+                    </span>
+                    {/if}
+                </span>
 
                 {if $showPrice && !$hidePrice}
                 <div class="quiqqer-products-search-suggest-dropdown-price" data-name="suggestPrice">
                     {$Product->getViewFrontend()->getPriceDisplay()->create()}
                 </div>
                 {/if}
-            </div>
-
-            {assign var=articleNo
-            value=$Product->getFieldValueByLocale(QUI\ERP\Products\Handler\Fields::FIELD_PRODUCT_NO, $Locale)
-            }
-
-            {if !empty($articleNo)}
-            <div class="quiqqer-products-search-suggest-dropdown-description-articlNo">
-            <span>
-                {locale group="quiqqer/products" var="productNo"}:
-            </span>
-                {$articleNo}
-            </div>
-            {/if}
+            </a>
         </li>
         {/foreach}
     </ul>
 
     {if $pages > 1 && ($showLinkToSearchSite && $searchUrl)}
     <div class="quiqqer-products-mobileSuggest-results-list-showAllResults">
-        <a href="{$searchUrl}">
+        <a href="{$searchUrl|escape:'html'}">
             {locale group='quiqqer/productsearch' var='settings.window.frontendSuggestSearch.frontend.showLinkToSearchSite.text'}
-            <span class="fa fa-angle-right"></span>
+            <span class="fa fa-angle-right" aria-hidden="true"></span>
         </a>
     </div>
     {/if}
 </div>
 
-<form>
-    <select name="quiqqer-products-search-sheets">
+{if $pages > 1}
+<form class="quiqqer-products-search-suggest-pagination">
+    <select aria-label="{locale group='quiqqer/bricks' var='controls.pagination.mobile.option' from=$active max=$pages}" name="quiqqer-products-search-sheets">
         {section name=sheets start=0 loop=$pages}
         {assign var=num value=$smarty.section.sheets.index+1}
         <option value="{$num}" {if $num== $active}selected="selected" {/if}>
@@ -67,3 +67,4 @@
         {/section}
     </select>
 </form>
+{/if}
