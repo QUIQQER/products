@@ -153,6 +153,9 @@
         <locale name="settings.window.products.editableFields">
 <pl><![CDATA[Określa, które pola są dziedziczone, a które można edytować w wariantach.]]></pl>
         </locale>
+        <locale name="settings.window.products.editableFields.description">
+<pl><![CDATA[Te ustawienia domyślnie dotyczą wszystkich wariantów. Dziedziczenie i możliwość edycji można również skonfigurować oddzielnie dla każdego produktu nadrzędnego.]]></pl>
+        </locale>
         <locale name="settings.window.products.findChildrenInSearch">
 <pl><![CDATA[Warianty: uwzględniaj w wyszukiwaniu]]></pl>
         </locale>
@@ -208,13 +211,7 @@
 <pl><![CDATA[Współczynniki pól cenowych]]></pl>
         </locale>
         <locale name="settings.window.products.priceFieldFactors.description" html="true">
-<pl><![CDATA[Pozwala ustawić mnożnik dla każdego pola cenowego w systemie na podstawie innego pola cenowego.<br/><br/>
-<b>Przykład:</b><br/>
-Pole cenowe: <b>Sugerowana cena detaliczna</b><br/>
-Mnożnik: <b>1.5</b><br/>
-Na podstawie pola cenowego: <b>Cena</b> (Wartość: <b>50,00 €</b>)<br/><br/>
-Sugerowana cena detaliczna po zastosowaniu mnożnika: <b>75,00 €</b>
-]]></pl>
+<pl><![CDATA[Obliczaj pola cenowe automatycznie na podstawie ceny bazowej, mnożnika i opcjonalnej dopłaty. Włącz pola, które chcesz obliczać.<br/><b>Przykład:</b> Cena zakupu 50 € × mnożnik 1,5 = cena sprzedaży 75 €.]]></pl>
         </locale>
 
         <locale name="menu.erp.products.autoArticleNos.title">
@@ -276,13 +273,13 @@ Sugerowana cena detaliczna po zastosowaniu mnożnika: <b>75,00 €</b>
 <pl><![CDATA[Edytowalne w wariantach]]></pl>
         </locale>
         <locale name="fieldEditableDesc">
-<pl><![CDATA[Każdy wariant może mieć własną wartość tego pola.]]></pl>
+<pl><![CDATA[Każdy wariant może mieć własną wartość tego pola. To ustawienie można również skonfigurować oddzielnie dla każdego produktu nadrzędnego.]]></pl>
         </locale>
         <locale name="fieldInherited">
 <pl><![CDATA[Dziedziczone z produktu nadrzędnego w wariantach]]></pl>
         </locale>
         <locale name="fieldInheritedDesc">
-<pl><![CDATA[Warianty dziedziczą wartość tego pola z produktu nadrzędnego, chyba że mają ustawioną własną wartość.]]></pl>
+<pl><![CDATA[Warianty dziedziczą wartość tego pola z produktu nadrzędnego, chyba że mają ustawioną własną wartość. To ustawienie można również skonfigurować oddzielnie dla każdego produktu nadrzędnego.]]></pl>
         </locale>
         <locale name="priority">
 <pl><![CDATA[Sortowanie]]></pl>
@@ -401,6 +398,9 @@ Sugerowana cena detaliczna po zastosowaniu mnożnika: <b>75,00 €</b>
 <pl><![CDATA[<p>Do pola nie przypisano jeszcze folderu mediów.</p>]]></pl>
         </locale>
 
+        <locale name="category.control.productlist.restoring">
+<pl><![CDATA[Wczytywanie kolejnych produktów …]]></pl>
+        </locale>
         <locale name="category.control.productlist.button.more">
 <pl><![CDATA[Wczytaj więcej]]></pl>
         </locale>
@@ -668,6 +668,58 @@ Sugerowana cena detaliczna po zastosowaniu mnożnika: <b>75,00 €</b>
         </locale>
         <locale name="cron.generateCacheImagesOfProducts.description">
 <pl><![CDATA[Przetwarza wszystkie zdjęcia i tworzy ich pamięć podręczną, aby przyspieszyć pierwsze otwarcie produktu.]]></pl>
+        </locale>
+
+        <locale name="cron.productQualityCheck.title">
+            <pl><![CDATA[Sprawdź jakość produktów]]></pl>
+        </locale>
+        <locale name="cron.productQualityCheck.description">
+            <pl><![CDATA[Sprawdza tłumaczenia produktów i zgłasza brakujące teksty e-mailem lub wiadomością w panelu. Pomija puste pola opcjonalne.]]></pl>
+        </locale>
+        <locale name="cron.productQualityCheck.notification">
+            <pl><![CDATA[Kanał powiadomień (domyślnie: e-mail)]]></pl>
+        </locale>
+        <locale name="cron.productQualityCheck.notification.email">
+            <pl><![CDATA[E-mail]]></pl>
+        </locale>
+        <locale name="cron.productQualityCheck.notification.backend">
+            <pl><![CDATA[Wiadomość w panelu]]></pl>
+        </locale>
+        <locale name="cron.productQualityCheck.notification.both">
+            <pl><![CDATA[E-mail i wiadomość w panelu]]></pl>
+        </locale>
+        <locale name="cron.productQualityCheck.email">
+            <pl><![CDATA[Adresat e-mail (puste: adres administratora)]]></pl>
+        </locale>
+        <locale name="cron.productQualityCheck.users">
+            <pl><![CDATA[Adresaci w panelu (puste: wszyscy superużytkownicy)]]></pl>
+        </locale>
+        <locale name="cron.productQualityCheck.languages">
+            <pl><![CDATA[Języki do sprawdzenia, np. de,en (puste: języki wszystkich projektów)]]></pl>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidEmail">
+            <pl><![CDATA[Skonfiguruj prawidłowy adres e-mail odbiorcy lub administratora.]]></pl>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidUsers">
+            <pl><![CDATA[Wybierz prawidłowych odbiorców w panelu lub skonfiguruj co najmniej jednego superużytkownika.]]></pl>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidNotification">
+            <pl><![CDATA[Wybierz e-mail, panel lub oba kanały powiadomień.]]></pl>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidLanguages">
+            <pl><![CDATA[Skonfiguruj dwuliterowe kody języków, np. de,en, lub języki projektów.]]></pl>
+        </locale>
+        <locale name="cron.productQualityCheck.missing">
+            <pl><![CDATA[Produkt #[productId], pole #[fieldId] ([fieldTitle]): Brakujące tłumaczenia: [languages]]]></pl>
+        </locale>
+        <locale name="cron.productQualityCheck.failed">
+            <pl><![CDATA[Nie można sprawdzić produktu #[productId]. Szczegóły znajdują się w dzienniku systemowym.]]></pl>
+        </locale>
+        <locale name="cron.productQualityCheck.summary">
+            <pl><![CDATA[Jakość produktów: sprawdzono [checked] produktów, [issues] problemów. Języki: [languages].]]></pl>
+        </locale>
+        <locale name="cron.productQualityCheck.truncated">
+            <pl><![CDATA[Raport pokazuje pierwszych [limit] problemów. Znaleziono więcej problemów.]]></pl>
         </locale>
 
 <!-- searchtypes -->
@@ -1803,11 +1855,35 @@ Sugerowana cena detaliczna po zastosowaniu mnożnika: <b>75,00 €</b>
         <locale name="controls.settings.PriceFieldFactors.btn.update">
 <pl><![CDATA[Zaktualizuj ceny produktów]]></pl>
         </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSourceField">
+<pl><![CDATA[Cena bazowa]]></pl>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelFactor">
+<pl><![CDATA[Mnożnik]]></pl>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.descFactor">
+<pl><![CDATA[1,5 = +50 %]]></pl>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSurcharge">
+<pl><![CDATA[Dopłata (netto)]]></pl>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSurchargePriority">
+<pl><![CDATA[Zastosuj dopłatę]]></pl>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRounding">
+<pl><![CDATA[Zaokrąglanie]]></pl>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelCalculation">
+<pl><![CDATA[Automatyczne obliczanie ceny]]></pl>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelManual">
+<pl><![CDATA[Bez automatycznego obliczania]]></pl>
+        </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelMultiplier">
 <pl><![CDATA[x wartość pola]]></pl>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelUpdateOnSave">
-<pl><![CDATA[stosuj przy zapisywaniu produktów]]></pl>
+<pl><![CDATA[Przelicz przy zapisywaniu produktu]]></pl>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelCategoryPriority">
 <pl><![CDATA[Priorytet współczynników pól cenowych]]></pl>

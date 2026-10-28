@@ -16,6 +16,7 @@ class BoolTypeTest extends TestCase
     public function testSetValueNormalizesAcceptedBooleanRepresentations(mixed $value, int $expected): void
     {
         $Field = new BoolType(991033, ['name' => 'available']);
+        $Field->setValue(true);
 
         $Field->setValue($value);
 
@@ -35,6 +36,7 @@ class BoolTypeTest extends TestCase
         yield 'uppercase false' => ['FALSE', 0];
         yield 'lowercase false' => ['false', 0];
         yield 'empty value' => ['', 0];
+        yield 'null value' => [null, 0];
     }
 
     #[DataProvider('invalidValues')]
@@ -65,7 +67,6 @@ class BoolTypeTest extends TestCase
         yield 'wrong letter case' => ['True'];
         yield 'surrounding whitespace' => [' true '];
         yield 'array' => [[]];
-        yield 'null' => [null];
     }
 
     public function testViewsRenderTheNormalizedBooleanState(): void

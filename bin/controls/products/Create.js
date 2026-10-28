@@ -10,6 +10,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
     'qui/utils/Form',
     'Locale',
     'Mustache',
+    'Packages',
     'package/quiqqer/products/bin/classes/Products',
     'package/quiqqer/products/bin/classes/Fields',
     'package/quiqqer/products/bin/controls/categories/Select',
@@ -18,7 +19,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
     'text!package/quiqqer/products/bin/controls/products/CreateField.html',
     'css!package/quiqqer/products/bin/controls/products/Create.css'
 
-], function (QUI, QUIControl, QUIFormUtils, QUILocale, Mustache, Handler, FieldHandler, CategoriesSelect,
+], function (QUI, QUIControl, QUIFormUtils, QUILocale, Mustache, Packages, Handler, FieldHandler, CategoriesSelect,
              template, templateField
 ) {
     'use strict';
@@ -178,11 +179,12 @@ define('package/quiqqer/products/bin/controls/products/Create', [
             const StandardFields = Elm.getElement('.product-standardfield tbody');
             const Data = Elm.getElement('.product-data tbody');
 
-            Promise.all([
+            return Promise.all([
                 Fields.getSystemFields(),
                 Fields.getStandardFields(),
                 Products.getTypes(),
-                Products.isAutoGenerateNextArticleNo()
+                Products.isAutoGenerateNextArticleNo(),
+                this.$getInitialCategories()
             ]).then((result) => {
                 let i, len, field, entry, Label;
                 const systemFields = result[0],
@@ -303,119 +305,106 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                 });
 
 
-                QUI.parse(this.getElm()).then(() => {
-                    if (!this.getAttribute('categories')) {
-                        this.fireEvent('loaded');
-                        return;
-                    }
-
-                    const categories = this.getAttribute('categories');
-
-                    if (categories.length) {
-                        categories.forEach((categoryId) => {
-                            this.$Categories.addCategory(categoryId);
-                        });
-                    }
-
+                return QUI.parse(this.getElm()).then(() => {
+                    result[4].forEach(categoryId => this.$Categories.addCategory(categoryId));
                     this.fireEvent('loaded');
                 });
             });
         },
 
         /**
-         * Create the field
+         * Preserve an explicit category selection, otherwise use the configured main category.
+         */
+        $getInitialCategories: function () {
+            const categories = this.getAttribute('categories');
+
+            if (Array.isArray(categories) && categories.length) {
+                return Promise.resolve(categories);
+            }
+
+            return Packages.getConfig('quiqqer/products').then(config => {
+                const categoryId = Number.parseInt(config.products?.mainCategory, 10);
+                return [Number.isInteger(categoryId) && categoryId >= 0 ? categoryId : 0];
+            });
+        },
+
+        /**
+         * Keep validation feedback next to the invalid field, visible and keyboard-accessible.
+         */
+        $showValidationError: function (Field, message) {
+            const Message = this.getElm().querySelector('[data-name="validation-message"]');
+            const Container = Field.closest('[data-name="validation-field"]') ?? this.getElm();
+            Message.textContent = message;
+            Message.hidden = false;
+            Container.appendChild(Message);
+            Message.focus({preventScroll: true});
+            Message.scrollIntoView({block: 'center', behavior: 'instant'});
+        },
+
+        /**
+         * Validate the form and create the product.
          *
          * @returns {Promise}
          */
         submit: function () {
             const Elm = this.getElm();
+            const Message = Elm.querySelector('[data-name="validation-message"]');
+            Message.hidden = true;
+            Message.textContent = '';
 
-            let cValue = this.$Categories.getValue().trim();
-            let categories = cValue.split(',');
-            let Form = Elm.getElement('form');
-            let data = QUIFormUtils.getFormData(Form);
+            const cValue = this.$Categories.getValue().trim();
+            const categories = cValue.split(',');
+            const Form = Elm.querySelector('[data-name="create-form"]');
+            const data = QUIFormUtils.getFormData(Form);
+            const fields = Object.fromEntries(
+                Object.entries(data).filter(([key]) => key.startsWith('field-'))
+            );
 
-            // fields
-            let fields = Object.filter(data, function (value, key) {
-                return (key.indexOf('field-') >= 0);
-            });
-
-            if (!categories.length || cValue === '') {
-                QUI.getMessageHandler().then(function (MH) {
-                    MH.addAttention(
-                        QUILocale.get(lg, 'message.product.create.missing.category'),
-                        Elm.getElement('.product-categories')
-                    );
-                });
-
+            if (cValue === '') {
+                this.$showValidationError(
+                    Elm.querySelector('[data-name="categories"]'),
+                    QUILocale.get(lg, 'message.product.create.missing.category')
+                );
                 return Promise.reject('No categories');
             }
 
-            // check require
-            let l, name, value, Label;
-            let required = Form.getElements('[data-required="1"]');
+            const required = Form.querySelectorAll('[data-name="field-input"][data-required="1"]');
 
-            const triggerMessage = function (Field, message) {
-                QUI.getMessageHandler().then(function (MH) {
-                    MH.addAttention(message, Field);
-                });
-            };
+            for (const Field of required) {
+                let value = Field.value;
+                const isMultiLang = (Field.dataset.qui ?? '').includes('MultiLang');
 
-            for (let i = 0, len = required.length; i < len; i++) {
-                name = required[i].get('name');
-                value = required[i].value;
-
-                if (required[i].get('data-qui').indexOf('MultiLang') === -1) {
-                    if (value === '') {
-                        Label = required[i].getParent('label');
-
-                        triggerMessage(
-                            required[i],
-                            QUILocale.get(lg, 'exception.field.is.invalid', {
-                                fieldtitle: Label.getElement('.field-container-item').get('text').trim()
-                            })
-                        );
-                        return Promise.reject('Please fill out all fields correctly');
+                if (isMultiLang) {
+                    try {
+                        value = JSON.parse(value);
+                    } catch (e) {
+                        continue;
                     }
 
+                    if (!value || typeof value !== 'object' || !Object.values(value).includes('')) {
+                        continue;
+                    }
+
+                    QUI.Controls.getById(Field.dataset.quiid)?.open();
+                } else if (value !== '') {
                     continue;
                 }
 
-                // if json field
-                try {
-                    value = JSON.decode(value);
-                } catch (e) {
-                    continue;
-                }
-
-                for (l in value) {
-                    if (value.hasOwnProperty(l) && value[l] === '') {
-                        Label = required[i].getParent('label');
-
-                        triggerMessage(
-                            Label.getElement('.quiqqer-inputmultilang-entry input'),
-                            QUILocale.get(lg, 'exception.field.is.invalid', {
-                                fieldtitle: Label.getElement('.field-container-item').get('text').trim()
-                            })
-                        );
-
-                        QUI.Controls.getById(required[i].get('data-quiid')).open();
-
-
-                        return Promise.reject('Please fill out all fields correctly');
-                    }
-                }
+                const Label = Field.closest('[data-name="field-label"]');
+                this.$showValidationError(
+                    Field,
+                    QUILocale.get(lg, 'exception.field.is.invalid', {
+                        fieldtitle: Label.querySelector('[data-name="field-title"]').textContent.trim()
+                    })
+                );
+                return Promise.reject('Please fill out all fields correctly');
             }
 
-
-            let category = Form.getElement('[name="product-category"]').value;
-            let productType = Form.getElement('[name="product-types"]').value;
-
             return Products.createChild(
-                category,
+                Form.querySelector('[data-name="main-category"]').value,
                 categories,
                 fields,
-                productType
+                Form.querySelector('[data-name="product-types"]').value
             );
         }
     });

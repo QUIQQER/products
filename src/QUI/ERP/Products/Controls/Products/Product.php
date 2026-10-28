@@ -101,15 +101,19 @@ class Product extends QUI\Control
                 // use default variant, if a default variant exists
                 if (!$this->getAttribute('ignoreDefaultVariant') && $Product->getDefaultVariantId()) {
                     try {
-                        $Product = $Product->getDefaultVariant();
+                        $Variant = $Product->getActiveDefaultVariant();
 
-                        $this->setAttributes([
-                            'data-qui-option-show-price' => true,
-                            'data-qui-option-available' => true
-                        ]);
+                        if ($Variant !== null) {
+                            $Product = $Variant;
 
-                        $typeVariantChild = true;
-                        $typeVariantParent = false;
+                            $this->setAttributes([
+                                'data-qui-option-show-price' => true,
+                                'data-qui-option-available' => true
+                            ]);
+
+                            $typeVariantChild = true;
+                            $typeVariantParent = false;
+                        }
                     } catch (QUI\Exception $Exception) {
                         QUI\System\Log::addDebug($Exception);
                     }

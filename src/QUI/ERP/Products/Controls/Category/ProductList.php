@@ -18,6 +18,7 @@ use function explode;
 use function get_class;
 use function htmlspecialchars;
 use function implode;
+use function in_array;
 use function is_array;
 use function is_null;
 use function is_string;
@@ -143,8 +144,8 @@ class ProductList extends QUI\Control
             $this->setAttribute('productLoadNumber', $Config?->get('products', 'productLoadNumber'));
         }
 
-        // global settings: product autoload after x clicks
-        if ($this->getAttribute('autoloadAfter') == '' || !$this->getAttribute('autoloadAfter')) {
+        // Zero disables autoload; only missing site settings inherit the global value.
+        if (in_array($this->getAttribute('autoloadAfter'), ['', false, null], true)) {
             $this->setAttribute('autoloadAfter', $Config?->get('products', 'autoloadAfter'));
         }
 
@@ -717,19 +718,7 @@ class ProductList extends QUI\Control
      */
     protected function getSearchParams(int $start = 0, bool | int $max = false): mixed
     {
-        $searchParams = $this->getAttribute('searchParams');
-
-        if (!is_array($searchParams)) {
-            $searchParams = [];
-        }
-
-        if ($this->getCategory()) {
-            $searchParams['category'] = $this->getCategory()->getId();
-        }
-
-        if (!isset($searchParams['freetext'])) {
-            $searchParams['freetext'] = '';
-        }
+        $searchParams = $this->getCountParams();
 
         if (!$max) {
             $max = $this->getMax();
@@ -737,10 +726,6 @@ class ProductList extends QUI\Control
 
         $searchParams['sheet'] = round($start / $max) + 1;
         $searchParams['limit'] = $max;
-
-        $searchParams['categoryProductSearchType'] = $this->getAttribute('categoryProductSearchType');
-
-//        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
 
         return $searchParams;
     }
@@ -766,7 +751,7 @@ class ProductList extends QUI\Control
             $searchParams['freetext'] = '';
         }
 
-//        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
+        $searchParams['categoryProductSearchType'] = $this->getAttribute('categoryProductSearchType');
 
         return $searchParams;
     }

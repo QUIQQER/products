@@ -1,92 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<database>
+<quiqqer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://www.quiqqer.com/docs/schemas/2.x/database.xsd">
+    <database>
 
-    <global>
-        <table name="products">
-            <field type="bigint" autoincrement="true" primary="true">id</field>
-            <field type="string" length="255">type</field>
-            <field type="bigint" nullable="true" default="null">category</field>
-            <field type="text" nullable="true" default="null">categories</field>
-            <field type="text" nullable="true" default="null">fieldData</field>
-            <field type="text" nullable="true" default="null">editableVariantFields</field>
-            <field type="text" nullable="true" default="null">inheritedVariantFields</field>
-            <field type="bigint" nullable="true" default="null">defaultVariantId</field>
-            <field type="text" nullable="true" default="null">variantHash</field>
-            <field type="boolean" default="0">active</field>
-            <field type="bigint" nullable="true" default="null">parent</field>
-            <field type="text" nullable="true" default="null">permissions</field>
+        <!-- The post-import hook applies MySQL/MariaDB search collations without vendor-specific XML types. -->
+        <global execute="\QUI\ERP\Products\Utils\SearchTextCollation::setup">
+            <table name="products">
+                <field type="bigint" autoincrement="true" primary="true">id</field>
+                <field type="string" length="255">type</field>
+                <field type="bigint" nullable="true" default="null">category</field>
+                <field type="text" nullable="true" default="null">categories</field>
+                <field type="text" nullable="true" default="null">fieldData</field>
+                <field type="text" nullable="true" default="null">editableVariantFields</field>
+                <field type="text" nullable="true" default="null">inheritedVariantFields</field>
+                <field type="bigint" nullable="true" default="null">defaultVariantId</field>
+                <field type="text" nullable="true" default="null">variantHash</field>
+                <field type="boolean" default="0">active</field>
+                <field type="bigint" nullable="true" default="null">parent</field>
+                <field type="text" nullable="true" default="null">permissions</field>
 
-            <field type="datetime" nullable="true" default="null">c_date</field>
-            <field type="datetime" nullable="true" default="null">e_date</field>
-            <field type="string" length="50" nullable="true" default="null">c_user</field>
-            <field type="string" length="50" nullable="true" default="null">e_user</field>
-            <field type="integer" default="0">orderCount</field>
-            <index>parent</index>
-            <index>category</index>
-            <index>active</index>
-            <index>defaultVariantId</index>
-        </table>
+                <field type="datetime" nullable="true" default="null">c_date</field>
+                <field type="datetime" nullable="true" default="null">e_date</field>
+                <field type="string" length="50" nullable="true" default="null">c_user</field>
+                <field type="string" length="50" nullable="true" default="null">e_user</field>
+                <field type="integer" default="0">orderCount</field>
+                <index>parent</index>
+                <index>category</index>
+                <index>active</index>
+                <index>defaultVariantId</index>
+            </table>
 
-        <table name="product_categories">
-            <field type="bigint" autoincrement="true" primary="true">id</field>
-            <field type="bigint" default="0">parentId</field>
-            <field type="text" nullable="true" default="null">fields</field>
-            <field type="text" nullable="true" default="null">sites</field>
-            <field type="text" nullable="true" default="null">title_cache</field>
-            <field type="text" nullable="true" default="null">description_cache</field>
-            <field type="text" nullable="true" default="null">custom_data</field>
-            <index>parentId</index>
-        </table>
+            <table name="product_categories">
+                <field type="bigint" autoincrement="true" primary="true">id</field>
+                <field type="bigint" default="0">parentId</field>
+                <field type="text" nullable="true" default="null">fields</field>
+                <field type="text" nullable="true" default="null">sites</field>
+                <field type="text" nullable="true" default="null">title_cache</field>
+                <field type="text" nullable="true" default="null">description_cache</field>
+                <field type="text" nullable="true" default="null">custom_data</field>
+                <index>parentId</index>
+            </table>
 
-        <table name="product_fields">
-            <field type="bigint" autoincrement="true" primary="true">id</field>
-            <field type="string" length="255">name</field>
-            <field type="string" length="255">type</field>
-            <field type="string" length="255" nullable="true" default="">search_type</field>
-            <field type="text" nullable="true" default="null">prefix</field>
-            <field type="text" nullable="true" default="null">suffix</field>
-            <field type="integer" default="0">priority</field>
-            <field type="boolean" default="0">systemField</field>
-            <field type="boolean" default="0">standardField</field>
-            <field type="boolean" default="0">requiredField</field>
-            <field type="boolean" default="0">publicField</field>
-            <field type="boolean" default="0">showInDetails</field>
-            <field type="text" nullable="true" default="null">options</field>
-            <field type="text" nullable="true" default="null">defaultValue</field>
-            <field type="datetime" nullable="true" default="null">e_date</field>
+            <table name="product_fields">
+                <field type="bigint" autoincrement="true" primary="true">id</field>
+                <field type="string" length="255">name</field>
+                <field type="string" length="255">type</field>
+                <field type="string" length="255" nullable="true" default="">search_type</field>
+                <field type="text" nullable="true" default="null">prefix</field>
+                <field type="text" nullable="true" default="null">suffix</field>
+                <field type="integer" default="0">priority</field>
+                <field type="boolean" default="0">systemField</field>
+                <field type="boolean" default="0">standardField</field>
+                <field type="boolean" default="0">requiredField</field>
+                <field type="boolean" default="0">publicField</field>
+                <field type="boolean" default="0">showInDetails</field>
+                <field type="text" nullable="true" default="null">options</field>
+                <field type="text" nullable="true" default="null">defaultValue</field>
+                <field type="datetime" nullable="true" default="null">e_date</field>
 
-            <index>systemField</index>
-            <index>standardField</index>
-            <index>requiredField</index>
-            <index>publicField</index>
-            <index>showInDetails</index>
-        </table>
+                <index>systemField</index>
+                <index>standardField</index>
+                <index>requiredField</index>
+                <index>publicField</index>
+                <index>showInDetails</index>
+            </table>
 
-        <table name="products_cache">
-            <field type="bigint">id</field>
-            <field type="string" length="255">type</field>
-            <field type="string" length="2">lang</field>
-            <field type="string" length="255" nullable="true" default="null">productNo</field>
-            <field type="float" nullable="true" default="null">minPrice</field>
-            <field type="float" nullable="true" default="null">maxPrice</field>
-            <field type="float" nullable="true" default="null">currentPrice</field>
-            <field type="string" length="255">title</field>
-            <field type="text" nullable="true" default="null">description</field>
-            <field type="string" length="255" nullable="true" default="null">category</field>
-            <field type="boolean" default="0">active</field>
-            <field type="text" nullable="true" default="null">tags</field>
-            <field type="text" nullable="true" default="null">viewUsersGroups</field>
-            <field type="datetime" nullable="true" default="null">c_date</field>
-            <field type="datetime" nullable="true" default="null">e_date</field>
-            <field type="bigint" nullable="true" default="null">parentId</field>
+            <table name="products_cache">
+                <field type="bigint">id</field>
+                <field type="string" length="255">type</field>
+                <field type="string" length="2">lang</field>
+                <field type="string" length="255" nullable="true" default="null">productNo</field>
+                <field type="float" nullable="true" default="null">minPrice</field>
+                <field type="float" nullable="true" default="null">maxPrice</field>
+                <field type="float" nullable="true" default="null">currentPrice</field>
+                <field type="string" length="255">title</field>
+                <field type="text" nullable="true" default="null">description</field>
+                <field type="string" length="255" nullable="true" default="null">category</field>
+                <field type="boolean" default="0">active</field>
+                <field type="text" nullable="true" default="null">tags</field>
+                <field type="text" nullable="true" default="null">viewUsersGroups</field>
+                <field type="datetime" nullable="true" default="null">c_date</field>
+                <field type="datetime" nullable="true" default="null">e_date</field>
+                <field type="bigint" nullable="true" default="null">parentId</field>
 
-            <primary>id,lang</primary>
-            <index>type</index>
-            <index>category</index>
-            <index>active</index>
-            <index>parentId</index>
-            <index>productNo</index>
-        </table>
-    </global>
+                <primary>id,lang</primary>
+                <index>type</index>
+                <index>category</index>
+                <index>active</index>
+                <index>parentId</index>
+                <index>productNo</index>
+            </table>
+        </global>
 
-</database>
+    </database>
+</quiqqer>

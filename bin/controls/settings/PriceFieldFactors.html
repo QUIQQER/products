@@ -1,111 +1,103 @@
 {{#isCategory}}
 <div class="quiqqer-products-settings-pricefieldfactors-options">
-    <label>
-        <span>
-            {{labelCategoryPriority}}
-        </span>
-        <input type="number" name="categoryPriority" value="0"/>
+    <label class="quiqqer-products-settings-pricefieldfactors-field">
+        <span>{{labelCategoryPriority}}</span>
+        <input type="number" name="categoryPriority" data-name="category-priority" value="0"/>
     </label>
-    <div class="field-container-item-desc">
-        {{{descCategoryPriority}}}
-    </div>
+    <div class="quiqqer-products-settings-pricefieldfactors-help">{{{descCategoryPriority}}}</div>
 </div>
 {{/isCategory}}
 
-{{#priceFields}}
-{{#edit}}
-<div class="quiqqer-products-settings-pricefieldfactors-entry" data-id="{{id}}">
-    <div class="quiqqer-products-settings-pricefieldfactors-entry-header">
-        <label>
-            <input type="checkbox" name="active"/>
-            <span class="quiqqer-products-settings-pricefieldfactors-entry-field">
-                {{title}}
-            </span>
-        </label>
-        <label class="quiqqer-products-settings-pricefieldfactors-entry-updateonsave">
-            <input type="checkbox" name="update_on_save" checked disabled/>
-            {{labelUpdateOnSave}}
-        </label>
-    </div>
-    <div class="quiqqer-products-settings-pricefieldfactors-entry-multiplier quiqqer-products-settings-pricefieldfactors__hidden">
-        <input type="number" name="multiplier" disabled/>
-        <span>
-            {{labelMultiplier}}
-        </span>
-        <select name="sourceFieldId" disabled>
-            {{#priceFields}}
-            <option value="{{id}}">{{title}}</option>
-            {{/priceFields}}
-        </select>
-        <label class="quiqqer-products-settings-pricefieldfactors-entry-fixedSurcharge">
-            <span>
-                {{labelFixedSurchargeAmount}}
-            </span>
-            <input type="number" name="fixedSurchargeAmount"/>
-            <select name="fixedSurchargePriority">
-                <option value="beforeRounding" selected>{{labelFixedSurchargePriorityBeforeRounding}}</option>
-                <option value="afterRounding">{{labelFixedSurchargePriorityAfterRounding}}</option>
-            </select>
-        </label>
-        <div class="quiqqer-products-settings-pricefieldfactors-entry-rounding">
-            <span>{{headerRounding}}</span>
-            <table class="data-table data-table-flexbox">
-                <tbody>
-                    <tr>
-                        <td>
-                        <label class="field-container quiqqer-products-settings-pricefieldfactors-entry-updateonsave">
-                            <span class="field-container-item">
-                                {{labelRoundingType}}
-                            </span>
-                            <select name="rounding_type" class="field-container-field">
-                                <option value="none">{{labelRoundingTypeOptionNone}}</option>
-                                <option value="commercial_decimals">{{labelRoundingTypeCommercialDecimals}}</option>
-                                <option value="commercial_decimals_single">{{labelRoundingTypeCommercialDecimalsSingle}}</option>
-                                <option value="commercial">{{labelRoundingTypeCommercial}}</option>
-                                <option value="commercial_9">{{labelRoundingTypeCommercial9}}</option>
-                                <option value="up">{{labelRoundingTypeOptionUp}}</option>
-                                <option value="up_9">{{labelRoundingTypeOptionUp9}}</option>
-                                <option value="down">{{labelRoundingTypeOptionDown}}</option>
-                                <option value="down_9">{{labelRoundingTypeOptionDown9}}</option>
-                            </select>
-                        </label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label class="field-container quiqqer-products-settings-pricefieldfactors-entry-updateonsave">
-                                <span class="field-container-item">
-                                    {{labelRoundingVat}}
-                                </span>
-                                <select name="rounding_vat" class="field-container-field">
-                                    {{#vatEntries}}
-                                        <option value="{{vat}}">{{vat}}%</option>
-                                    {{/vatEntries}}
-                                </select>
-                            </label>
-                            <div class="field-container-item-desc">
-                                {{{descRoundingVat}}}
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label class="field-container quiqqer-products-settings-pricefieldfactors-entry-updateonsave">
-                                <span class="field-container-item">
-                                    {{labelRoundingTypeDecimalCustomValue}}
-                                </span>
-                                <input type="number" name="decimal_custom_value" class="field-container-field"/>
-                            </label>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-{{/edit}}
+<div class="quiqqer-products-settings-pricefieldfactors-list">
+    {{#priceFields}}
+    {{#edit}}
+    <article class="quiqqer-products-settings-pricefieldfactors-entry" data-name="entry" data-id="{{id}}">
+        <header class="quiqqer-products-settings-pricefieldfactors-entry-header">
+            <label class="quiqqer-products-settings-pricefieldfactors-toggle">
+                <input type="checkbox" name="active" data-name="active" aria-controls="{{configurationId}}"/>
+                <span>
+                    <strong data-name="title">{{title}}</strong>
+                    <span class="quiqqer-products-settings-pricefieldfactors-summary" data-name="summary" aria-live="polite">{{labelManual}}</span>
+                </span>
+            </label>
+        </header>
 
-{{/priceFields}}
-<div class="quiqqer-products-settings-pricefieldfactors-buttons">
+        <fieldset class="quiqqer-products-settings-pricefieldfactors-configuration" id="{{configurationId}}" data-name="configuration" hidden disabled>
+            <legend>{{labelCalculation}}</legend>
+            <div class="quiqqer-products-settings-pricefieldfactors-formula">
+                <label class="quiqqer-products-settings-pricefieldfactors-field">
+                    <span>{{labelSourceField}}</span>
+                    <select name="sourceFieldId" data-name="source-field">
+                        {{#sourceFields}}
+                        <option value="{{id}}">{{title}}</option>
+                        {{/sourceFields}}
+                    </select>
+                </label>
+                <span class="quiqqer-products-settings-pricefieldfactors-operator" aria-hidden="true">×</span>
+                <label class="quiqqer-products-settings-pricefieldfactors-field">
+                    <span>{{labelFactor}} <small id="{{factorHelpId}}">{{descFactor}}</small></span>
+                    <input type="number" name="multiplier" data-name="multiplier" value="1" step="any" aria-describedby="{{factorHelpId}}"/>
+                </label>
+                <span class="quiqqer-products-settings-pricefieldfactors-operator" aria-hidden="true">+</span>
+                <label class="quiqqer-products-settings-pricefieldfactors-field">
+                    <span>{{labelSurcharge}}</span>
+                    <input type="number" name="fixedSurchargeAmount" data-name="surcharge-amount" value="0" step="any"/>
+                </label>
+            </div>
 
+            <div class="quiqqer-products-settings-pricefieldfactors-toolbar">
+                <button type="button" class="btn btn-secondary-outline" data-name="rounding-toggle" aria-expanded="false" aria-controls="{{roundingId}}">
+                    <span class="fa fa-sliders" aria-hidden="true"></span>
+                    {{labelRounding}}
+                </button>
+                <label class="quiqqer-products-settings-pricefieldfactors-updateonsave">
+                    <input type="checkbox" name="update_on_save" data-name="update-on-save" checked/>
+                    <span>{{labelUpdateOnSave}}</span>
+                </label>
+            </div>
+
+            <div class="quiqqer-products-settings-pricefieldfactors-rounding" data-name="rounding-options" id="{{roundingId}}" hidden>
+                <div class="quiqqer-products-settings-pricefieldfactors-rounding-fields">
+                    <label class="quiqqer-products-settings-pricefieldfactors-field quiqqer-products-settings-pricefieldfactors-wide">
+                        <span>{{labelRoundingType}}</span>
+                        <select name="rounding_type" data-name="rounding-type">
+                            <option value="none">{{labelRoundingTypeOptionNone}}</option>
+                            <option value="commercial_decimals">{{labelRoundingTypeCommercialDecimals}}</option>
+                            <option value="commercial_decimals_single">{{labelRoundingTypeCommercialDecimalsSingle}}</option>
+                            <option value="commercial">{{labelRoundingTypeCommercial}}</option>
+                            <option value="commercial_9">{{labelRoundingTypeCommercial9}}</option>
+                            <option value="up">{{labelRoundingTypeOptionUp}}</option>
+                            <option value="up_9">{{labelRoundingTypeOptionUp9}}</option>
+                            <option value="down">{{labelRoundingTypeOptionDown}}</option>
+                            <option value="down_9">{{labelRoundingTypeOptionDown9}}</option>
+                        </select>
+                    </label>
+                    <label class="quiqqer-products-settings-pricefieldfactors-field">
+                        <span>{{labelRoundingVat}}</span>
+                        <select name="rounding_vat" data-name="rounding-vat" aria-describedby="{{vatHelpId}}">
+                            {{#vatEntries}}
+                            <option value="{{vat}}">{{vat}}%</option>
+                            {{/vatEntries}}
+                        </select>
+                    </label>
+                    <label class="quiqqer-products-settings-pricefieldfactors-field">
+                        <span>{{labelRoundingTypeDecimalCustomValue}}</span>
+                        <input type="number" name="decimal_custom_value" data-name="rounding-custom"/>
+                    </label>
+                    <label class="quiqqer-products-settings-pricefieldfactors-field">
+                        <span>{{labelSurchargePriority}}</span>
+                        <select name="fixedSurchargePriority" data-name="surcharge-priority">
+                            <option value="beforeRounding">{{labelFixedSurchargePriorityBeforeRounding}}</option>
+                            <option value="afterRounding">{{labelFixedSurchargePriorityAfterRounding}}</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="quiqqer-products-settings-pricefieldfactors-help" id="{{vatHelpId}}">{{{descRoundingVat}}}</div>
+            </div>
+        </fieldset>
+    </article>
+    {{/edit}}
+    {{/priceFields}}
 </div>
+
+<div class="quiqqer-products-settings-pricefieldfactors-buttons" data-name="buttons"></div>

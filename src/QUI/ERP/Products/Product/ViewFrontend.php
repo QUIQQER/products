@@ -225,10 +225,10 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         }
 
         $User = QUI::getUserBySession();
-        $price = $this->Product->getPrice()->getPrice();
+        $MinimumPrice = $this->Product->getMinimumPrice($User);
 
         if ($this->Product instanceof QUI\ERP\Products\Product\Types\VariantParent) {
-            $Price = $this->getProduct()->getMinimumPrice($User);
+            $Price = $MinimumPrice;
         } else {
             $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
 
@@ -237,46 +237,15 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
             );
         }
 
-        // use search cache
-        $minCache = 'quiqqer/products/' . $this->getId() . '/prices/min';
-        $maxName = 'quiqqer/products/' . $this->getId() . '/prices/max';
+        $MaximumPrice = $this->Product->getMaximumPrice($User);
+        $precision = $Price->getCurrency()->getPrecision();
+        $minimum = round($MinimumPrice->getValue(), $precision);
+        $maximum = round($MaximumPrice->getValue(), $precision);
 
-        $min = null;
-        $max = null;
-
-        try {
-            $min = QUI\Cache\LongTermCache::get($minCache);
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::addDebug($Exception->getMessage());
-        }
-
-        try {
-            $max = QUI\Cache\LongTermCache::get($maxName);
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::addDebug($Exception->getMessage());
-        }
-
-        if ($min === null || $max === null) {
-            $priceResult = QUI\ERP\Products\Utils\Database::fetch([
-                'select' => 'id, minPrice, maxPrice',
-                'from' => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-                'where' => [
-                    'id' => $this->getId()
-                ],
-                'limit' => 1
-            ]);
-
-            if (isset($priceResult[0])) {
-                $min = $priceResult[0]['minPrice'];
-                $max = $priceResult[0]['maxPrice'];
-            } else {
-                $min = $this->Product->getMinimumPrice();
-                $max = $this->Product->getMaximumPrice();
-            }
-        }
-
-        if ($min !== $max) {
+        if ($minimum < $maximum) {
             $Price->enableMinimalPrice();
+        } else {
+            $Price->disableMinimalPrice();
         }
 
         return $Price;

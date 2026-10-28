@@ -1,12 +1,12 @@
-<td>
-    <label class="field-container">
-        <span class="field-container-item">
+<td data-name="validation-field">
+    <label class="field-container" data-name="field-label">
+        <span class="field-container-item" data-name="field-title">
             {{fieldTitle}}
 
             {{#fieldHelp}}
             <span class="field-container-item-help" title="{{fieldHelp}}"></span>
             {{/fieldHelp}}
         </span>
-        <input type="hidden" name="{{fieldName}}" data-qui="{{control}}" data-required="{{required}}"/>
+        <input type="hidden" data-name="field-input" name="{{fieldName}}" data-qui="{{control}}" data-required="{{required}}"/>
     </label>
 </td>

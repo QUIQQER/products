@@ -19,7 +19,7 @@
     "quiqqer/discount": "^2|^3",
     "quiqqer/pace": "^2",
     "quiqqer/product-bricks": "^2",
-    "quiqqer/productsearch": "^2",
+    "quiqqer/productsearch": "^2.7",
     "quiqqer/backendsearch": "^2.1",
     "quiqqer/slider": "^2",
     "quiqqer/tags": "^2",

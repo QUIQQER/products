@@ -182,6 +182,9 @@
         <locale name="settings.window.products.editableFields">
 <de><![CDATA[Bestimme, welche Felder vererbt werden und editierbar in den Varianten sind.]]></de>
         </locale>
+        <locale name="settings.window.products.editableFields.description">
+<de><![CDATA[Diese Einstellungen gelten standardmäßig für alle Varianten. Du kannst Vererbung und Editierbarkeit auch für jedes Eltern-Produkt separat festlegen.]]></de>
+        </locale>
         <locale name="settings.window.products.findChildrenInSearch">
 <de><![CDATA[Varianten: Kindartikel in Suche beachten]]></de>
         </locale>
@@ -248,13 +251,7 @@
 <de><![CDATA[Preisfeld-Faktoren]]></de>
         </locale>
         <locale name="settings.window.products.priceFieldFactors.description" html="true">
-<de><![CDATA[Hier kann für jedes im System angelegte Preisfeld ein Multiplikator auf Basis eines anderen Preisfelds festgelegt werden.<br/><br/>
-<b>Beispiel:</b><br/>
-Preis-Feld: <b>UVP</b><br/>
-Multiplikator: <b>1.5</b><br/>
-Auf Basis von Preis-Feld: <b>Preis</b> (Wert: <b>50,00 €</b>)<br/><br/>
-UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
-]]></de>
+<de><![CDATA[Berechne Preisfelder automatisch aus einem Ausgangspreis, einem Faktor und einem optionalen Zuschlag. Aktiviere dafür die gewünschten Preisfelder.<br/><b>Beispiel:</b> Einkaufspreis 50 € × Faktor 1,5 = Verkaufspreis 75 €.]]></de>
         </locale>
 
         <locale name="menu.erp.products.autoArticleNos.title">
@@ -316,14 +313,14 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
 <de><![CDATA[In Varianten editierbar]]></de>
         </locale>
         <locale name="fieldEditableDesc">
-<de><![CDATA[Varianten-Produkte können für dieses Feld jeweils einen eigenen Wert festlegen.]]></de>
+<de><![CDATA[Varianten-Produkte können für dieses Feld jeweils einen eigenen Wert festlegen. Diese Einstellung kann auch für jedes Eltern-Produkt separat festgelegt werden.]]></de>
         </locale>
         <locale name="fieldInherited">
 <de><![CDATA[In Varianten von Eltern-Produkt übernommen]]></de>
         </locale>
         <locale name="fieldInheritedDesc">
 <de>
-                <![CDATA[Varianten-Produkte übernehmen für dieses Feld den Wert des Eltern-Produkts, sofern kein eigener Wert festgelegt ist.]]></de>
+                <![CDATA[Varianten-Produkte übernehmen für dieses Feld den Wert des Eltern-Produkts, sofern kein eigener Wert festgelegt ist. Diese Einstellung kann auch für jedes Eltern-Produkt separat festgelegt werden.]]></de>
         </locale>
         <locale name="priority">
 <de><![CDATA[Sortierung]]></de>
@@ -454,6 +451,9 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
 <de><![CDATA[<p>Dem Feld wurde noch kein Media Ordner zugewiesen.</p>]]></de>
         </locale>
 
+        <locale name="category.control.productlist.restoring">
+<de><![CDATA[Weitere Produkte werden geladen …]]></de>
+        </locale>
         <locale name="category.control.productlist.button.more">
 <de><![CDATA[Mehr laden]]></de>
         </locale>
@@ -746,6 +746,58 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
 <de><![CDATA[
             Geht durch alle Bilder und baut den Bild-Cache auf, dadurch wird der erste Aufruf eines Produktes schneller
             ]]></de>
+        </locale>
+
+        <locale name="cron.productQualityCheck.title">
+            <de><![CDATA[Produktqualität prüfen]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.description">
+            <de><![CDATA[Prüft Produktübersetzungen und meldet fehlende Texte per E-Mail oder Backend-Nachricht. Leere optionale Felder werden übersprungen.]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.notification">
+            <de><![CDATA[Benachrichtigung (Standard: E-Mail)]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.notification.email">
+            <de><![CDATA[E-Mail]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.notification.backend">
+            <de><![CDATA[Backend-Nachricht]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.notification.both">
+            <de><![CDATA[E-Mail und Backend-Nachricht]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.email">
+            <de><![CDATA[E-Mail-Empfänger (leer: konfigurierte Administrator-Adresse)]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.users">
+            <de><![CDATA[Backend-Empfänger (leer: alle Superuser)]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.languages">
+            <de><![CDATA[Prüfsprachen, z. B. de,en (leer: Sprachen aller Projekte)]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidEmail">
+            <de><![CDATA[Bitte eine gültige E-Mail-Adresse als Empfänger oder als Administrator-Adresse konfigurieren.]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidUsers">
+            <de><![CDATA[Bitte gültige Backend-Empfänger auswählen oder mindestens einen Superuser konfigurieren.]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidNotification">
+            <de><![CDATA[Bitte E-Mail, Backend oder beide Benachrichtigungswege auswählen.]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidLanguages">
+            <de><![CDATA[Bitte zweistellige Sprachcodes wie de,en oder Projektsprachen konfigurieren.]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.missing">
+            <de><![CDATA[Produkt #[productId], Feld #[fieldId] ([fieldTitle]): Fehlende Übersetzungen: [languages]]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.failed">
+            <de><![CDATA[Produkt #[productId] konnte nicht geprüft werden. Details stehen im Systemprotokoll.]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.summary">
+            <de><![CDATA[Produktqualität: [checked] Produkte geprüft, [issues] Hinweise. Prüfsprachen: [languages].]]></de>
+        </locale>
+        <locale name="cron.productQualityCheck.truncated">
+            <de><![CDATA[Der Bericht zeigt die ersten [limit] Hinweise. Weitere Hinweise sind vorhanden.]]></de>
         </locale>
 
 <!-- searchtypes -->
@@ -1963,11 +2015,35 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
         <locale name="controls.settings.PriceFieldFactors.btn.update">
 <de><![CDATA[Produkt-Preise aktualisieren]]></de>
         </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSourceField">
+<de><![CDATA[Ausgangspreis]]></de>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelFactor">
+<de><![CDATA[Faktor]]></de>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.descFactor">
+<de><![CDATA[1,5 = +50 %]]></de>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSurcharge">
+<de><![CDATA[Zuschlag (netto)]]></de>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSurchargePriority">
+<de><![CDATA[Zuschlag anwenden]]></de>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRounding">
+<de><![CDATA[Rundung]]></de>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelCalculation">
+<de><![CDATA[Automatische Preisberechnung]]></de>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelManual">
+<de><![CDATA[Keine automatische Berechnung]]></de>
+        </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelMultiplier">
 <de><![CDATA[x Wert von]]></de>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelUpdateOnSave">
-<de><![CDATA[beim Speichern von Produkten anwenden]]></de>
+<de><![CDATA[Beim Speichern des Produkts neu berechnen]]></de>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelCategoryPriority">
 <de><![CDATA[Preisfeld-Faktoren Priorität]]></de>

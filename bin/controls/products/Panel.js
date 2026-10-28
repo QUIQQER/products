@@ -6,20 +6,15 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
     'qui/QUI',
     'qui/controls/desktop/Panel',
     'qui/controls/buttons/Button',
-    'qui/controls/buttons/ButtonMultiple',
-    'qui/controls/windows/Confirm',
+    'package/quiqqer/products/bin/controls/products/DeleteProductWindow',
     'qui/controls/contextmenu/Separator',
-    'controls/grid/Grid',
     'Locale',
     'package/quiqqer/products/bin/Products',
-    'package/quiqqer/products/bin/controls/products/Create',
-    'package/quiqqer/products/bin/controls/products/Product',
     'package/quiqqer/productsearch/bin/controls/products/search/Search',
 
     'css!package/quiqqer/products/bin/controls/products/Panel.css'
 
-], function (QUI, QUIPanel, QUIButton, QUIButtonMultiple, QUIConfirm, QUIMenuSeparator, Grid, QUILocale,
-             Products, CreateProduct, ProductPanel, Search) {
+], function (QUI, QUIPanel, QUIButton, DeleteProductWindow, QUIMenuSeparator, QUILocale, Products, Search) {
     "use strict";
 
     const lg = 'quiqqer/products';
@@ -51,6 +46,8 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             this.$Search = null;
             this.$ButtonAdd = null;
+            this.$initialLoad = true;
+            this.$currentSearch = '';
 
             this.addEvents({
                 onCreate: this.$onCreate,
@@ -62,81 +59,56 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
         },
 
         /**
-         * Refresh the panel
+         * Return the embedded backend search, or null before injection.
+         *
+         * @return {Object|null}
+         */
+        getSearch: function () {
+            return this.$Search;
+        },
+
+        /**
+         * Refresh the product list.
          *
          * @return {Promise}
          */
         refresh: function () {
             this.parent();
-
-            const Action   = this.getButtons('actions'),
-                  children = Action.getChildren();
-
-            const Delete = children.filter(function (Btn) {
-                return Btn.getAttribute('name') === 'delete';
-            })[0];
-
-            const Edit = children.filter(function (Btn) {
-                return Btn.getAttribute('name') === 'edit';
-            })[0];
-
-            const Copy = children.filter(function (Btn) {
-                return Btn.getAttribute('name') === 'copy';
-            })[0];
-
-            const Activate = children.filter(function (Btn) {
-                return Btn.getAttribute('name') === 'activate';
-            })[0];
-
-            const Deactivate = children.filter(function (Btn) {
-                return Btn.getAttribute('name') === 'deactivate';
-            })[0];
-
-            Delete.disable();
-            Copy.disable();
-            Edit.disable();
-            Activate.disable();
-            Deactivate.disable();
-
+            this.$setActionState(0);
             return this.$Search.search();
         },
 
-        /**
-         * Resize the panel
-         *
-         * @return {Promise}
-         */
         $onResize: function () {
-            return this.$Search.resize();
+            return this.$Search?.resize() ?? Promise.resolve();
         },
 
-        /**
-         * event : on create
-         */
         $onCreate: function () {
-            this.getContent().addClass('quiqqer-products-productPanel');
-            this.getContent().setStyle('padding', 10);
+            this.getElm().classList.add('quiqqer-products-panel');
+            const Content = this.getContent();
+            Content.classList.add('quiqqer-products-productPanel');
+            Content.style.padding = '0';
+            Content.style.visibility = 'hidden';
+            Content.setAttribute('aria-busy', 'true');
+            this.Loader.show();
 
-            // buttons
             this.$ButtonAdd = new QUIButton({
-                name     : 'add',
-                text     : QUILocale.get('quiqqer/core', 'add'),
+                name: 'add',
+                text: QUILocale.get(lg, 'category.panel.button.products.add'),
                 textimage: 'fa fa-plus',
-                events   : {
-                    onClick: this.createChild
-                }
+                events: {onClick: this.createChild}
             });
+            this.$Actions = this.$createActions();
+            this.$createToolbar();
+            this.getButtonBar().getElm().style.visibility = 'hidden';
+            QUI.fireEvent('quiqqerProductsPanelCreate', [this]);
+        },
 
-            this.addButton(this.$ButtonAdd);
-
-            // aktionen
+        $createActions: function () {
             const Actions = new QUIButton({
                 name      : 'actions',
                 text      : QUILocale.get(lg, 'btn.actions'),
                 menuCorner: 'topRight',
-                styles    : {
-                    'float': 'right'
-                }
+                position: 'right'
             });
 
             Actions.appendChild({
@@ -172,27 +144,11 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             );
 
             Actions.appendChild({
-                name    : 'activate',
-                text    : QUILocale.get('quiqqer/core', 'activate'),
-                icon    : 'fa fa-check',
+                name: 'toggleActive',
+                text: QUILocale.get('quiqqer/core', 'activate'),
+                icon: 'fa fa-check',
                 disabled: true,
-                events  : {
-                    onClick: () => {
-                        this.activateChildren();
-                    }
-                }
-            });
-
-            Actions.appendChild({
-                name    : 'deactivate',
-                text    : QUILocale.get('quiqqer/core', 'deactivate'),
-                icon    : 'fa fa-remove',
-                disabled: true,
-                events  : {
-                    onClick: () => {
-                        this.deactivateChildren();
-                    }
-                }
+                events: {onClick: () => this.toggleActiveChildren()}
             });
 
             Actions.appendChild(
@@ -209,7 +165,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                         Btn.setAttribute('textimage', 'fa fa-spinner fa-spin');
 
                         this.deleteChild(this.$Search.getSelected()).catch(function (Exception) {
-                            if (Exception.getType() === 'qui/controls/messages/Error') {
+                            if (Exception?.getType?.() === 'qui/controls/messages/Error') {
                                 return;
                             }
 
@@ -221,154 +177,213 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 }
             });
 
-            this.getButtonBar().appendChild(Actions);
+            return Actions;
+        },
 
-            this.getButtonBar().appendChild(
-                new Element('button', {
-                    type   : 'button',
-                    'class': 'qui-button qui-utils-noselect',
-                    html   : '<span class="fa fa-search"></span>',
-                    styles : {
-                        'float'    : 'right',
-                        marginRight: 5
-                    },
-                    events : {
-                        click: () => {
-                            this.$Search.search();
-                        }
-                    }
-                })
-            );
+        $createToolbar: function () {
+            this.$CategoriesButton = new QUIButton({
+                name: 'categories',
+                text: QUILocale.get(lg, 'categories.panel.title'),
+                events: {
+                    onClick: () => this.$Search?.toggleCategories()
+                }
+            });
+            const SearchButton = new QUIButton({
+                name: 'search',
+                events: {onClick: () => this.$submitSearch()}
+            });
+            this.$FilterButton = new QUIButton({
+                name: 'filter',
+                text: QUILocale.get(lg, 'quiqqer.products.control.search.title'),
+                events: {onClick: () => this.$openFilters()}
+            });
 
-            this.$SearchInput = new Element('input', {
-                placeholder: QUILocale.get(lg, 'controls.products.search'),
-                styles     : {
-                    'float': 'right',
-                    margin : 10,
-                    width  : 200
-                },
-                events     : {
-                    keyup: (e) => {
-                        e.stop();
+            [this.$CategoriesButton, SearchButton, this.$FilterButton].forEach(Button => this.addButton(Button));
+            this.$prepareToolbarButton(this.$CategoriesButton, 'fa fa-sitemap');
+            this.$prepareToolbarButton(SearchButton, 'fa fa-search');
+            this.$prepareToolbarButton(this.$FilterButton, 'fa fa-filter');
+            const FilterArrow = document.createElement('span');
+            FilterArrow.className = 'qui-button-drop fa fa-chevron-down';
+            FilterArrow.setAttribute('aria-hidden', 'true');
+            this.$FilterButton.getElm().appendChild(FilterArrow);
+            this.$CategoriesButton.getElm().setAttribute('aria-expanded', 'false');
+            this.$FilterButton.getElm().setAttribute('aria-haspopup', 'dialog');
+            this.$FilterButton.getElm().setAttribute('aria-expanded', 'false');
+            this.$FilterButton.getElm().classList.add('quiqqer-products-toolbar-filter');
 
-                        this.getContent()
-                            .getElements('[name="search"]')
-                            .set('value', this.$SearchInput.value);
+            const Separator = document.createElement('span');
+            Separator.className = 'quiqqer-products-toolbar-separator';
+            Separator.setAttribute('aria-hidden', 'true');
+            this.$CategoriesButton.getElm().after(Separator);
 
-                        if (e.key === 'enter') {
-                            this.$Search.search();
-                        }
-                    }
+            const SearchGroup = document.createElement('form');
+            SearchGroup.className = 'quiqqer-products-toolbar-search';
+            SearchGroup.setAttribute('role', 'search');
+            SearchGroup.dataset.name = 'product-search';
+            const searchLabel = QUILocale.get(lg, 'controls.products.search');
+            this.$SearchInput = document.createElement('input');
+            this.$SearchInput.type = 'search';
+            this.$SearchInput.placeholder = searchLabel;
+            this.$SearchInput.setAttribute('aria-label', searchLabel);
+            this.$SearchInput.dataset.name = 'search-input';
+            SearchGroup.appendChild(this.$SearchInput);
+            const SearchElm = SearchButton.getElm();
+            SearchElm.setAttribute('aria-label', searchLabel);
+            SearchElm.before(SearchGroup);
+            SearchGroup.appendChild(SearchElm);
+            SearchGroup.addEventListener('submit', event => {
+                event.preventDefault();
+                this.$submitSearch();
+            });
+            this.$SearchInput.addEventListener('input', () => {
+                if (!this.$SearchInput.value && this.$currentSearch) {
+                    this.$submitSearch();
                 }
             });
 
-            this.getButtonBar().appendChild(this.$SearchInput);
+            const Toolbar = this.$CategoriesButton.getElm().parentElement;
+            Toolbar.classList.add('quiqqer-products-toolbar');
+            Toolbar.parentElement.classList.add('quiqqer-products-toolbar-viewport');
         },
 
-        /**
-         * event : on inject
-         */
+        $prepareToolbarButton: function (Button, icon) {
+            const Elm = Button.getElm();
+            Elm.removeAttribute('tabindex');
+            Elm.style.outline = '';
+            const Icon = document.createElement('span');
+            Icon.className = icon;
+            Icon.setAttribute('aria-hidden', 'true');
+            Elm.prepend(Icon);
+        },
+
+        $submitSearch: function () {
+            if (!this.$Search) {
+                return Promise.resolve();
+            }
+
+            this.$currentSearch = this.$SearchInput.value;
+            this.$Search.setFreeText(this.$currentSearch);
+            return this.refresh().catch(error => {
+                this.Loader.hide();
+                console.error(error);
+            });
+        },
+
+        $openFilters: function () {
+            if (!this.$Search) {
+                return;
+            }
+
+            this.$FilterButton.getElm().setAttribute('aria-expanded', 'true');
+            this.$Search.openFilters(this.$FilterButton.getElm()).catch(error => {
+                this.$FilterButton.getElm().setAttribute('aria-expanded', 'false');
+                console.error(error);
+            });
+        },
+
+        $setActionState: function (count) {
+            this.$Actions.getChildren().forEach(Action => {
+                const name = Action.getAttribute('name');
+
+                if (!['edit', 'copy', 'toggleActive', 'delete'].includes(name)) {
+                    return;
+                }
+
+                if (name === 'toggleActive' && count > 0) {
+                    const deactivate = this.$selectionIsActive();
+                    Action.setAttribute('text', QUILocale.get('quiqqer/core', deactivate ? 'deactivate' : 'activate'));
+                    Action.setAttribute('icon', deactivate ? 'fa fa-remove' : 'fa fa-check');
+                }
+
+                const enabled = ['edit', 'copy'].includes(name) ? count === 1 : count > 0;
+
+                if (enabled) {
+                    Action.enable();
+                } else {
+                    Action.disable();
+                }
+            });
+        },
+
         $onInject: function () {
-            this.$Search = new Search({
+            const searchOptions = {
+                context: 'products.panel',
+                layout: 'panel',
+                freeTextSearch: false,
                 injectShow: false,
-                events    : {
-                    onClick: () => {
-                        const Action   = this.getButtons('actions'),
-                              children = Action.getChildren();
-
-                        const selected = this.$Search.getSelected();
-
-                        const Edit = children.filter(function (Btn) {
-                            return Btn.getAttribute('name') === 'edit';
-                        })[0];
-
-                        const Copy = children.filter(function (Btn) {
-                            return Btn.getAttribute('name') === 'copy';
-                        })[0];
-
-                        const Delete = children.filter(function (Btn) {
-                            return Btn.getAttribute('name') === 'delete';
-                        })[0];
-
-                        const Activate = children.filter(function (Btn) {
-                            return Btn.getAttribute('name') === 'activate';
-                        })[0];
-
-                        const Deactivate = children.filter(function (Btn) {
-                            return Btn.getAttribute('name') === 'deactivate';
-                        })[0];
-
-                        Delete.enable();
-                        Activate.enable();
-                        Deactivate.enable();
-
-                        if (selected.length === 1) {
-                            Copy.enable();
-                            Edit.enable();
-                        } else {
-                            Copy.disable();
-                            Edit.disable();
-                        }
-                    },
-
-                    onDblClick: () => {
-                        this.updateChild(this.$Search.getSelected()[0]);
-                    },
-
+                gridOptions: {buttons: [this.$ButtonAdd, this.$Actions]},
+                events: {
+                    onClick: () => this.$setActionState(this.$Search.getSelected().length),
+                    onDblClick: () => this.updateChild(this.$Search.getSelected()[0]),
                     onSearchBegin: () => {
-                        const Action   = this.getButtons('actions'),
-                              children = Action.getChildren();
-
-                        const Delete = children.filter(function (Btn) {
-                            return Btn.getAttribute('name') === 'delete';
-                        })[0];
-
-                        const Edit = children.filter(function (Btn) {
-                            return Btn.getAttribute('name') === 'edit';
-                        })[0];
-
-                        const Copy = children.filter(function (Btn) {
-                            return Btn.getAttribute('name') === 'copy';
-                        })[0];
-
-                        const Activate = children.filter(function (Btn) {
-                            return Btn.getAttribute('name') === 'activate';
-                        })[0];
-
-                        const Deactivate = children.filter(function (Btn) {
-                            return Btn.getAttribute('name') === 'deactivate';
-                        })[0];
-
-                        Copy.disable();
-                        Edit.disable();
-                        Delete.disable();
-                        Activate.disable();
-                        Deactivate.disable();
-
+                        this.$setActionState(0);
                         this.Loader.show();
                     },
-
                     onSearch: () => {
-                        this.Loader.hide();
+                        if (!this.$initialLoad) {
+                            this.Loader.hide();
+                        }
+                    },
+                    onSearchError: () => this.Loader.hide(),
+                    onCategoriesToggle: (Search, visible) => {
+                        this.$CategoriesButton.getElm().setAttribute('aria-expanded', String(visible));
+                    },
+                    onFiltersClose: () => {
+                        const Button = this.$FilterButton.getElm();
+                        Button.setAttribute('aria-expanded', 'false');
                     }
                 }
-            }).inject(this.getContent());
+            };
 
-            this.refresh();
+            QUI.fireEvent('quiqqerProductsPanelSearchCreate', [this, searchOptions]);
+            this.$Search = new Search(searchOptions);
+            this.$Search.inject(this.getContent());
+            this.$Search.whenReady().then(() => {
+                this.$CategoriesButton.getElm().setAttribute('aria-controls', this.$Search.getCategoriesId());
+                QUI.fireEvent('quiqqerProductsPanelSearchReady', [this, this.$Search]);
+                return this.refresh();
+            }).then(() => {
+                const showing = this.$Search.show();
+                // A later grid resize can replace its animation without settling this promise.
+                this.$finishInitialLoad();
+                return showing;
+            }).catch(error => {
+                this.$finishInitialLoad();
+                console.error(error);
+            });
         },
 
-        /**
-         * event: on show
-         */
+        $finishInitialLoad: function () {
+            this.$initialLoad = false;
+            this.getContent().style.visibility = '';
+            this.getContent().setAttribute('aria-busy', 'false');
+            this.getButtonBar().getElm().style.visibility = '';
+            this.Loader.hide();
+        },
+
+        $selectionIsActive: function () {
+            const rows = this.$Search.getResult().getGrid().getSelectedData();
+            return rows.length > 0 && rows.every(row => Number(row.active) === 1);
+        },
+
+        toggleActiveChildren: function () {
+            if (this.$selectionIsActive()) {
+                return this.deactivateChildren();
+            }
+
+            return this.activateChildren();
+        },
+
         $onShow: function () {
-            this.$Search.show.delay(300, this.$Search);
+            if (this.$initialLoad) {
+                return;
+            }
+
+            this.$Search?.show().then(() => this.$Search.resize());
         },
 
-        /**
-         * event: on hide
-         */
         $onHide: function () {
-            this.$Search.hide();
+            this.$Search?.hide();
         },
 
         /**
@@ -380,9 +395,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             require([
                 'package/quiqqer/products/bin/controls/products/CreateProductWindow'
             ], (CreateProductWindow) => {
-                const categories = this.$Search.$Form.$Sitemap.getSelected().map(function (Item) {
-                    return Item.getAttribute('value');
-                });
+                const categories = this.$Search.getSelectedCategories();
 
                 new CreateProductWindow({
                     categories: categories,
@@ -417,7 +430,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
         activateChildren: function () {
             this.Loader.show();
 
-            Products.activateChildren(
+            return Products.activateChildren(
                 this.$Search.getSelected()
             ).then(() => {
                 this.Loader.hide();
@@ -434,7 +447,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
         deactivateChildren: function () {
             this.Loader.show();
 
-            Products.deactivateChildren(
+            return Products.deactivateChildren(
                 this.$Search.getSelected()
             ).then(() => {
                 this.Loader.hide();
@@ -468,66 +481,23 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          * @return {Promise}
          */
         deleteChild: function (productIds) {
-            return new Promise((resolve, reject) => {
-                if (typeOf(productIds) === 'number') {
-                    productIds = [productIds];
+            const ids = typeof productIds === 'number' ? [productIds] : productIds;
+
+            if (!Array.isArray(ids) || !ids.length) {
+                return Promise.reject(new Error('No products selected'));
+            }
+
+            return Products.getChildren(ids).then(products => {
+                if (!products.length) {
+                    throw new Error('No products found');
                 }
 
-                if (typeOf(productIds) !== 'array') {
-                    return reject();
-                }
-
-                if (!productIds.length) {
-                    return reject();
-                }
-
-                Products.getChildren(productIds).then((data) => {
-                    if (!data.length) {
-                        return reject();
+                new DeleteProductWindow({
+                    products: products,
+                    events: {
+                        onDeleted: () => this.refresh()
                     }
-
-                    let products = '<ul>';
-
-                    for (let i = 0, len = data.length; i < len; i++) {
-                        products = products + '<li>' + data[i].id + ': ' +
-                                   data[i].title + '</li>';
-                    }
-
-                    products = products + '</ul>';
-
-                    new QUIConfirm({
-                        title      : QUILocale.get(lg, 'products.window.delete.title'),
-                        text       : QUILocale.get(lg, 'products.window.delete.text', {
-                            products: products
-                        }),
-                        information: QUILocale.get(lg, 'products.window.delete.information', {
-                            products: products
-                        }),
-                        autoclose  : false,
-                        maxHeight  : 400,
-                        maxWidth   : 600,
-                        icon       : 'fa fa-trashcan',
-                        texticon   : 'fa fa-trashcan',
-                        events     : {
-                            onSubmit: (Win) => {
-                                Win.Loader.show();
-
-                                Products.deleteChildren(productIds).then(() => {
-                                    Win.close();
-                                    this.refresh();
-
-                                    QUI.getMessageHandler().then((MH) => {
-                                        MH.addSuccess(
-                                            QUILocale.get(lg, 'message.success.products.delete')
-                                        );
-                                    });
-                                });
-                            }
-                        }
-                    }).open();
-
-                    resolve();
-                }, reject);
+                }).open();
             });
         }
     });

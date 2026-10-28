@@ -46,13 +46,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     // history popstate for mootools
     Element.NativeEvents.popstate = 2;
 
-    window.addEvent('load', function () {
-        // browser workaround, to add the first page to the history
-        if (window.location.hash === '') {
-            history.pushState({}, '', '/#');
-        }
-    });
-
     /**
      * Fires an event for a batch of products that became visible in a list.
      *
@@ -155,6 +148,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             this.$load = false;
             this.$readLocationRunning = false;
+            this.$restoringHistory = false;
+            this.$historyLoading = false;
+            this.$historyVersion = 0;
+            this.$historyTransition = Promise.resolve();
 
             this.$ButtonDetails = null;
             this.$ButtonGallery = null;
@@ -241,6 +238,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 Elm = this.getElm(),
                 cid = Elm.get('data-productlist-id');
 
+            this.$initialHistoryView = this.getAttribute('view');
+
             if (parseInt(Elm.get('data-autoload')) === 0) {
                 this.setAttribute('autoload', false);
             }
@@ -270,6 +269,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if (Elm.get('data-sort')) {
                 this.setAttribute('sort', Elm.get('data-sort'));
             }
+
+            this.$initialHistorySort = this.getAttribute('sort') || '';
 
             let Url = URI(window.location),
                 search = Url.search(true);
@@ -305,6 +306,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if (Elm.get('data-tags') && Elm.get('data-tags') !== '') {
                 this.$tags = Elm.get('data-tags').split(',');
             }
+
+            this.$initialHistoryTags = Array.from(this.$tags);
 
             this.$ContainerLoader = new Element('div', {
                 'class': 'quiqqer-products-productList-loader',
@@ -465,6 +468,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             this.$initialProductIndex = parseInt(this.getElm().get('data-product-index')) || 0;
+            this.$listStartIndex = this.$initialProductIndex;
 
             // events
             this.$ButtonDetails.addEvent('click', this.detailView);
@@ -481,11 +485,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 case 'list':
                     this.$ButtonList.addClass('active');
                     break;
-            }
-
-            if (this.getAttribute('view') === 'detail' || this.getAttribute('view') === 'list') {
-                Url.addSearch('v', this.getAttribute('view'));
-                window.history.pushState({}, "", Url.toString());
             }
 
             // categories
@@ -539,7 +538,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             // more button auto loading
             QUI.addEvent('scroll', function () {
-                if (this.$productId) {
+                if (this.$restoringHistory || this.$productId) {
                     return;
                 }
 
@@ -571,7 +570,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }.bind(this));
 
             // read url
-            window.addEvent('popstate', function () {
+            window.addEvent('popstate', function (event) {
+                // Native history navigation is restored separately from synthetic filter changes.
+                if (event?.type === 'popstate' || event?.event?.type === 'popstate') {
+                    return;
+                }
+
                 if (!this.$load) {
                     return;
                 }
@@ -580,7 +584,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     this.$onFilterChange();
                 }.bind(this));
             }.bind(this));
-
+            const navigation = window.performance?.getEntriesByType('navigation')[0];
+            if (navigation?.type === 'back_forward' && window.history.state?.quiqqerProductLists) {
+                this.$setHistoryLoading(true);
+            }
 
             (function () {
                 if ("p" in search) {
@@ -590,6 +597,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.$readWindowLocation().then(function () {
                     this.$load = true;
                     this.$renderFilterFields();
+                    this.$installHistory();
 
                     if (!this.$productId) {
                         fireProductListView(
@@ -600,6 +608,251 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     }
                 }.bind(this));
             }).delay(500, this);
+        },
+
+        /**
+         * Keep list snapshots on the browser entry, independently of other controls' state.
+         */
+        $installHistory: function () {
+            this.$renderedListView = this.getAttribute('view');
+            this.$renderedListUrl = window.location.href;
+            this.$historyKey = JSON.stringify([
+                this.getAttribute('project'), this.getAttribute('lang'),
+                this.getAttribute('siteId'), this.getAttribute('categoryId')
+            ]);
+            this.$historyTransition = Promise.resolve();
+            this.$historyVersion = 0;
+            this.$restoringHistory = false;
+            const onPopstate = event => this.$restoreHistory(event.state).catch(console.error);
+            const onPageHide = () => this.$saveHistoryState();
+            let scrollTimer;
+            const onScroll = () => {
+                clearTimeout(scrollTimer);
+                scrollTimer = setTimeout(() => this.$saveHistoryState(), 100);
+            };
+            window.addEventListener('popstate', onPopstate);
+            window.addEventListener('pagehide', onPageHide);
+            window.addEventListener('scroll', onScroll, {passive: true});
+            this.addEvents({
+                onDestroy: () => {
+                    this.$load = false;
+                    this.$setHistoryLoading(false);
+                    clearTimeout(scrollTimer);
+                    window.removeEventListener('popstate', onPopstate);
+                    window.removeEventListener('pagehide', onPageHide);
+                    window.removeEventListener('scroll', onScroll);
+                }
+            });
+
+            const navigation = window.performance?.getEntriesByType('navigation')[0];
+
+            if (navigation?.type === 'back_forward') {
+                return this.$restoreHistory(window.history.state).catch(console.error);
+            }
+
+            this.$saveHistoryState();
+            return Promise.resolve();
+        },
+
+        /**
+         * Lock list actions during restoration, leaving product cards interactive.
+         */
+        $setHistoryLoading: function (loading) {
+            this.$historyLoading = loading;
+            this.$historyDisabledControls ??= new Map();
+
+            if (loading) {
+                const controls = [
+                    this.$BarSort,
+                    this.$BarDisplays,
+                    this.$BarFilter,
+                    this.$FilterFL,
+                    this.$FilterMobile,
+                    this.$FilterContainer,
+                    this.$FreeTextContainer,
+                    this.$More,
+                    this.$CategoryMore
+                ];
+
+                for (const Control of controls) {
+                    if (!Control || this.$historyDisabledControls.has(Control)) {
+                        continue;
+                    }
+
+                    this.$historyDisabledControls.set(Control, {
+                        inert: Control.inert,
+                        ariaDisabled: Control.getAttribute('aria-disabled')
+                    });
+                    Control.inert = true;
+                    Control.setAttribute('aria-disabled', 'true');
+                    Control.classList.add('quiqqer-products-productList-history-pending');
+                }
+
+                if (!this.$HistoryLoadingStatus) {
+                    const Status = document.createElement('div');
+                    Status.className = 'quiqqer-products-productList-history-loading';
+                    Status.setAttribute('role', 'status');
+                    const Icon = document.createElement('span');
+                    Icon.className = 'fa fa-spinner fa-spin';
+                    Icon.setAttribute('aria-hidden', 'true');
+                    const Text = document.createElement('span');
+                    Text.textContent = QUILocale.get(lg, 'category.control.productlist.restoring');
+                    Status.append(Icon, Text);
+                    this.$Container.after(Status);
+                    this.$HistoryLoadingStatus = Status;
+                }
+            } else {
+                for (const [Control, state] of this.$historyDisabledControls) {
+                    Control.inert = state.inert;
+                    if (state.ariaDisabled === null) {
+                        Control.removeAttribute('aria-disabled');
+                    } else {
+                        Control.setAttribute('aria-disabled', state.ariaDisabled);
+                    }
+                    Control.classList.remove('quiqqer-products-productList-history-pending');
+                }
+                this.$historyDisabledControls.clear();
+            }
+
+            this.$ContainerReal.setAttribute('aria-busy', String(loading));
+            if (this.$HistoryLoadingStatus) {
+                this.$HistoryLoadingStatus.hidden = !loading;
+            }
+        },
+
+        $saveHistoryState: function () {
+            if (!this.$historyKey || !this.$load || this.$productId || this.$restoringHistory) {
+                return;
+            }
+
+            const productCount = Array.from(this.$ContainerReal.children)
+                .filter(Element => Element.dataset.pid).length;
+            const state = window.history.state || {};
+            window.history.replaceState(Object.assign({}, state, {
+                quiqqerProductLists: Object.assign({}, state.quiqqerProductLists, {
+                    [this.$historyKey]: {
+                        url: window.location.href,
+                        productCount: productCount,
+                        startIndex: this.$listStartIndex || 0,
+                        view: this.$renderedListView,
+                        scrollX: window.scrollX,
+                        scrollY: window.scrollY,
+                        moreButtonClicked: this.$moreButtonClicked
+                    }
+                })
+            }), '', window.location.href);
+        },
+
+        /**
+         * Restore complete loaded lists before scrolling; serialize rapid history navigation.
+         */
+        $restoreHistory: function (state) {
+            const snapshot = state?.quiqqerProductLists?.[this.$historyKey];
+            const saved = snapshot?.url === window.location.href ? snapshot : null;
+            const version = ++this.$historyVersion;
+            let restored = false;
+            this.$restoringHistory = true;
+            this.$setHistoryLoading(true);
+            clearTimeout(this.$refreshTimer);
+            this.$historyTransition = this.$historyTransition.catch(console.error).then(async () => {
+                if (version !== this.$historyVersion || !this.$load) {
+                    return;
+                }
+
+                await this.showList(false);
+
+                if (version !== this.$historyVersion) {
+                    return;
+                }
+
+                this.$resetHistoryFilters(saved?.view);
+                await this.$readWindowLocation();
+
+                if (version !== this.$historyVersion || this.$productId) {
+                    return;
+                }
+
+                const count = Number.isSafeInteger(saved?.productCount) && saved.productCount > 0
+                    ? saved.productCount : undefined;
+                const startIndex = Number.isSafeInteger(saved?.startIndex) && saved.startIndex >= 0
+                    ? saved.startIndex : 0;
+                const productCount = Array.from(this.$ContainerReal.children)
+                    .filter(Element => Element.dataset.pid).length;
+                const sameList = saved
+                    && this.$renderedListUrl === saved.url
+                    && this.$renderedListView === saved.view
+                    && (this.$listStartIndex || 0) === startIndex;
+
+                // Opening a product only hides the list; keep its parsed controls and images.
+                if (sameList && productCount > 0 && productCount < saved.productCount) {
+                    await this.$renderSearch(true, saved.productCount - productCount);
+                } else if (!sameList || productCount !== saved.productCount) {
+                    await this.$refreshSearchCount();
+
+                    if (version !== this.$historyVersion) {
+                        return;
+                    }
+
+                    await this.$renderSearch(undefined, count, startIndex);
+                }
+
+                if (version !== this.$historyVersion) {
+                    return;
+                }
+
+                this.$moreButtonClicked = saved?.moreButtonClicked || 0;
+                this.$renderFilterFields();
+                await new Promise(resolve => window.requestAnimationFrame(() => window.requestAnimationFrame(resolve)));
+
+                if (version === this.$historyVersion) {
+                    window.scrollTo({left: saved?.scrollX || 0, top: saved?.scrollY || 0, behavior: 'instant'});
+                    restored = true;
+                }
+            }).finally(() => {
+                if (version === this.$historyVersion) {
+                    this.$restoringHistory = false;
+                    this.$setHistoryLoading(false);
+                    if (restored) {
+                        this.$saveHistoryState();
+                    }
+                }
+            });
+            return this.$historyTransition;
+        },
+
+        $resetHistoryFilters: function (savedView) {
+            if (this.$FreeText) {
+                this.$FreeText.value = '';
+            }
+
+            for (const Field of this.$selectFields) {
+                Field.reset();
+            }
+
+            for (const Select of this.$selectFilter) {
+                Select.getChildren().forEach(Child => Child.uncheck());
+            }
+
+            for (const Container of [this.$FilterList, this.$FilterFieldList]) {
+                if (Container) {
+                    QUI.Controls.getControlsInElement(Container).forEach(Control => Control.destroy());
+                    Container.replaceChildren();
+                }
+            }
+
+            this.$tags = Array.from(this.$initialHistoryTags || []);
+            const historyView = ['gallery', 'detail', 'list'].includes(savedView) ? savedView : this.$initialHistoryView;
+            this.setAttribute('view', historyView);
+            this.setAttribute('sort', this.$initialHistorySort);
+            this.$Sort?.setValue(this.$initialHistorySort);
+
+            for (const [view, Buttons] of [
+                ['gallery', this.$ButtonGallery], ['detail', this.$ButtonDetails], ['list', this.$ButtonList]
+            ]) {
+                Array.from(Buttons || []).forEach(Button => {
+                    Button.classList.toggle('active', view === historyView);
+                });
+            }
         },
 
         /**
@@ -660,8 +913,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                         if (Close) {
                             this.$readLocationRunning = false;
-                            Close.click();
-                            return Promise.resolve();
+                            this.$productId = false;
+                            this.showList(false).then(resolve);
+                            return;
                         }
                     }
 
@@ -688,7 +942,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                     let productId = parseInt(search.p);
 
-                    if (productOpened) {
+                    if (productOpened && this.$productId === productId) {
                         if (DEBUG) {
                             console.log('$readWindowLocation', 7);
                         }
@@ -703,7 +957,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                             console.log('$readWindowLocation', 8);
                         }
 
-                        this.openProduct(productId).then(function () {
+                        this.openProduct(productId, true).then(function () {
                             self.$readLocationRunning = false;
                             resolve();
                         });
@@ -742,7 +996,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         let findFilterById = function (fieldId) {
                             for (let f in fieldList) {
                                 if (fieldList.hasOwnProperty(f) &&
-                                    fieldList[f].getFieldId() === fieldId) {
+                                    String(fieldList[f].getFieldId()) === String(fieldId)) {
                                     return fieldList[f];
                                 }
                             }
@@ -798,7 +1052,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 tags.each(this.addFilter.bind(this));
 
                 // sort
-                if ("sortBy" in search && "sortOn" in search && !this.$load && this.$Sort) {
+                if ("sortBy" in search && "sortOn" in search && (!this.$load || this.$restoringHistory) && this.$Sort) {
                     this.$Sort.setValue(
                         search.sortOn + ' ' + search.sortBy
                     );
@@ -828,8 +1082,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                     if (Close) {
                         this.$readLocationRunning = false;
-                        Close.click();
-                        return Promise.resolve();
+                        this.showList(false).then(resolve);
+                        return;
                     }
                 }
 
@@ -867,7 +1121,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @param {Boolean} [userExecute] - flag for user execution
          */
         $setWindowLocation: function (userExecute) {
-            if (!this.$load) {
+            if (!this.$load || this.$restoringHistory || this.$historyLoading) {
                 return;
             }
 
@@ -960,6 +1214,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             if ("history" in window) {
+                this.$saveHistoryState();
                 window.history.pushState({}, "", url);
                 window.fireEvent('popstate');
             } else {
@@ -973,6 +1228,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         next: function () {
+            if (this.$historyLoading || this.$restoringHistory) {
+                return Promise.resolve();
+            }
+
             let self = this,
                 size = this.$More.getSize();
 
@@ -1026,7 +1285,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         galleryView: function () {
-            if (!this.$sortingEnabled || !this.$load) {
+            if (this.$historyLoading || !this.$sortingEnabled || !this.$load) {
                 return Promise.resolve();
             }
 
@@ -1045,7 +1304,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         detailView: function () {
-            if (!this.$sortingEnabled || !this.$load) {
+            if (this.$historyLoading || !this.$sortingEnabled || !this.$load) {
                 return Promise.resolve();
             }
 
@@ -1064,7 +1323,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         listView: function () {
-            if (!this.$sortingEnabled || !this.$load) {
+            if (this.$historyLoading || !this.$sortingEnabled || !this.$load) {
                 return Promise.resolve();
             }
 
@@ -1091,27 +1350,41 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * Load the data view and return the searched products as html
          *
          * @param {Boolean} [next] - wanted more articles, default is false
+         * @param {Number} [historyProductCount] - restore all products loaded on a history entry
+         * @param {Number} [historyStartIndex] - offset of the first product on that entry
          * @return {Promise}
          */
-        $renderSearch: function (next) {
+        $renderSearch: function (next, historyProductCount, historyStartIndex) {
             next = typeof next !== 'undefined';
 
             let self = this,
                 view = this.getAttribute('view'),
                 sort = this.getAttribute('sort'),
                 categoryId = this.getAttribute('categoryId'),
-                productLoadNumber = this.getAttribute('productLoadNumber'),
+                productLoadNumber = historyProductCount || this.getAttribute('productLoadNumber'),
                 ContainerReal = this.$ContainerReal,
                 articles = this.$ContainerReal.getElements('article').length + 1;
 
-            const startIndex = next ? articles - 1 : 0;
+            const historyVersion = this.$historyVersion;
+            const listUrl = window.location.href;
+            const startIndex = next ? (this.$listStartIndex || 0) + articles - 1 : (historyStartIndex || 0);
+            const searchParams = this.$getSearchParams();
+
+            if (startIndex > 0) {
+                searchParams.limitOffset = startIndex;
+            }
 
             if (sort) {
                 sort = sort.replace('Sc_date', 'c_date').replace('Se_date', 'e_date');
             }
 
-            return new Promise(function (resolve) {
+            return new Promise(function (resolve, reject) {
                 QUIAjax.get('package_quiqqer_products_ajax_controls_categories_productList', function (result) {
+                    if (self.$historyVersion !== historyVersion) {
+                        resolve({stale: true});
+                        return;
+                    }
+
                     if (!result) {
                         self.$FilterSort.setStyle('display', 'none');
                         resolve(result);
@@ -1143,6 +1416,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     }
 
                     Prom.then(function () {
+                        if (self.$historyVersion !== historyVersion) {
+                            return;
+                        }
+
                         self.enableSorting();
 
                         let articles = Ghost.getElements('article');
@@ -1174,9 +1451,21 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                             return self.$showContainer();
                         });
                     }).then(function () {
+                        if (self.$historyVersion !== historyVersion) {
+                            resolve({stale: true});
+                            return;
+                        }
+
+                        if (!next) {
+                            self.$listStartIndex = startIndex;
+                        }
+
+                        self.$renderedListView = view;
+                        self.$renderedListUrl = listUrl;
                         fireProductListView(self, result.productIds || [], startIndex);
+                        self.$saveHistoryState();
                         resolve(result);
-                    });
+                    }).catch(reject);
                 }, {
                     'package': 'quiqqer/products',
                     view: view,
@@ -1187,7 +1476,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     productLoadNumber: productLoadNumber,
                     project: JSON.encode(window.QUIQQER_PROJECT),
                     siteId: self.getAttribute('siteId'),
-                    searchParams: JSON.encode(self.$getSearchParams())
+                    searchParams: JSON.encode(searchParams),
+                    onError: reject
                 });
             });
         },
@@ -1354,7 +1644,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         $getSearchParams: function () {
             let i, len, Field;
 
-            let fields = this.getAttribute('searchfields') || {},
+            let fields = Object.assign({}, this.getAttribute('searchfields') || {}),
                 categories = Array.clone(this.$categories),
                 tags = Array.clone(this.$tags),
                 sortOn = '',
@@ -2333,7 +2623,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * event on filter change
          */
         $onFilterChange: function () {
-            if (!this.$FilterResultInfo) {
+            if (this.$restoringHistory || !this.$FilterResultInfo) {
                 return;
             }
 
@@ -2345,6 +2635,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.showList();
 
             const self = this;
+            const historyVersion = this.$historyVersion;
 
             if (!this.$load) {
                 return;
@@ -2368,6 +2659,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             this.$refreshTimer = (function () {
                 this.$refreshSearchCount().then(function () {
+                    if (historyVersion !== self.$historyVersion || self.$restoringHistory) {
+                        return;
+                    }
+
                     self.fireEvent('filterChange');
 
                     return self.$renderSearch();
@@ -2381,25 +2676,31 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         $refreshSearchCount: function () {
-            return new Promise((resolve) => {
+            return new Promise((resolve, reject) => {
                 let self = this,
                     search = this.$getSearchParams();
+                const historyVersion = this.$historyVersion;
 
                 search.count = true;
 
-                if (refreshSearchCountTimeOut) {
+                if (refreshSearchCountTimeOut && !this.$restoringHistory) {
                     resolve();
                     return;
                 }
 
                 refreshSearchCountTimeOut = (() => {
                     this.search(search).then(function (result) {
-                        self.$FilterResultInfo.set('html', QUILocale.get(lg, 'product.list.result.count', {
-                            count: result
-                        }));
+                        if (historyVersion === self.$historyVersion) {
+                            self.$FilterResultInfo.set('html', QUILocale.get(lg, 'product.list.result.count', {
+                                count: result
+                            }));
+                        }
 
                         refreshSearchCountTimeOut = null;
-                    }).then(resolve);
+                    }).then(resolve, error => {
+                        refreshSearchCountTimeOut = null;
+                        reject(error);
+                    });
                 }).delay(100);
             });
         },
@@ -2585,10 +2886,19 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * Open a product in the list
          *
          * @param {Number} productId
+         * @param {Boolean} [fromHistory] - product selection was read from the current URL
          */
-        openProduct: function (productId) {
+        openProduct: function (productId, fromHistory = false) {
             if (this.$productId === productId) {
                 return Promise.resolve();
+            }
+
+            if (this.$historyLoading && !fromHistory) {
+                this.$historyVersion++;
+                this.$restoringHistory = false;
+                this.$setHistoryLoading(false);
+            } else {
+                this.$saveHistoryState();
             }
 
             let ListContainer = this.getElm().getElement('.quiqqer-products-productList-products');
@@ -2673,7 +2983,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                                 let Url = URI(window.location);
                                 Url.removeSearch('p');
-                                window.history.pushState({}, "", Url.toString());
+                                if (!self.$restoringHistory) {
+                                    window.history.pushState({}, "", Url.toString());
+                                }
 
                                 self.showList(false);
                                 resolve(false);
@@ -2729,7 +3041,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                                         let Url = URI(window.location);
                                         Url.removeSearch('p');
-                                        window.history.pushState({}, "", Url.toString());
+                                        if (!self.$restoringHistory) {
+                                            window.history.pushState({}, "", Url.toString());
+                                        }
 
                                         QUI.fireEvent('quiqqerProductsCloseProduct', [
                                             this,

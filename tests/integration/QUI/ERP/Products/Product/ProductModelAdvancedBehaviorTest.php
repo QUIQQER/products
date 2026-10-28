@@ -2,12 +2,17 @@
 
 namespace QUITests\ERP\Products\Integration\Product;
 
+use Monolog\Handler\TestHandler;
+use Monolog\Level;
+use Monolog\Logger as MonologLogger;
 use PHPUnit\Framework\Attributes\DataProvider;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Product\Model;
 use QUI\ERP\Products\Product\Exception as ProductException;
+use QUI\Log\Config as LogConfig;
+use QUI\Log\Logger;
 use QUI\Permissions\Exception as PermissionException;
 use QUITests\ERP\Products\Fixtures\TestUser;
 use ReflectionProperty;
@@ -126,14 +131,35 @@ class ProductModelAdvancedBehaviorTest extends ProductIntegrationTestCase
         }
 
         $Product = ProductTestHelper::createProduct('inactive-frontend-view');
+        $OriginalLogger = Logger::getLogger();
+        $LogHandler = new TestHandler();
+        $Config = LogConfig::getPackageConfig();
+        self::assertNotNull($Config);
+        $originalLogLevels = $Config->get('log_levels');
 
         try {
-            $Product->getViewFrontend();
-            self::fail('An inactive product must not expose a frontend view.');
-        } catch (ProductException $Exception) {
-            self::assertSame(404, $Exception->getCode());
-            self::assertSame($Product->getId(), $Exception->getContext()['id']);
-            self::assertSame('frontend', $Exception->getContext()['view']);
+            Logger::$Logger = new MonologLogger('products-not-found-test', [$LogHandler]);
+            $Config->setValue('log_levels', 'info', 1);
+            $Config->setValue('log_levels', 'error', 1);
+
+            try {
+                $Product->getViewFrontend();
+                self::fail('An inactive product must not expose a frontend view.');
+            } catch (ProductException $Exception) {
+                self::assertSame(404, $Exception->getCode());
+                self::assertSame($Product->getId(), $Exception->getContext()['id']);
+                self::assertSame('frontend', $Exception->getContext()['view']);
+
+                $records = $LogHandler->getRecords();
+                self::assertCount(1, $records);
+                self::assertSame(Level::Info, $records[0]->level);
+                self::assertSame($Exception->getMessage(), $records[0]->message);
+                self::assertSame('products_not_found', $records[0]->context['filename']);
+                self::assertSame('product frontend view error', $records[0]->context['extra-message']);
+            }
+        } finally {
+            Logger::$Logger = $OriginalLogger;
+            $Config->setSection('log_levels', $originalLogLevels);
         }
     }
 

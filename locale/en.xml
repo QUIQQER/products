@@ -182,6 +182,9 @@
         <locale name="settings.window.products.editableFields">
 <en><![CDATA[Determine which fields are inherited and editable in the child variants.]]></en>
         </locale>
+        <locale name="settings.window.products.editableFields.description">
+<en><![CDATA[These settings apply to all variants by default. You can also configure inheritance and editability separately for each parent product.]]></en>
+        </locale>
         <locale name="settings.window.products.findChildrenInSearch">
 <en><![CDATA[Variants: Consider child articles in search]]></en>
         </locale>
@@ -249,13 +252,7 @@
         </locale>
         <locale name="settings.window.products.priceFieldFactors.description" html="true">
 <en>
-                <![CDATA[Here you can set a multiplier for each price field in the system based on another price field.<br/><br/>
-<b>Example:</b><br/>
-Price field: <b>Recommended retail price</b><br/>
-Multiplier: <b>1.5</b><br/>
-Based on price field: <b>Price</b> (Value: <b>50,00 €</b>)<br/><br/>
-Recommended retail price after applying the multiplier: <b>75,00 €</b>
-]]></en>
+                <![CDATA[Calculate price fields automatically from a source price, a factor and an optional surcharge. Activate the price fields you want to calculate.<br/><b>Example:</b> Purchase price €50 × factor 1.5 = selling price €75.]]></en>
         </locale>
 
         <locale name="menu.erp.products.autoArticleNos.title">
@@ -319,7 +316,7 @@ This suffix is appended to all automatically generated article numbers. Optional
 <en><![CDATA[Editable in variants]]></en>
         </locale>
         <locale name="fieldEditableDesc">
-<en><![CDATA[Variant products can each define their own value for this field.]]></en>
+<en><![CDATA[Variant products can each define their own value for this field. This setting can also be configured separately for each parent product.]]></en>
         </locale>
         <locale name="fieldInherited">
 <en><![CDATA[Inherited in variants from parent product]]></en>
@@ -327,7 +324,7 @@ This suffix is appended to all automatically generated article numbers. Optional
         <locale name="fieldInheritedDesc">
 <en>
                 <![CDATA[
-                Variant products take the value from the parent product for this field unless its own value is set.]]></en>
+                Variant products take the value from the parent product for this field unless its own value is set. This setting can also be configured separately for each parent product.]]></en>
         </locale>
         <locale name="priority">
 <en><![CDATA[Sorting]]></en>
@@ -453,6 +450,9 @@ This suffix is appended to all automatically generated article numbers. Optional
 <en><![CDATA[<p>The field was still not assigned a media folder.</p>]]></en>
         </locale>
 
+        <locale name="category.control.productlist.restoring">
+<en><![CDATA[Loading more products …]]></en>
+        </locale>
         <locale name="category.control.productlist.button.more">
 <en><![CDATA[More]]></en>
         </locale>
@@ -743,6 +743,58 @@ This suffix is appended to all automatically generated article numbers. Optional
         </locale>
         <locale name="cron.generateCacheImagesOfProducts.description">
 <en><![CDATA[Go through all images and build the image cache, so the first call is faster]]></en>
+        </locale>
+
+        <locale name="cron.productQualityCheck.title">
+            <en><![CDATA[Product Quality Check]]></en>
+        </locale>
+        <locale name="cron.productQualityCheck.description">
+            <en><![CDATA[Checks product translations and reports missing text by email or backend message. Empty optional fields are skipped.]]></en>
+        </locale>
+        <locale name="cron.productQualityCheck.notification">
+            <en><![CDATA[Notification channel (default: email)]]></en>
+        </locale>
+        <locale name="cron.productQualityCheck.notification.email">
+            <en><![CDATA[Email]]></en>
+        </locale>
+        <locale name="cron.productQualityCheck.notification.backend">
+            <en><![CDATA[Backend message]]></en>
+        </locale>
+        <locale name="cron.productQualityCheck.notification.both">
+            <en><![CDATA[Email and backend message]]></en>
+        </locale>
+        <locale name="cron.productQualityCheck.email">
+            <en><![CDATA[Email recipient (empty: configured administrator address)]]></en>
+        </locale>
+        <locale name="cron.productQualityCheck.users">
+            <en><![CDATA[Backend recipients (empty: all superusers)]]></en>
+        </locale>
+        <locale name="cron.productQualityCheck.languages">
+            <en><![CDATA[Languages to check, e.g. de,en (empty: languages of all projects)]]></en>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidEmail">
+            <en><![CDATA[Configure a valid recipient email address or administrator email address.]]></en>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidUsers">
+            <en><![CDATA[Select valid backend recipients or configure at least one superuser.]]></en>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidNotification">
+            <en><![CDATA[Select email, backend or both notification channels.]]></en>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidLanguages">
+            <en><![CDATA[Configure two-letter language codes such as de,en or project languages.]]></en>
+        </locale>
+        <locale name="cron.productQualityCheck.missing">
+            <en><![CDATA[Product #[productId], field #[fieldId] ([fieldTitle]): Missing translations: [languages]]]></en>
+        </locale>
+        <locale name="cron.productQualityCheck.failed">
+            <en><![CDATA[Product #[productId] could not be checked. See the system log for details.]]></en>
+        </locale>
+        <locale name="cron.productQualityCheck.summary">
+            <en><![CDATA[Product quality: [checked] products checked, [issues] issues. Languages: [languages].]]></en>
+        </locale>
+        <locale name="cron.productQualityCheck.truncated">
+            <en><![CDATA[The report shows the first [limit] issues. Additional issues were found.]]></en>
         </locale>
 
 <!-- searchtypes -->
@@ -1952,11 +2004,35 @@ This suffix is appended to all automatically generated article numbers. Optional
         <locale name="controls.settings.PriceFieldFactors.btn.update">
 <en><![CDATA[Update product prices]]></en>
         </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSourceField">
+<en><![CDATA[Source price]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelFactor">
+<en><![CDATA[Factor]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.descFactor">
+<en><![CDATA[1.5 = +50%]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSurcharge">
+<en><![CDATA[Surcharge (net)]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSurchargePriority">
+<en><![CDATA[Apply surcharge]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRounding">
+<en><![CDATA[Rounding]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelCalculation">
+<en><![CDATA[Automatic price calculation]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelManual">
+<en><![CDATA[No automatic calculation]]></en>
+        </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelMultiplier">
 <en><![CDATA[x value of]]></en>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelUpdateOnSave">
-<en><![CDATA[apply on product save]]></en>
+<en><![CDATA[Recalculate when saving the product]]></en>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelCategoryPriority">
 <en><![CDATA[Price field factors priority]]></en>

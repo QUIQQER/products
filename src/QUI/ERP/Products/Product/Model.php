@@ -389,7 +389,7 @@ class Model extends QUI\QDOM
                 // log products not found
                 // these are often products that are called up but are deactivated and still exist
                 // e.g. when search engines still direct users to it
-                QUI\System\Log::addError(
+                QUI\System\Log::addInfo(
                     $Exception->getMessage(),
                     ['extra-message' => 'product frontend view error'],
                     'products_not_found'
