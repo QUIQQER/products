@@ -10,9 +10,10 @@ define('package/quiqqer/products/bin/classes/Product', [
     'Ajax',
     'Locale',
     'package/quiqqer/products/bin/Fields',
-    'qui/utils/String'
+    'qui/utils/String',
+    'package/quiqqer/products/bin/utils/Activation'
 
-], function (QUI, QUIDOM, Ajax, QUILocale, Fields, StringUtils) {
+], function (QUI, QUIDOM, Ajax, QUILocale, Fields, StringUtils, Activation) {
     'use strict';
 
     return new Class({
@@ -381,15 +382,7 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @returns {Promise}
          */
         activate: function () {
-            return new Promise(function (resolve, reject) {
-                Ajax.get('package_quiqqer_products_ajax_products_activate', function () {
-                    this.refresh().then(resolve, reject);
-                }.bind(this), {
-                    'package': 'quiqqer/products',
-                    productId: this.getId(),
-                    onError: reject
-                });
-            }.bind(this));
+            return Activation.activate([this.getId()]).then(() => this.refresh());
         },
 
         /**

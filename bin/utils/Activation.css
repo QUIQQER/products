@@ -1,0 +1,90 @@
+.quiqqer-products-activation-window .qui-window-simpleWindow-content {
+    display: flex;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.quiqqer-products-activation {
+    --_padding: var(--quiqqer-products-activation-window-padding, 2rem);
+    --_gap: var(--quiqqer-products-activation-window-gap, 1.25rem);
+    --_icon-size: var(--quiqqer-products-activation-window-icon-size, 5rem);
+    --_heading-size: var(--quiqqer-products-activation-window-heading-size, 1.5rem);
+    --_accent: var(--quiqqer-products-activation-window-accent, var(--qui-colors-primary, Highlight));
+    --_muted: var(--quiqqer-products-activation-window-muted, var(--qui-colors-gray-700, GrayText));
+    --_border: var(--quiqqer-products-activation-window-border, var(--qui-colors-gray-100, ButtonBorder));
+    --_actions-background: var(--quiqqer-products-activation-window-actions-background, var(--qui-colors-gray-25, Canvas));
+
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    width: 100%;
+}
+
+.quiqqer-products-activation-body {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--_gap);
+    justify-content: safe center;
+    min-height: 0;
+    overflow: auto;
+    padding: var(--_padding);
+    text-align: center;
+}
+
+.quiqqer-products-activation-icon {
+    color: var(--_accent);
+    font-size: var(--_icon-size);
+}
+
+.quiqqer-products-activation-body h2 {
+    font-size: var(--_heading-size);
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0;
+}
+
+.quiqqer-products-activation-body p {
+    color: var(--_muted);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 38ch;
+}
+
+.quiqqer-products-activation-actions {
+    align-items: center;
+    background: var(--_actions-background);
+    border-top: 1px solid var(--_border);
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: var(--_gap);
+    justify-content: space-between;
+    padding: 1rem var(--_padding);
+}
+
+.quiqqer-products-activation-choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--_gap) / 2);
+    justify-content: end;
+    margin-inline-start: auto;
+}
+
+.quiqqer-products-activation-actions button {
+    margin: 0;
+    white-space: nowrap;
+}
+
+.quiqqer-products-activation button:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+@media (max-width: 420px) {
+    .quiqqer-products-activation {
+        --_padding: 1.25rem;
+    }
+}

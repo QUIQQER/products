@@ -8,9 +8,10 @@ define('package/quiqqer/products/bin/classes/Products', [
     'qui/classes/DOM',
     'Ajax',
     'package/quiqqer/products/bin/classes/Product',
-    'package/quiqqer/products/bin/utils/Products'
+    'package/quiqqer/products/bin/utils/Products',
+    'package/quiqqer/products/bin/utils/Activation'
 
-], function (QUI, QUIDOM, Ajax, Product, ProductUtils) {
+], function (QUI, QUIDOM, Ajax, Product, ProductUtils, Activation) {
     'use strict';
 
     const requestCache = {};
@@ -398,13 +399,7 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @returns {Promise}
          */
         activateChildren: function (productIds) {
-            return new Promise(function (resolve, reject) {
-                Ajax.post('package_quiqqer_products_ajax_products_activate', resolve, {
-                    'package': 'quiqqer/products',
-                    onError: reject,
-                    productId: JSON.encode(productIds)
-                });
-            });
+            return Activation.activate(productIds);
         },
 
         /**

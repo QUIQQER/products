@@ -1290,16 +1290,12 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 return entry.id;
             });
 
-            QUIAjax.post('package_quiqqer_products_ajax_products_variant_generate_activate', function () {
+            return Products.activateChildren(selected).then(function () {
                 self.refreshVariantGrid();
                 self.$loaderHide();
-            }, {
-                'package': 'quiqqer/products',
-                variantIds: JSON.encode(selected),
-                onError: function () {
-                    self.refreshVariantGrid();
-                    self.$loaderHide();
-                }
+            }).catch(function () {
+                self.refreshVariantGrid();
+                self.$loaderHide();
             });
         },
 

@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<quiqqer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://www.quiqqer.com/docs/schemas/2.x/locale.xsd">
 <locales>
 
     <groups name="quiqqer/products" datatype="php,js">
+        <locale name="products.activation.images.title">
+<de><![CDATA[Produktaktivierung]]></de>
+        </locale>
+        <locale name="products.activation.images.question">
+<de><![CDATA[Bilder ebenfalls aktivieren?]]></de>
+        </locale>
+        <locale name="products.activation.images.information.single">
+<de><![CDATA[Ein Produktbild ist noch inaktiv. Soll es ebenfalls aktiviert werden?]]></de>
+        </locale>
+        <locale name="products.activation.images.information">
+<de><![CDATA[[count] Produktbilder sind noch inaktiv. Sollen sie ebenfalls aktiviert werden?]]></de>
+        </locale>
+        <locale name="products.activation.images.confirm">
+<de><![CDATA[Mit Bildern]]></de>
+        </locale>
+        <locale name="products.activation.images.skip">
+<de><![CDATA[Ohne Bilder]]></de>
+        </locale>
         <locale name="package.title">
 <de><![CDATA[QUIQQER - Shop - Produkte]]></de>
         </locale>
@@ -2501,3 +2521,4 @@
     </groups>
 
 </locales>
+</quiqqer>

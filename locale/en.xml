@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<quiqqer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://www.quiqqer.com/docs/schemas/2.x/locale.xsd">
 <locales>
 
     <groups name="quiqqer/products" datatype="php,js">
+        <locale name="products.activation.images.title">
+<en><![CDATA[Product activation]]></en>
+        </locale>
+        <locale name="products.activation.images.question">
+<en><![CDATA[Activate images as well?]]></en>
+        </locale>
+        <locale name="products.activation.images.information.single">
+<en><![CDATA[One product image is still inactive. Activate it as well?]]></en>
+        </locale>
+        <locale name="products.activation.images.information">
+<en><![CDATA[[count] product images are still inactive. Activate them as well?]]></en>
+        </locale>
+        <locale name="products.activation.images.confirm">
+<en><![CDATA[With images]]></en>
+        </locale>
+        <locale name="products.activation.images.skip">
+<en><![CDATA[Without images]]></en>
+        </locale>
         <locale name="package.title">
 <en><![CDATA[QUIQQER - Shop - Products]]></en>
         </locale>
@@ -2488,3 +2508,4 @@ This suffix is appended to all automatically generated article numbers. Optional
     </groups>
 
 </locales>
+</quiqqer>
