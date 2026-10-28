@@ -35,7 +35,6 @@
     cursor: pointer;
     float: left;
     height: 30px;
-    position: relative;
     text-align: center;
     width: 60px;
 }
@@ -78,7 +77,7 @@
 }
 
 .quiqqer-products-search-suggest-spinner,
-.quiqqer-products-search-suggest-form-button[data-loading="true"]::after {
+.quiqqer-products-search-suggest-form-button[data-loading="true"] .quiqqer-products-search-suggest-form-button-icon::before {
     animation: quiqqer-products-search-suggest-spin 0.8s linear infinite;
     border: 2px solid currentColor;
     border-inline-end-color: transparent;
@@ -88,15 +87,10 @@
     width: 1rem;
 }
 
-.quiqqer-products-search-suggest-form-button[data-loading="true"]::after {
+.quiqqer-products-search-suggest-form-button[data-loading="true"] .quiqqer-products-search-suggest-form-button-icon::before {
     content: "";
-    inset: 0;
-    margin: auto;
-    position: absolute;
-}
-
-.quiqqer-products-search-suggest-form-button[data-loading="true"] .quiqqer-products-search-suggest-form-button-icon {
-    visibility: hidden;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 @keyframes quiqqer-products-search-suggest-spin {
@@ -107,7 +101,7 @@
 
 @media (prefers-reduced-motion: reduce) {
     .quiqqer-products-search-suggest-spinner,
-    .quiqqer-products-search-suggest-form-button[data-loading="true"]::after {
+    .quiqqer-products-search-suggest-form-button[data-loading="true"] .quiqqer-products-search-suggest-form-button-icon::before {
         animation: none;
     }
 }
