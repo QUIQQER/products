@@ -15,7 +15,13 @@ use QUI\ERP\Products\Utils\Tables;
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_search_backend_executeForGrid',
     function ($searchParams) {
-        require_once 'execute.php';
+        require_once __DIR__ . '/execute.php';
+
+        $params = json_decode($searchParams, true);
+
+        if (!is_array($params)) {
+            throw new QUI\Exception('Wrong search parameters.', 400);
+        }
 
         // products
         $result = QUI::getAjax()->callRequestFunction(
@@ -23,16 +29,8 @@ QUI::getAjax()->registerFunction(
             ['searchParams' => $searchParams]
         );
 
-        if (empty($result) || empty($result['result'])) {
-            return [
-                'data' => [],
-                'total' => 0,
-                'page' => 1
-            ];
-        }
-
-        $page = 1;
-        $productIds = $result['result'];
+        $page = isset($params['sheet']) ? (int)$params['sheet'] : 1;
+        $productIds = $result['result'] ?? [];
         $products = [];
 
         $BackEndSearch = SearchHandler::getBackendSearch();
@@ -65,7 +63,7 @@ QUI::getAjax()->registerFunction(
                 case 4: // title
                 case 5: // short
                 case 18: // sort
-                    break 2;
+                    continue 2;
             }
 
             $fields['F' . $fieldId] = 'F' . $fieldId;
@@ -138,17 +136,19 @@ QUI::getAjax()->registerFunction(
             $products[] = $product;
         }
 
-        // count
-        $searchParams = json_decode($searchParams, true);
-        $searchParams['count'] = 1;
+        QUI::getEvents()->fireEvent('quiqqerProductsBackendSearchGridData', [
+            &$products,
+            $productIds,
+            $params,
+            $BackEndSearch
+        ]);
 
-        if (isset($searchParams['sheet'])) {
-            $page = (int)$searchParams['sheet'];
-        }
+        // Count with the same extension parameters, including on empty pages.
+        $params['count'] = 1;
 
         $count = QUI::getAjax()->callRequestFunction(
             'package_quiqqer_products_ajax_search_backend_execute',
-            ['searchParams' => json_encode($searchParams)]
+            ['searchParams' => json_encode($params)]
         );
 
         return [

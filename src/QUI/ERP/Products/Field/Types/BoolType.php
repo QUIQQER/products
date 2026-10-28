@@ -57,7 +57,10 @@ class BoolType extends QUI\ERP\Products\Field\Field
      */
     public function validate(mixed $value): void
     {
-        if ($value === '') {
+        if (
+            $value === null
+            || $value === ''
+        ) {
             return;
         }
 

@@ -29,4 +29,31 @@
         </autocreate>
     </cron>
 
+    <cron exec="\QUI\ERP\Products\Crons::productQualityCheck">
+        <title>
+            <locale group="quiqqer/products" var="cron.productQualityCheck.title"/>
+        </title>
+        <description>
+            <locale group="quiqqer/products" var="cron.productQualityCheck.description"/>
+        </description>
+        <params>
+            <param name="notification" data-qui="package/quiqqer/products/bin/controls/cron/QualityNotification">
+                <locale group="quiqqer/products" var="cron.productQualityCheck.notification"/>
+            </param>
+            <param name="email" type="email">
+                <locale group="quiqqer/products" var="cron.productQualityCheck.email"/>
+            </param>
+            <param name="users" data-qui="controls/users/Select">
+                <locale group="quiqqer/products" var="cron.productQualityCheck.users"/>
+            </param>
+            <param name="languages" type="text">
+                <locale group="quiqqer/products" var="cron.productQualityCheck.languages"/>
+            </param>
+        </params>
+        <autocreate>
+            <interval>0 3 * * *</interval>
+            <active>0</active>
+        </autocreate>
+    </cron>
+
 </crons>

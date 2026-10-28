@@ -8,6 +8,7 @@ use QUI\ERP\Products\Handler\Manufacturers as ManufacturersHandler;
 
 use function count;
 use function dirname;
+use function in_array;
 use function strnatcmp;
 use function usort;
 
@@ -48,8 +49,8 @@ class ManufacturerList extends QUI\Control
         $Engine = QUI::getTemplateManager()->getEngine();
         $Config = QUI::getPackage('quiqqer/products')->getConfig();
 
-        // global settings: product autoload after x clicks
-        if ($this->getAttribute('autoloadAfter') == '' || !$this->getAttribute('autoloadAfter')) {
+        // Zero disables autoload; only missing site settings inherit the global value.
+        if (in_array($this->getAttribute('autoloadAfter'), ['', false, null], true)) {
             // @todo get setting from site
             $this->setAttribute('autoloadAfter', $Config?->get('products', 'autoloadAfter'));
         }

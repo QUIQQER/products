@@ -16,7 +16,17 @@ use QUI\ERP\Products\Search\FrontendSearch;
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_search_frontend_suggestRendered',
-    function ($project, $siteId, $searchParams, $globalsearch, $limit, $showLinkToSearchSite, $searchUrl) {
+    function (
+        $project,
+        $siteId,
+        $searchParams,
+        $globalsearch,
+        $limit,
+        $showLinkToSearchSite,
+        $searchUrl,
+        $showPrice = null,
+        $showDesc = null
+    ) {
         QUI\Permissions\Permission::checkPermission(
             Search::PERMISSION_FRONTEND_EXECUTE
         );
@@ -118,6 +128,15 @@ QUI::getAjax()->registerFunction(
         $pages = ceil($count / $limit);
 
         $User = QUI::getUserBySession();
+        $Config = QUI::getPackage('quiqqer/productsearch')->getConfig();
+
+        if ($showPrice === null || $showPrice === '') {
+            $showPrice = $Config?->get('frontendSuggestSearch', 'showPrice');
+        }
+
+        if ($showDesc === null || $showDesc === '') {
+            $showDesc = $Config?->get('frontendSuggestSearch', 'showDesc') ?? true;
+        }
 
         try {
             $Engine = QUI::getTemplateManager()->getEngine();
@@ -128,7 +147,10 @@ QUI::getAjax()->registerFunction(
                 'pages' => $pages,
                 'active' => $active,
                 'showLinkToSearchSite' => (bool)$showLinkToSearchSite,
-                'searchUrl' => $searchUrl ?: ''
+                'searchUrl' => $searchUrl ?: '',
+                'showPrice' => filter_var($showPrice, FILTER_VALIDATE_BOOLEAN),
+                'showDesc' => filter_var($showDesc, FILTER_VALIDATE_BOOLEAN),
+                'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice()
             ]);
 
             return $Engine->fetch(OPT_DIR . 'quiqqer/products/template/search/frontend/SuggestRendered.html');
@@ -138,5 +160,15 @@ QUI::getAjax()->registerFunction(
             return '';
         }
     },
-    ['project', 'siteId', 'searchParams', 'globalsearch', 'limit', 'showLinkToSearchSite', 'searchUrl']
+    [
+        'project',
+        'siteId',
+        'searchParams',
+        'globalsearch',
+        'limit',
+        'showLinkToSearchSite',
+        'searchUrl',
+        'showPrice',
+        'showDesc'
+    ]
 );

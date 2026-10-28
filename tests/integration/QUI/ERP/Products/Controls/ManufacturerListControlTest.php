@@ -2,6 +2,7 @@
 
 namespace QUITests\ERP\Products\Integration\Controls;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use QUI;
 use QUI\ERP\Products\Controls\ManufacturerList\ManufacturerList;
 use QUI\ERP\Products\Field\Types\GroupList;
@@ -119,6 +120,47 @@ class ManufacturerListControlTest extends ProductIntegrationTestCase
         self::assertSame(10, $Method->invoke(new ManufacturerList(['view' => 'list'])));
         self::assertSame(5, $Method->invoke(new ManufacturerList(['view' => 'detail'])));
         self::assertSame(9, $Method->invoke(new ManufacturerList()));
+    }
+
+    #[DataProvider('autoloadSettings')]
+    public function testAutoloadPreservesManufacturerOverrides(
+        int|string|false|null $localValue,
+        int $globalValue,
+        int|string $expected
+    ): void {
+        $Config = QUI::getPackage('quiqqer/products')->getConfig();
+        self::assertNotNull($Config);
+        $original = $Config->get('products', 'autoloadAfter');
+        $Config->set('products', 'autoloadAfter', $globalValue);
+
+        try {
+            $Control = new ManufacturerList([
+                'Site' => ProductTestHelper::getCategorySite(),
+                'autoloadAfter' => $localValue
+            ]);
+            $Control->getBody();
+
+            self::assertSame($expected, $Control->getAttribute('data-autoloadAfter'));
+        } finally {
+            if ($original === false) {
+                $Config->del('products', 'autoloadAfter');
+            } else {
+                $Config->set('products', 'autoloadAfter', $original);
+            }
+        }
+    }
+
+    public static function autoloadSettings(): iterable
+    {
+        yield 'empty inherits global' => ['', 4, 4];
+        yield 'false inherits global' => [false, 4, 4];
+        yield 'null inherits global' => [null, 4, 4];
+        yield 'integer zero disables autoload' => [0, 4, 0];
+        yield 'string zero disables autoload' => ['0', 4, '0'];
+        yield 'integer category threshold' => [2, 4, 2];
+        yield 'string category threshold' => ['2', 4, '2'];
+        yield 'inherit globally disabled autoload' => ['', 0, 0];
+        yield 'category enables globally disabled autoload' => [2, 0, 2];
     }
 
     private function installManufacturerFixtures(): void

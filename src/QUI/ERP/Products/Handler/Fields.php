@@ -477,7 +477,8 @@ class Fields
         QUI\ERP\Products\Utils\Database::addColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             $columnName,
-            $columnType
+            $columnType,
+            caseSensitiveText: true
         );
     }
 

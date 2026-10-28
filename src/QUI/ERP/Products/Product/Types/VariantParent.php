@@ -317,11 +317,9 @@ class VariantParent extends AbstractType
      */
     public function getCurrentPrice(null | User $User = null): QUI\ERP\Money\Price
     {
-        if ($this->getDefaultVariantId() === false) {
-            return parent::getCurrentPrice($User);
-        }
+        $Variant = $this->getActiveDefaultVariant();
 
-        return $this->getDefaultVariant()->getMinimumPrice($User);
+        return $Variant !== null ? $Variant->getMinimumPrice($User) : parent::getCurrentPrice($User);
     }
 
     /**
@@ -1804,6 +1802,49 @@ class VariantParent extends AbstractType
 
         $Product = Products::getProduct($variantId);
 
+        return $this->prepareDefaultVariant($Product);
+    }
+
+    /**
+     * Resolve an active configured default, falling back to the first active child by ID.
+     * Keep an explicitly unset default and the persisted selection unchanged.
+     */
+    public function getActiveDefaultVariant(): ?AbstractType
+    {
+        if (!$this->getDefaultVariantId()) {
+            return null;
+        }
+
+        try {
+            $Variant = $this->getDefaultVariant();
+
+            if ($Variant->isActive()) {
+                return $Variant;
+            }
+        } catch (Exception $Exception) {
+            if ($Exception->getCode() !== 404) {
+                throw $Exception;
+            }
+        }
+
+        $variants = $this->getVariants(['order' => 'id ASC']);
+
+        if (is_array($variants)) {
+            foreach ($variants as $Variant) {
+                if ($Variant->isActive()) {
+                    return $this->prepareDefaultVariant($Variant);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Apply the parent's attribute lists to both configured and fallback defaults.
+     */
+    private function prepareDefaultVariant(AbstractType $Product): AbstractType
+    {
         // set attribute lists
         $attributeLists = $this->getFieldsByType(FieldHandler::TYPE_ATTRIBUTE_LIST);
 

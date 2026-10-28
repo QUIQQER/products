@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<events>
-    <event on="onTemplateGetHeader" fire="\QUI\ERP\Products\EventHandling::onTemplateGetHeader"/>
-    <event on="onQuiqqer::template::header::end" fire="\QUI\ERP\Products\EventHandling::onTemplateEnd"/>
-    <event on="onPermissionsSet" fire="\QUI\ERP\Products\EventHandling::onPermissionsSet"/>
-    <event on="onRequest" fire="\QUI\ERP\Products\EventHandling::onRequest"/>
-    <event on="onQuiqqerTranslatorEdit" fire="\QUI\ERP\Products\EventHandling::onQuiqqerTranslatorEdit"/>
-    <event on="onQuiqqerTranslatorEditById" fire="\QUI\ERP\Products\EventHandling::onQuiqqerTranslatorEditById"/>
+<quiqqer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://www.quiqqer.com/docs/schemas/2.x/events.xsd">
+    <events>
+        <event on="onHeaderLoaded" fire="\QUI\ERP\Products\Utils\SearchTextCollation::onHeaderLoaded"/>
+        <event on="onTemplateGetHeader" fire="\QUI\ERP\Products\EventHandling::onTemplateGetHeader"/>
+        <event on="onQuiqqer::template::header::end" fire="\QUI\ERP\Products\EventHandling::onTemplateEnd"/>
+        <event on="onPermissionsSet" fire="\QUI\ERP\Products\EventHandling::onPermissionsSet"/>
+        <event on="onRequest" fire="\QUI\ERP\Products\EventHandling::onRequest"/>
+        <event on="onQuiqqerTranslatorEdit" fire="\QUI\ERP\Products\EventHandling::onQuiqqerTranslatorEdit"/>
+        <event on="onQuiqqerTranslatorEditById" fire="\QUI\ERP\Products\EventHandling::onQuiqqerTranslatorEditById"/>
 
-    <!-- package events -->
-    <event on="onPackageSetup" fire="\QUI\ERP\Products\EventHandling::onPackageSetup"/>
-    <event on="onPackageInstallAfter" fire="\QUI\ERP\Products\EventHandling::onPackageInstallAfter" priority="-100"/>
-    <event on="onPackageConfigSave" fire="\QUI\ERP\Products\EventHandling::onPackageConfigSave"/>
+        <!-- package events -->
+        <event on="onPackageSetup" fire="\QUI\ERP\Products\EventHandling::onPackageSetup"/>
+        <event on="onPackageInstallAfter" fire="\QUI\ERP\Products\EventHandling::onPackageInstallAfter" priority="-100"/>
+        <event on="onPackageConfigSave" fire="\QUI\ERP\Products\EventHandling::onPackageConfigSave"/>
 
-    <!-- site events -->
-    <event on="onSiteSave" fire="\QUI\ERP\Products\EventHandling::onSiteSave"/>
-    <event on="onSiteCreateChild" fire="\QUI\ERP\Products\EventHandling::onSiteCreateChild"/>
-    <event on="onSiteSaveBefore" fire="\QUI\ERP\Products\EventHandling::onSiteSaveBefore"/>
-    <event on="onSiteLoad" fire="\QUI\ERP\Products\EventHandling::onSiteLoad"/>
+        <!-- site events -->
+        <event on="onSiteSave" fire="\QUI\ERP\Products\EventHandling::onSiteSave"/>
+        <event on="onSiteCreateChild" fire="\QUI\ERP\Products\EventHandling::onSiteCreateChild"/>
+        <event on="onSiteSaveBefore" fire="\QUI\ERP\Products\EventHandling::onSiteSaveBefore"/>
+        <event on="onSiteLoad" fire="\QUI\ERP\Products\EventHandling::onSiteLoad"/>
 
-    <!-- cache events -->
-    <event on="onClearSettingsCache" fire="\QUI\ERP\Products\EventHandling::onFrontendCacheClear"/>
-    <event on="onClearProjectsCache" fire="\QUI\ERP\Products\EventHandling::onFrontendCacheClear"/>
-    <event on="onClearProjectCache" fire="\QUI\ERP\Products\EventHandling::onFrontendCacheClear"/>
+        <!-- cache events -->
+        <event on="onClearSettingsCache" fire="\QUI\ERP\Products\EventHandling::onFrontendCacheClear"/>
+        <event on="onClearProjectsCache" fire="\QUI\ERP\Products\EventHandling::onFrontendCacheClear"/>
+        <event on="onClearProjectCache" fire="\QUI\ERP\Products\EventHandling::onFrontendCacheClear"/>
 
-    <!-- order events -->
-    <event on="onQuiqqerOrderSuccessful" fire="\QUI\ERP\Products\EventHandling::onQuiqqerOrderSuccessful"/>
+        <!-- order events -->
+        <event on="onQuiqqerOrderSuccessful" fire="\QUI\ERP\Products\EventHandling::onQuiqqerOrderSuccessful"/>
 
-    <event on="onQuiqqerMigrationV2" fire="\QUI\ERP\Products\EventHandling::onQuiqqerMigrationV2"/>
-    <event on="onSmartyInit" fire="\QUI\ERP\Products\EventHandling::onSmartyInit"/>
-</events>
+        <event on="onQuiqqerMigrationV2" fire="\QUI\ERP\Products\EventHandling::onQuiqqerMigrationV2"/>
+        <event on="onSmartyInit" fire="\QUI\ERP\Products\EventHandling::onSmartyInit"/>
+    </events>
+</quiqqer>

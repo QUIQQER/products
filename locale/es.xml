@@ -153,6 +153,9 @@
         <locale name="settings.window.products.editableFields">
 <es><![CDATA[Define qué campos se heredan y cuáles se pueden editar en las variantes.]]></es>
         </locale>
+        <locale name="settings.window.products.editableFields.description">
+<es><![CDATA[Estas opciones se aplican a todas las variantes de forma predeterminada. También puedes configurar la herencia y la posibilidad de edición por separado para cada producto principal.]]></es>
+        </locale>
         <locale name="settings.window.products.findChildrenInSearch">
 <es><![CDATA[Variantes: incluirlas en la búsqueda]]></es>
         </locale>
@@ -208,13 +211,7 @@
 <es><![CDATA[Factores de campos de precio]]></es>
         </locale>
         <locale name="settings.window.products.priceFieldFactors.description" html="true">
-<es><![CDATA[Permite definir un multiplicador para cada campo de precio del sistema tomando otro campo de precio como base.<br/><br/>
-<b>Ejemplo:</b><br/>
-Campo de precio: <b>Precio de venta recomendado</b><br/>
-Multiplicador: <b>1.5</b><br/>
-Basado en el campo de precio: <b>Precio</b> (Valor: <b>50,00 €</b>)<br/><br/>
-Precio de venta recomendado tras aplicar el multiplicador: <b>75,00 €</b>
-]]></es>
+<es><![CDATA[Calcula los campos de precio automáticamente a partir de un precio de origen, un factor y un recargo opcional. Activa los campos que quieras calcular.<br/><b>Ejemplo:</b> Precio de compra 50 € × factor 1,5 = precio de venta 75 €.]]></es>
         </locale>
 
         <locale name="menu.erp.products.autoArticleNos.title">
@@ -276,13 +273,13 @@ Precio de venta recomendado tras aplicar el multiplicador: <b>75,00 €</b>
 <es><![CDATA[Editable en las variantes]]></es>
         </locale>
         <locale name="fieldEditableDesc">
-<es><![CDATA[Cada variante puede tener un valor propio para este campo.]]></es>
+<es><![CDATA[Cada variante puede tener un valor propio para este campo. Esta opción también se puede configurar por separado para cada producto principal.]]></es>
         </locale>
         <locale name="fieldInherited">
 <es><![CDATA[Heredado del producto principal en las variantes]]></es>
         </locale>
         <locale name="fieldInheritedDesc">
-<es><![CDATA[Las variantes heredan el valor de este campo del producto principal, salvo que tengan un valor propio.]]></es>
+<es><![CDATA[Las variantes heredan el valor de este campo del producto principal, salvo que tengan un valor propio. Esta opción también se puede configurar por separado para cada producto principal.]]></es>
         </locale>
         <locale name="priority">
 <es><![CDATA[Ordenación]]></es>
@@ -401,6 +398,9 @@ Precio de venta recomendado tras aplicar el multiplicador: <b>75,00 €</b>
 <es><![CDATA[<p>Aún no se ha asignado una carpeta multimedia a este campo.</p>]]></es>
         </locale>
 
+        <locale name="category.control.productlist.restoring">
+<es><![CDATA[Cargando más productos …]]></es>
+        </locale>
         <locale name="category.control.productlist.button.more">
 <es><![CDATA[Cargar más]]></es>
         </locale>
@@ -668,6 +668,58 @@ Precio de venta recomendado tras aplicar el multiplicador: <b>75,00 €</b>
         </locale>
         <locale name="cron.generateCacheImagesOfProducts.description">
 <es><![CDATA[Recorre todas las imágenes y genera su caché para acelerar la primera apertura de un producto.]]></es>
+        </locale>
+
+        <locale name="cron.productQualityCheck.title">
+            <es><![CDATA[Comprobar la calidad de los productos]]></es>
+        </locale>
+        <locale name="cron.productQualityCheck.description">
+            <es><![CDATA[Comprueba las traducciones de productos y notifica los textos faltantes por correo o mensaje en el panel. Omite los campos opcionales vacíos.]]></es>
+        </locale>
+        <locale name="cron.productQualityCheck.notification">
+            <es><![CDATA[Canal de notificación (predeterminado: correo)]]></es>
+        </locale>
+        <locale name="cron.productQualityCheck.notification.email">
+            <es><![CDATA[Correo electrónico]]></es>
+        </locale>
+        <locale name="cron.productQualityCheck.notification.backend">
+            <es><![CDATA[Mensaje en el panel]]></es>
+        </locale>
+        <locale name="cron.productQualityCheck.notification.both">
+            <es><![CDATA[Correo y mensaje en el panel]]></es>
+        </locale>
+        <locale name="cron.productQualityCheck.email">
+            <es><![CDATA[Destinatario del correo (vacío: dirección del administrador)]]></es>
+        </locale>
+        <locale name="cron.productQualityCheck.users">
+            <es><![CDATA[Destinatarios del panel (vacío: todos los superusuarios)]]></es>
+        </locale>
+        <locale name="cron.productQualityCheck.languages">
+            <es><![CDATA[Idiomas que comprobar, p. ej. de,en (vacío: idiomas de todos los proyectos)]]></es>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidEmail">
+            <es><![CDATA[Configure una dirección válida del destinatario o del administrador.]]></es>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidUsers">
+            <es><![CDATA[Seleccione destinatarios válidos del panel o configure al menos un superusuario.]]></es>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidNotification">
+            <es><![CDATA[Seleccione correo, panel o ambos canales de notificación.]]></es>
+        </locale>
+        <locale name="cron.productQualityCheck.invalidLanguages">
+            <es><![CDATA[Configure códigos de idioma de dos letras, como de,en, o los idiomas de los proyectos.]]></es>
+        </locale>
+        <locale name="cron.productQualityCheck.missing">
+            <es><![CDATA[Producto #[productId], campo #[fieldId] ([fieldTitle]): Faltan traducciones: [languages]]]></es>
+        </locale>
+        <locale name="cron.productQualityCheck.failed">
+            <es><![CDATA[No se pudo comprobar el producto #[productId]. Consulte el registro del sistema.]]></es>
+        </locale>
+        <locale name="cron.productQualityCheck.summary">
+            <es><![CDATA[Calidad de los productos: [checked] productos comprobados, [issues] incidencias. Idiomas: [languages].]]></es>
+        </locale>
+        <locale name="cron.productQualityCheck.truncated">
+            <es><![CDATA[El informe muestra las primeras [limit] incidencias. Se encontraron más incidencias.]]></es>
         </locale>
 
 <!-- searchtypes -->
@@ -1803,11 +1855,35 @@ Precio de venta recomendado tras aplicar el multiplicador: <b>75,00 €</b>
         <locale name="controls.settings.PriceFieldFactors.btn.update">
 <es><![CDATA[Actualizar precios de productos]]></es>
         </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSourceField">
+<es><![CDATA[Precio de origen]]></es>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelFactor">
+<es><![CDATA[Factor]]></es>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.descFactor">
+<es><![CDATA[1,5 = +50 %]]></es>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSurcharge">
+<es><![CDATA[Recargo (neto)]]></es>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelSurchargePriority">
+<es><![CDATA[Aplicar recargo]]></es>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRounding">
+<es><![CDATA[Redondeo]]></es>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelCalculation">
+<es><![CDATA[Cálculo automático del precio]]></es>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelManual">
+<es><![CDATA[Sin cálculo automático]]></es>
+        </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelMultiplier">
 <es><![CDATA[x valor de]]></es>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelUpdateOnSave">
-<es><![CDATA[aplicar al guardar productos]]></es>
+<es><![CDATA[Recalcular al guardar el producto]]></es>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelCategoryPriority">
 <es><![CDATA[Prioridad de los factores de campos de precio]]></es>

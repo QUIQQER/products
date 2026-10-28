@@ -58,6 +58,7 @@ class EventHandling
         self::setDefaultVariantFields();
         self::setDefaultProductFields();
         self::checkProductCacheTable();
+        QUI\ERP\Products\Utils\SearchTextCollation::setup();
 //        Crons::updateProductCache();
 
         // Clear specific cache paths
