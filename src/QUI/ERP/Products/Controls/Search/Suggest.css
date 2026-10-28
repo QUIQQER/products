@@ -5,7 +5,7 @@
     --_border: var(--quiqqer-products-search-suggest-border-color, color-mix(in srgb, var(--_text) 12%, var(--_surface)));
     --_accent: var(--quiqqer-products-search-suggest-accent-color, var(--qui-color-main, Highlight));
     --_hover: var(--quiqqer-products-search-suggest-hover-background, color-mix(in srgb, var(--_accent) 6%, var(--_surface)));
-    --_radius: var(--quiqqer-products-search-suggest-border-radius, 0.75rem);
+    --_radius: var(--quiqqer-products-search-suggest-border-radius, 0);
     --_gap: var(--quiqqer-products-search-suggest-gap, 0.75rem);
     --_padding: var(--quiqqer-products-search-suggest-padding, 1rem);
     --_image-size: var(--quiqqer-products-search-suggest-image-size, 3.75rem);
