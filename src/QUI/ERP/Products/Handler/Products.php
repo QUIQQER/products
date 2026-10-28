@@ -12,6 +12,7 @@ use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Field\Field;
 use QUI\ERP\Products\Interfaces\ProductTypeInterface;
 use QUI\ERP\Products\Product\Types\VariantChild;
+use QUI\ERP\Products\Utils\ProductMediaCopy;
 use QUI\ERP\Products\Utils\Tables as TablesUtils;
 use QUI\Interfaces\Users\User;
 use QUI\Locale;
@@ -646,19 +647,46 @@ class Products
      * Copy a product
      *
      * @param integer $productId
+     * @param string $mediaMode - copy images, share existing media, or use an empty folder (legacy default)
      * @return QUI\ERP\Products\Product\Types\AbstractType
      *
      * @throws QUI\Exception
      */
-    public static function copyProduct(int $productId): QUI\ERP\Products\Product\Types\AbstractType
-    {
+    public static function copyProduct(
+        int $productId,
+        string $mediaMode = ProductMediaCopy::EMPTY
+    ): QUI\ERP\Products\Product\Types\AbstractType {
+        ProductMediaCopy::validateMode($mediaMode);
         $Product = self::getProduct($productId);
+
+        if ($mediaMode === ProductMediaCopy::SHARE) {
+            $Product->getMediaFolder();
+        }
+
         $fields = $Product->getFields();
 
         // filter url quiqqer/products#301
         $fields = array_filter($fields, function ($Field) {
             return $Field->getId() !== Fields::FIELD_URL;
         });
+
+        foreach ($fields as $key => $Field) {
+            if (!$Field instanceof Field) {
+                throw new QUI\Exception(['quiqqer/products', 'exception.field.is.invalid']);
+            }
+
+            $Copy = clone $Field;
+
+            if (
+                $mediaMode !== ProductMediaCopy::SHARE
+                && in_array($Copy->getType(), [Fields::TYPE_FOLDER, Fields::TYPE_IMAGE], true)
+            ) {
+                $Copy->setValue('');
+                $Copy->setOwnFieldStatus(true);
+            }
+
+            $fields[$key] = $Copy;
+        }
 
         $parent = null;
 
@@ -685,26 +713,21 @@ class Products
                 $New->setMainCategory($MainCategory);
             }
 
-            $folders = $New->getFieldsByType(Fields::TYPE_FOLDER);
-
-            // @todo sub media folder kopieren wäre sinnvoller.
-            // vorerst leer machen, so wird dann ein neuer ordner erstellt
-
-            foreach ($folders as $Field) {
-                $Field->setValue('');
-            }
-
-            // neuer media ordner erstellen
-            $New->createMediaFolder(Fields::FIELD_FOLDER);
-
-
-            // @todo titel setzen -> Kopie von
+            ProductMediaCopy::apply($Product, $New, $mediaMode);
 
             $New->save($CreateUser);
 
             QUI::getEvents()->fireEvent('onQuiqqerProductsProductCopy', [$New, $Product]);
 
             return $New;
+        } catch (\Throwable $Exception) {
+            try {
+                $New->delete();
+            } catch (\Throwable $CleanupException) {
+                QUI\System\Log::writeException($CleanupException);
+            }
+
+            throw $Exception;
         } finally {
             unset(self::$productsBeingCreated[$newId]);
         }

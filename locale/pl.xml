@@ -1,7 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<quiqqer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://www.quiqqer.com/docs/schemas/2.x/locale.xsd">
 <locales>
 
     <groups name="quiqqer/products" datatype="php,js">
+        <locale name="products.copy.media.title">
+<pl><![CDATA[Kopiuj produkt]]></pl>
+        </locale>
+        <locale name="products.copy.media.product">
+<pl><![CDATA[Produkt nr [id]]]></pl>
+        </locale>
+        <locale name="products.copy.media.question">
+<pl><![CDATA[Co zrobić ze zdjęciami?]]></pl>
+        </locale>
+        <locale name="products.copy.media.copy.label">
+<pl><![CDATA[Kopiuj zdjęcia]]></pl>
+        </locale>
+        <locale name="products.copy.media.copy.help">
+<pl><![CDATA[Osobny folder z niezależnymi kopiami zdjęć produktu.]]></pl>
+        </locale>
+        <locale name="products.copy.media.share.label">
+<pl><![CDATA[Zachowaj istniejący folder]]></pl>
+        </locale>
+        <locale name="products.copy.media.share.help">
+<pl><![CDATA[Oryginał i kopia używają tych samych zdjęć. Zmiany zdjęć dotyczą obu produktów.]]></pl>
+        </locale>
+        <locale name="products.copy.media.empty.label">
+<pl><![CDATA[Użyj nowego, pustego folderu]]></pl>
+        </locale>
+        <locale name="products.copy.media.empty.help">
+<pl><![CDATA[Kopia produktu otrzyma własny folder bez zdjęć.]]></pl>
+        </locale>
+        <locale name="products.copy.media.submit">
+<pl><![CDATA[Kopiuj produkt]]></pl>
+        </locale>
+        <locale name="products.copy.media.invalidMode">
+<pl><![CDATA[Nieprawidłowa opcja zdjęć produktu.]]></pl>
+        </locale>
+        <locale name="products.copy.media.error">
+<pl><![CDATA[Nie udało się skopiować produktu. Spróbuj ponownie.]]></pl>
+        </locale>
+        <locale name="products.product.loading">
+<pl><![CDATA[Wczytywanie produktu…]]></pl>
+        </locale>
+        <locale name="products.product.saving">
+<pl><![CDATA[Zapisywanie produktu…]]></pl>
+        </locale>
+        <locale name="products.activation.images.title">
+<pl><![CDATA[Aktywacja produktów]]></pl>
+        </locale>
+        <locale name="products.activation.images.question">
+<pl><![CDATA[Aktywować również zdjęcia?]]></pl>
+        </locale>
+        <locale name="products.activation.images.information.single">
+<pl><![CDATA[Jedno zdjęcie produktu jest nadal nieaktywne. Czy je również aktywować?]]></pl>
+        </locale>
+        <locale name="products.activation.images.information">
+<pl><![CDATA[Liczba nieaktywnych zdjęć produktów: [count]. Czy aktywować je również?]]></pl>
+        </locale>
+        <locale name="products.activation.images.confirm">
+<pl><![CDATA[Ze zdjęciami]]></pl>
+        </locale>
+        <locale name="products.activation.images.skip">
+<pl><![CDATA[Bez zdjęć]]></pl>
+        </locale>
         <locale name="package.title">
 <pl><![CDATA[QUIQQER - Sklep - Produkty]]></pl>
         </locale>
@@ -2316,3 +2378,4 @@
     </groups>
 
 </locales>
+</quiqqer>
