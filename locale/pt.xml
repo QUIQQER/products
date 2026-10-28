@@ -4,6 +4,42 @@
 <locales>
 
     <groups name="quiqqer/products" datatype="php,js">
+        <locale name="products.copy.media.title">
+<pt><![CDATA[Copiar produto]]></pt>
+        </locale>
+        <locale name="products.copy.media.product">
+<pt><![CDATA[Produto n.º [id]]]></pt>
+        </locale>
+        <locale name="products.copy.media.question">
+<pt><![CDATA[Como pretende tratar as imagens?]]></pt>
+        </locale>
+        <locale name="products.copy.media.copy.label">
+<pt><![CDATA[Copiar imagens]]></pt>
+        </locale>
+        <locale name="products.copy.media.copy.help">
+<pt><![CDATA[Uma pasta própria com cópias independentes das imagens do produto.]]></pt>
+        </locale>
+        <locale name="products.copy.media.share.label">
+<pt><![CDATA[Manter a pasta existente]]></pt>
+        </locale>
+        <locale name="products.copy.media.share.help">
+<pt><![CDATA[O original e a cópia usam as mesmas imagens. As alterações afetam ambos os produtos.]]></pt>
+        </locale>
+        <locale name="products.copy.media.empty.label">
+<pt><![CDATA[Usar uma nova pasta vazia]]></pt>
+        </locale>
+        <locale name="products.copy.media.empty.help">
+<pt><![CDATA[A cópia do produto terá a sua própria pasta sem imagens.]]></pt>
+        </locale>
+        <locale name="products.copy.media.submit">
+<pt><![CDATA[Copiar produto]]></pt>
+        </locale>
+        <locale name="products.copy.media.invalidMode">
+<pt><![CDATA[Opção inválida para as imagens do produto.]]></pt>
+        </locale>
+        <locale name="products.copy.media.error">
+<pt><![CDATA[Não foi possível copiar o produto. Tente novamente.]]></pt>
+        </locale>
         <locale name="products.product.loading">
 <pt><![CDATA[A carregar o produto…]]></pt>
         </locale>

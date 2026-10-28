@@ -2187,55 +2187,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @returns {Promise}
          */
         copy: function () {
-            const self = this;
-
-            return new Promise(function (resolve, reject) {
-                self.$Product.getTitle().then(function (title) {
-                    new QUIConfirm({
-                        icon: 'fa fa-copy',
-                        title: QUILocale.get(lg, 'products.window.copy.title', {
-                            id: self.$Product.getId(),
-                            title: title
-                        }),
-                        text: QUILocale.get(lg, 'products.window.copy.text', {
-                            id: self.$Product.getId(),
-                            title: title
-                        }),
-                        texticon: false,
-                        information: QUILocale.get(lg, 'products.window.copy.information', {
-                            id: self.$Product.getId(),
-                            title: title
-                        }),
-                        autoclose: false,
-                        maxHeight: 300,
-                        maxWidth: 450,
-
-                        ok_button: {
-                            text: QUILocale.get('quiqqer/core', 'copy'),
-                            textimage: 'fa fa-copy'
-                        },
-
-                        events: {
-                            onSubmit: function (Win) {
-                                Win.Loader.show();
-
-                                Products.copy(self.$Product.getId()).then(function (newProductId) {
-                                    require([
-                                        'package/quiqqer/products/bin/controls/products/Product'
-                                    ], function (ProductPanel) {
-                                        new ProductPanel({
-                                            productId: newProductId
-                                        }).inject(self.getParent());
-
-                                        Win.close();
-                                    });
-                                }).catch(reject);
-                            },
-
-                            onClose: resolve
-                        }
-                    }).open();
-                });
+            return Products.copy(this.$Product.getId()).then(newProductId => {
+                if (newProductId !== null) {
+                    return Products.openProduct(newProductId);
+                }
             });
         },
 

@@ -9,9 +9,10 @@ define('package/quiqqer/products/bin/classes/Products', [
     'Ajax',
     'package/quiqqer/products/bin/classes/Product',
     'package/quiqqer/products/bin/utils/Products',
-    'package/quiqqer/products/bin/utils/Activation'
+    'package/quiqqer/products/bin/utils/Activation',
+    'package/quiqqer/products/bin/utils/Copy'
 
-], function (QUI, QUIDOM, Ajax, Product, ProductUtils, Activation) {
+], function (QUI, QUIDOM, Ajax, Product, ProductUtils, Activation, Copy) {
     'use strict';
 
     const requestCache = {};
@@ -134,13 +135,7 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @returns {Promise}
          */
         copy: function (productId) {
-            return new Promise(function (resolve, reject) {
-                Ajax.get('package_quiqqer_products_ajax_products_copy', resolve, {
-                    'package': 'quiqqer/products',
-                    productId: productId,
-                    onError: reject
-                });
-            });
+            return this.getChild(productId).then(product => Copy.copy(productId, product));
         },
 
         /**

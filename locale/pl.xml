@@ -4,6 +4,42 @@
 <locales>
 
     <groups name="quiqqer/products" datatype="php,js">
+        <locale name="products.copy.media.title">
+<pl><![CDATA[Kopiuj produkt]]></pl>
+        </locale>
+        <locale name="products.copy.media.product">
+<pl><![CDATA[Produkt nr [id]]]></pl>
+        </locale>
+        <locale name="products.copy.media.question">
+<pl><![CDATA[Co zrobić ze zdjęciami?]]></pl>
+        </locale>
+        <locale name="products.copy.media.copy.label">
+<pl><![CDATA[Kopiuj zdjęcia]]></pl>
+        </locale>
+        <locale name="products.copy.media.copy.help">
+<pl><![CDATA[Osobny folder z niezależnymi kopiami zdjęć produktu.]]></pl>
+        </locale>
+        <locale name="products.copy.media.share.label">
+<pl><![CDATA[Zachowaj istniejący folder]]></pl>
+        </locale>
+        <locale name="products.copy.media.share.help">
+<pl><![CDATA[Oryginał i kopia używają tych samych zdjęć. Zmiany zdjęć dotyczą obu produktów.]]></pl>
+        </locale>
+        <locale name="products.copy.media.empty.label">
+<pl><![CDATA[Użyj nowego, pustego folderu]]></pl>
+        </locale>
+        <locale name="products.copy.media.empty.help">
+<pl><![CDATA[Kopia produktu otrzyma własny folder bez zdjęć.]]></pl>
+        </locale>
+        <locale name="products.copy.media.submit">
+<pl><![CDATA[Kopiuj produkt]]></pl>
+        </locale>
+        <locale name="products.copy.media.invalidMode">
+<pl><![CDATA[Nieprawidłowa opcja zdjęć produktu.]]></pl>
+        </locale>
+        <locale name="products.copy.media.error">
+<pl><![CDATA[Nie udało się skopiować produktu. Spróbuj ponownie.]]></pl>
+        </locale>
         <locale name="products.product.loading">
 <pl><![CDATA[Wczytywanie produktu…]]></pl>
         </locale>

@@ -464,13 +464,15 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          * @param {Number} productId
          */
         copyChild: function (productId) {
-            this.Loader.show();
+            return Products.copy(productId).then(newProductId => {
+                if (newProductId === null) {
+                    return;
+                }
 
-            Products.copy(productId).then((newProductId) => {
-                Products.openProduct(newProductId).then(() => {
-                    this.Loader.hide();
-                    this.refresh();
-                });
+                this.Loader.show();
+                return Products.openProduct(newProductId).then(() => this.refresh());
+            }).finally(() => {
+                this.Loader.hide();
             });
         },
 
