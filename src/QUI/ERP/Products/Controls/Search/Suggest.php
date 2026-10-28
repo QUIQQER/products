@@ -32,6 +32,8 @@ class Suggest extends QUI\Control
             'hideOnProductSearch' => false,
             'globalsearch' => false,
             'limit' => false,
+            'showPrice' => '',
+            'showDesc' => '',
             'showLinkToSearchSite' => false
         ]);
 
@@ -80,6 +82,20 @@ class Suggest extends QUI\Control
         $this->setJavaScriptControlOption('searchurl', $Search->getUrlRewritten());
         $this->setJavaScriptControlOption('limit', $limit);
         $this->setJavaScriptControlOption('showlinktosearchsite', $showLinkToSearchSite);
+
+        $showPrice = $this->getAttribute('showPrice');
+        $showDesc = $this->getAttribute('showDesc');
+
+        if ($showPrice === '') {
+            $showPrice = $Config?->get('frontendSuggestSearch', 'showPrice');
+        }
+
+        if ($showDesc === '') {
+            $showDesc = $Config?->get('frontendSuggestSearch', 'showDesc');
+        }
+
+        $this->setJavaScriptControlOption('showprice', (int)$showPrice);
+        $this->setJavaScriptControlOption('showdesc', (int)$showDesc);
 
         $Engine->assign([
             'this' => $this,

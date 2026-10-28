@@ -2,6 +2,7 @@
 
 namespace QUITests\ERP\Products\Integration\Ajax;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
@@ -252,8 +253,13 @@ class SearchAjaxTest extends AjaxTestCase
         self::assertSame([$Product->getId()], array_map('intval', $suggestions));
     }
 
-    public function testRenderedFrontendSuggestionsExposeSearchResultsAndPaginationToTemplate(): void
-    {
+    /** @param array<int, mixed> $options */
+    #[DataProvider('suggestPriceOptionsProvider')]
+    public function testRenderedFrontendSuggestionsExposeSearchResultsAndPaginationToTemplate(
+        array $options,
+        bool $showPrice,
+        bool $showDesc
+    ): void {
         $Product = ProductTestHelper::createProduct('ajax-rendered-suggestion', 31.25);
         ProductTestHelper::runAsSystemUser(static function ($SystemUser) use ($Product): void {
             $Product->activate($SystemUser);
@@ -273,11 +279,14 @@ class SearchAjaxTest extends AjaxTestCase
         $Template->method('getEngine')->willReturn($Engine);
         $originalTemplate = QUI::$Template;
         QUI::$Template = $Template;
+        $Config = QUI::getPackage('quiqqer/productsearch')->getConfig();
+        self::assertNotNull($Config);
+        $originalOptions = $Config->getSection('frontendSuggestSearch');
+        $Config->set('frontendSuggestSearch', 'showPrice', 1);
+        $Config->set('frontendSuggestSearch', 'showDesc', 0);
 
         try {
-            $html = $this->invokeEndpointAsAdmin(
-                'search/frontend/suggestRendered.php',
-                'package_quiqqer_products_ajax_search_frontend_suggestRendered',
+            $arguments = [
                 json_encode([
                     'name' => $Project->getName(),
                     'lang' => $Project->getLang()
@@ -287,10 +296,17 @@ class SearchAjaxTest extends AjaxTestCase
                 null,
                 0,
                 true,
-                '/products/search'
+                '/products/search',
+                ...$options
+            ];
+            $html = $this->invokeEndpointAsAdmin(
+                'search/frontend/suggestRendered.php',
+                'package_quiqqer_products_ajax_search_frontend_suggestRendered',
+                ...$arguments
             );
         } finally {
             QUI::$Template = $originalTemplate;
+            $Config->setSection('frontendSuggestSearch', $originalOptions);
         }
 
         self::assertSame('<suggestions/>', $html);
@@ -300,6 +316,19 @@ class SearchAjaxTest extends AjaxTestCase
         self::assertTrue($assigned['showLinkToSearchSite']);
         self::assertSame('/products/search', $assigned['searchUrl']);
         self::assertSame(QUI::getUserBySession()->getLocale(), $assigned['Locale']);
+        self::assertSame($showPrice, $assigned['showPrice']);
+        self::assertSame($showDesc, $assigned['showDesc']);
+        self::assertSame(QUI\ERP\Products\Utils\Package::hidePrice(), $assigned['hidePrice']);
+    }
+
+    /** @return array<string, array{array<int, mixed>, bool, bool}> */
+    public static function suggestPriceOptionsProvider(): array
+    {
+        return [
+            'legacy request uses configuration' => [[], true, false],
+            'explicit options override configuration' => [[false, true], false, true],
+            'string booleans are parsed' => [['false', 'true'], false, true]
+        ];
     }
 
     public function testRenderedFrontendSuggestionsReturnEmptyMarkupWithoutResults(): void

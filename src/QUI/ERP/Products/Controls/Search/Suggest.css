@@ -1,4 +1,6 @@
 .quiqqer-products-search-suggest {
+    --_price-gap: var(--quiqqer-products-search-suggest-price-gap, 0.5em);
+
     float: left;
     position: relative;
     width: 100%;
@@ -93,17 +95,22 @@
     clear: both;
     float: left;
     font-size: 12px;
-    padding-bottom: 40px;
+}
+
+.quiqqer-products-search-suggest-dropdown-price {
+    clear: both;
+    float: left;
+    margin-block-start: var(--_price-gap);
+    width: 100%;
 }
 
 .quiqqer-products-search-suggest-dropdown-description-articlNo {
-    bottom: 10px;
     clear: both;
     color: #999999;
-    position: absolute;
-    right: 10px;
+    float: left;
+    margin-block-start: var(--_price-gap);
     text-align: right;
-    width: 90%;
+    width: 100%;
 }
 
 .quiqqer-products-search-suggest-dropdown-description-articlNo span {

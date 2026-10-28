@@ -14,9 +14,17 @@
                 <div class="quiqqer-products-search-suggest-dropdown-title">
                     {$Product->getTitle($Locale)}
                 </div>
+                {if $showDesc}
                 <div class="quiqqer-products-search-suggest-dropdown-description">
                     {$Product->getDescription($Locale)}
                 </div>
+                {/if}
+
+                {if $showPrice && !$hidePrice}
+                <div class="quiqqer-products-search-suggest-dropdown-price" data-name="suggestPrice">
+                    {$Product->getViewFrontend()->getPriceDisplay()->create()}
+                </div>
+                {/if}
             </div>
 
             {assign var=articleNo
