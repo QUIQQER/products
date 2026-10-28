@@ -8,6 +8,8 @@ use QUI\ERP\Products\Product\ProductList;
 use QUI\ERP\Products\Product\ProductListBackendView;
 use QUI\ERP\Products\Product\ProductListFrontendView;
 use QUI\ERP\Products\Product\UniqueProductFrontendView;
+use QUI\ERP\Products\Utils\Tables;
+use QUI;
 
 class ProductPresentationTest extends ProductIntegrationTestCase
 {
@@ -71,6 +73,19 @@ class ProductPresentationTest extends ProductIntegrationTestCase
         self::assertStringStartsWith('<script type="application/ld+json">', $html);
         self::assertStringContainsString('"name":"structured-product"', $html);
         self::assertStringEndsWith('</script>', $html);
+    }
+
+    public function testFixedFrontendPriceWithoutSearchCacheHasNoStartingPrefix(): void
+    {
+        $Product = ProductTestHelper::createProduct('fixed-starting-price', 19.9);
+        ProductTestHelper::runAsSystemUser(static function ($SystemUser) use ($Product): void {
+            $Product->activate($SystemUser);
+        });
+        QUI::getDataBaseConnection()->delete(Tables::getProductCacheTableName(), ['id' => $Product->getId()]);
+
+        $Price = $Product->getViewFrontend()->getPrice();
+        self::assertSame(19.9, $Price->value());
+        self::assertFalse($Price->isMinimalPrice());
     }
 
     public function testUniqueAndListViewsRenderCalculatedCustomerData(): void
