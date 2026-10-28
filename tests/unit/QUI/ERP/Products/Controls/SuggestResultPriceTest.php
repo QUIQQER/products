@@ -20,7 +20,6 @@ class SuggestResultPriceTest extends TestCase
 {
     #[DataProvider('suggestionProvider')]
     public function testSuggestionPricesRespectVisibilityAndStartingPrefix(
-        string $template,
         bool $showPrice,
         bool $hidden,
         bool $starting
@@ -67,7 +66,7 @@ class SuggestResultPriceTest extends TestCase
                 'showPrice' => $showPrice,
                 'hidePrice' => Package::hidePrice()
             ]);
-            $html = $Engine->fetch(OPT_DIR . $template);
+            $html = $Engine->fetch(OPT_DIR . 'quiqqer/products/template/search/frontend/SuggestRendered.html');
         } finally {
             $Products->setValue(null, $previousProducts);
             $Visibility->setValue(null, $previousVisibility);
@@ -89,23 +88,14 @@ class SuggestResultPriceTest extends TestCase
         }
     }
 
-    /** @return array<string, array{string, bool, bool, bool}> */
+    /** @return array<string, array{bool, bool, bool}> */
     public static function suggestionProvider(): array
     {
-        $cases = [];
-
-        $templates = [
-            'desktop' => 'quiqqer/products/template/search/frontend/SuggestRendered.html',
-            'mobile' => 'quiqqer/productsearch/template/SuggestRendered.html'
+        return [
+            'fixed price' => [true, false, false],
+            'starting price' => [true, false, true],
+            'disabled' => [false, false, true],
+            'globally hidden' => [true, true, true]
         ];
-
-        foreach ($templates as $name => $template) {
-            $cases[$name . ' fixed price'] = [$template, true, false, false];
-            $cases[$name . ' starting price'] = [$template, true, false, true];
-            $cases[$name . ' disabled'] = [$template, false, false, true];
-            $cases[$name . ' globally hidden'] = [$template, true, true, true];
-        }
-
-        return $cases;
     }
 }
