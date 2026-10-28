@@ -28,6 +28,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'package/quiqqer/products/bin/controls/fields/FieldTypeSelect',
     'package/quiqqer/products/bin/utils/Products',
     'package/quiqqer/products/bin/controls/products/DeleteProductWindow',
+    'package/quiqqer/products/bin/utils/ProductPanelLoading',
 
     'text!package/quiqqer/products/bin/controls/products/ProductInformation.html',
     'text!package/quiqqer/products/bin/controls/products/ProductData.html',
@@ -38,7 +39,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 ], function (QUI, QUIPanel, QUIButton, QUISwitch, QUIButtonSwitch, QUIConfirm, QUIFormUtils,
              QUIAjax, QUILocale, Users, Grid, FolderViewer, Mustache, Packages, Locker,
              Products, Product, Categories, Fields, FieldUtils, FieldWindow,
-             CategorySelect, FieldTypeSelect, ProductUtils, DeleteProductWindow, informationTemplate, templateProductData,
+             CategorySelect, FieldTypeSelect, ProductUtils, DeleteProductWindow, ProductPanelLoading,
+             informationTemplate, templateProductData,
              templateProductPrices, templateField
 ) {
     'use strict';
@@ -146,10 +148,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * event : on create
          */
         $onCreate: function () {
-            this.Loader.setAttribute('opacity', 1);
-            this.Loader.setAttribute('styles', {
-                background: '#fff'
-            });
+            this.$Loading = new ProductPanelLoading(this);
 
             this.Loader.show();
 
@@ -2038,6 +2037,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             const self = this,
                 Elm = self.getElm();
 
+            this.$Loading?.setSaving();
             this.Loader.show();
 
             return this.$saveControl(this.$Product).then(function () {

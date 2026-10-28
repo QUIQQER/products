@@ -134,7 +134,8 @@ function createProductPanel(moduleName = 'Product') {
             requested.push(Array.from(ids));
             return Promise.resolve(Array.from(ids, id => ({id, title: 'Panel product'})));
         }},
-        'package/quiqqer/products/bin/controls/products/DeleteProductWindow': DeleteWindow
+        'package/quiqqer/products/bin/controls/products/DeleteProductWindow': DeleteWindow,
+        'package/quiqqer/products/bin/utils/ProductPanelLoading': class {}
     });
     const panel = Object.assign(Object.create(definition), {
         $Product: {getId: () => 21},

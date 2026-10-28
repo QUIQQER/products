@@ -4,6 +4,12 @@
 <locales>
 
     <groups name="quiqqer/products" datatype="php,js">
+        <locale name="products.product.loading">
+<en><![CDATA[Loading product…]]></en>
+        </locale>
+        <locale name="products.product.saving">
+<en><![CDATA[Saving product…]]></en>
+        </locale>
         <locale name="products.activation.images.title">
 <en><![CDATA[Product activation]]></en>
         </locale>

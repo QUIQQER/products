@@ -305,6 +305,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             }
 
             // variant handling
+            this.$Loading?.setSaving();
             this.Loader.show();
 
             const self = this;
