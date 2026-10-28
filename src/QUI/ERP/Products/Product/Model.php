@@ -2142,7 +2142,10 @@ class Model extends QUI\QDOM
                 $delete = false;
             }
 
-            if ($delete) {
+            if (
+                $delete
+                && !QUI\ERP\Products\Utils\ProductMediaCopy::isFolderShared($MediaFolder, $this->getId())
+            ) {
                 $MediaFolder->delete();
             }
         } catch (QUI\Exception $Exception) {

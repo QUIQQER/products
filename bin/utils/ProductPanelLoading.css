@@ -1,0 +1,70 @@
+.quiqqer-product-panel-loader {
+    --_surface: var(--quiqqer-products-panel-loading-surface, Canvas);
+    --_text: var(--quiqqer-products-panel-loading-color, CanvasText);
+    --_accent: var(--quiqqer-products-panel-loading-accent, var(--qui-colors-primary, Highlight));
+    --_veil: var(--quiqqer-products-panel-loading-veil, color-mix(in srgb, var(--_surface) 80%, transparent));
+    --_border: var(--quiqqer-products-panel-loading-border, color-mix(in srgb, var(--_text) 12%, transparent));
+    --_shadow: var(--quiqqer-products-panel-loading-shadow, 0 0.5rem 2rem color-mix(in srgb, var(--_text) 12%, transparent));
+    --_radius: var(--quiqqer-products-panel-loading-radius, 0.5rem);
+
+    background: transparent;
+}
+
+.quiqqer-product-panel-loader > .qui-loader-inner,
+.quiqqer-product-panel-loader > .qui-loader-message {
+    display: none;
+}
+
+.quiqqer-product-panel-loading-cover {
+    align-items: center;
+    background: var(--_veil);
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    position: absolute;
+}
+
+.quiqqer-product-panel-loading-card {
+    align-items: center;
+    background: var(--_surface);
+    border: 1px solid var(--_border);
+    border-radius: var(--_radius);
+    box-shadow: var(--_shadow);
+    color: var(--_text);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: calc(100% - 2rem);
+    padding: 1.5rem 2rem;
+    text-align: center;
+}
+
+.quiqqer-product-panel-loading-card p {
+    font-weight: 600;
+    margin: 0;
+}
+
+.quiqqer-product-panel-loading-spinner {
+    animation: quiqqer-product-panel-loading-spin 0.8s linear infinite;
+    border: 3px solid var(--_accent);
+    border-inline-end-color: transparent;
+    border-radius: 50%;
+    height: 2rem;
+    width: 2rem;
+}
+
+.quiqqer-product-panel[aria-busy="true"] > [inert] {
+    opacity: 0.65;
+}
+
+@keyframes quiqqer-product-panel-loading-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .quiqqer-product-panel-loading-spinner {
+        animation: none;
+    }
+}

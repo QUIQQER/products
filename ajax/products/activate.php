@@ -5,19 +5,21 @@
  */
 
 use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Utils\ProductActivation;
 use QUI\ExceptionStack;
 
 /**
  * Activate a product
  *
  * @param integer $productId - Product-ID
+ * @param integer $activateImages - Set to 1 to also activate inactive product images
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_products_ajax_products_activate',
-    function ($productId) {
+    function ($productId, $activateImages = 0) {
         if (is_numeric($productId)) {
             $Product = Products::getProduct((int)$productId);
-            $Product->activate();
+            ProductActivation::activate($Product, (int)$activateImages === 1);
 
             return;
         }
@@ -32,7 +34,7 @@ QUI::getAjax()->registerFunction(
         foreach ($productIds as $productId) {
             try {
                 $Product = Products::getProduct($productId);
-                $Product->activate();
+                ProductActivation::activate($Product, (int)$activateImages === 1);
             } catch (QUI\Exception $Exception) {
                 $ExceptionStack->addException($Exception);
             }
@@ -42,6 +44,6 @@ QUI::getAjax()->registerFunction(
             throw $ExceptionStack;
         }
     },
-    ['productId'],
+    ['productId', 'activateImages'],
     'Permission::checkAdminUser'
 );
