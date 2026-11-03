@@ -516,7 +516,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     }
                 ]);
 
-                this.$Grid = new Grid(Container, {
+                const gridOptions = {
                     pagination: true,
                     multipleSelection: true,
                     width: VariantSheet.getSize().x - 40,
@@ -554,7 +554,18 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         }
                     ],
                     columnModel: columns
-                });
+                };
+
+                QUI.fireEvent('quiqqerProductsVariantGridCreate', [
+                    this,
+                    gridOptions,
+                    {
+                        context: 'products.variants',
+                        productId: this.$Product.getId()
+                    }
+                ]);
+
+                this.$Grid = new Grid(Container, gridOptions);
 
                 this.$createExtraMenu();
 
@@ -868,8 +879,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 // build grid data
                 for (i = 0, len = variants.length; i < len; i++) {
-                    entry = {};
                     variant = variants[i];
+                    entry = {...variant};
 
                     // status
                     if (variant.active) {
@@ -890,7 +901,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     for (n = 0, nLen = needles.length; n < nLen; n++) {
                         needle = needles[n];
 
-                        if (typeof variant[needle] === 'undefined' || !variant[needle]) {
+                        if (variant[needle] === undefined || variant[needle] === null || variant[needle] === '') {
                             entry[needle] = '-';
                         } else {
                             entry[needle] = variant[needle];
@@ -911,7 +922,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                             const fieldData = field[0];
                             const value = fieldData.value;
 
-                            if (!value || value === '') {
+                            if (value === undefined || value === null || value === '') {
                                 entry[needle] = '-';
                                 continue;
                             }
