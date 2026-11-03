@@ -55,6 +55,10 @@ until the form, grid, first result, and initial sizing are ready. The
 `quiqqerProductsPanelSearchReady` event still runs before the first request, so
 extensions can contribute initial parameters.
 
+The variant tables in the product editor and ERP selection dialog have separate
+shared hooks, documented in [Backend variant grid extensions](backend-variant-grid-extensions.md).
+The product overview shown by this panel uses the search hooks described below.
+
 Existing product fields can already be shown through the product search settings.
 Use those settings for ordinary field columns. Calculated columns, additional
 filters, and server-side query extensions are described in

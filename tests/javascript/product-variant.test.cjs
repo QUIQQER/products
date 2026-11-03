@@ -4,7 +4,7 @@ const {resolve} = require('node:path');
 const {test} = require('node:test');
 const vm = require('node:vm');
 
-function createPanel({wantedCategory = 'variants', productId = 21, parentId = productId} = {}) {
+function createPanel({wantedCategory = 'variants', productId = 21, parentId = productId, onGridCreate} = {}) {
     const errors = [];
     const buttons = new Map();
     const categories = new Map();
@@ -38,7 +38,8 @@ function createPanel({wantedCategory = 'variants', productId = 21, parentId = pr
         getElement() { return this; }
     }
     class Grid {
-        constructor() { grids.push(this); }
+        constructor(container, options) { this.options = options; grids.push(this); }
+        setData(data) { this.data = data; }
         addEvents() {}
         setHeight() {}
     }
@@ -48,6 +49,10 @@ function createPanel({wantedCategory = 'variants', productId = 21, parentId = pr
         getVariantFields() { return Promise.resolve([]); }
     }
     const modules = {
+        'qui/QUI': {fireEvent(name, args) {
+            assert.equal(name, 'quiqqerProductsVariantGridCreate');
+            onGridCreate?.(...args);
+        }},
         Locale: {get: (group, key) => key},
         Users: {getUserBySession: () => ({
             isLoaded: () => true,
@@ -139,7 +144,7 @@ function createPanel({wantedCategory = 'variants', productId = 21, parentId = pr
     panel.parent = () => base.$onInject.call(panel);
 
     return {
-        panel, errors, grids,
+        panel, errors, grids, variant,
         getSelectedVariant: () => selectedVariant,
         isLoaderVisible: () => loaderVisible,
         async inject() {
@@ -190,4 +195,55 @@ test('opening a child with the variants category remembered still selects the re
     assert.equal(fixture.getSelectedVariant(), 22);
     assert.equal(fixture.panel.$BackToVariantList.visible, true);
     assert.equal(fixture.isLoaderVisible(), false);
+});
+
+test('variant extensions configure the existing grid before construction', async () => {
+    let hook;
+    const fixture = createPanel({onGridCreate(Control, options, metadata) {
+        hook = {Control, metadata};
+        options.columnModel.push({dataIndex: 'packageQuantity', dataType: 'number', sortable: false});
+        options.storageKey = 'test-variant-grid';
+    }});
+    await fixture.inject();
+
+    assert.equal(hook.Control, fixture.panel);
+    assert.equal(hook.metadata.context, 'products.variants');
+    assert.equal(hook.metadata.productId, 21);
+    assert.equal(fixture.grids[0].options.columnModel.at(-1).dataIndex, 'packageQuantity');
+    assert.equal(fixture.grids[0].options.storageKey, 'test-variant-grid');
+});
+
+test('refresh preserves extension values, zero fields and pagination', async () => {
+    const fixture = createPanel();
+    await fixture.inject();
+    const grid = fixture.grids[0];
+    fixture.panel.$Product.getVariants = () => Promise.resolve({
+        data: [0, -1.25, 12.3456].map((quantity, index) => ({
+            id: index + 1,
+            active: 1,
+            defaultVariant: index === 0,
+            priority: 0,
+            fields: [{id: 18, value: 0}],
+            packageQuantity: quantity,
+            packageFlag: false,
+            packageMissing: null
+        })),
+        page: 2,
+        total: 8
+    });
+    await fixture.variant.refreshVariantGrid.call(fixture.panel);
+
+    assert.deepEqual(Array.from(grid.data.data, row => row.packageQuantity), [0, -1.25, 12.3456]);
+    assert.equal(grid.data.data[0].priority, 0);
+    assert.equal(grid.data.data[0].packageFlag, false);
+    assert.equal(grid.data.data[0].packageMissing, null);
+    assert.equal(grid.data.data[0].id, 1);
+    assert.equal(grid.data.page, 2);
+    assert.equal(grid.data.total, 8);
+
+    fixture.panel.$Product.getVariants = () => Promise.resolve({data: [], page: 5, total: 8});
+    await fixture.variant.refreshVariantGrid.call(fixture.panel);
+    assert.equal(grid.data.data.length, 0);
+    assert.equal(grid.data.page, 5);
+    assert.equal(grid.data.total, 8);
 });
