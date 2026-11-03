@@ -97,6 +97,112 @@ class VariantAjaxTest extends AjaxTestCase
         self::assertContains($firstFields[$Attribute->getId()]['title'], ['Rot', 'Blau'], true);
     }
 
+    public function testVariantGridEnrichesOnlyTheCurrentPageAndPreservesEmptyPageTotals(): void
+    {
+        $Parent = ProductTestHelper::createProduct('ajax-variant-extension', 29.5, VariantParent::class);
+        $children = [
+            $Parent->createVariant(),
+            $Parent->createVariant(),
+            $Parent->createVariant()
+        ];
+        $variantIds = array_map(static fn ($Child): int => $Child->getId(), $children);
+        $values = array_combine($variantIds, [0, -1.25, 12.3456]);
+        $calls = [];
+        $Enrich = static function (
+            array &$rows,
+            array $ids,
+            VariantParent $EventParent,
+            string $context
+        ) use (
+            $Parent,
+            $values,
+            &$calls
+        ): void {
+            self::assertSame($Parent, $EventParent);
+            self::assertSame('products.variants', $context);
+            self::assertSame($ids, array_map('intval', array_column($rows, 'id')));
+            $calls[] = $ids;
+
+            foreach ($rows as &$row) {
+                $row['packageQuantity'] = $values[(int)$row['id']];
+            }
+
+            unset($row);
+        };
+        $Events = QUI::getEvents();
+        $Events->addEvent('onQuiqqerProductsVariantGridData', $Enrich);
+
+        try {
+            foreach ([1, 2, 3, 4] as $page) {
+                $result = $this->invokeEndpoint(
+                    'products/variant/getVariants.php',
+                    'package_quiqqer_products_ajax_products_variant_getVariants',
+                    $Parent->getId(),
+                    json_encode([
+                        'page' => $page,
+                        'perPage' => 1,
+                        'sortOn' => 'id',
+                        'sortBy' => 'ASC'
+                    ], JSON_THROW_ON_ERROR)
+                );
+
+                self::assertSame($page, $result['page']);
+                self::assertSame(3, $result['total']);
+
+                if ($page === 4) {
+                    self::assertSame([], $result['data']);
+                    continue;
+                }
+
+                self::assertCount(1, $result['data']);
+                self::assertSame($variantIds[$page - 1], $result['data'][0]['id']);
+                self::assertSame($values[$variantIds[$page - 1]], $result['data'][0]['packageQuantity']);
+            }
+
+            self::assertSame([
+                [$variantIds[0]],
+                [$variantIds[1]],
+                [$variantIds[2]],
+                []
+            ], $calls);
+        } finally {
+            $Events->removeEvent('onQuiqqerProductsVariantGridData', $Enrich);
+        }
+    }
+
+    public function testVariantGridDispatchesEmptyResultsWithoutCreatingRows(): void
+    {
+        $Parent = ProductTestHelper::createProduct('ajax-empty-variant-extension', 10.0, VariantParent::class);
+        $calls = 0;
+        $Enrich = static function (array &$rows, array $ids) use (&$calls): void {
+            self::assertSame([], $rows);
+            self::assertSame([], $ids);
+            ++$calls;
+        };
+        $Events = QUI::getEvents();
+        $Events->addEvent('onQuiqqerProductsVariantGridData', $Enrich);
+
+        try {
+            $result = $this->invokeEndpoint(
+                'products/variant/getVariants.php',
+                'package_quiqqer_products_ajax_products_variant_getVariants',
+                $Parent->getId(),
+                json_encode([
+                    'page' => 1,
+                    'perPage' => 20
+                ], JSON_THROW_ON_ERROR)
+            );
+            self::assertSame([
+                'data' => [],
+                'page' => 1,
+                'total' => 0
+            ], $result);
+            self::assertSame(1, $calls);
+        } finally {
+            $Events->removeEvent('onQuiqqerProductsVariantGridData', $Enrich);
+        }
+    }
+
     public function testVariantGridRejectsOrdinaryProducts(): void
     {
         $Product = ProductTestHelper::createProduct('ajax-no-variant', 10.0);

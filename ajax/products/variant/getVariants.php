@@ -226,6 +226,15 @@ QUI::getAjax()->registerFunction(
             }, $searchResult);
         }
 
+        $variantIds = array_map('intval', array_column($variants, 'id'));
+
+        QUI::getEvents()->fireEvent('quiqqerProductsVariantGridData', [
+            &$variants,
+            $variantIds,
+            $Product,
+            'products.variants'
+        ]);
+
         // count
         $queryOptions['count'] = true;
         $count = $Product->getVariants($queryOptions);
