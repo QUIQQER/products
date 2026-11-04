@@ -90,6 +90,21 @@ class ImageTest extends TestCase
         $Cache->setValue(null, $cache);
     }
 
+    public function testTextProductPreservesImageWhenConvertedForBasket(): void
+    {
+        $imageUrl = self::getMediaUrl(self::IMAGE_ID);
+        $Product = new QUI\ERP\Products\Product\TextProduct([
+            'title' => 'Coupon code',
+            'image' => $imageUrl,
+            'customData' => ['image' => $imageUrl]
+        ]);
+        $Unique = $Product->createUniqueProduct(new \QUITests\ERP\Products\Fixtures\TestUser());
+
+        self::assertSame($imageUrl, $Unique->getFieldValue(QUI\ERP\Products\Handler\Fields::FIELD_IMAGE));
+        self::assertSame(self::IMAGE_ID, $Unique->getImage()->getId());
+        self::assertFalse($Unique->getAttribute('displayPrice'));
+    }
+
     public function testValidationAcceptsImagesAndRejectsFilesAndMalformedUrls(): void
     {
         $Field = new Image(9300, ['name' => 'product-image']);

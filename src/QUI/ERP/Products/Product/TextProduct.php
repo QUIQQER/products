@@ -157,6 +157,10 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
         $addField(Fields::FIELD_SHORT_DESC);
         $addField(Fields::FIELD_CONTENT);
 
+        if (is_string($this->getAttribute('image')) && $this->getAttribute('image') !== '') {
+            $addField(Fields::FIELD_IMAGE);
+        }
+
         return QUI\ERP\Products\Utils\Fields::sortFields($fields);
     }
 
@@ -170,6 +174,11 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     public function getField(int $fieldId): ?QUI\ERP\Products\Interfaces\FieldInterface
     {
         switch ($fieldId) {
+            case Fields::FIELD_IMAGE:
+                return new QUI\ERP\Products\Field\Types\Image($fieldId, [
+                    'value' => $this->getAttribute('image')
+                ]);
+
             case Fields::FIELD_PRICE:
                 return new QUI\ERP\Products\Field\Types\Price($fieldId, [
                     'value' => $this->getPrice()
