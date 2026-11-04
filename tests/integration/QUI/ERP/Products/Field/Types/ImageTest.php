@@ -9,6 +9,7 @@ use QUI\ERP\Products\Field\Types\Image;
 use QUI\ERP\Products\Field\Types\ImageFrontendView;
 use QUI\ERP\Products\Field\View;
 use QUI\Projects\Project;
+use QUITests\ERP\Products\Integration\IntegrationTestEnvironment;
 use QUITests\ERP\Products\Integration\ProjectTestHelper;
 use ReflectionProperty;
 
@@ -92,6 +93,8 @@ class ImageTest extends TestCase
 
     public function testTextProductPreservesImageWhenConvertedForBasket(): void
     {
+        IntegrationTestEnvironment::ensureDefaults();
+
         $imageUrl = self::getMediaUrl(self::IMAGE_ID);
         $Product = new QUI\ERP\Products\Product\TextProduct([
             'title' => 'Coupon code',
