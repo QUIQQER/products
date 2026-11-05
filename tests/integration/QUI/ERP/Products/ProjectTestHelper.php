@@ -110,6 +110,14 @@ final class ProjectTestHelper
         $Multilingual->setPrimaryKey(['id']);
         QUI::getSchemaManager()->createTable($Multilingual);
 
+        if (class_exists(QUI\ERP\Tags\Manager::class)) {
+            $SiteProductTags = new Table(QUI_DB_PRFX . $projectName . '_' . self::LANGUAGE . '_sites_to_product_tags');
+            $SiteProductTags->addColumn('id', 'bigint');
+            $SiteProductTags->addColumn('tags', 'text', ['notnull' => false]);
+            $SiteProductTags->setPrimaryKey(['id']);
+            QUI::getSchemaManager()->createTable($SiteProductTags);
+        }
+
         $date = date('Y-m-d H:i:s');
         $userUuid = QUI::getUserBySession()->getUUID();
         $Connection = QUI::getDataBaseConnection();

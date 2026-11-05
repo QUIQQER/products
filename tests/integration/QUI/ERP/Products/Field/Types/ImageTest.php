@@ -9,6 +9,7 @@ use QUI\ERP\Products\Field\Types\Image;
 use QUI\ERP\Products\Field\Types\ImageFrontendView;
 use QUI\ERP\Products\Field\View;
 use QUI\Projects\Project;
+use QUITests\ERP\Products\Integration\IntegrationTestEnvironment;
 use QUITests\ERP\Products\Integration\ProjectTestHelper;
 use ReflectionProperty;
 
@@ -88,6 +89,23 @@ class ImageTest extends TestCase
         $cache = $Cache->getValue();
         unset($cache[self::getMediaUrl(self::IMAGE_ID)], $cache[self::getMediaUrl(self::FILE_ID)]);
         $Cache->setValue(null, $cache);
+    }
+
+    public function testTextProductPreservesImageWhenConvertedForBasket(): void
+    {
+        IntegrationTestEnvironment::ensureDefaults();
+
+        $imageUrl = self::getMediaUrl(self::IMAGE_ID);
+        $Product = new QUI\ERP\Products\Product\TextProduct([
+            'title' => 'Coupon code',
+            'image' => $imageUrl,
+            'customData' => ['image' => $imageUrl]
+        ]);
+        $Unique = $Product->createUniqueProduct(new \QUITests\ERP\Products\Fixtures\TestUser());
+
+        self::assertSame($imageUrl, $Unique->getFieldValue(QUI\ERP\Products\Handler\Fields::FIELD_IMAGE));
+        self::assertSame(self::IMAGE_ID, $Unique->getImage()->getId());
+        self::assertFalse($Unique->getAttribute('displayPrice'));
     }
 
     public function testValidationAcceptsImagesAndRejectsFilesAndMalformedUrls(): void

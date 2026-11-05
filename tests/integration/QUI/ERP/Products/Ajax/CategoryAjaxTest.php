@@ -208,11 +208,14 @@ class CategoryAjaxTest extends AjaxTestCase
             json_encode(['fields' => 'ajax-search'], JSON_THROW_ON_ERROR)
         );
 
-        self::assertSame(
-            [$Alpha->getId(), $Zulu->getId()],
-            array_map('intval', array_column($result, 'id'))
-        );
-        self::assertSame([$Alpha->getTitle(), $Zulu->getTitle()], array_column($result, 'title'));
+        $expectedTitles = [
+            $Alpha->getId() => $Alpha->getTitle(),
+            $Zulu->getId() => $Zulu->getTitle()
+        ];
+        asort($expectedTitles, SORT_STRING);
+
+        self::assertSame(array_keys($expectedTitles), array_map('intval', array_column($result, 'id')));
+        self::assertSame(array_values($expectedTitles), array_column($result, 'title'));
 
         $AllProducts = new AllProducts();
         $allProductsResult = $this->invokeEndpointAsAdmin(
