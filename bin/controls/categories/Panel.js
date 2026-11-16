@@ -383,18 +383,14 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
          * event : on resize
          */
         $onResize: function () {
-            const size   = this.$GridContainer.getSize(),
+            const size   = this.getContent().getSize(),
                   Button = this.getButtons('sitemap'),
                   active = Button.getElm().getAttribute('aria-expanded') === 'true';
 
-            if (active) {
-                this.$Grid.setWidth(size.x - 340);
-            } else {
-                this.$Grid.setWidth(size.x - 40);
-            }
-
-            this.$Grid.setHeight(size.y - 40);
-            this.$Grid.resize();
+            return Promise.all([
+                this.$Grid.setWidth(size.x - (active ? 320 : 20)),
+                this.$Grid.setHeight(size.y - 20)
+            ]).then(() => this.$Grid.resize());
         },
 
         /**
@@ -416,15 +412,15 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             this.$SitemapContainer.inert = false;
 
             return new Promise(function (resolve) {
-                const size = self.$GridContainer.getSize();
+                const size = self.getContent().getSize();
 
                 self.$GridFX.animate({
-                    paddingLeft: 320
+                    paddingLeft: 310
                 }, {
                     duration: 200
                 });
 
-                self.$Grid.setWidth(size.x - 340).then(function () {
+                self.$Grid.setWidth(size.x - 320).then(function () {
                     self.$SitemapFX.animate({
                         opacity: 1,
                         width  : 300
@@ -450,7 +446,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             const self = this;
 
             return new Promise(function (resolve) {
-                const size = self.$GridContainer.getSize();
+                const size = self.getContent().getSize();
 
                 self.$SitemapFX.animate({
                     opacity: 0,
@@ -459,12 +455,12 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                     duration: 200,
                     callback: function () {
                         self.$GridFX.animate({
-                            paddingLeft: 20
+                            paddingLeft: 10
                         }, {
                             duration: 200
                         });
 
-                        self.$Grid.setWidth(size.x - 40);
+                        self.$Grid.setWidth(size.x - 20);
                         self.getButtons('sitemap').getElm().setAttribute('aria-expanded', 'false');
                         self.$SitemapContainer.inert = true;
 

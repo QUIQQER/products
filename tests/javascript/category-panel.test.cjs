@@ -40,6 +40,8 @@ function fixture() {
         getSelectedData() { return this.selected; }
         setData(data) { this.data = data; this.selected = []; }
         setWidth(width) { this.width = width; return Promise.resolve(); }
+        setHeight(height) { this.height = height; return Promise.resolve(); }
+        resize() {}
     }
 
     class Menu {
@@ -139,12 +141,18 @@ test('the categories toggle returns a settling promise and exposes the sitemap v
     assert.equal(button.attributes['aria-expanded'], 'false');
     assert.equal(button.attributes['aria-controls'], panel.$SitemapContainer.id);
     assert.equal(panel.$SitemapContainer.inert, true);
+    await panel.$onResize();
+    assert.equal(panel.$Grid.width, 980);
+    assert.equal(panel.$Grid.height, 580);
     await panel.toggleSitemap();
     assert.equal(button.attributes['aria-expanded'], 'true');
     assert.equal(panel.$SitemapContainer.inert, false);
-    assert.equal(panel.$Grid.width, 660);
+    assert.equal(panel.$Grid.width, 680);
+    await panel.$onResize();
+    assert.equal(panel.$Grid.width, 680);
+    assert.equal(panel.$Grid.height, 580);
     await panel.toggleSitemap();
     assert.equal(button.attributes['aria-expanded'], 'false');
     assert.equal(panel.$SitemapContainer.inert, true);
-    assert.equal(panel.$Grid.width, 960);
+    assert.equal(panel.$Grid.width, 980);
 });
