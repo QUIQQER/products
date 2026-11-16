@@ -3,6 +3,7 @@
 }
 
 .quiqqer-products-panel {
+    --quiqqer-productsearch-panel-table-inset: 10px;
     --_toolbar-gap: var(--quiqqer-products-panel-toolbar-gap, 8px);
     --_toolbar-border: var(--quiqqer-products-panel-toolbar-border, var(--qui-colors-gray-200));
     --_toolbar-surface: var(--quiqqer-products-panel-toolbar-surface, var(--qui-colors-white));
@@ -21,7 +22,7 @@
     align-items: center;
     gap: var(--_toolbar-gap);
     min-height: 50px;
-    padding-inline: var(--_toolbar-gap);
+    padding-inline: 10px;
 }
 
 .quiqqer-products-toolbar-viewport {
