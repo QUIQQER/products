@@ -1192,6 +1192,15 @@
 <es><![CDATA[Campos de producto]]></es>
         </locale>
 
+        <locale name="categories.panel.button.add" context="administration">
+<es><![CDATA[Añadir categoría]]></es>
+        </locale>
+        <locale name="categories.panel.button.edit" context="administration">
+<es><![CDATA[Editar categoría]]></es>
+        </locale>
+        <locale name="categories.panel.button.delete" context="administration">
+<es><![CDATA[Eliminar categoría]]></es>
+        </locale>
         <locale name="categories.panel.title">
 <es><![CDATA[Categorías]]></es>
         </locale>

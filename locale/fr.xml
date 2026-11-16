@@ -1192,6 +1192,15 @@
 <fr><![CDATA[Champs de produit]]></fr>
         </locale>
 
+        <locale name="categories.panel.button.add" context="administration">
+<fr><![CDATA[Ajouter une catégorie]]></fr>
+        </locale>
+        <locale name="categories.panel.button.edit" context="administration">
+<fr><![CDATA[Modifier la catégorie]]></fr>
+        </locale>
+        <locale name="categories.panel.button.delete" context="administration">
+<fr><![CDATA[Supprimer la catégorie]]></fr>
+        </locale>
         <locale name="categories.panel.title">
 <fr><![CDATA[Catégories]]></fr>
         </locale>

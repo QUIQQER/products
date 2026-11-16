@@ -1277,6 +1277,15 @@
 <de><![CDATA[Produktfelder]]></de>
         </locale>
 
+        <locale name="categories.panel.button.add" context="administration">
+<de><![CDATA[Kategorie hinzufügen]]></de>
+        </locale>
+        <locale name="categories.panel.button.edit" context="administration">
+<de><![CDATA[Kategorie bearbeiten]]></de>
+        </locale>
+        <locale name="categories.panel.button.delete" context="administration">
+<de><![CDATA[Kategorie löschen]]></de>
+        </locale>
         <locale name="categories.panel.title">
 <de><![CDATA[Kategorien]]></de>
         </locale>

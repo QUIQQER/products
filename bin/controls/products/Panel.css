@@ -51,13 +51,18 @@
     margin-inline-start: auto;
 }
 
+.qui-panel-buttons .quiqqer-products-toolbar > .quiqqer-products-toolbar-categories {
+    background: transparent;
+}
+
 .qui-panel-buttons .quiqqer-products-toolbar-categories[aria-expanded="false"] {
-    background: var(--qui-colors-gray-50);
+    background: transparent;
     color: var(--qui-colors-gray-700);
-    border-color: color-mix(in srgb, var(--_toolbar-border) 40%, var(--qui-colors-gray-50));
+    border-color: var(--_toolbar-border);
 }
 
 .qui-panel-buttons .quiqqer-products-toolbar-categories[aria-expanded="true"] {
+    background: var(--_toolbar-surface);
     border-color: var(--_toolbar-focus);
     color: var(--qui-colors-primary-700);
 }
