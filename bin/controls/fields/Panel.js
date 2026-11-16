@@ -13,11 +13,12 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
     'package/quiqqer/products/bin/controls/fields/Create',
     'package/quiqqer/products/bin/controls/fields/Update',
     'package/quiqqer/products/bin/controls/fields/search/Search',
+    'package/quiqqer/products/bin/controls/fields/FieldTypeSelect',
 
     'css!package/quiqqer/products/bin/controls/fields/Panel.css'
 
 ], function (QUI, QUIPanel, QUIButton, QUIConfirm, Grid, QUILocale,
-             Handler, CreateField, UpdateField, FieldSearch) {
+             Handler, CreateField, UpdateField, FieldSearch, FieldTypeSelect) {
     "use strict";
 
     const lg = 'quiqqer/products',
@@ -62,7 +63,17 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
          * @return {Promise}
          */
         $onResize: function () {
-            this.$Search.resize();
+            const Grid = this.$Search?.getGrid();
+
+            if (!Grid) {
+                return Promise.resolve();
+            }
+
+            const size = this.getContent().getSize();
+            return Promise.all([
+                Grid.setHeight(size.y - 20),
+                Grid.setWidth(size.x - 20)
+            ]);
         },
 
         /**
@@ -72,83 +83,148 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
          */
         refresh: function () {
             this.Loader.show();
-            return this.$Search.refresh().then(function () {
+            return this.$Search.refresh().finally(() => {
                 this.Loader.hide();
-            }.bind(this));
+            });
         },
 
         /**
          * event : on create
          */
         $onCreate: function () {
-            const self = this;
-
-            // buttons
-            this.addButton({
+            this.getElm().classList.add('quiqqer-products-fields-panel');
+            this.getContent().style.padding = '10px';
+            const deleteLabel = QUILocale.get(lg, 'fields.panel.button.delete');
+            const Create = new QUIButton({
                 name: 'add',
-                text: QUILocale.get('quiqqer/core', 'add'),
+                text: QUILocale.get(lg, 'fields.panel.button.create'),
                 textimage: 'fa fa-plus',
                 events: {
                     onClick: this.createChild
                 }
             });
 
-            this.addButton({
+            const Edit = new QUIButton({
                 name: 'edit',
-                text: QUILocale.get('quiqqer/core', 'edit'),
+                text: QUILocale.get(lg, 'fields.panel.button.edit'),
                 textimage: 'fa fa-edit',
                 disabled: true,
                 events: {
-                    onClick: function () {
-                        self.updateChild(
-                            self.$Search.getSelected()[0]
-                        );
+                    onClick: () => {
+                        const selected = this.$Search.getSelected();
+
+                        if (selected.length === 1) {
+                            this.updateChild(selected[0]);
+                        }
                     }
                 }
             });
 
-            this.addButton({
-                type: 'separator'
-            });
-
-            this.addButton({
+            const Delete = new QUIButton({
                 name: 'delete',
-                text: QUILocale.get('quiqqer/core', 'delete'),
-                textimage: 'fa fa-trash',
+                'class': 'quiqqer-products-fields-delete',
+                text: deleteLabel,
+                title: deleteLabel,
+                icon: 'fa fa-trash',
                 disabled: true,
+                position: 'right',
                 events: {
-                    onClick: function () {
-                        self.deleteChild(self.$Search.getSelected());
+                    onClick: () => {
+                        const selected = this.$Search.getSelected();
+
+                        if (selected.length) {
+                            this.deleteChild(selected);
+                        }
                     }
                 }
             });
-
-
             // field search
             this.$Search = new FieldSearch({
                 multiple: true,
+                buttons: [Create, Edit, Delete],
+                showFieldTypeFilter: false,
                 events: {
-                    onRefreshBegin: function () {
-                        self.Loader.show();
+                    onRefreshBegin: () => {
+                        this.$setSelectionState(0);
+                        this.Loader.show();
                     },
 
-                    onRefresh: function () {
-                        self.Loader.hide();
+                    onRefresh: () => {
+                        this.$setSelectionState(0);
+                        this.$onResize();
+                        this.Loader.hide();
                     },
 
-                    onClick: function () {
-                        const Delete = self.getButtons('delete'),
-                            Edit = self.getButtons('edit');
+                    onRefreshError: () => this.Loader.hide(),
+                    onClick: () => this.$setSelectionState(this.$Search.getSelected().length),
+                    onSubmit: () => {
+                        const selected = this.$Search.getSelected();
 
-                        Delete.enable();
-                        Edit.enable();
-                    },
-
-                    submit: function () {
-                        self.updateChild(self.$Search.getSelected()[0]);
+                        if (selected.length === 1) {
+                            this.updateChild(selected[0]);
+                        }
                     }
                 }
             }).inject(this.getContent());
+
+            for (const Button of [Create, Edit, Delete]) {
+                const Elm = Button.getElm();
+                Elm.style.removeProperty('outline');
+                Elm.firstElementChild?.setAttribute('aria-hidden', 'true');
+            }
+            Delete.getElm().setAttribute('aria-label', deleteLabel);
+
+            const label = QUILocale.get(lg, 'quiqqer.products.control.search.title');
+            this.$Filter = new FieldTypeSelect({
+                name: 'filter',
+                'class': 'quiqqer-products-fields-filter',
+                text: label,
+                filterLabel: label,
+                menuCorner: 'topRight',
+                events: {
+                    onFilterChange: (Filter, value) => {
+                        this.$Search.setAttribute('fieldTypeFilter', value);
+                        this.$Search.getGrid().options.page = 1;
+                        this.refresh();
+                    }
+                }
+            });
+            this.addButton(this.$Filter);
+            const FilterElm = this.$Filter.getElm();
+            FilterElm.tabIndex = 0;
+            FilterElm.style.removeProperty('outline');
+            FilterElm.firstElementChild?.setAttribute('aria-hidden', 'true');
+            FilterElm.setAttribute('aria-haspopup', 'menu');
+            FilterElm.setAttribute('aria-expanded', 'false');
+            const Arrow = document.createElement('span');
+            Arrow.className = 'qui-button-drop fa fa-chevron-down';
+            Arrow.setAttribute('aria-hidden', 'true');
+            FilterElm.appendChild(Arrow);
+            this.$Filter.getContextMenu(Menu => {
+                Menu.addEvents({
+                    onShow: () => {
+                        const button = FilterElm.getBoundingClientRect();
+                        const menu = Menu.getElm().getBoundingClientRect();
+                        Menu.setPosition(
+                            Math.max(8, Math.min(button.right - menu.width, window.innerWidth - menu.width - 8)) + window.scrollX,
+                            button.bottom + window.scrollY + 8
+                        );
+                        FilterElm.setAttribute('aria-expanded', 'true');
+                    },
+                    onHide: () => FilterElm.setAttribute('aria-expanded', 'false')
+                });
+            });
+        },
+
+        $setSelectionState: function (count) {
+            const Grid = this.$Search?.getGrid();
+
+            if (!Grid) {
+                return;
+            }
+
+            Grid.getButton('edit')[count === 1 ? 'enable' : 'disable']();
+            Grid.getButton('delete')[count > 0 ? 'enable' : 'disable']();
         },
 
         /**

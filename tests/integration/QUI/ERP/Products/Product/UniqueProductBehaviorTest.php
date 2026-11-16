@@ -2,7 +2,9 @@
 
 namespace QUITests\ERP\Products\Integration\Product;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use QUI\ERP\Accounting\Article;
+use QUI\ERP\Accounting\Calc as ErpCalc;
 use QUI\ERP\Currency\Currency;
 use QUI\ERP\Products\Field\UniqueField;
 use QUI\ERP\Products\Handler\Fields;
@@ -15,6 +17,49 @@ class UniqueProductBehaviorTest extends ProductIntegrationTestCase
     {
         parent::setUpBeforeClass();
         ProductTestHelper::installCompleteFieldFixtures();
+    }
+
+    #[DataProvider('percentageAdjustmentTextProvider')]
+    public function testPercentageAdjustmentTextIncludesNegativeValues(
+        int $value,
+        bool $displayDiscounts,
+        string $expectedText
+    ): void {
+        $Unique = $this->createUniqueProductWithAdjustment(
+            $value,
+            ErpCalc::CALCULATION_PERCENTAGE,
+            $displayDiscounts
+        );
+        $factors = $Unique->getPriceFactors()->getFactors();
+
+        self::assertCount(1, $factors);
+        self::assertSame($expectedText, $factors[0]->getValueText());
+        self::assertSame($value, $factors[0]->getValue());
+    }
+
+    /**
+     * @return iterable<string, array{int, bool, string}>
+     */
+    public static function percentageAdjustmentTextProvider(): iterable
+    {
+        yield 'positive percentage' => [10, true, 'Option (+10%)'];
+        yield 'negative percentage' => [-10, true, 'Option (-10%)'];
+        yield 'zero adjustment' => [0, true, 'Option'];
+        yield 'hidden positive adjustment' => [10, false, 'Option'];
+        yield 'hidden negative adjustment' => [-10, false, 'Option'];
+    }
+
+    public function testMonetaryAdjustmentTextPreservesTheFormattedMinusSign(): void
+    {
+        $Unique = $this->createUniqueProductWithAdjustment(-10, ErpCalc::CALCULATION_COMPLEMENT);
+        $factors = $Unique->getPriceFactors()->getFactors();
+
+        self::assertCount(1, $factors);
+        self::assertSame(
+            'Option (' . $Unique->getCurrency()->format(-10) . ')',
+            $factors[0]->getValueText()
+        );
+        self::assertSame(-10, $factors[0]->getValue());
     }
 
     public function testUniqueProductIsAStableCustomerSpecificSnapshot(): void
@@ -155,5 +200,30 @@ class UniqueProductBehaviorTest extends ProductIntegrationTestCase
         self::assertSame(37.5, $Unique->getUnitPrice()->value());
         self::assertSame('XTS', $Unique->getUnitPrice()->getCurrency()->getCode());
         self::assertSame('XTS', $Unique->getPrice()->getCurrency()->getCode());
+    }
+
+    private function createUniqueProductWithAdjustment(
+        int $value,
+        int $calculation,
+        bool $displayDiscounts = true
+    ): UniqueProduct {
+        $Product = ProductTestHelper::createProduct('price-adjustment-text', 100);
+        $attributes = $Product->createUniqueProduct()->getAttributes();
+        $attributes['fields'][] = new UniqueField(990003, [
+            'title' => 'Pricing option',
+            'type' => 'ProductAttributeList',
+            'custom' => true,
+            'value' => 1,
+            'options' => [
+                'display_discounts' => $displayDiscounts
+            ],
+            'custom_calc' => [
+                'value' => $value,
+                'calculation' => $calculation,
+                'valueText' => 'Option'
+            ]
+        ]);
+
+        return new UniqueProduct($Product->getId(), $attributes);
     }
 }

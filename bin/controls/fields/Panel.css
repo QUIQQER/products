@@ -4,3 +4,65 @@
     height: 100%;
     width: 100%;
 }
+
+.quiqqer-products-fields-panel {
+    --_toolbar-hover-color: color-mix(in srgb, var(--qui-colors-primary) 65%, var(--qui-colors-success));
+    --_toolbar-hover-text: color-mix(in srgb, var(--_toolbar-hover-color) 75%, var(--qui-colors-black));
+    --_toolbar-hover-shadow: inset 0 0 0 1px var(--_toolbar-hover-color), 0 0 7px color-mix(in srgb, var(--_toolbar-hover-color) 45%, transparent);
+}
+
+.qui-panel-buttons .quiqqer-products-fields-filter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    float: right;
+    height: 34px;
+    margin: 8px 10px;
+    padding: 0 9px;
+    border: 1px solid var(--qui-colors-gray-200);
+    border-radius: 5px;
+    background: var(--qui-colors-primary--accent);
+    color: var(--qui-colors-gray-800);
+    font-weight: 400;
+    line-height: 1;
+}
+
+.quiqqer-products-fields-filter .qui-button-text {
+    margin: 0;
+}
+
+.qui-panel-buttons .quiqqer-products-fields-filter .qui-button-text-image {
+    line-height: 1;
+}
+
+.quiqqer-products-fields-filter > .qui-button-drop {
+    position: static;
+    width: auto;
+    height: auto;
+    line-height: 1;
+}
+
+.quiqqer-products-fields-panel .qui-panel-buttons button:not(:disabled):hover {
+    background: var(--qui-colors-white);
+    border-color: var(--_toolbar-hover-color);
+    box-shadow: var(--_toolbar-hover-shadow);
+    color: var(--_toolbar-hover-text);
+}
+
+.quiqqer-products-fields-panel button:focus-visible {
+    outline: 2px solid var(--qui-colors-primary);
+    outline-offset: 1px;
+}
+
+.quiqqer-products-fields-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    padding: 0;
+}
+
+.quiqqer-products-fields-delete .qui-button-text {
+    display: none;
+}

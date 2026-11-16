@@ -1,3 +1,74 @@
+.quiqqer-products-categories-panel {
+    --_toolbar-border: var(--quiqqer-products-categories-panel-toolbar-border, var(--qui-colors-gray-200));
+    --_toolbar-surface: var(--quiqqer-products-categories-panel-toolbar-surface, var(--qui-colors-white));
+    --_toolbar-focus: var(--quiqqer-products-categories-panel-toolbar-focus, var(--qui-colors-primary));
+    --_toolbar-hover-color: var(--quiqqer-products-categories-panel-toolbar-hover-color, color-mix(in srgb, var(--qui-colors-primary) 65%, var(--qui-colors-success)));
+    --_toolbar-hover-text: color-mix(in srgb, var(--_toolbar-hover-color) 75%, var(--qui-colors-black));
+    --_toolbar-hover-shadow: inset 0 0 0 1px var(--_toolbar-hover-color), 0 0 7px color-mix(in srgb, var(--_toolbar-hover-color) 45%, transparent);
+}
+
+.qui-panel-buttons .quiqqer-products-categories-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 34px;
+    margin: 8px 10px;
+    padding: 0 9px;
+    border: 1px solid var(--_toolbar-border);
+    border-radius: 5px;
+    background: transparent;
+    color: var(--qui-colors-gray-800);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.quiqqer-products-categories-toggle .qui-button-text {
+    margin: 0;
+}
+
+.qui-panel-buttons .quiqqer-products-categories-toggle .qui-button-text-image {
+    line-height: 1;
+}
+
+.qui-panel-buttons .quiqqer-products-categories-toggle[aria-expanded="false"] {
+    background: transparent;
+    color: var(--qui-colors-gray-700);
+    border-color: var(--_toolbar-border);
+}
+
+.qui-panel-buttons .quiqqer-products-categories-toggle[aria-expanded="true"] {
+    background: var(--_toolbar-surface);
+    border-color: var(--_toolbar-focus);
+    color: var(--qui-colors-primary-700);
+}
+
+.quiqqer-products-categories-panel .qui-panel-buttons button:not(:disabled):hover {
+    background: var(--_toolbar-surface);
+    border-color: var(--_toolbar-hover-color);
+    box-shadow: var(--_toolbar-hover-shadow);
+    color: var(--_toolbar-hover-text);
+}
+
+.quiqqer-products-categories-toggle:focus-visible,
+.quiqqer-products-categories-delete:focus-visible {
+    outline: 2px solid var(--_toolbar-focus);
+    outline-offset: 1px;
+}
+
+.quiqqer-products-categories-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    padding: 0;
+}
+
+.quiqqer-products-categories-delete .qui-button-text {
+    display: none;
+}
+
 .products-categories-panel-sitemap {
     background: #fff none repeat scroll 0 0;
     border-right: 1px solid #bbb;
@@ -18,5 +89,5 @@
 }
 
 .products-categories-panel-container {
-    padding: 20px;
+    padding: 10px;
 }

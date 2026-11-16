@@ -1192,6 +1192,15 @@
 <fr><![CDATA[Champs de produit]]></fr>
         </locale>
 
+        <locale name="categories.panel.button.add" context="administration">
+<fr><![CDATA[Ajouter une catégorie]]></fr>
+        </locale>
+        <locale name="categories.panel.button.edit" context="administration">
+<fr><![CDATA[Modifier la catégorie]]></fr>
+        </locale>
+        <locale name="categories.panel.button.delete" context="administration">
+<fr><![CDATA[Supprimer la catégorie]]></fr>
+        </locale>
         <locale name="categories.panel.title">
 <fr><![CDATA[Catégories]]></fr>
         </locale>
@@ -1356,6 +1365,15 @@
 <fr><![CDATA[Rechercher un champ de produit...]]></fr>
         </locale>
 
+        <locale name="fields.panel.button.create" context="administration">
+<fr><![CDATA[Créer un champ de produit]]></fr>
+        </locale>
+        <locale name="fields.panel.button.edit" context="administration">
+<fr><![CDATA[Modifier le champ de produit]]></fr>
+        </locale>
+        <locale name="fields.panel.button.delete" context="administration">
+<fr><![CDATA[Supprimer les champs de produit]]></fr>
+        </locale>
         <locale name="fields.create.title">
 <fr><![CDATA[Créer un champ de produit]]></fr>
         </locale>

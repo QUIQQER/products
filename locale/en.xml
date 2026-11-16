@@ -1274,6 +1274,15 @@ This suffix is appended to all automatically generated article numbers. Optional
 <en><![CDATA[Product fields]]></en>
         </locale>
 
+        <locale name="categories.panel.button.add" context="administration">
+<en><![CDATA[Add category]]></en>
+        </locale>
+        <locale name="categories.panel.button.edit" context="administration">
+<en><![CDATA[Edit category]]></en>
+        </locale>
+        <locale name="categories.panel.button.delete" context="administration">
+<en><![CDATA[Delete category]]></en>
+        </locale>
         <locale name="categories.panel.title">
 <en><![CDATA[Categories]]></en>
         </locale>
@@ -1446,6 +1455,15 @@ This suffix is appended to all automatically generated article numbers. Optional
 <en><![CDATA[Search for a product field...]]></en>
         </locale>
 
+        <locale name="fields.panel.button.create" context="administration">
+<en><![CDATA[Create product field]]></en>
+        </locale>
+        <locale name="fields.panel.button.edit" context="administration">
+<en><![CDATA[Edit product field]]></en>
+        </locale>
+        <locale name="fields.panel.button.delete" context="administration">
+<en><![CDATA[Delete product fields]]></en>
+        </locale>
         <locale name="fields.create.title">
 <en><![CDATA[Create a new product field]]></en>
         </locale>

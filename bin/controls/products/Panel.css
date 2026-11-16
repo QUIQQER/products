@@ -3,10 +3,14 @@
 }
 
 .quiqqer-products-panel {
+    --quiqqer-productsearch-panel-table-inset: 10px;
     --_toolbar-gap: var(--quiqqer-products-panel-toolbar-gap, 8px);
     --_toolbar-border: var(--quiqqer-products-panel-toolbar-border, var(--qui-colors-gray-200));
     --_toolbar-surface: var(--quiqqer-products-panel-toolbar-surface, var(--qui-colors-white));
     --_toolbar-focus: var(--quiqqer-products-panel-toolbar-focus, var(--qui-colors-primary));
+    --_toolbar-hover-color: var(--quiqqer-products-panel-toolbar-hover-color, color-mix(in srgb, var(--qui-colors-primary) 65%, var(--qui-colors-success)));
+    --_toolbar-hover-text: color-mix(in srgb, var(--_toolbar-hover-color) 75%, var(--qui-colors-black));
+    --_toolbar-hover-shadow: inset 0 0 0 1px var(--_toolbar-hover-color), 0 0 7px color-mix(in srgb, var(--_toolbar-hover-color) 45%, transparent);
 }
 
 .quiqqer-products-productPanel {
@@ -18,18 +22,11 @@
     align-items: center;
     gap: var(--_toolbar-gap);
     min-height: 50px;
-    padding-inline: var(--_toolbar-gap);
+    padding-inline: 10px;
 }
 
 .quiqqer-products-toolbar-viewport {
     overflow-x: auto;
-}
-
-.quiqqer-products-toolbar-separator {
-    flex-shrink: 0;
-    height: 22px;
-    margin-inline: 4px;
-    border-inline-start: 1px solid var(--_toolbar-border);
 }
 
 .qui-panel-buttons .quiqqer-products-toolbar > button {
@@ -38,11 +35,79 @@
     line-height: 34px;
 }
 
+.qui-panel-buttons .quiqqer-products-toolbar > .quiqqer-products-toolbar-categories,
+.qui-panel-buttons .quiqqer-products-toolbar > .quiqqer-products-toolbar-filter {
+    justify-content: center;
+    padding: 0 9px;
+    border: 1px solid var(--_toolbar-border);
+    border-radius: 5px;
+    background: var(--_toolbar-surface);
+    color: var(--qui-colors-gray-800);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1;
+}
+
 .quiqqer-products-toolbar .quiqqer-products-toolbar-filter {
     margin-inline-start: auto;
 }
 
+.qui-panel-buttons .quiqqer-products-toolbar > .quiqqer-products-toolbar-categories {
+    background: transparent;
+}
+
+.qui-panel-buttons .quiqqer-products-toolbar-categories[aria-expanded="false"] {
+    background: transparent;
+    color: var(--qui-colors-gray-700);
+    border-color: var(--_toolbar-border);
+}
+
+.qui-panel-buttons .quiqqer-products-toolbar-categories[aria-expanded="true"] {
+    background: var(--_toolbar-surface);
+    border-color: var(--_toolbar-focus);
+    color: var(--qui-colors-primary-700);
+}
+
+.qui-panel-buttons .quiqqer-products-toolbar button:not(:disabled):hover,
+.quiqqer-products-toolbar-search:hover {
+    background: var(--_toolbar-surface);
+    border-color: var(--_toolbar-hover-color);
+    box-shadow: var(--_toolbar-hover-shadow);
+    color: var(--_toolbar-hover-text);
+}
+
+.quiqqer-products-actions-button,
+.quiqqer-products-toolbar-categories,
+.quiqqer-products-toolbar-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.quiqqer-products-actions-button .qui-button-text,
+.quiqqer-products-toolbar-categories .qui-button-text,
+.quiqqer-products-toolbar-filter .qui-button-text {
+    margin: 0;
+}
+
+.quiqqer-products-actions-button .qui-button-drop,
+.quiqqer-products-toolbar-filter .qui-button-drop {
+    position: static;
+    width: auto;
+    height: auto;
+    line-height: 1;
+}
+
+.qui-panel-buttons .quiqqer-products-toolbar .qui-button-text-image {
+    line-height: 1;
+}
+
+.quiqqer-products-actions-menu.qui-contextmenu::after {
+    right: 6px;
+}
+
 .quiqqer-products-toolbar-search {
+    --_search-focus: var(--quiqqer-products-panel-search-focus, var(--qui-colors-danger));
     display: flex;
     align-items: center;
     flex: 0 1 310px;
@@ -73,8 +138,17 @@
     border: 0;
 }
 
-.quiqqer-products-toolbar-search:focus-within,
 .quiqqer-products-toolbar button:focus-visible {
     outline: 2px solid var(--_toolbar-focus);
     outline-offset: 1px;
+}
+
+.quiqqer-products-toolbar-search:focus-within {
+    box-shadow: 0 0 3px 1px var(--_search-focus);
+}
+
+.quiqqer-products-toolbar-search input:focus,
+.quiqqer-products-toolbar .quiqqer-products-toolbar-search button:focus-visible {
+    outline: none;
+    box-shadow: none;
 }
