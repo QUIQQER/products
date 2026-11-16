@@ -1462,6 +1462,15 @@
 <de><![CDATA[Suche nach einem Produktfeld...]]></de>
         </locale>
 
+        <locale name="fields.panel.button.create" context="administration">
+<de><![CDATA[Produktfeld anlegen]]></de>
+        </locale>
+        <locale name="fields.panel.button.edit" context="administration">
+<de><![CDATA[Produktfeld bearbeiten]]></de>
+        </locale>
+        <locale name="fields.panel.button.delete" context="administration">
+<de><![CDATA[Produktfelder löschen]]></de>
+        </locale>
         <locale name="fields.create.title">
 <de><![CDATA[Neues Produktfeld hinzufügen]]></de>
         </locale>

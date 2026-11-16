@@ -1365,6 +1365,15 @@
 <fr><![CDATA[Rechercher un champ de produit...]]></fr>
         </locale>
 
+        <locale name="fields.panel.button.create" context="administration">
+<fr><![CDATA[Créer un champ de produit]]></fr>
+        </locale>
+        <locale name="fields.panel.button.edit" context="administration">
+<fr><![CDATA[Modifier le champ de produit]]></fr>
+        </locale>
+        <locale name="fields.panel.button.delete" context="administration">
+<fr><![CDATA[Supprimer les champs de produit]]></fr>
+        </locale>
         <locale name="fields.create.title">
 <fr><![CDATA[Créer un champ de produit]]></fr>
         </locale>

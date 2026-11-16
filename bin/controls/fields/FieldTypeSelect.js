@@ -95,7 +95,10 @@ define('package/quiqqer/products/bin/controls/fields/FieldTypeSelect', [
             const value = ContextItem.getAttribute('value');
 
             if (value === '') {
-                this.setAttribute('text', QUILocale.get(lg, 'categories.window.fieldtype.filter'));
+                this.setAttribute(
+                    'text',
+                    this.getAttribute('filterLabel') || QUILocale.get(lg, 'categories.window.fieldtype.filter')
+                );
             } else {
                 this.setAttribute('text', QUILocale.get(lg, 'fieldtype.' + value));
             }

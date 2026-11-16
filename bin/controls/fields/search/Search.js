@@ -28,6 +28,8 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
         ],
 
         options: {
+            buttons           : [],
+            showFieldTypeFilter: true,
             multiple          : false,
             fieldTypeFilter   : false,
             sortOn            : 'id',
@@ -68,6 +70,20 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
                 }
             }).inject(this.$Elm);
 
+            const buttons = [...this.getAttribute('buttons')];
+
+            if (this.getAttribute('showFieldTypeFilter')) {
+                buttons.unshift(new FieldTypeSelect({
+                    events: {
+                        onFilterChange: (FTS, value) => {
+                            this.setAttribute('fieldTypeFilter', value);
+                            this.$Grid.options.page = 1;
+                            this.refresh();
+                        }
+                    }
+                }));
+            }
+
             this.$Grid = new Grid(GridContainer, {
                 pagination       : true,
                 multipleSelection: this.getAttribute('multiple'),
@@ -76,16 +92,7 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
                 sortOn           : this.getAttribute('sortOn'),
                 sortBy           : this.getAttribute('sortBy'),
                 serverSort       : true,
-                buttons          : [
-                    new FieldTypeSelect({
-                        events: {
-                            onFilterChange: function (FTS, value) {
-                                this.setAttribute('fieldTypeFilter', value);
-                                this.refresh();
-                            }.bind(this)
-                        }
-                    })
-                ],
+                buttons          : buttons,
                 columnModel      : [
                     {
                         header   : QUILocale.get('quiqqer/core', 'id'),
@@ -210,7 +217,16 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
         },
 
         /**
-         * Return the selected ids
+         * Return the embedded grid.
+         *
+         * @returns {Object}
+         */
+        getGrid: function () {
+            return this.$Grid;
+        },
+
+        /**
+         * Return the selected ids.
          *
          * @returns {Array}
          */
@@ -293,6 +309,9 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
 
                 self.$Grid.setData(gridData);
                 self.fireEvent('refresh');
+            }).catch(error => {
+                this.fireEvent('refreshError', [this, error]);
+                throw error;
             });
         }
     });
