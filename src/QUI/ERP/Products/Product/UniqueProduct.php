@@ -290,9 +290,9 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             if (
                 !empty($fieldOptions['display_discounts']) &&
                 (!QUI::isFrontend() || !QUI\ERP\Products\Utils\Package::hidePrice()) &&
-                $Factor->getValue() > 0
+                $Factor->getValue() != 0
             ) {
-                $priceAddition = '+';
+                $priceAddition = $Factor->getValue() > 0 ? '+' : '';
 
                 switch ($Factor->getCalculation()) {
                     case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
