@@ -93,7 +93,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             this.$ButtonAdd = new QUIButton({
                 name: 'add',
-                text: QUILocale.get(lg, 'category.panel.button.products.add'),
+                text: QUILocale.get(lg, 'products.create.title'),
                 textimage: 'fa fa-plus',
                 events: {onClick: this.createChild}
             });
@@ -106,6 +106,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
         $createActions: function () {
             const Actions = new QUIButton({
                 name      : 'actions',
+                'class'   : 'quiqqer-products-actions-button',
                 text      : QUILocale.get(lg, 'btn.actions'),
                 menuCorner: 'topRight',
                 position: 'right'
@@ -177,12 +178,41 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 }
             });
 
+            Actions.getContextMenu(Menu => {
+                Menu.getElm().classList.add('quiqqer-products-actions-menu');
+                Menu.addEvents({
+                    onShow: () => this.$positionActionsMenu(Menu)
+                });
+            });
+
             return Actions;
+        },
+
+        $positionActionsMenu: function (Menu) {
+            const MenuElm = Menu.getElm();
+            const button = this.$Actions.getElm().getBoundingClientRect();
+            const menu = MenuElm.getBoundingClientRect();
+            const left = Math.max(
+                8,
+                Math.min(button.right - menu.width, window.innerWidth - menu.width - 8)
+            );
+            const above =
+                button.bottom + menu.height + 8 > window.innerHeight &&
+                button.top - menu.height - 8 >= 8;
+            const top = above ? button.top - menu.height - 8 : button.bottom + 8;
+
+            MenuElm.classList.toggle('qui-context-corner-topRight', !above);
+            MenuElm.classList.toggle('qui-context-corner-bottomRight', above);
+            Menu.setPosition(
+                left + window.scrollX,
+                Math.max(8, Math.min(top, window.innerHeight - menu.height - 8)) + window.scrollY
+            );
         },
 
         $createToolbar: function () {
             this.$CategoriesButton = new QUIButton({
                 name: 'categories',
+                'class': 'quiqqer-products-toolbar-categories',
                 text: QUILocale.get(lg, 'categories.panel.title'),
                 events: {
                     onClick: () => this.$Search?.toggleCategories()
@@ -190,6 +220,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             });
             const SearchButton = new QUIButton({
                 name: 'search',
+                icon: 'fa fa-search',
                 events: {onClick: () => this.$submitSearch()}
             });
             this.$FilterButton = new QUIButton({
@@ -200,7 +231,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             [this.$CategoriesButton, SearchButton, this.$FilterButton].forEach(Button => this.addButton(Button));
             this.$prepareToolbarButton(this.$CategoriesButton, 'fa fa-sitemap');
-            this.$prepareToolbarButton(SearchButton, 'fa fa-search');
+            this.$prepareToolbarButton(SearchButton);
             this.$prepareToolbarButton(this.$FilterButton, 'fa fa-filter');
             const FilterArrow = document.createElement('span');
             FilterArrow.className = 'qui-button-drop fa fa-chevron-down';
@@ -210,11 +241,6 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             this.$FilterButton.getElm().setAttribute('aria-haspopup', 'dialog');
             this.$FilterButton.getElm().setAttribute('aria-expanded', 'false');
             this.$FilterButton.getElm().classList.add('quiqqer-products-toolbar-filter');
-
-            const Separator = document.createElement('span');
-            Separator.className = 'quiqqer-products-toolbar-separator';
-            Separator.setAttribute('aria-hidden', 'true');
-            this.$CategoriesButton.getElm().after(Separator);
 
             const SearchGroup = document.createElement('form');
             SearchGroup.className = 'quiqqer-products-toolbar-search';
@@ -250,10 +276,12 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             const Elm = Button.getElm();
             Elm.removeAttribute('tabindex');
             Elm.style.outline = '';
-            const Icon = document.createElement('span');
-            Icon.className = icon;
-            Icon.setAttribute('aria-hidden', 'true');
-            Elm.prepend(Icon);
+
+            if (icon) {
+                Button.setAttribute('textimage', icon);
+            }
+
+            Elm.firstElementChild.setAttribute('aria-hidden', 'true');
         },
 
         $submitSearch: function () {

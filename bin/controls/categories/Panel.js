@@ -111,21 +111,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             return Categories.getList(params).then(function (gridData) {
                 self.$Grid.setData(gridData);
 
-                const Delete = self.getButtons('delete'),
-                      Edit   = self.getButtons('edit');
-
-                Delete.disable();
-                Edit.disable();
-
-                Delete.setAttribute(
-                    'text',
-                    QUILocale.get('quiqqer/core', 'delete')
-                );
-
-                Edit.setAttribute(
-                    'text',
-                    QUILocale.get('quiqqer/core', 'edit')
-                );
+                self.$setSelectionState(false);
 
                 self.Loader.hide();
             });
@@ -138,73 +124,35 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             const self    = this,
                   Content = this.getContent();
 
-            Content.setStyles({
-                padding: 0
-            });
+            Content.style.padding = '0';
+            this.getElm().classList.add('quiqqer-products-categories-panel');
 
             // buttons
-            this.addButton({
+            const SitemapButton = new QUIButton({
                 name  : 'sitemap',
-                image : 'fa fa-sitemap',
+                'class': 'quiqqer-products-categories-toggle',
+                text: QUILocale.get(lg, 'categories.panel.title'),
+                textimage: 'fa fa-sitemap',
                 events: {
                     onClick: this.toggleSitemap
                 }
             });
-
-            this.addButton({
-                type: 'separator'
-            });
-
-            this.addButton({
-                name     : 'add',
-                text     : QUILocale.get('quiqqer/core', 'add'),
-                textimage: 'fa fa-plus',
-                events   : {
-                    onClick: this.createChild
-                }
-            });
-
-            this.addButton({
-                name     : 'edit',
-                text     : QUILocale.get('quiqqer/core', 'edit'),
-                textimage: 'fa fa-edit',
-                disabled : true,
-                events   : {
-                    onClick: function () {
-                        self.updateChild(
-                            self.$Grid.getSelectedData()[0].id
-                        );
-                    }
-                }
-            });
-
-            this.addButton({
-                type: 'separator'
-            });
-
-            this.addButton({
-                name     : 'delete',
-                text     : QUILocale.get('quiqqer/core', 'delete'),
-                textimage: 'fa fa-trash',
-                disabled : true,
-                events   : {
-                    onClick: function () {
-                        self.deleteChild(
-                            self.$Grid.getSelectedData()[0].id
-                        );
-                    }
-                }
-            });
-
+            this.addButton(SitemapButton);
+            const SitemapElm = SitemapButton.getElm();
+            SitemapElm.tabIndex = 0;
+            SitemapElm.style.removeProperty('outline');
+            SitemapElm.setAttribute('aria-expanded', 'false');
+            SitemapElm.firstElementChild.setAttribute('aria-hidden', 'true');
 
             // content
-            this.$SitemapContainer = new Element('div', {
-                'class': 'products-categories-panel-sitemap shadow',
-                styles : {
-                    opacity: 0,
-                    width  : 0
-                }
-            }).inject(Content);
+            this.$SitemapContainer = document.createElement('div');
+            this.$SitemapContainer.className = 'products-categories-panel-sitemap shadow';
+            this.$SitemapContainer.id = 'product-categories-sitemap-' + this.getId();
+            this.$SitemapContainer.style.opacity = '0';
+            this.$SitemapContainer.style.width = '0';
+            this.$SitemapContainer.inert = true;
+            Content.appendChild(this.$SitemapContainer);
+            SitemapElm.setAttribute('aria-controls', this.$SitemapContainer.id);
 
             this.$SitemapFX = moofx(this.$SitemapContainer);
 
@@ -234,20 +182,63 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             }).inject(this.$SitemapContainer);
 
 
-            this.$GridContainer = new Element('div', {
-                'class': 'products-categories-panel-container'
-            }).inject(Content);
+            this.$GridContainer = document.createElement('div');
+            this.$GridContainer.className = 'products-categories-panel-container';
+            Content.appendChild(this.$GridContainer);
 
             this.$GridFX = moofx(this.$GridContainer);
 
-            const GridContainer = new Element('div', {
-                'class': 'products-categories-panel-grid'
-            }).inject(this.$GridContainer);
+            const GridContainer = document.createElement('div');
+            GridContainer.className = 'products-categories-panel-grid';
+            this.$GridContainer.appendChild(GridContainer);
+
+            const deleteLabel = QUILocale.get(lg, 'categories.panel.button.delete');
 
             this.$Grid = new Grid(GridContainer, {
                 pagination : true,
                 perPage    : 150,
                 serverSort : true,
+                buttons: [
+                    {
+                        name: 'add',
+                        text: QUILocale.get(lg, 'categories.panel.button.add'),
+                        textimage: 'fa fa-plus',
+                        events: {onClick: () => this.createChild()}
+                    },
+                    {
+                        name: 'edit',
+                        text: QUILocale.get(lg, 'categories.panel.button.edit'),
+                        textimage: 'fa fa-edit',
+                        disabled: true,
+                        events: {
+                            onClick: () => {
+                                const selected = this.$Grid.getSelectedData()[0];
+
+                                if (selected) {
+                                    this.updateChild(selected.id);
+                                }
+                            }
+                        }
+                    },
+                    {
+                        name: 'delete',
+                        'class': 'quiqqer-products-categories-delete',
+                        text: deleteLabel,
+                        title: deleteLabel,
+                        icon: 'fa fa-trash',
+                        disabled: true,
+                        position: 'right',
+                        events: {
+                            onClick: () => {
+                                const selected = this.$Grid.getSelectedData()[0];
+
+                                if (selected) {
+                                    this.deleteChild(selected.id);
+                                }
+                            }
+                        }
+                    }
+                ],
                 columnModel: [
                     {
                         header   : QUILocale.get('quiqqer/core', 'id'),
@@ -282,30 +273,20 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                 ]
             });
 
+            ['add', 'edit', 'delete'].forEach(name => {
+                const Elm = this.$Grid.getButton(name).getElm();
+                Elm.style.removeProperty('outline');
+                Elm.firstElementChild?.setAttribute('aria-hidden', 'true');
+            });
+            this.$Grid.getButton('delete').getElm().setAttribute('aria-label', deleteLabel);
+
             this.$Grid.addEvents({
                 onDblClick: function () {
                     self.updateChild(
                         self.$Grid.getSelectedData()[0].id
                     );
                 },
-                onClick   : function () {
-                    const selected = self.$Grid.getSelectedData()[0],
-                          Delete   = self.getButtons('delete'),
-                          Edit     = self.getButtons('edit');
-
-                    Delete.enable();
-                    Edit.enable();
-
-                    Delete.setAttribute(
-                        'text',
-                        QUILocale.get('quiqqer/core', 'delete') + ' (#' + selected.id + ')'
-                    );
-
-                    Edit.setAttribute(
-                        'text',
-                        QUILocale.get('quiqqer/core', 'edit') + ' (#' + selected.id + ')'
-                    );
-                },
+                onClick   : () => this.$setSelectionState(this.$Grid.getSelectedData().length === 1),
                 onRefresh : this.refresh
             });
 
@@ -378,6 +359,18 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
         },
 
+        $setSelectionState: function (selected) {
+            ['edit', 'delete'].forEach(name => {
+                const Button = this.$Grid.getButton(name);
+
+                if (selected) {
+                    Button.enable();
+                } else {
+                    Button.disable();
+                }
+            });
+        },
+
         /**
          * event : on inject
          */
@@ -390,40 +383,23 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
          * event : on resize
          */
         $onResize: function () {
-            const size   = this.$GridContainer.getSize(),
+            const size   = this.getContent().getSize(),
                   Button = this.getButtons('sitemap'),
-                  active = Button.isActive();
+                  active = Button.getElm().getAttribute('aria-expanded') === 'true';
 
-            if (active) {
-                this.$Grid.setWidth(size.x - 340);
-            } else {
-                this.$Grid.setWidth(size.x - 40);
-            }
-
-            this.$Grid.setHeight(size.y - 40);
-            this.$Grid.resize();
+            return Promise.all([
+                this.$Grid.setWidth(size.x - (active ? 320 : 20)),
+                this.$Grid.setHeight(size.y - 20)
+            ]).then(() => this.$Grid.resize());
         },
 
         /**
          * toggle the sitemap display
          */
         toggleSitemap: function () {
-            return new Promise(() => {
-                const Button = this.getButtons('sitemap'),
-                      status = Button.isActive();
+            const expanded = this.getButtons('sitemap').getElm().getAttribute('aria-expanded') === 'true';
 
-                if (status === false) {
-                    this.openSitemap().then(function () {
-                        Button.setActive();
-                    });
-
-                    return;
-                }
-
-                this.closeSitemap().then(function () {
-                    Button.setNormal();
-                });
-            });
+            return expanded ? this.closeSitemap() : this.openSitemap();
         },
 
         /**
@@ -433,17 +409,18 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
          */
         openSitemap: function () {
             const self = this;
+            this.$SitemapContainer.inert = false;
 
             return new Promise(function (resolve) {
-                const size = self.$GridContainer.getSize();
+                const size = self.getContent().getSize();
 
                 self.$GridFX.animate({
-                    paddingLeft: 320
+                    paddingLeft: 310
                 }, {
                     duration: 200
                 });
 
-                self.$Grid.setWidth(size.x - 340).then(function () {
+                self.$Grid.setWidth(size.x - 320).then(function () {
                     self.$SitemapFX.animate({
                         opacity: 1,
                         width  : 300
@@ -451,7 +428,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                         duration: 200,
                         callback: function () {
 
-                            self.getButtons('sitemap').setActive();
+                            self.getButtons('sitemap').getElm().setAttribute('aria-expanded', 'true');
 
                             resolve();
                         }
@@ -469,7 +446,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             const self = this;
 
             return new Promise(function (resolve) {
-                const size = self.$GridContainer.getSize();
+                const size = self.getContent().getSize();
 
                 self.$SitemapFX.animate({
                     opacity: 0,
@@ -478,13 +455,14 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                     duration: 200,
                     callback: function () {
                         self.$GridFX.animate({
-                            paddingLeft: 20
+                            paddingLeft: 10
                         }, {
                             duration: 200
                         });
 
-                        self.$Grid.setWidth(size.x - 40);
-                        self.getButtons('sitemap').setNormal();
+                        self.$Grid.setWidth(size.x - 20);
+                        self.getButtons('sitemap').getElm().setAttribute('aria-expanded', 'false');
+                        self.$SitemapContainer.inert = true;
 
                         resolve();
                     }

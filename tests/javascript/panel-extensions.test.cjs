@@ -5,6 +5,7 @@ const {test} = require('node:test');
 const vm = require('node:vm');
 
 function loadPanel() {
+    const viewport = {innerWidth: 1024, innerHeight: 768, scrollX: 0, scrollY: 0};
     let definition;
     let options;
     let resolveReady;
@@ -23,6 +24,7 @@ function loadPanel() {
     };
     const filename = resolve(__dirname, '../../bin/controls/products/Panel.js');
     vm.runInNewContext(readFileSync(filename, 'utf8'), {
+        window: viewport,
         Class: function (value) {
             return value;
         },
@@ -54,8 +56,46 @@ function loadPanel() {
         refresh: () => actions.push('refresh'),
         Loader: {hide: () => actions.push('hideLoader')}
     });
-    return {panel, actions, getOptions: () => options, resolveReady, rejectReady};
+    return {panel, actions, getOptions: () => options, resolveReady, rejectReady, viewport};
 }
+
+test('actions menu aligns with the button and stays in the viewport', () => {
+    const {panel, viewport} = loadPanel();
+    const corners = new Map();
+    let button = {right: 442, top: 130, bottom: 162};
+    let position;
+    panel.$Actions = {getElm: () => ({getBoundingClientRect: () => button})};
+    const Menu = {
+        getElm: () => ({
+            getBoundingClientRect: () => ({width: 200, height: 176}),
+            classList: {toggle: (name, active) => corners.set(name, active)}
+        }),
+        setPosition: (left, top) => position = [left, top]
+    };
+    viewport.innerWidth = 460;
+    viewport.innerHeight = 420;
+
+    panel.$positionActionsMenu(Menu);
+    assert.deepEqual(position, [242, 170]);
+    assert.equal(corners.get('qui-context-corner-topRight'), true);
+    assert.equal(corners.get('qui-context-corner-bottomRight'), false);
+
+    button = {right: 442, top: 330, bottom: 362};
+    viewport.scrollX = 20;
+    viewport.scrollY = 100;
+    panel.$positionActionsMenu(Menu);
+    assert.deepEqual(position, [262, 246]);
+    assert.equal(corners.get('qui-context-corner-topRight'), false);
+    assert.equal(corners.get('qui-context-corner-bottomRight'), true);
+
+    button = {right: 480, top: 130, bottom: 162};
+    panel.$positionActionsMenu(Menu);
+    assert.deepEqual(position, [272, 270]);
+
+    button = {right: 120, top: 130, bottom: 162};
+    panel.$positionActionsMenu(Menu);
+    assert.deepEqual(position, [28, 270]);
+});
 
 test('panel exposes the search and lets extensions configure it before injection', async () => {
     const {panel, actions, getOptions, resolveReady} = loadPanel();
