@@ -63,7 +63,17 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
          * @return {Promise}
          */
         $onResize: function () {
-            return this.$Search?.resize();
+            const Grid = this.$Search?.getGrid();
+
+            if (!Grid) {
+                return Promise.resolve();
+            }
+
+            const size = this.getContent().getSize();
+            return Promise.all([
+                Grid.setHeight(size.y - 20),
+                Grid.setWidth(size.x - 20)
+            ]);
         },
 
         /**
@@ -141,6 +151,7 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
 
                     onRefresh: () => {
                         this.$setSelectionState(0);
+                        this.$onResize();
                         this.Loader.hide();
                     },
 

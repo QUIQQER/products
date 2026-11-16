@@ -9,6 +9,7 @@ function element() {
         style: {removeProperty() {}},
         classList: {add() {}},
         attributes: {},
+        getSize: () => ({x: 1000, y: 600}),
         children: [],
         firstElementChild: {setAttribute() {}},
         setAttribute(name, value) { this.attributes[name] = value; },
@@ -56,6 +57,8 @@ function fixture() {
             this.selected = [];
             this.grid = {
                 options: {page: 1},
+                setWidth(width) { this.width = width; },
+                setHeight(height) { this.height = height; },
                 getButton: name => options.buttons.find(Button => Button.getAttribute('name') === name)
             };
         }
@@ -136,6 +139,18 @@ test('changing the field type resets pagination and clears selection actions on 
     assert.equal(Grid.getButton('delete').getAttribute('disabled'), true);
     await panel.refresh();
     assert.equal(Grid.getButton('edit').getAttribute('disabled'), true);
+});
+
+test('field grid width follows the panel content with equal ten-pixel outer margins', async () => {
+    const {panel, content} = fixture();
+    const Grid = panel.$Search.getGrid();
+    await panel.$onResize();
+    assert.equal(Grid.width, 980);
+    assert.equal(Grid.height, 580);
+    content.getSize = () => ({x: 750, y: 450});
+    await panel.refresh();
+    assert.equal(Grid.width, 730);
+    assert.equal(Grid.height, 430);
 });
 
 test('the toolbar filter exposes its menu state and aligns the menu to the right', () => {
