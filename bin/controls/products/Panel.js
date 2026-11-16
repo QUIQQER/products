@@ -93,7 +93,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             this.$ButtonAdd = new QUIButton({
                 name: 'add',
-                text: QUILocale.get(lg, 'category.panel.button.products.add'),
+                text: QUILocale.get(lg, 'products.create.title'),
                 textimage: 'fa fa-plus',
                 events: {onClick: this.createChild}
             });
