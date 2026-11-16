@@ -83,6 +83,7 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
          */
         $onCreate: function () {
             this.getElm().classList.add('quiqqer-products-fields-panel');
+            this.getContent().style.padding = '10px';
             const deleteLabel = QUILocale.get(lg, 'fields.panel.button.delete');
             const Create = new QUIButton({
                 name: 'add',

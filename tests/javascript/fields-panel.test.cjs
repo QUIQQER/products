@@ -36,6 +36,7 @@ function fixture() {
     const toolbar = [];
     const calls = [];
     const root = element();
+    const content = element();
     const menu = {
         getElm: element,
         addEvents(events) { this.events = events; },
@@ -76,7 +77,7 @@ function fixture() {
     });
     const panel = Object.assign({}, definition, {
         getElm: () => root,
-        getContent: element,
+        getContent: () => content,
         addButton: Button => toolbar.push(Button),
         Loader: {show() {}, hide() {}},
         createChild: () => calls.push(['create']),
@@ -84,11 +85,12 @@ function fixture() {
         deleteChild: ids => calls.push(['delete', ...ids])
     });
     panel.$onCreate();
-    return {panel, toolbar, calls, menu};
+    return {panel, toolbar, calls, menu, content};
 }
 
 test('named field actions belong to the grid and only the filter stays in the toolbar', () => {
-    const {panel, toolbar} = fixture();
+    const {panel, toolbar, content} = fixture();
+    assert.equal(content.style.padding, '10px');
     assert.deepEqual(toolbar.map(Button => Button.getAttribute('name')), ['filter']);
     const Search = panel.$Search;
     const Grid = Search.getGrid();
